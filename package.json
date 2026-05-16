@@ -1,0 +1,29 @@
+{
+  "name": "english-channel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent-first VoxCPM audiobook workflow platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @english-channel/web",
+    "dev:api": "npm run dev --workspace @english-channel/api",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run check:encoding && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
+    "test": "npm run test --workspaces --if-present && npm run test:py",
+    "check:architecture": "node packages/tooling/scripts/check-api-architecture.mjs",
+    "check:docs": "node packages/tooling/scripts/check-docs-index.mjs",
+    "check:encoding": "node packages/tooling/scripts/check-file-encoding.mjs",
+    "setup:runtime": "powershell -ExecutionPolicy Bypass -File scripts/setup_project_runtime.ps1 -UseHfMirror",
+    "py:check": ".\\.conda-env\\python.exe apps/worker-py/scripts/check_env.py",
+    "py:download-model": ".\\.conda-env\\python.exe apps/worker-py/scripts/download_voxcpm2.py --local-dir pretrained_models/VoxCPM2",
+    "py:smoke": ".\\.conda-env\\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --model-id pretrained_models/VoxCPM2",
+    "lint:py": ".\\.conda-env\\python.exe -m compileall apps/worker-py/worker apps/worker-py/scripts",
+    "test:py": ".\\.conda-env\\python.exe -m pytest apps/worker-py/tests"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
