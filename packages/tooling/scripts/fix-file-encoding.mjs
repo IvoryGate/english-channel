@@ -2,7 +2,19 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const ignoredDirs = new Set([".git", "node_modules", ".venv", ".conda-env", ".next", "dist", "artifacts", "pretrained_models"]);
+const ignoredDirs = new Set([
+  ".git",
+  "node_modules",
+  ".venv",
+  ".conda-env",
+  ".next",
+  "dist",
+  "artifacts",
+  "assets",
+  "pretrained_models",
+  ".pytest_cache",
+  "__pycache__"
+]);
 const checkedExtensions = new Set([
   ".md",
   ".json",

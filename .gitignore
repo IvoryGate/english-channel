@@ -15,3 +15,6 @@ artifacts/
 tmp/
 pretrained_models/
 books/
+assets/
+reference/
+workspace/
