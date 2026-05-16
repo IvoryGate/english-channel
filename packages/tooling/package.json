@@ -1,0 +1,10 @@
+{
+  "name": "@english-channel/tooling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "node ./scripts/check-api-architecture.mjs && node ./scripts/check-docs-index.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}
