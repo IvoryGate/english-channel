@@ -14,3 +14,4 @@ venv/
 artifacts/
 tmp/
 pretrained_models/
+books/
