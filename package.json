@@ -21,7 +21,7 @@
     "py:download-model": ".\\.conda-env\\python.exe apps/worker-py/scripts/download_voxcpm2.py --local-dir pretrained_models/VoxCPM2",
     "py:smoke": ".\\.conda-env\\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --model-id pretrained_models/VoxCPM2",
     "lint:py": ".\\.conda-env\\python.exe -m compileall apps/worker-py/worker apps/worker-py/scripts",
-    "test:py": ".\\.conda-env\\python.exe -m pytest apps/worker-py/tests"
+    "test:py": ".\\.conda-env\\python.exe apps/worker-py/scripts/run_tests.py"
   },
   "engines": {
     "node": ">=20.0.0"

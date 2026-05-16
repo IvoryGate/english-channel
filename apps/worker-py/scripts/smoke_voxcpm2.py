@@ -20,6 +20,7 @@ def main() -> None:
     parser.add_argument("--model-id", default=os.getenv("VOXCPM_MODEL_ID", "openbmb/VoxCPM2"))
     parser.add_argument("--device", default=os.getenv("VOXCPM_DEVICE", "auto"))
     parser.add_argument("--output-dir", default=os.getenv("ARTIFACT_DIR", "artifacts"))
+    parser.add_argument("--voice-profile", default="default-english-narrator")
     parser.add_argument("--no-optimize", action="store_true")
     args = parser.parse_args()
 
@@ -34,7 +35,7 @@ def main() -> None:
             job_id="smoke-voxcpm2",
             chapter_id="smoke",
             text=args.text,
-            voice_profile="default-english-narrator",
+            voice_profile=args.voice_profile,
         )
     )
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
