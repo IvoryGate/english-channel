@@ -11,6 +11,10 @@ const ignoredDirs = new Set([
   "dist",
   "artifacts",
   "assets",
+  "books",
+  "reference",
+  "tmp",
+  "workspace",
   "pretrained_models",
   ".pytest_cache",
   "__pycache__"
