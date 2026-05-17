@@ -1,5 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 
 const requiredDocs = [
   "ARCHITECTURE.md",
@@ -15,9 +18,9 @@ const requiredDocs = [
   "ENCODING.md"
 ];
 
-const docsRoot = join(process.cwd(), "docs");
-const readmePath = join(process.cwd(), "README.md");
-const agentsPath = join(process.cwd(), "AGENTS.md");
+const docsRoot = join(repoRoot, "docs");
+const readmePath = join(repoRoot, "README.md");
+const agentsPath = join(repoRoot, "AGENTS.md");
 
 const missing = requiredDocs.filter((file) => !existsSync(join(docsRoot, file)));
 if (missing.length > 0) {

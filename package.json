@@ -11,7 +11,7 @@
     "dev:web": "npm run dev --workspace @english-channel/web",
     "dev:api": "npm run dev --workspace @english-channel/api",
     "build": "npm run build --workspaces --if-present",
-    "lint": "npm run check:encoding && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
+    "lint": "npm run check:encoding && npm run build --workspace @english-channel/shared-types && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
     "test": "npm run test --workspaces --if-present && npm run test:py",
     "check:architecture": "node packages/tooling/scripts/check-api-architecture.mjs",
     "check:docs": "node packages/tooling/scripts/check-docs-index.mjs",

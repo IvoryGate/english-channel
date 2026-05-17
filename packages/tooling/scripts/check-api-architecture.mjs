@@ -1,7 +1,9 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const apiRoot = join(process.cwd(), "apps", "api", "src");
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+const apiRoot = join(repoRoot, "apps", "api", "src");
 const layerOrder = ["types", "schema", "repo", "service", "transport"];
 const layerIndex = Object.fromEntries(layerOrder.map((layer, index) => [layer, index]));
 const importPattern = /from\s+["']\.\.\/([^/"']+)/g;
