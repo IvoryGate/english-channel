@@ -45,6 +45,18 @@ Compose without rendering:
 .\.conda-env\python.exe .cursor/skills/audiobook-chapter-tts/scripts/compose_chapter.py --workspace workspace/pride_and_prejudice/chapter_001
 ```
 
+## External Trimming Workflow
+
+When a segment has extra tail audio, the user may trim the segment WAV manually in external audio software.
+
+After saving the edited segment in place, recompose only:
+
+```powershell
+.\.conda-env\python.exe .cursor/skills/audiobook-chapter-tts/scripts/compose_chapter.py --workspace workspace/pride_and_prejudice/chapter_001
+```
+
+This command reads the current `001_*.wav`, `002_*.wav`, etc. files, overwrites `000_chapter_001_raw.wav`, and updates `000_chapter_001.run.json`. It does not regenerate or overwrite any segment WAV.
+
 Inspect:
 
 ```powershell
@@ -55,7 +67,7 @@ Inspect:
 
 - Workspace root: `workspace/`.
 - Chapter folder: `chapter_001`, `chapter_002`, etc.
-- Final audio: `000_chapter_001.raw.wav`.
+- Final audio: `000_chapter_001_raw.wav`.
 - Segment manifest: `000_chapter_001.segments.json`.
 - Source text: `000_chapter_001.source.txt`.
 - Cleaned reference: `000_reference_clean.wav`.

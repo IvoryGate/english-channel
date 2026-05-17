@@ -13,7 +13,7 @@ Default workspace layout:
 
 ```text
 workspace/<book_slug>/chapter_001/
-├── 000_chapter_001.raw.wav
+├── 000_chapter_001_raw.wav
 ├── 000_chapter_001.run.json
 ├── 000_chapter_001.segments.json
 ├── 000_chapter_001.source.txt
@@ -48,7 +48,8 @@ workspace/<book_slug>/chapter_001/
 - Use cleaned reference audio by default.
 - Preserve every segment WAV.
 - Regenerating a segment overwrites that segment WAV in place.
-- After regenerating any segment, recompose `000_chapter_XXX.raw.wav`.
+- After regenerating any segment, recompose `000_chapter_XXX_raw.wav`.
+- If the user manually trims segment WAVs with external audio software, only run `scripts/compose_chapter.py`; do not regenerate segments.
 - Keep only raw final audio by default; do not create mastered copies unless the user asks.
 
 ## Utility Scripts

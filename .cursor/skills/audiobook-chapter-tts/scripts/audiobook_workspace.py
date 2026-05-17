@@ -50,7 +50,7 @@ def source_text_path(workspace: Path) -> Path:
 
 def final_audio_path(workspace: Path) -> Path:
     chapter = workspace.name
-    return workspace / f"000_{chapter}.raw.wav"
+    return workspace / f"000_{chapter}_raw.wav"
 
 
 def run_manifest_path(workspace: Path) -> Path:
