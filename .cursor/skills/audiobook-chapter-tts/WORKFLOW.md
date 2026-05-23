@@ -119,7 +119,7 @@ See `SUBTITLES.md` for format details.
 - Cleaned reference: `000_reference_clean.wav`.
 - Segment audio: `001_<speaker>.wav`, `002_<speaker>.wav`, etc.
 - Short segment threshold: 12 words (`max_len` 128; ≤4 words → 56).
-- Long dialogue profile-only threshold: 35 words (override with `renderPolicy: include_delivery_cue`).
+- Long dialogue: keep one full quoted turn per segment; do not split at semicolons.
 - Post-render: peak boost if segment peak < 0.45 (target 0.88); no RMS chapter normalize.
 - Inter-segment silence: 0.34 seconds.
 - Reference cleaning: on by default.

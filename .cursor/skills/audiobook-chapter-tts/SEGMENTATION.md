@@ -7,14 +7,17 @@ Use semantic units:
 - Narration sentence or coherent narration beat.
 - One speaker's dialogue turn.
 - A narrator transition such as `This was invitation enough.`
-- A long sentence split at semicolons only when each part has a clear delivery beat.
+- One full quoted turn per segment, even when the source uses semicolons across clauses.
 
 Avoid:
 
 - Combining multiple speakers in one segment.
 - Combining narration and dialogue in one segment.
+- Splitting one speaker's long dialogue at semicolons or mid-quote continuations.
 - Splitting only by character count.
 - Repeating the global narrator instruction inside every segment.
+
+`segment_chapter.py` merges consecutive sentences when a quoted turn is still open or a clause continues after `;`.
 
 ## Manifest Shape
 
@@ -56,7 +59,7 @@ For dialogue consistency, define one stable cue per speaker in `characterProfile
 }
 ```
 
-`compose_control` prepends the speaker profile to dialogue segments. Long dialogue (over 35 words) uses the profile alone unless `renderPolicy: include_delivery_cue` is set. Shorter dialogue uses profile + short `deliveryCue`. Full decision table: `CONTROLS.md`.
+`compose_control` prepends the speaker profile to dialogue segments and always keeps a short `deliveryCue`, including for long unsplit turns. Full decision table: `CONTROLS.md`.
 
 ### Narration splits
 
@@ -78,20 +81,14 @@ Segments **009** / **010** sound strong when:
 
 - `deliveryCue` uses an **active verb** (`bursting out`, `deadpan comic correction`) not a flat label (`matter-of-fact`)
 - dialogue has **13–22 words** (not 2-word quips with huge `max_len`)
-- **character profile + deliveryCue** both apply (long lines need `renderPolicy: include_delivery_cue` if emotional)
+- **character profile + deliveryCue** both apply on every dialogue segment, including long unsplit turns
 - the text already has exclamation or conflict
 
 Very short lines (≤4 words): automatic `max_len` 56; quiet peaks are boosted after render (peak < 0.45 → 0.88). See `CONTROLS.md`.
 
-### Long dialogue that sounds flat
+### Long dialogue
 
-If a dialogue segment over 35 words renders without enough emotion, add:
-
-```json
-"renderPolicy": "include_delivery_cue"
-```
-
-so profile and `deliveryCue` both reach the model.
+Keep the full quoted turn in one segment. Use one `deliveryCue` for the whole speech; do not split at semicolons inside the same quote.
 
 Avoid strong acting cues unless requested:
 

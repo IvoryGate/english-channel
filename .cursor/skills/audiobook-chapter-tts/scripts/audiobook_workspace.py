@@ -25,7 +25,6 @@ VERY_SHORT_MAX_LEN = 56
 DEFAULT_PACE_CUE = "unhurried pace"
 DEFAULT_REFERENCE_TEMPO_RATIO = 1.0
 SHORT_CONTROL = "same cloned narrator, slightly slower"
-LONG_DIALOGUE_WORD_LIMIT = 35
 SEGMENT_PEAK_NORMALIZE_TARGET = 0.88
 SEGMENT_PEAK_BOOST_BELOW = 0.45
 
@@ -169,17 +168,12 @@ def compose_control(
     def join_control(*parts: str) -> str:
         return ", ".join(part.strip() for part in parts if part and part.strip())
 
-    render_policy = str(segment.get("renderPolicy", ""))
-    force_delivery = render_policy == "include_delivery_cue"
     max_len = short_segment_max_len(segment, words) if kind == "dialogue" or words <= SHORT_SEGMENT_WORD_LIMIT else None
 
     if kind == "dialogue":
-        if character and words > LONG_DIALOGUE_WORD_LIMIT and not force_delivery:
-            control = character
-            policy = "character-only-long-dialogue"
-        elif character:
+        if character:
             control = join_control(character, delivery_cue)
-            policy = "character-dialogue-cue" if not force_delivery else "character-long-with-delivery"
+            policy = "character-dialogue-cue"
         else:
             control = join_control(pace, delivery_cue) if pace else delivery_cue
             policy = "compact-dialogue-cue"

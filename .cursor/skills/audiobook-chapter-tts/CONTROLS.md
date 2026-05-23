@@ -18,7 +18,7 @@ Per-segment optional fields:
 | Field | When to use |
 | --- | --- |
 | `maxLen` | Override auto `max_len` for fragile short lines. |
-| `renderPolicy: include_delivery_cue` | Long dialogue (>35 words) that must keep emotion; otherwise profile-only. |
+| `renderPolicy: include_delivery_cue` | Legacy override; dialogue already keeps profile + `deliveryCue` by default. |
 
 Do **not** add chapter-wide loudness targets (`targetSegmentRms`, `energyLevel`) or post-compose RMS normalization. Those were tried and reverted; peak-only quiet boost stays the default.
 
@@ -31,9 +31,7 @@ Do **not** add chapter-wide loudness targets (`targetSegmentRms`, `energyLevel`)
 | Condition | Control sent to model | `max_len` |
 | --- | --- | --- |
 | ≤12 words, has profile | `{profile}, {deliveryCue}` | 128 (or 56 if ≤4 words) |
-| >35 words, has profile, no `include_delivery_cue` | `{profile}` only | none |
-| >35 words + `renderPolicy: include_delivery_cue` | `{profile}, {deliveryCue}` | none |
-| Otherwise with profile | `{profile}, {deliveryCue}` | by word count |
+| >12 words, has profile | `{profile}, {deliveryCue}` | none |
 | No profile | `{deliveryCue}` (and `paceCue` if manifest has it) | by word count |
 
 ### Narration
@@ -47,7 +45,7 @@ Word limits (code constants):
 
 - `SHORT_SEGMENT_WORD_LIMIT` = 12 → `max_len` 128
 - `VERY_SHORT_WORD_LIMIT` = 4 → `max_len` 56
-- `LONG_DIALOGUE_WORD_LIMIT` = 35 → profile-only unless `include_delivery_cue`
+- Long dialogue stays one segment; do not split at semicolons inside the same quoted turn.
 
 ## Post-Render Audio (Per Segment)
 
@@ -63,7 +61,7 @@ No time-stretch, trim, or RMS matching across segments. Compose concatenates seg
 1. **Split long narration** where the model swallows an opening word (e.g. separate “It was then disclosed…” from the following beat).
 2. **Active verbs in `deliveryCue`** (`bursting out`, `deadpan comic correction`) outperform flat labels (`matter-of-fact`).
 3. **13–22 word dialogue** with profile + cue tends to sound strongest; very short quips rely on tight `max_len`.
-4. **Quiet long dialogue**: add `renderPolicy: include_delivery_cue` if profile-only sounds flat.
+4. **Long dialogue** stays one segment with profile + `deliveryCue`; do not split at semicolons inside the same quoted turn.
 5. **EPUB source**: use `segment_chapter.py` so italic fragments merge onto the previous line instead of breaking paragraphs.
 
 ## Pacing (Opt-In Only)
@@ -82,7 +80,7 @@ Chapter 002 production omits both; unhurried delivery comes from reference choic
 | Stage directions spoken aloud | Long text stuffed into every segment control | Keep `globalControl` short; use per-segment `deliveryCue` only |
 | Extra speech after sentence | Control string too long for short text | Shorter cue; lower `max_len`; split segment |
 | Opening word swallowed (“It”) | Long narration block | Split into two narration segments |
-| Segment too quiet | Short line + high `max_len` or profile-only long dialogue | Rerender; try `include_delivery_cue`; peak boost applies automatically if peak < 0.45 |
+| Segment too quiet | Short line + high `max_len` | Rerender with lower `maxLen`; peak boost applies automatically if peak < 0.45 |
 | Uneven loudness between segments | Peak boost only helps very quiet peaks | Accept raw variation or master externally; do not re-enable RMS chapter normalize in scripts |
 | Odd duration / unstable take | `paceCue` or slowed reference | Remove `paceCue` / reset `referenceTempoRatio` to `1.0` |
 

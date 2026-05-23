@@ -108,19 +108,50 @@ def extract_chapter(text: str, chapter: int) -> str:
     return re.sub(r"\n{3,}", "\n\n", chapter_text).strip()
 
 
+def unclosed_dialogue_quotes(text: str) -> bool:
+    if text.count('"') % 2 == 1:
+        return True
+    for left, right in (("\u201c", "\u201d"), ("\u2018", "\u2019")):
+        if text.count(left) > text.count(right):
+            return True
+    return False
+
+
+def is_dialogue_continuation(previous: str, sentence: str) -> bool:
+    if unclosed_dialogue_quotes(previous):
+        return True
+    if previous.rstrip().endswith((';', ',')) and sentence[:1].islower():
+        return True
+    if previous.rstrip().endswith(';') and sentence.startswith(
+        ("that ", "and ", "but ", "which ", "who ", "when ", "where ")
+    ):
+        return True
+    return False
+
+
+def merge_dialogue_turns(sentences: list[str]) -> list[str]:
+    merged: list[str] = []
+    for sentence in sentences:
+        sentence = sentence.strip()
+        if not sentence:
+            continue
+        if merged and is_dialogue_continuation(merged[-1], sentence):
+            merged[-1] = f"{merged[-1]} {sentence}"
+        else:
+            merged.append(sentence)
+    return merged
+
+
 def draft_segments(text: str) -> list[dict[str, object]]:
     paragraphs = [re.sub(r"\s+", " ", item).strip() for item in re.split(r"\n\s*\n", text) if item.strip()]
     segments = []
     order = 1
     for paragraph in paragraphs:
         sentences = re.split(r"(?<=[.!?])\s+", paragraph)
-        for sentence in sentences:
-            sentence = sentence.strip()
-            if not sentence:
-                continue
+        for sentence in merge_dialogue_turns(sentences):
             speaker = "narrator"
             kind = "narration"
-            if sentence.startswith(('"', "“")):
+            if sentence.startswith(('"', "\u201c")):
                 kind = "dialogue"
                 speaker = "unknown_speaker"
             words = word_count(sentence)
