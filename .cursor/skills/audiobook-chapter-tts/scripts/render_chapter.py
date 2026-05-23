@@ -17,6 +17,7 @@ from audiobook_workspace import (
     ensure_segment_defaults,
     load_json,
     manifest_path,
+    normalize_segment_peak,
     parse_segment_ids,
     write_json,
 )
@@ -47,6 +48,8 @@ def render_segments(
     manifest = ensure_segment_defaults(load_json(manifest_file))
     segments = manifest["segments"]
     global_control = str(manifest["globalControl"])
+    pace_cue = str(manifest["paceCue"]) if "paceCue" in manifest else None
+    character_profiles = dict(manifest.get("characterProfiles") or {})
     reference_audio = active_reference(manifest, workspace, no_clean_reference)
     manifest["activeReferenceAudio"] = reference_audio
     write_json(manifest_file, manifest)
@@ -72,7 +75,12 @@ def render_segments(
     for segment in segments:
         if str(segment["id"]) not in selected_ids:
             continue
-        request = compose_control(segment, global_control)
+        request = compose_control(
+            segment,
+            global_control,
+            pace_cue=pace_cue,
+            character_profiles=character_profiles,
+        )
         print(
             f"Rendering {segment['id']} -> {segment['filename']}: {segment['speaker']} | "
             f"{request['policy']} max_len={request['maxLen']}"
@@ -88,6 +96,7 @@ def render_segments(
         if request["maxLen"] is not None:
             kwargs["max_len"] = request["maxLen"]
         wav = model.generate(**kwargs).astype(np.float32, copy=False)
+        wav = normalize_segment_peak(wav)
         output = workspace / str(segment["filename"])
         sf.write(output, wav, sample_rate)
         rendered.append(

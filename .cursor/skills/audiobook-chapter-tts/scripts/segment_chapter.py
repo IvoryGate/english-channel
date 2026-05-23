@@ -21,17 +21,65 @@ from audiobook_workspace import (
 )
 
 
+def html_to_plain(raw: str) -> str:
+    raw = re.sub(r"<script.*?</script>", " ", raw, flags=re.S | re.I)
+    raw = re.sub(r"<style.*?</style>", " ", raw, flags=re.S | re.I)
+    raw = re.sub(r"</?(?:p|div|br|h\d|li|blockquote|section)[^>]*>", "\n", raw, flags=re.I)
+    raw = re.sub(r"<[^>]+>", " ", raw)
+    raw = html.unescape(raw)
+    raw = re.sub(r"[ \t\r\f\v]+", " ", raw)
+    lines = []
+    for line in raw.split("\n"):
+        line = line.strip()
+        if not line:
+            if lines and lines[-1] != "":
+                lines.append("")
+            continue
+        if lines and lines[-1] != "" and len(line.split()) <= 2 and not re.search(r"[.!?:;\"']\s*$", line):
+            lines[-1] = f"{lines[-1]} {line}"
+        else:
+            lines.append(line)
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
+
+
+def read_epub_chapter_file(path: Path, chapter: int) -> str | None:
+    roman = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+    markers = [rf"\bchapter\s+{chapter}\b"]
+    if chapter < len(roman):
+        markers.append(rf"\bchapter\s+{roman[chapter]}\b")
+    best: tuple[int, str] | None = None
+    with zipfile.ZipFile(path) as archive:
+        for name in archive.namelist():
+            if not name.lower().endswith((".xhtml", ".html", ".htm")):
+                continue
+            raw = archive.read(name).decode("utf-8", errors="ignore")
+            if not any(re.search(marker, raw, flags=re.I) for marker in markers):
+                continue
+            text = html_to_plain(raw)
+            for marker in markers:
+                match = re.search(marker, text, flags=re.I)
+                if match:
+                    text = text[match.end() :].strip()
+                    break
+            else:
+                continue
+            next_match = re.search(r"\bchapter\s+([ivxlcdm]+|\d+)\b", text, flags=re.I)
+            if next_match:
+                text = text[: next_match.start()].strip()
+            if len(text) < 200:
+                continue
+            if best is None or len(text) > best[0]:
+                best = (len(text), text)
+    return best[1] if best else None
+
+
 def read_epub_text(path: Path) -> str:
     parts: list[str] = []
     with zipfile.ZipFile(path) as archive:
         names = [name for name in archive.namelist() if name.lower().endswith((".xhtml", ".html", ".htm"))]
         for name in names:
             raw = archive.read(name).decode("utf-8", errors="ignore")
-            raw = re.sub(r"<script.*?</script>", " ", raw, flags=re.S | re.I)
-            raw = re.sub(r"<style.*?</style>", " ", raw, flags=re.S | re.I)
-            raw = re.sub(r"<[^>]+>", " ", raw)
-            raw = html.unescape(raw)
-            parts.append(raw)
+            parts.append(html_to_plain(raw))
     return "\n\n".join(parts)
 
 
@@ -105,7 +153,13 @@ def main() -> None:
     workspace = workspace_path(args.book, args.chapter, args.workspace_root)
     workspace.mkdir(parents=True, exist_ok=True)
 
-    chapter_text = extract_chapter(read_source(Path(args.source)), args.chapter)
+    source_path_arg = Path(args.source)
+    if source_path_arg.suffix.lower() == ".epub":
+        chapter_text = read_epub_chapter_file(source_path_arg, args.chapter)
+        if not chapter_text:
+            chapter_text = extract_chapter(read_epub_text(source_path_arg), args.chapter)
+    else:
+        chapter_text = extract_chapter(read_source(source_path_arg), args.chapter)
     source_path = source_text_path(workspace)
     if args.overwrite or not source_path.exists():
         source_path.write_text(chapter_text + "\n", encoding="utf-8", newline="\n")

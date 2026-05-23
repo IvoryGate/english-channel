@@ -22,9 +22,14 @@ Avoid:
 {
   "bookTitle": "Pride and Prejudice",
   "bookSlug": "pride_and_prejudice",
-  "chapterNumber": 1,
-  "chapterId": "chapter_001",
-  "globalControl": "one consistent cloned audiobook narrator, same voice throughout...",
+  "chapterNumber": 2,
+  "chapterId": "chapter_002",
+  "globalControl": "one consistent cloned audiobook narrator, same voice throughout, calm British literary narration, restrained expression",
+  "characterProfiles": {
+    "Mr. Bennet": "Mr Bennet, dry ironical calm, consistent manner",
+    "Mrs. Bennet": "Mrs Bennet, anxious fluttering, consistent manner"
+  },
+  "cfgValue": 2.35,
   "segments": [
     {
       "id": "001",
@@ -40,6 +45,23 @@ Avoid:
 }
 ```
 
+## Character Profiles
+
+For dialogue consistency, define one stable cue per speaker in `characterProfiles`:
+
+```json
+"characterProfiles": {
+  "Mr. Bennet": "Mr Bennet, dry ironical calm, steady throughout",
+  "Mrs. Bennet": "Mrs Bennet, anxious fluttering, steady throughout"
+}
+```
+
+`compose_control` prepends the speaker profile to dialogue segments. Long dialogue (over 35 words) uses the profile alone unless `renderPolicy: include_delivery_cue` is set. Shorter dialogue uses profile + short `deliveryCue`. Full decision table: `CONTROLS.md`.
+
+### Narration splits
+
+When the model swallows an opening word or a sentence has two delivery beats, use two narration segments (e.g. `002` “It was then disclosed…” and `002b` “Observing his second daughter…”). IDs may use a letter suffix; `order` stays sequential.
+
 ## Delivery Cue Guidelines
 
 Delivery cues should describe small performance changes:
@@ -49,6 +71,27 @@ Delivery cues should describe small performance changes:
 - `mild impatience`
 - `eager to share news, still restrained`
 - `light comic transition`
+
+### Energy that tends to work (VoxCPM2)
+
+Segments **009** / **010** sound strong when:
+
+- `deliveryCue` uses an **active verb** (`bursting out`, `deadpan comic correction`) not a flat label (`matter-of-fact`)
+- dialogue has **13–22 words** (not 2-word quips with huge `max_len`)
+- **character profile + deliveryCue** both apply (long lines need `renderPolicy: include_delivery_cue` if emotional)
+- the text already has exclamation or conflict
+
+Very short lines (≤4 words): automatic `max_len` 56; quiet peaks are boosted after render (peak < 0.45 → 0.88). See `CONTROLS.md`.
+
+### Long dialogue that sounds flat
+
+If a dialogue segment over 35 words renders without enough emotion, add:
+
+```json
+"renderPolicy": "include_delivery_cue"
+```
+
+so profile and `deliveryCue` both reach the model.
 
 Avoid strong acting cues unless requested:
 
