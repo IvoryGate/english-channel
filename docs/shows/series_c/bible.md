@@ -45,6 +45,8 @@ Examples (original):
 
 **No episode numbers** in public titles.
 
+**YouTube title hard limit: 100 characters.** The "no Learn English Tips" rule already keeps C titles short; still author the `youtube.json` `title` field ≤100. `prepare_episode_youtube_packaging.py` fails the pack step on any title over 100.
+
 ## Validation
 
 ```powershell

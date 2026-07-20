@@ -48,6 +48,8 @@ Examples (original):
 
 **No episode numbers** in public titles.
 
+**YouTube title hard limit: 100 characters.** If a title would exceed 100, trim the promise or drop optional clauses. `prepare_episode_youtube_packaging.py` fails the pack step on any title over 100, so author the `youtube.json` `title` field ≤100 from the start.
+
 ## Validation
 
 ```powershell
