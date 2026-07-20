@@ -39,6 +39,21 @@ Primary voice for Jane Austen's `Pride and Prejudice`.
 
 VoxCPM2 needs prompt or reference audio to truly shape timbre. Until those files exist, the worker records the selected profile and applies its generation defaults, but the acoustic timbre remains model-driven.
 
+### ELR dialogue hosts (Series A/B/C)
+
+Podcast voice references for English Listening Room dual-host series:
+
+| Profile ID | Host | Series | Reference path |
+| --- | --- | --- | --- |
+| `elr-series-a-ethan` | Ethan | A — Daily Talk (B1-B2) | `assets/voices/series_a/ethan_reference_clean.wav` |
+| `elr-series-a-nora` | Nora | A — Daily Talk (B1-B2) | `assets/voices/series_a/nora_reference_clean.wav` |
+| `elr-series-b-sam` | Sam | B — First Steps (A2-B1) | `assets/voices/series_b/sam_reference_clean.wav` |
+| `elr-series-b-riley` | Riley | B — First Steps (A2-B1) | `assets/voices/series_b/riley_reference_clean.wav` |
+| `elr-series-c-leo` | Leo | C — Polished English (B2-C1) | `workspace/dialogue_podcast_research/voices/leo/leo_reference_clean.wav` |
+| `elr-series-c-mia` | Mia | C — Polished English (B2-C1) | `workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav` |
+
+Registry of record for render manifests: `workspace/dialogue_podcast_research/voices/voice_profiles.json`. Extract Series A/B references with `extract_host_reference_clips.py`.
+
 ## Smoke Test
 
 Run:

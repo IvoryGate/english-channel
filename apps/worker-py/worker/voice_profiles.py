@@ -69,10 +69,115 @@ DEFAULT_VOICE_PROFILE = VoiceProfile(
     description="The model default voice with repository baseline generation settings.",
 )
 
+ELR_SERIES_A_ETHAN = VoiceProfile(
+    id="elr-series-a-ethan",
+    display_name="ELR Series A — Ethan",
+    description="Warm male daily-talk host for ELR Series A (B1-B2).",
+    prompt_text=(
+        "There's something really beautiful about knowing that people from different places, "
+        "different lives, and different stories are all meeting here through English."
+    ),
+    prompt_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+ELR_SERIES_A_NORA = VoiceProfile(
+    id="elr-series-a-nora",
+    display_name="ELR Series A — Nora",
+    description="Warm female daily-talk host for ELR Series A (B1-B2).",
+    prompt_text=(
+        "It really does, because every time you listen, every time you leave a comment, "
+        "every time you share your thoughts with us, it makes this space feel more real, "
+        "more alive, and more special."
+    ),
+    prompt_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+ELR_SERIES_B_SAM = VoiceProfile(
+    id="elr-series-b-sam",
+    display_name="ELR Series B — Sam",
+    description="Male co-learner friend host for ELR Series B (A2-B1).",
+    prompt_text=(
+        "Okay, I need this, I seriously need this because every time I open a grammar book "
+        "I see things like future perfect continuous and I just close the book."
+    ),
+    prompt_wav_path="assets/voices/series_b/sam_reference_clean.wav",
+    reference_wav_path="assets/voices/series_b/sam_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+ELR_SERIES_B_RILEY = VoiceProfile(
+    id="elr-series-b-riley",
+    display_name="ELR Series B — Riley",
+    description="Female teacher host for ELR Series B (A2-B1).",
+    prompt_text=(
+        "Today, I want to show you exactly how to use just 15 minutes a day "
+        "to practice your English, alone, at home, anywhere you are."
+    ),
+    prompt_wav_path="assets/voices/series_b/riley_reference_clean.wav",
+    reference_wav_path="assets/voices/series_b/riley_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+ELR_SERIES_C_LEO = VoiceProfile(
+    id="elr-series-c-leo",
+    display_name="ELR Series C — Leo",
+    description="Male facilitator host for ELR Series C / Polished English (B2-C1).",
+    prompt_text=(
+        "Neither did I. I found myself lying prone upon a bed of yellowish moss-like "
+        "vegetation, which stretched around me in all directions for interminable miles. "
+        "I seemed to be lying in a deep"
+    ),
+    prompt_wav_path="workspace/dialogue_podcast_research/voices/leo/leo_reference_clean.wav",
+    reference_wav_path="workspace/dialogue_podcast_research/voices/leo/leo_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+ELR_SERIES_C_MIA = VoiceProfile(
+    id="elr-series-c-mia",
+    display_name="ELR Series C — Mia",
+    description="Female listener-voice host for ELR Series C / Polished English (B2-C1).",
+    prompt_text=(
+        "Being because it is no business of mine to look gruff and fight battles, Emily "
+        "endeavoured to correct the superstitious weakness of Annette, though she could "
+        "not entirely subdue her own, to which the latter only replied"
+    ),
+    prompt_wav_path="workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    reference_wav_path="workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
 VOICE_PROFILES = {
     DEFAULT_VOICE_PROFILE.id: DEFAULT_VOICE_PROFILE,
     "default-english-narrator": DEFAULT_VOICE_PROFILE,
     PRIDE_PREJUDICE_REGENCY_NARRATOR.id: PRIDE_PREJUDICE_REGENCY_NARRATOR,
+    ELR_SERIES_A_ETHAN.id: ELR_SERIES_A_ETHAN,
+    ELR_SERIES_A_NORA.id: ELR_SERIES_A_NORA,
+    ELR_SERIES_B_SAM.id: ELR_SERIES_B_SAM,
+    ELR_SERIES_B_RILEY.id: ELR_SERIES_B_RILEY,
+    ELR_SERIES_C_LEO.id: ELR_SERIES_C_LEO,
+    ELR_SERIES_C_MIA.id: ELR_SERIES_C_MIA,
 }
 
 
