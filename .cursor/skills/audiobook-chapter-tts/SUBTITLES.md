@@ -20,7 +20,8 @@ This means externally trimmed segment WAVs are reflected in the SRT without re-r
 
 - Use each segment's `text` field from the manifest.
 - Strip wrapping quotation marks for display.
-- Keep one semantic segment per subtitle cue.
+- Default: one manifest segment becomes one subtitle cue (keeps each speaker turn intact).
+- Split only when a segment exceeds `--max-sec` (default 20 seconds); merged phrase groups stay under that limit and under `--max-chars` (default 84).
 
 ## Output Files
 

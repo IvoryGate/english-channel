@@ -86,6 +86,8 @@ Chapter 002 production omits both; unhurried delivery comes from reference choic
 
 **Opt-in:** `inspect_chapter.py` when the user wants duration ratios and suspicious segments listed.
 
+**Opt-in:** `check_chapter.py` when the user wants a full QC report (`000_chapter_XXX.qc.json`). See `QC.md`.
+
 **Opt-in:** Rerender named ids only:
 
 ```powershell

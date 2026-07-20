@@ -17,7 +17,10 @@ powershell -ExecutionPolicy Bypass -File scripts/setup_project_runtime.ps1 -UseH
 ```powershell
 .\.conda-env\python.exe apps/worker-py/scripts/check_env.py
 .\.conda-env\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --model-id pretrained_models/VoxCPM2
+.\.conda-env\python.exe -m pip install -r apps/worker-py/requirements.txt
 ```
+
+Audiobook chapter QC layer 2 uses `faster-whisper` (included in `apps/worker-py/requirements.txt`).
 
 ## API Integration
 
