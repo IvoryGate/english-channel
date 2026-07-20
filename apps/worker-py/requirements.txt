@@ -6,3 +6,6 @@ rq>=2.3.0
 huggingface-hub>=0.31.0
 modelscope>=1.25.0
 pytest>=8.3.0
+faster-whisper>=1.1.0
+yt-dlp
+playwright>=1.51.0
