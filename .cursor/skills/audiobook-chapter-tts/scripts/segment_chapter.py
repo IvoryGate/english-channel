@@ -142,18 +142,82 @@ def merge_dialogue_turns(sentences: list[str]) -> list[str]:
     return merged
 
 
+def split_sentences(paragraph: str) -> list[str]:
+    protected = paragraph
+    for token in ("Mr.", "Mrs.", "Ms.", "Dr.", "St.", "etc."):
+        protected = protected.replace(token, token.replace(".", "\u0000"))
+    parts = re.split(r"(?<=[.!?])\s+", protected)
+    return [part.replace("\u0000", ".").strip() for part in parts if part.strip()]
+
+
+def infer_dialogue_speaker(text: str, last_dialogue_speaker: str | None) -> str:
+    named = [
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered|inquired|remarked)\s+Mrs\.?\s*Bennet\b", "Mrs. Bennet"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mr\.?\s*Bennet\b", "Mr. Bennet"),
+        (r"\bsaid her mother\b|\bcried her mother\b|\breplied her mother\b", "Mrs. Bennet"),
+        (r"\bsaid her father\b|\breplied her father\b|\bcried her father\b", "Mr. Bennet"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Elizabeth\b", "Elizabeth"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Jane\b", "Jane"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Charlotte\b", "Charlotte"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Miss\s+Lucas\b", "Charlotte"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mary\b", "Mary"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Lydia\b", "Lydia"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Kitty\b", "Kitty"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mr\.?\s*Bingley\b", "Mr. Bingley"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mr\.?\s*Darcy\b", "Mr. Darcy"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Miss\s+Bingley\b", "Miss Bingley"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mrs\.?\s*Hurst\b", "Mrs. Hurst"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Sir\s+William\b", "Sir William"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Lady\s+Lucas\b", "Lady Lucas"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mr\.?\s*Collins\b", "Mr. Collins"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Mr\.?\s*Wickham\b", "Mr. Wickham"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Colonel\s+Fitzwilliam\b", "Colonel Fitzwilliam"),
+        (r"\b(?:said|replied|cried|returned|observed|exclaimed|continued|added|answered)\s+Lady\s+Catherine\b", "Lady Catherine"),
+        (r"\bcried a young Lucas\b|\b(?:said|replied|cried)\s+a young Lucas\b", "Lucas"),
+    ]
+    for pattern, speaker in named:
+        if re.search(pattern, text, re.I):
+            return speaker
+    if re.search(r"\bsaid his lady\b|\breplied his wife\b|\bcried his wife\b", text, re.I):
+        return "Mrs. Bennet"
+    if re.search(r"\breplied he\b|\breturned he\b|\bcried he\b", text, re.I):
+        return "Mr. Bennet"
+    if last_dialogue_speaker == "Charlotte":
+        return "Elizabeth"
+    if last_dialogue_speaker == "Elizabeth":
+        return "Charlotte"
+    if last_dialogue_speaker == "Mrs. Bennet":
+        return "Mr. Bennet"
+    if last_dialogue_speaker == "Mr. Bennet":
+        return "Mrs. Bennet"
+    return last_dialogue_speaker or "Mrs. Bennet"
+
+
+def classify_unit(text: str, last_dialogue_speaker: str | None) -> tuple[str, str]:
+    stripped = text.strip()
+    if re.match(r'^["\u201c]', stripped):
+        return "dialogue", infer_dialogue_speaker(stripped, last_dialogue_speaker)
+    if re.search(r'["\u201c].*["\u201d]', stripped) and re.search(
+        r"\b(said|replied|returned|cried)\b", stripped, re.I
+    ):
+        return "dialogue", infer_dialogue_speaker(stripped, last_dialogue_speaker)
+    if re.search(r"\bMr\. Bennet\b", stripped) and re.search(
+        r"\b(replied|made no answer|was so odd)\b", stripped, re.I
+    ):
+        return "narration", "narrator"
+    return "narration", "narrator"
+
+
 def draft_segments(text: str) -> list[dict[str, object]]:
     paragraphs = [re.sub(r"\s+", " ", item).strip() for item in re.split(r"\n\s*\n", text) if item.strip()]
     segments = []
     order = 1
+    last_dialogue_speaker: str | None = None
     for paragraph in paragraphs:
-        sentences = re.split(r"(?<=[.!?])\s+", paragraph)
-        for sentence in merge_dialogue_turns(sentences):
-            speaker = "narrator"
-            kind = "narration"
-            if sentence.startswith(('"', "\u201c")):
-                kind = "dialogue"
-                speaker = "unknown_speaker"
+        for sentence in merge_dialogue_turns(split_sentences(paragraph)):
+            kind, speaker = classify_unit(sentence, last_dialogue_speaker)
+            if kind == "dialogue":
+                last_dialogue_speaker = speaker
             words = word_count(sentence)
             segments.append(
                 {
