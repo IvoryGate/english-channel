@@ -103,11 +103,11 @@ def env_for() -> dict[str, str]:
 
 def collect(channel: str | None, *, smoke: bool, refresh: bool, env: dict[str, str]) -> int:
     cmd = [str(PY), "-u", str(RESEARCH_SCRIPTS / "collect_youtube_corpus.py")]
+    if channel:
+        cmd += ["--channel", channel]
     if smoke:
         cmd.append("--smoke")
     else:
-        if channel:
-            cmd += ["--channel", channel]
         cmd += ["--candidate-limit", "40", "--top-n", "20", "--language", "en"]
         if refresh:
             cmd.append("--refresh")
@@ -190,8 +190,19 @@ def main() -> int:
         return 0
 
     # 1. smoke canary (mandatory before any real scrape)
-    log("STAGE 1: smoke canary (1 video/channel, candidate-limit 6)")
-    code = collect(None, smoke=True, refresh=False, env=env)
+    # The canary tests ONE channel only (1 video, candidate-limit 6) so it stays
+    # fast even as DEFAULT_CHANNELS grows. Without --channel, collect_youtube_corpus
+    # iterates ALL channels, which made the canary take 10+ min after the 3->10
+    # channel expansion.
+    sys.path.insert(0, str(REPO / "apps" / "worker-py"))
+    DEFAULT_CHANNELS: tuple[dict[str, str], ...] = ()
+    try:
+        from worker.youtube_podcast_research.workspace import DEFAULT_CHANNELS  # noqa: E402
+        smoke_channel = DEFAULT_CHANNELS[0]["slug"]
+    except Exception:
+        smoke_channel = None
+    log(f"STAGE 1: smoke canary (channel={smoke_channel}, 1 video, candidate-limit 6)")
+    code = collect(smoke_channel, smoke=True, refresh=False, env=env)
     stages.append({"stage": "smoke", "exit": code})
     if code != 0:
         write_manifest(stages, "aborted_smoke")
@@ -217,11 +228,7 @@ def main() -> int:
         return 0
 
     if args.all_channels:
-        from worker.youtube_podcast_research.workspace import DEFAULT_CHANNELS  # type: ignore
-        sys.path.insert(0, str(REPO / "apps" / "worker-py"))
-        try:
-            from worker.youtube_podcast_research.workspace import DEFAULT_CHANNELS  # noqa: E402
-        except Exception:
+        if not DEFAULT_CHANNELS:
             log("could not import DEFAULT_CHANNELS; pass --channel instead")
             return 2
         for i, ch in enumerate(DEFAULT_CHANNELS):
