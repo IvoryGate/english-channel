@@ -1,0 +1,330 @@
+# ELR Episode Pipeline — audiobook monitor parity
+
+Durable workflow for Series A/B/C: topic selection → scriptwriting → validation → approval → visual generation → render → QC → master → pack → export.
+
+Companion: [`ELR_YOUTUBE_PUBLISH.md`](ELR_YOUTUBE_PUBLISH.md), [`AUDIO_MASTERING.md`](AUDIO_MASTER.md), [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md), [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
+
+## Episode directory structure
+
+Each episode lives under `workspace/shows/series_X/episode_XXX/` and is split into subdirectories so script, audio, video, subtitles, and reports never mix. The manifest and script-stage files stay at the episode root (the "control center"); generated artifacts go into typed subfolders.
+
+```text
+workspace/shows/series_X/episode_XXX/
+  000_episode_XXX.draft.md                  # script (root)
+  000_episode_XXX.youtube.json              # script metadata: hookText, coverScene, coverAction, coverOutfit*, tags (root)
+  000_episode_XXX.episode_manifest.json     # render plan (root, control center)
+  audio/
+    turns/                                   # per-turn rendered WAVs (VoxCPM output)
+      turn_001.wav ...
+    _master_turns/                           # per-turn mastered WAVs
+      p001_turn_001.wav ...
+    000_episode_XXX.raw.wav                  # concatenated raw
+    000_episode_XXX.master.wav              # mastered program (-16 LUFS / -1.5 dBTP)
+    000_episode_XXX.preloudnorm.wav          # intermediate
+  video/
+    000_episode_XXX.cover_source.png         # generated cover (text baked in)
+    000_episode_XXX.video_bg_source.png       # generated no-text bg
+    000_episode_XXX.thumbnail.png             # final thumbnail
+    000_episode_XXX.video_bg.jpg              # final video bg
+    000_episode_XXX.barwave.mov              # waveform overlay
+    000_episode_XXX.mp4                      # final composed video
+  subtitles/
+    000_episode_XXX.words.json                # aligned words
+    000_episode_XXX.karaoke.ass                # karaoke ASS
+    000_episode_XXX.srt                       # SRT
+  reports/
+    000_episode_XXX.render_report.json
+    000_episode_XXX.qc.json
+    000_episode_XXX.master_report.json
+    000_episode_XXX.subtitle_report.json
+    000_episode_XXX.video_report.json
+    000_episode_XXX.thumbnail_report.json
+    000_episode_XXX.youtube_description.txt
+    000_episode_XXX.youtube_title.txt
+    000_episode_XXX.youtube_packaging.json
+    000_episode_XXX._prompts.json
+```
+
+Old pilot artifacts are archived under `workspace/shows/series_X/_archive/episode_XXX_old_pilot/` and are not read by any tool.
+
+All paths are resolved by `workspace/shows/tools/episode_artifacts.py::artifact_paths()` — the single source of truth. Tools that consume per-turn WAVs use `turn_wav_path()` / `master_turn_wav_path()` so the manifest still stores bare filenames (`turn_001.wav`).
+
+## Topic selection (before scriptwriting)
+
+Topic selection is a real-investigation flow — it is driven by actual competitor research, not static priors. It has two layers:
+
+- **Real investigation (scrapes, anti-ban)** — `scripts/run_research_refresh.py` refreshes the local YouTube corpus via the existing rate-limited research scripts, then re-runs the offline analysis. This is the ONLY step that touches YouTube.
+- **Offline selection (no scraping)** — `refresh_topic_backlog.py` → `select_next_topic.py` → (scriptwriting) → `mark_topic_done.py`. These only read local artifacts and can be run freely with zero ban risk.
+
+### Anti-ban hard rules (non-negotiable)
+
+`run_research_refresh.py` enforces: smoke canary before any real collect; one channel at a time; conservative caps (`--candidate-limit 40`, sleep 5–10s, channel pause 30s+); on ANY rate-limit signal it stops, writes a 60-minute cooldown marker, and refuses further runs until it expires; no discovery+collect in the same run; no parallel scraping. Slow is acceptable; account/IP bans are not.
+
+### Flow
+
+```text
+[real investigation]  run_research_refresh.py --channel <slug>   → fresh corpus + analysis
+[offline]            refresh_topic_backlog.py --all               → merge research into topic_backlog.json
+[offline]            select_next_topic.py --show series_X --apply → pick next topic, write topic_selection_<date>.json
+[offline]            (scriptwriting stage uses the selected topic)
+[offline]            mark_topic_done.py --show series_X --episode episode_YYY --auto  → backlog status = done
+```
+
+Commands:
+
+```powershell
+# 1. Real investigation (one channel, safe) — opt-in, slow
+.\.conda-env\python.exe scripts/run_research_refresh.py --channel jandmaypodcast
+# 1b. Offline re-analyze only (no scraping) — re-rerun analysis after manual corpus edits
+.\.conda-env\python.exe scripts/run_research_refresh.py --skip-scrape
+
+# 2. Feed research into the backlog (offline)
+.\.conda-env\python.exe workspace/shows/tools/refresh_topic_backlog.py --all
+
+# 3. Pick the next topic (offline) — prints the chosen topic; --apply flips it to "selected"
+.\.conda-env\python.exe workspace/shows/tools/select_next_topic.py --show series_a --apply
+
+# 4. ... write the script (see Scriptwriting & validation below) ...
+
+# 5. After the episode is produced, write back (offline)
+.\.conda-env\python.exe workspace/shows/tools/mark_topic_done.py --show series_a --episode episode_003 --auto
+```
+
+`topic_backlog.json` is the single source of truth for what has been produced: each topic carries `status` ∈ {`planned`, `selected`, `draft`, `done`} and, when done, a `producedEpisode` reference. `select_next_topic.py` auto-excludes topics already matched to a produced episode (and auto-marks stale `planned`/`draft` topics `done` if their title matches an existing episode), so topic reuse is prevented structurally rather than by memory.
+
+### Anti-homogeneity (do not clone competitors)
+
+Studying competitors is for **demand signals** (what topics learners watch), not for copying their format, titles, or phrasing. The flow enforces this:
+
+- `refresh_topic_backlog.py` records each candidate's `sourceCompetitor` + `sourceTitle` + a `differentiationAngle` prompt.
+- `select_next_topic.py` exposes those fields in the selection record and applies a **source-diversity bonus** so selection rotates across competitors instead of clustering on one channel's playbook.
+- The scriptwriter MUST read `differentiationAngle` and deliberately diverge in hook, angle, and phrasing — never clone a competitor's title or structure.
+
+The competitor set itself was expanded from the original 3 channels to 10 (see `.cursor/skills/youtube-podcast-research/CHANNELS.md`) so trend signals are not tied to a single channel's style. Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
+
+## Scriptwriting & validation (before render)
+
+Each series has a specialized skill that owns the script draft, the human-feel rules, and the word band. Always start here — do not jump straight to render.
+
+| Series | Skill | Word band | Profile |
+| --- | --- | --- | --- |
+| A · Daily Talk · B1-B2 | `.cursor/skills/series-a-daily-talk/` | 1800–2400 spoken words | `series_a` |
+| B · First Steps · A2-B1 | `.cursor/skills/series-b-first-steps/` | 1400–1900 spoken words | `series_b` |
+| C · Polished English · B2-C1 | `.cursor/skills/series-c-polished-english/` | 2000–2800 spoken words | `series_c` |
+
+The legacy `dialogue-podcast-scriptwriting` skill remains as a routing fallback and still hosts `validate_podcast_script.py`.
+
+### Workflow
+
+1. **Read the series skill** (`SKILL.md` + `STYLE.md` + `SCRIPT_TEMPLATE.md` + `DELIVERY.md`) and the series bible (`docs/shows/series_X/bible.md`). Get the topic from `select_next_topic.py --show <series> --apply` (writes `topic_selection_<date>.json`); or fall back to a user brief. Reject political / duplicate themes — the selector already excludes produced topics, but confirm against `ELR_YOUTUBE_PUBLISH.md` hard rules.
+2. **Draft** using `SCRIPT_TEMPLATE.md` — frozen cold-open chassis, brand name "English Listening Room" spoken once, hook template, 起承转合 per the series ratio, every turn tagged `[Delivery: …]`, `characterProfiles` block in header.
+3. **Validate** the draft until `ok=true`:
+
+```powershell
+.\.conda-env\python.exe .cursor/skills/dialogue-podcast-scriptwriting/scripts/validate_podcast_script.py `
+  workspace/shows/series_X/episode_YYY/000_episode_YYY.draft.md --profile series_X
+```
+
+The validator checks: title, description, exactly two hosts, balanced turns, CTA present, word count inside the band, required structure markers (`[Teaching Plan]`, `[Structure Map]`, `[Early Contract]`, `[Host Intro]`, `[Micro-Pocket]`, `[Recycle]`, `[Word Tour]` for A/C; `[Teaching Plan]`, `[Episode Contract]` for B), `delivery:` / `emotion` fields present, and no legacy `speed` controls. Word bands are hardcoded in `PROFILE_DEFAULTS` inside the validator.
+
+4. **Stop and wait for human approval.** Do not proceed to render until the user confirms. Do not auto-fix content issues without human confirmation — only fix validator-level issues (length, missing markers) yourself.
+
+### Hard rules (all series)
+
+- **Brand name**: every episode must speak "English Listening Room" at least once (opening, after dual intro).
+- **Delivery cues**: every turn carries `[Delivery: …]`. No exceptions.
+- **No `speed` controls** in the draft — all series use `speed=1.0` (the validator rejects the word `speed` anywhere in the text).
+- **No politics, no topic reuse**.
+
+## Tools map
+
+| Stage | Tool | Audiobook analogue |
+| --- | --- | --- |
+| Topic selection (real investigation) | `scripts/run_research_refresh.py` (scrapes, anti-ban) | (none — audiobook uses provided chapters) |
+| Topic selection (offline) | `refresh_topic_backlog.py` → `select_next_topic.py` → `mark_topic_done.py` | (none) |
+| Script draft + validation | series skill + `validate_podcast_script.py` | (audiobook: source text QC) |
+| Thumbnail + video bg | `render_episode_thumbnail.py` (now step 0 in pack) | `cover_pipeline.py` |
+| Render turns + raw concat + QC | `render_episode.py` | `render_chapter.py` |
+| Stable GPU launch | `scripts/monitor_episode_render.py` (per-turn/batch + retry) | `monitor_book_chapters.py` |
+| Full production | `scripts/monitor_episode_production.py --detach` | monitor + packaging |
+| QC report file | `check_episode.py --write-report` | `check_chapter.py --write-report` |
+| Master | `master_episode_audio.py` | (audiobook: peak boost only) |
+| YouTube packaging (title + description + chapter timestamps) | `prepare_episode_youtube_packaging.py` (step 5 in pack) | `prepare_youtube_packaging.py` |
+| Full pack | `pack_episode.py` / `scripts/launch_episode_pack.py --detach` | monitor + packaging |
+| Subtitles | `generate_episode_subtitles.py --scripted-only --master-turns-dir` | `generate_chapter_srt.py` |
+
+## Full production (after script approval)
+
+**Recommended:** one detached monitor job (render → master → pack → export):
+
+```powershell
+& $py scripts/monitor_episode_production.py `
+  --show series_b --episode episode_001 `
+  --workspace workspace/shows/series_b/episode_001 `
+  --episode-num 1 --force --detach
+```
+
+Log: `logs/monitor_episode_series_b_episode_001.log`
+
+### Why per-turn monitor?
+
+Loading VoxCPM once for 134 turns in one process often CUDA-crashes on 8GB GPUs.
+`monitor_episode_render.py` renders **one turn per subprocess** (default `--batch-size 1`),
+retries failed batches, resumes when WAVs already exist, then compose+QC once at the end.
+
+## Visual generation & pack (after script approval)
+
+Visual identity is defined in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md) (palette / fonts / layout / per-episode flexibility). Thumbnail + video bg generation is now **step 0 of `pack_episode.py`** — it runs a `hookText` consistency check first, then calls `render_episode_thumbnail.py`.
+
+### Before pack: generate the cover scene
+
+1. **Print prompts** (no image-gen in this repo):
+
+```powershell
+& $py workspace/shows/tools/render_episode_thumbnail.py `
+  --show series_b --episode episode_001 `
+  --workspace workspace/shows/series_b/episode_001 `
+  --print-prompts
+```
+
+2. **Image-gen tool** (external) → save outputs as:
+   - `000_episode_XXX.cover_source.png` (full cover, typography baked in)
+   - `000_episode_XXX.video_bg_source.png` (no-text background)
+
+3. **Fill `youtube.json`** with `hookText` + `coverScene` / `coverAction` / `coverOutfitFemale` / `coverOutfitMale`. **Never reuse the previous episode's scene/outfit/action** — see per-episode flexibility policy in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
+
+### Pack (one-dragon)
+
+Step 0 (thumbnail + hookText check) runs automatically unless `--skip-thumbnail`:
+
+```powershell
+& $py scripts/launch_episode_pack.py `
+  --show series_b --episode episode_001 `
+  --workspace workspace/shows/series_b/episode_001 `
+  --episode-num 1 `
+  --detach
+```
+
+If the cover scene is not ready yet, skip step 0:
+
+```powershell
+& $py scripts/launch_episode_pack.py ... --detach --skip-thumbnail
+```
+
+## Render (after manifest)
+
+```powershell
+$py = ".\.conda-env\python.exe"
+$man = "workspace/shows/series_b/episode_001/000_episode_001.episode_manifest.json"
+
+# Long GPU job — stable launcher (same idea as monitor):
+& $py scripts/run_episode_render.py --manifest $man --skip-existing
+
+# Or direct (shorter jobs):
+& $py workspace/shows/tools/render_episode.py --manifest $man
+```
+
+`render_episode.py` by default:
+1. Renders turns (one VoxCPM load)
+2. Concats `000_episode_XXX.raw.wav`
+3. **QC self-check** in chat (layer 1 + ASR on flagged turns)
+
+Flags: `--no-compose`, `--no-self-check`, `--segments p003`, `--skip-existing`.
+
+Selective rerender then recompose:
+
+```powershell
+& $py workspace/shows/tools/render_episode.py --manifest $man --segments p003
+```
+
+## Pack (after human audio approval)
+
+One job: **thumbnail (step 0) → QC → master → scripted subs → compose → export**. See [Visual generation & pack](#visual-generation--pack-after-script-approval) above for step 0 details.
+
+```powershell
+& $py scripts/launch_episode_pack.py `
+  --show series_b --episode episode_001 `
+  --workspace workspace/shows/series_b/episode_001 `
+  --episode-num 1 `
+  --detach
+```
+
+Log: `logs/episode_pack_*.log`. Subtitles use **scripted-only** (no 134× Whisper).
+
+Resume when master exists:
+
+```powershell
+& $py scripts/launch_episode_pack.py ... --detach --skip-master
+```
+
+Skip the cover/thumbnail step (e.g. cover not generated yet):
+
+```powershell
+& $py scripts/launch_episode_pack.py ... --detach --skip-thumbnail
+```
+
+## YouTube packaging (step 5, post-audio)
+
+After audio is rendered + mastered, `prepare_episode_youtube_packaging.py` builds the upload title and description **with real chapter timestamps** from the spoken turn durations. This mirrors the audiobook's `prepare_youtube_packaging.py`.
+
+### Why post-audio
+
+Chapter timestamps must reflect the actual spoken timeline, so this step runs only after turn WAVs exist. If audio is missing it fails fast with `Missing turn audio for timeline: ...turn_001.wav. Run render first.` — do not run it before render.
+
+### What it does
+
+1. Builds a cumulative turn timeline from rendered turn WAV durations + `interTurnSilenceSec`.
+2. Resolves chapter markers to **video timestamps** (audio start + `intro_offset_sec`, default 3s, matching the composed video's intro).
+3. Assembles the description: opening hook (`youtube.json` `description`) → chapter timestamps block → optional highlights / engagement question → subscribe CTA → hashtags (from `tags`).
+4. Writes to `reports/`:
+   - `000_episode_XXX.youtube_description.txt` (consumed by the export step)
+   - `000_episode_XXX.youtube_title.txt`
+   - `000_episode_XXX.youtube_packaging.json` (resolved markers + timeline audit)
+
+### Marker sources (first non-empty wins)
+
+1. **Explicit** — `youtube.json` `chapterMarkers`: `[{"turnId": "p001", "label": "Intro"}, ...]`. Use this for hand-tuned chapters.
+2. **Auto-derived** — the draft's `## ` section headers (起承转合 beats: Intro Hook, Teaching Dialogue, Micro-Pocket, Recycle, Word Tour, Recap And CTA, …), each mapped to the first dialogue turn that follows it in the draft. This is the default and needs no extra authoring.
+
+### Standalone run
+
+```powershell
+& $py workspace/shows/tools/prepare_episode_youtube_packaging.py `
+  --workspace workspace/shows/series_b/episode_001 `
+  --episode episode_001
+```
+
+It is also wired as **step 5 of `pack_episode.py`** (between compose and export), so the one-dragon pack produces it automatically.
+
+## Agent behavior
+
+### Render (VoxCPM)
+
+1. Use `scripts/run_episode_render.py --manifest ...` (not nested Cursor Wait chains).
+2. For full episode: `--skip-existing` to resume.
+3. After render completes, **summarize QC self-check** from stdout; wait for human before pack.
+
+### Pack (master + video)
+
+1. Start **`scripts/launch_episode_pack.py --detach`** (or skill wrapper under `dialogue-podcast-scriptwriting/scripts/`).
+2. Tell user **log path** and episode id; do **not** block chat on compose/ffmpeg.
+3. Poll log or artifacts when user asks; do not restart if job is already running.
+4. After pack/export completes, write the topic back as done so the next `select_next_topic.py` run excludes it: `workspace/shows/tools/mark_topic_done.py --show <series> --episode <episode_id> --auto`.
+
+### Do not
+
+- Run 134-turn Whisper subtitle alignment in agent shell (use `--scripted-only`).
+- Nest long jobs inside Cursor agent blocking shell without `--detach`.
+- Auto-fix flagged turns without human confirmation.
+
+## Revision history
+
+- 2026-07-20: Expanded the competitor set from 3 to 10 channels and added anti-homogeneity guardrails. `DEFAULT_CHANNELS` now includes 6 dual-host competitor podcasts surfaced by discovery + BBC Learning English as a trend reference (see `CHANNELS.md`). `refresh_topic_backlog.py` now records `sourceCompetitor` + `sourceTitle` + `differentiationAngle` per candidate; `select_next_topic.py` exposes those in the selection record and applies a source-diversity bonus so selection rotates across competitors instead of clustering on one channel's playbook. Rationale: tracking only the original 3 channels risked both narrow trend bias and homogeneity (copying a single competitor's style → reportable + uncompetitive). Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
+- 2026-07-20: Added a real-investigation Topic selection stage before scriptwriting. `scripts/run_research_refresh.py` is the only step that scrapes — it wraps the existing rate-limited research scripts with anti-ban hard rules (smoke canary first, one channel at a time, conservative caps, 60-min cooldown on any rate-limit signal, no parallel, no discovery+collect in one run). Three offline scripts (no scraping) consume the research: `refresh_topic_backlog.py` merges research signals into `topic_backlog.json`, `select_next_topic.py` scores planned topics by trend signal + series fit and picks the next one (writing `topic_selection_<date>.json`), and `mark_topic_done.py` writes back `status=done` + `producedEpisode` after an episode is produced. The selector auto-excludes topics already matched to a produced episode, so topic reuse is prevented structurally. `topic_backlog.json` is now the single source of truth for what has been produced.
+- 2026-07-20: QC now raises on issues + YouTube upload texts co-located with final products + no-text video background. (1) `check_episode.py` gained `--strict` (exit 1 when any segment is flagged for review or chapter-level flags fire, e.g. `HAS_REVIEW_SEGMENTS`/`COMPOSE_DRIFT`); `pack_episode.py` passes `--strict` so QC problems stop the pipeline and print a clear message instead of silently passing. (2) `export_episode_to_youtube_dir.py` now also writes `000_episode_XXX.youtube_title.txt` + `000_episode_002.youtube_description.txt` into the workspace `video/` dir (next to the mp4), so the upload-ready copy/paste texts sit with the final program — not only in `reports/` and the `H:\Youtube\<Show>\episodeNN\` export folder. (3) Video background must be a separate no-text image: `render_episode_thumbnail.py --video-bg-from <video_bg_source.png>` consumes a text-free scene render (`videoBgImagePrompt`: "absolutely no text/letters/logos/watermarks"); without it `video_bg.jpg` falls back to the text-baked cover and the cover's baked words leak into the video behind the subtitles. Generate `cover_source.png` (3:2, with baked hook text) AND `video_bg_source.png` (no text) per episode.
+- 2026-07-19: GPU/hardware video encoding + redundant-QC skip — `compose_media_video.py` auto-detects NVENC (NVIDIA) and falls back to libx264 `veryfast`; QSV/AMF opt-in via `--encoder`. Encoder is real-probed (an outdated NVIDIA driver lists h264_nvenc but can't open it). Default libx264 preset lowered to `veryfast` (quality gated by VBR bitrate caps, not preset). `run_all_series_full.py` now defaults `--qc-no-asr` so pack's QC skips Whisper (render's compose_and_qc already ran full ASR), removing the redundant ~2–3 min/series ASR pass.
+- 2026-07-19: Added YouTube packaging stage (step 5 of `pack_episode.py`) — `prepare_episode_youtube_packaging.py` builds the upload title + description with real chapter timestamps from rendered turn durations; auto-derives markers from draft `## ` headers or uses explicit `youtube.json` `chapterMarkers`; runs post-audio only.
+- 2026-07-19: Episode directory restructure — split into `audio/` `video/` `subtitles/` `reports/` subdirs; `artifact_paths()` is the single source of truth; old pilot artifacts archived under `_archive/`.
+- 2026-07-19: Added Visual generation & pack stage — step 0 of `pack_episode.py` now does hookText consistency check + thumbnail/video bg generation; `--skip-thumbnail` flag; references `VISUAL_IDENTITY.md`.
+- 2026-07-19: Added Scriptwriting & validation stage (before render) — wires the three specialized series skills + `validate_podcast_script.py` word-band gate into the main pipeline so agents do not skip straight to render.
+- 2026-07-17: Audiobook-parity render self-check + detached pack launcher + scripted subtitles.
