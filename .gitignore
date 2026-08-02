@@ -12,9 +12,12 @@ __pycache__/
 venv/
 .conda-env/
 artifacts/
+logs/
+videos/
 tmp/
 pretrained_models/
 books/
 assets/
 reference/
 workspace/
+/_tmp_*.json

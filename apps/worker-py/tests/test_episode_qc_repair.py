@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "workspace" / "shows" / "tools"))
 
 from check_episode import blocking_segment_ids, has_blocking_qc_issues  # noqa: E402
