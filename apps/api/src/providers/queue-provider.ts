@@ -1,20 +1,33 @@
 import { Queue } from "bullmq";
 
-const queueName = "voxcpm-tts";
+export const TTS_QUEUE_NAME = "voxcpm-tts";
 
-export function createQueueProvider() {
-  const connection = {
+export type TtsQueuePayload = {
+  jobId: string;
+  chapterId: string;
+  text: string;
+  voiceProfile: string;
+};
+
+export function getQueueConnection() {
+  return {
     host: process.env.REDIS_HOST ?? "127.0.0.1",
     port: Number(process.env.REDIS_PORT ?? 6379)
   };
-  const queue = new Queue(queueName, { connection });
+}
+
+export function createQueueProvider() {
+  const queue = new Queue<TtsQueuePayload>(TTS_QUEUE_NAME, { connection: getQueueConnection() });
 
   return {
-    async enqueueTtsJob(payload: { jobId: string; chapterId: string; text: string; voiceProfile?: string }) {
+    async enqueueTtsJob(payload: TtsQueuePayload) {
       await queue.add("generate-chapter-audio", payload, {
         attempts: 3,
         removeOnComplete: true
       });
+    },
+    async close() {
+      await queue.close();
     }
   };
 }

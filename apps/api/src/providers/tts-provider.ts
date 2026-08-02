@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 
-type TtsResult = {
+export type TtsResult = {
   jobId: string;
   chapterId: string;
   modelId: string;
@@ -9,7 +9,11 @@ type TtsResult = {
   audioPath: string;
 };
 
-export function createTtsProvider() {
+export type TtsProvider = {
+  runInline(payload: { jobId: string; chapterId: string; text: string; voiceProfile: string }): Promise<TtsResult>;
+};
+
+export function createTtsProvider(): TtsProvider {
   return {
     runInline(payload: { jobId: string; chapterId: string; text: string; voiceProfile: string }) {
       const pythonCmd =

@@ -39,3 +39,5 @@ $env:PYTHON_BIN = ".\.conda-env\python.exe"
 $env:VOXCPM_MODEL_ID = "pretrained_models/VoxCPM2"
 $env:JOB_EXECUTION_MODE = "inline"
 ```
+
+For normal asynchronous operation, omit `JOB_EXECUTION_MODE` (or set it to `queue`). The API process owns the BullMQ consumer and launches the Python renderer; do not start a separate Python RQ worker.

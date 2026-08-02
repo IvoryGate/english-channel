@@ -1,6 +1,7 @@
 import type { CreateTtsJobInput } from "../schema/tts.js";
 import {
   createJob,
+  getJob,
   listJobs,
   markJobCompleted,
   markJobFailed,
@@ -37,7 +38,7 @@ export function createTtsService(providers: Providers) {
           voiceProfile: input.voiceProfile
         });
       }
-      return job;
+      return getJob(job.id) ?? job;
     },
     list: listJobs
   };
