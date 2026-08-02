@@ -15,9 +15,12 @@ Legacy `workspace/polished_english/` is deprecated; episode_001 lives under `ser
 
 ## Research Inputs (other skills)
 
+Topic investigation flow: [`docs/shows/EPISODE_PIPELINE.md`](../../../docs/shows/EPISODE_PIPELINE.md) § Topic selection · channel list [`docs/shows/COMPETITOR_CHANNELS.md`](../../../docs/shows/COMPETITOR_CHANNELS.md).
+
 ```text
-youtube-podcast-research   → discover / collect / score trending
-youtube-corpus-analysis    → patterns / beats / briefs / report
+run_research_refresh.py --channel <slug>   → scrape one competitor (anti-ban)
+refresh_topic_backlog.py --all             → merge into topic_backlog.json
+select_next_topic.py --show series_X --apply
 ```
 
 Key handoff files:

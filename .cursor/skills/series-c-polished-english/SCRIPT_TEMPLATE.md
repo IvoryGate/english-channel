@@ -155,9 +155,11 @@ For each item:
 ```
 [Delivery: slow, clear]
 Leo:  [Phrase]. [English gloss — one sentence]. Like when [brief example].
-Mia:  [Phrase].
+Mia:  [Phrase] — got it.
 Leo:  Nice.
 ```
+
+**Mirror echo rule (TTS):** avoid bare one-word turns (`Hook.` / `Tangent.` alone). VoxCPM often hallucinates 5–9s on single-word mirrors and fails QC. Use a 2–4 word echo (`Hook — got it.`, `Lose the table.`) or repeat the phrase in a short sentence.
 
 **[Short close + optional light CTA]**
 

@@ -25,6 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
 RENDER_EPISODE = REPO_ROOT / "workspace" / "shows" / "tools" / "render_episode.py"
 TOOLS_DIR = REPO_ROOT / "workspace" / "shows" / "tools"
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE, validate_render_batch_size  # noqa: E402
 sys.path.insert(0, str(TOOLS_DIR))
 from episode_artifacts import turn_wav_path  # noqa: E402
 
@@ -200,6 +202,7 @@ def compose_and_qc(
     device: str,
     logger: MonitorLogger,
     retry_on_failure: int,
+    self_check: bool,
 ) -> int:
     attempts = 1 + max(retry_on_failure, 0)
     for attempt in range(1, attempts + 1):
@@ -212,7 +215,7 @@ def compose_and_qc(
             turn_ids=[],
             device=device,
             compose=True,
-            self_check=True,
+            self_check=self_check,
             skip_existing=True,
         )
         # No segments + all wavs exist => skip model load, compose + QC only.
@@ -236,6 +239,7 @@ def monitor_render(
     force: bool,
     retry_on_failure: int,
     cfg: float,
+    no_self_check: bool,
 ) -> int:
     workspace = manifest_path.parent
     patch_cfg(manifest_path, cfg, logger)
@@ -278,6 +282,7 @@ def monitor_render(
         device=device,
         logger=logger,
         retry_on_failure=retry_on_failure,
+        self_check=not no_self_check,
     )
 
 
@@ -286,9 +291,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--cfg", type=float, default=2.15)
-    parser.add_argument("--batch-size", type=int, default=1, help="Turns per subprocess (1 = most stable).")
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=DEFAULT_RENDER_BATCH_SIZE,
+        help=f"Turns per subprocess (default {DEFAULT_RENDER_BATCH_SIZE}; one model load per batch).",
+    )
     parser.add_argument("--force", action="store_true", help="Re-render all turns even if WAV exists.")
     parser.add_argument("--retry-on-failure", type=int, default=2, help="Retries per batch (default 2).")
+    parser.add_argument(
+        "--no-self-check",
+        action="store_true",
+        help="Skip Whisper ASR in render compose+QC (pack runs layer-1 QC only with --qc-no-asr).",
+    )
     parser.add_argument("--python", type=Path, default=DEFAULT_PYTHON)
     parser.add_argument("--log-file", type=Path, default=REPO_ROOT / "logs" / "monitor_episode_render.log")
     return parser.parse_args()
@@ -296,6 +311,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    validate_render_batch_size(args.batch_size)
     if not args.python.is_file():
         print(f"error: python not found: {args.python}", file=sys.stderr)
         return 2
@@ -321,6 +337,7 @@ def main() -> int:
             force=args.force,
             retry_on_failure=args.retry_on_failure,
             cfg=args.cfg,
+            no_self_check=args.no_self_check,
         )
     finally:
         logger.log(

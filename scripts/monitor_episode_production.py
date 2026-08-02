@@ -19,6 +19,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
 MONITOR_RENDER = REPO_ROOT / "scripts" / "monitor_episode_render.py"
 PACK_SCRIPT = REPO_ROOT / "workspace" / "shows" / "tools" / "pack_episode.py"
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE, GpuProductionLock, release_gpu_lock, validate_render_batch_size  # noqa: E402
 
 
 def utc_now() -> str:
@@ -57,6 +59,8 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
         ]
         if args.force:
             render_cmd.append("--force")
+        if args.qc_no_asr:
+            render_cmd.append("--no-self-check")
         write(f"render: {' '.join(render_cmd)}")
         proc = subprocess.run(render_cmd, cwd=str(REPO_ROOT), text=True, capture_output=True)
         if proc.stdout:
@@ -86,6 +90,7 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
         ]
         if args.qc_no_asr:
             pack_cmd.append("--qc-no-asr")
+        pack_cmd.extend(["--compose-encoder", "libx264"])
         write(f"pack: {' '.join(pack_cmd)}")
         proc = subprocess.run(pack_cmd, cwd=str(REPO_ROOT), text=True, capture_output=True)
         if proc.stdout:
@@ -106,7 +111,7 @@ def main() -> int:
     parser.add_argument("--youtube-root", default=r"H:\Youtube")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--cfg", type=float, default=2.15)
-    parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument("--batch-size", type=int, default=DEFAULT_RENDER_BATCH_SIZE)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--retry-on-failure", type=int, default=2)
     parser.add_argument("--qc-no-asr", action="store_true")
@@ -114,6 +119,8 @@ def main() -> int:
     parser.add_argument("--python", default=str(DEFAULT_PYTHON))
     parser.add_argument("--detach", action="store_true")
     args = parser.parse_args()
+
+    validate_render_batch_size(args.batch_size)
 
     log_path = Path(args.log) if args.log else REPO_ROOT / "logs" / f"monitor_episode_{args.show}_{args.episode}.log"
 
@@ -136,7 +143,9 @@ def main() -> int:
         print(f"pid={proc.pid}", flush=True)
         return 0
 
-    return run_production(args, log_path)
+    label = f"monitor_{args.show}_{args.episode}"
+    with GpuProductionLock(label):
+        return run_production(args, log_path)
 
 
 if __name__ == "__main__":

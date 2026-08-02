@@ -24,26 +24,26 @@ Image-generation tools rarely emit a true 16:9 frame (they produce 3:2 1536x1024
 | `center-crop` | Scale to fill, crop top+bottom equally | Rare; only when text is centered |
 | `contain` | Scale to fit, pad sides with edge color | Fallback; leaves solid side bars |
 | `blur-fill` | Scale to fill width, center-crop to height, light Gaussian blur | Soft color-matched backdrop layer (no readable text) |
-| `blur-fill-composite` | `blur-fill` backdrop + sharp cover contained on top, **rounded corners + feathered edges + small margin** | **Episode thumbnails / covers** (`thumbnail.png`, `thumbnail_cover.jpg`) |
+| `blur-fill-composite` | `blur-fill` backdrop + sharp cover **height-filled** (no top/bottom gap), rounded corners + feather | **Episode thumbnails / covers** (`thumbnail.png`, `thumbnail_cover.jpg`) |
 
 ### Episode cover = `blur-fill-composite` (default)
 
 The episode cover (with baked-in text) is normalized with `blur-fill-composite` so that:
 
 1. The 16:9 frame is **seamless** — no solid side bars; the sides are a soft blurred extension of the cover itself.
-2. All baked-in text is **preserved** — the sharp cover is *contained* (scaled to fit), never cropped, so edge text (level badge, brand tag) is never cut.
+2. All baked-in text is **preserved** — the sharp cover scales to **fill frame height** (no top/bottom gap); if wider than 16:9, center-crop horizontally only.
 3. The cover **blends softly** into the backdrop via rounded corners + feathered edges instead of a hard seam.
 
 Tuned defaults (in `normalize_youtube_cover.py::_blur_fill_composite`):
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `blur_radius` | `8.0` | Light blur on the backdrop (若隐若现 — shapes/colors visible, text unreadable) |
-| `safe_margin` | `0.04` | 4% inset on all sides so the cover floats inside the frame |
+| `blur_radius` | `24.0` | Strong blur on the side backdrop (color wash, no readable text) |
+| `safe_margin` | `0.0` | No inset — sharp layer fills height edge-to-edge |
 | `corner_radius` | `48` | Rounded-corner radius in pixels |
 | `feather` | `16.0` | Edge feather width in pixels for the soft transition |
 
-> If the backdrop still feels too soft or too sharp, tune `blur_radius` (lower = sharper, higher = softer). If text crowds the frame edge, raise `safe_margin`. These are the only knobs; do **not** switch the cover to `auto`/`top-crop` — that re-introduces text cropping.
+> Tune `blur_radius` only (lower = sharper backdrop, higher = softer). Do **not** switch the cover to `auto`/`top-crop` — that re-introduces text cropping. Do **not** raise `safe_margin` unless a rare cover needs horizontal inset only.
 
 ### Video background = `auto` (direct crop)
 

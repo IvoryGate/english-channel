@@ -99,14 +99,14 @@ Studying competitors is for **demand signals** (what topics learners watch), not
 - **Candidate generation (`refresh_topic_backlog.py`)**
   - Each candidate records `sourceCompetitor` + `sourceTitle` + a `differentiationAngle` prompt.
   - **Per-channel cap** — at most `MAX_PER_CHANNEL_PER_SERIES = 3` candidates per (competitor channel, series) per refresh. Without this, one high-view channel (e.g. "Speak English With Class", which dominated the trending list 18/30) would flood a single series' backlog with clones of its own playbook. The cap forces candidate diversity across channels even when one channel's videos rank highest by view count.
-  - **Channel → CEFR mapping** — `CHANNEL_LEVEL_HINT` assigns each known competitor channel to its correct ELR series (e.g. `Speak English With Class` / `English With HOPE` → series_b A2-B1; `Max & Mia` / `J and May` / `BBC Learning English` → series_a B1-B2; `High Level Listening` / `English Unleashed` → series_c B2-C1). Falls back to spine-keyword heuristics for unknown channels. This prevents an "Easy English" channel's topics from landing in series_c, or an advanced channel's topics from landing in series_b.
+  - **Channel → CEFR mapping** — `CHANNEL_LEVEL_HINT` assigns each known competitor channel to its correct ELR series (e.g. `Speak English With Class` / `English With HOPE` → series_b A2-B1; `Max & Mia` / `J and May` / `English Goal Podcast` / `BBC Learning English` → series_a B1-B2; `High Level Listening` / `English Unleashed` → series_c B2-C1). Falls back to spine-keyword heuristics for unknown channels. This prevents an "Easy English" channel's topics from landing in series_c, or an advanced channel's topics from landing in series_b.
   - **Stop-word-filtered dedup** — `title_overlap` filters ELR title boilerplate (`english`, `podcast`, `learn`, `daily`, `talk`, `life`, `fast`, `minutes`, `real`, `conversation`, …) before comparing. Without this filter, the shared wrapper `"English Podcast For <X> | Learn English"` made every research candidate collide with every existing topic as a false duplicate, so **fresh research data was silently dropped and the backlog never grew beyond the static seed**. This was the critical bug that made "real investigation" not actually reach the backlog; the stop-word filter is what makes the research → backlog path real.
 - **Selection (`select_next_topic.py`)**
   - Exposes `sourceCompetitor` / `sourceTitle` / `differentiationAngle` in the selection record and applies a **source-diversity bonus** so selection rotates across competitors instead of clustering on one channel's playbook.
 - **Scriptwriting**
   - The scriptwriter MUST read `differentiationAngle` and deliberately diverge in hook, angle, and phrasing — never clone a competitor's title or structure.
 
-The competitor set itself was expanded from the original 3 channels to 10 (see `.cursor/skills/youtube-podcast-research/CHANNELS.md`) so trend signals are not tied to a single channel's style. Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
+The competitor set tracks dual-host English-learning podcasts plus BBC Learning English as a trend reference (see [`COMPETITOR_CHANNELS.md`](COMPETITOR_CHANNELS.md)). Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
 
 ## Scriptwriting & validation (before render)
 
@@ -175,8 +175,32 @@ Log: `logs/monitor_episode_series_b_episode_001.log`
 ### Why per-turn monitor?
 
 Loading VoxCPM once for 134 turns in one process often CUDA-crashes on 8GB GPUs.
-`monitor_episode_render.py` renders **one turn per subprocess** (default `--batch-size 1`),
-retries failed batches, resumes when WAVs already exist, then compose+QC once at the end.
+`monitor_episode_render.py` renders **batches of turns per subprocess** (default `--batch-size 10`):
+one model load → up to N turns → unload. Retries failed batches, resumes when WAVs already exist,
+then compose+QC once at the end. Do **not** set batch-size to the full episode turn count.
+
+### GPU memory policy (8GB / stability)
+
+One heavy GPU job at a time — enforced by `scripts/gpu_production_lock.py` (`logs/gpu_production.lock`).
+
+| Rule | Why |
+|------|-----|
+| **`--batch-size` default 10, max 20** | One VoxCPM load per batch; avoids per-turn reload overhead. Entire episode in one process still OOMs |
+| **`torch.cuda.empty_cache()` between turns** | Keeps VRAM stable within a batch on 8GB GPUs |
+| **Global GPU lock** on all production entry points | Prevents duplicate relaunches stacking 2× VoxCPM or VoxCPM + NVENC |
+| **Render `--no-self-check` when pack uses `--qc-no-asr`** | Skips redundant Whisper load after turns; pack runs layer-1 QC only |
+| **Pack compose defaults to `libx264`** (CPU) | ffmpeg NVENC contends with VoxCPM on the same NVIDIA GPU |
+| **Serial series** in `run_all_series_full.py` / `resume_episode_production.py` | A → B → C; never parallel renders |
+
+Entry points that acquire the lock: `monitor_episode_production.py`, `run_all_series_full.py`, `resume_episode_production.py`, `run_episode_pack.py`. Child render/pack subprocesses inherit the parent lock (same tree).
+
+**Do not** start a second production script while one holds the lock. If a process crashed and left a stale lock, delete `logs/gpu_production.lock` only after confirming the PID is dead.
+
+Resume after interrupt:
+
+```powershell
+& $py scripts/resume_episode_production.py --episode episode_003 --episode-num 3 --detach
+```
 
 ## Visual generation & pack (after script approval)
 
@@ -197,7 +221,7 @@ Visual identity is defined in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md) (palett
    - `000_episode_XXX.cover_source.png` (full cover, typography baked in)
    - `000_episode_XXX.video_bg_source.png` (no-text background)
 
-3. **Fill `youtube.json`** with `hookText` + `coverScene` / `coverAction` / `coverOutfitFemale` / `coverOutfitMale`. **Never reuse the previous episode's scene/outfit/action** — see per-episode flexibility policy in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
+3. **Fill `youtube.json`** with `coverScene` / `coverAction` / `coverOutfitFemale` / `coverOutfitMale` / `tags`. **Do not hand-write `hookText` or `title`** — both are auto-synced from draft `Title:` when you run `prepare_episode_manifest.py` or at pack step 0 (`episode_youtube_meta.py`). **Never reuse the previous episode's scene/outfit/action** — see per-episode flexibility policy in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
 
 ### Pack (one-dragon)
 
@@ -237,11 +261,24 @@ $man = "workspace/shows/series_b/episode_001/000_episode_001.episode_manifest.js
 
 Flags: `--no-compose`, `--no-self-check`, `--segments p003`, `--skip-existing`.
 
-Selective rerender then recompose:
+Selective rerender then recompose — **do not** call `render_episode.py` directly from Cursor agent shell after a full production run (VRAM/RAM fragmentation → crash). Use the GPU-safe repair tool instead:
 
 ```powershell
-& $py workspace/shows/tools/render_episode.py --manifest $man --segments p003
+& $py workspace/shows/tools/repair_episode_qc.py `
+  --manifest $man --write-report
 ```
+
+`pack_episode.py` runs this automatically before strict QC (`--no-auto-qc-repair` to disable).
+
+### Series C QC pattern (Word Tour)
+
+Series C `[Word Tour + Close]` uses slow mirror echoes (`Hook.`, `Tangent.`, sign-off `This is Mia.`). VoxCPM often generates 5–9s hallucinations on **single-word** turns → `SHORT_TOO_LONG` (blocking). Mitigations (layered):
+
+1. **Script:** mirror echoes should be 2–4 words (`Hook — got it.`), not bare one-word lines (see Series C `SCRIPT_TEMPLATE.md`).
+2. **Manifest:** `prepare_episode_manifest.py` caps `maxLen=28` for 1-word turns (was 56).
+3. **Pack:** `repair_episode_qc.py` trims trailing silence when possible, then re-renders blocking turns **one subprocess at a time** with GPU lock, re-composes `raw.wav`, loops up to 3 rounds.
+
+Timing-only flags (`CHECK_LONG` on slow Word Tour repeats) remain advisory and do not block pack when ASR/content is fine.
 
 ## Pack (after human audio approval)
 
@@ -292,7 +329,14 @@ Chapter timestamps must reflect the actual spoken timeline, so this step runs on
 ### Marker sources (first non-empty wins)
 
 1. **Explicit** — `youtube.json` `chapterMarkers`: `[{"turnId": "p001", "label": "Intro"}, ...]`. Use this for hand-tuned chapters.
-2. **Auto-derived** — the draft's `## ` section headers (起承转合 beats: Intro Hook, Teaching Dialogue, Micro-Pocket, Recycle, Word Tour, Recap And CTA, …), each mapped to the first dialogue turn that follows it in the draft. This is the default and needs no extra authoring.
+2. **Auto-derived (viewer-facing labels)** — each draft `## ` section maps to the first dialogue turn after it, but the **published chapter title** comes from learner-facing copy, not internal beat names:
+   - **Intro** → `youtube.json` `hookText`
+   - **Teaching / Body / Part N** → `[Teaching Plan]` Thread/Part lines in order
+   - **Micro-Pocket** → `[Micro-Pocket]` phrase replay note (e.g. `Slow replay: mid-stream & join in`)
+   - **Recycle / Pattern Interrupt** → `[Recycle]` summary sentence
+   - **Word Tour** → `[Word Tour]` phrase preview
+   - **Close** → `Recap & your practice`
+   Never ship raw headers like `Teaching Dialogue` or `Meta Pivot` to YouTube.
 
 ### Standalone run
 
@@ -329,7 +373,8 @@ It is also wired as **step 5 of `pack_episode.py`** (between compose and export)
 
 - 2026-07-20: YouTube title 100-char hard limit enforced in the pipeline. `prepare_episode_youtube_packaging.py` and `export_episode_to_youtube_dir.py` now fail if `youtube.json` `title` exceeds 100 characters (YouTube's upload limit), with an actionable error pointing at the offending title. Series A/B/C bibles' Title formula sections now document the ≤100 rule and that the optional `| Learn English` suffix should be dropped first. Existing Series A episode_001/002 titles were shortened (109/111 → 93/95) and the `youtube.json` `title` fields updated to match.
 - 2026-07-20: Hardened the topic-selection candidate pipeline so fresh research actually reaches the backlog. Three fixes in `refresh_topic_backlog.py`: (1) **stop-word-filtered dedup** — `title_overlap` now strips ELR title boilerplate (`english`/`podcast`/`learn`/`daily`/`talk`/`life`/…) before comparing; previously the shared wrapper `"English Podcast For <X> | Learn English"` made every research candidate collide with every existing topic as a false duplicate, so `addedCount` was always 0 and the backlog never grew beyond the static seed — the "real investigation" was silently discarded. (2) **Per-channel cap** (`MAX_PER_CHANNEL_PER_SERIES = 3`) so one high-view channel cannot flood a single series' backlog with clones of its own playbook (the trending list was 18/30 from one channel). (3) **Channel → CEFR hint map** (`CHANNEL_LEVEL_HINT`) assigns each known competitor channel to its correct ELR series, with spine-keyword fallback, so an "Easy English" channel's topics don't land in series_c. Validated: a post-maxandmia refresh now adds 9/6/2 source-tracked candidates to series_a/b/c respectively, capped at 3 per channel, with `differentiationAngle` exposed for the scriptwriter.
-- 2026-07-20: Expanded the competitor set from 3 to 10 channels and added anti-homogeneity guardrails. `DEFAULT_CHANNELS` now includes 6 dual-host competitor podcasts surfaced by discovery + BBC Learning English as a trend reference (see `CHANNELS.md`). `refresh_topic_backlog.py` now records `sourceCompetitor` + `sourceTitle` + `differentiationAngle` per candidate; `select_next_topic.py` exposes those in the selection record and applies a source-diversity bonus so selection rotates across competitors instead of clustering on one channel's playbook. Rationale: tracking only the original 3 channels risked both narrow trend bias and homogeneity (copying a single competitor's style → reportable + uncompetitive). Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
+- 2026-07-21: Added **English Goal Podcast** (`englishgoalpodcast`, series_a B1-B2) to the competitor reference set. Channel registry moved to [`COMPETITOR_CHANNELS.md`](COMPETITOR_CHANNELS.md) (includes full topic-investigation flow summary).
+- 2026-07-20: Expanded the competitor set from 3 to 11 channels and added anti-homogeneity guardrails. `DEFAULT_CHANNELS` now includes dual-host competitor podcasts surfaced by discovery + BBC Learning English as a trend reference (see [`COMPETITOR_CHANNELS.md`](COMPETITOR_CHANNELS.md)). `refresh_topic_backlog.py` now records `sourceCompetitor` + `sourceTitle` + `differentiationAngle` per candidate; `select_next_topic.py` exposes those in the selection record and applies a source-diversity bonus so selection rotates across competitors instead of clustering on one channel's playbook. Rationale: tracking only the original 3 channels risked both narrow trend bias and homogeneity (copying a single competitor's style → reportable + uncompetitive). Collect new channels one at a time via `run_research_refresh.py --channel <slug>`.
 - 2026-07-20: Added a real-investigation Topic selection stage before scriptwriting. `scripts/run_research_refresh.py` is the only step that scrapes — it wraps the existing rate-limited research scripts with anti-ban hard rules (smoke canary first, one channel at a time, conservative caps, 60-min cooldown on any rate-limit signal, no parallel, no discovery+collect in one run). Three offline scripts (no scraping) consume the research: `refresh_topic_backlog.py` merges research signals into `topic_backlog.json`, `select_next_topic.py` scores planned topics by trend signal + series fit and picks the next one (writing `topic_selection_<date>.json`), and `mark_topic_done.py` writes back `status=done` + `producedEpisode` after an episode is produced. The selector auto-excludes topics already matched to a produced episode, so topic reuse is prevented structurally. `topic_backlog.json` is now the single source of truth for what has been produced.
 - 2026-07-20: QC now raises on issues + YouTube upload texts co-located with final products + no-text video background. (1) `check_episode.py` gained `--strict` (exit 1 when any segment is flagged for review or chapter-level flags fire, e.g. `HAS_REVIEW_SEGMENTS`/`COMPOSE_DRIFT`); `pack_episode.py` passes `--strict` so QC problems stop the pipeline and print a clear message instead of silently passing. (2) `export_episode_to_youtube_dir.py` now also writes `000_episode_XXX.youtube_title.txt` + `000_episode_002.youtube_description.txt` into the workspace `video/` dir (next to the mp4), so the upload-ready copy/paste texts sit with the final program — not only in `reports/` and the `H:\Youtube\<Show>\episodeNN\` export folder. (3) Video background must be a separate no-text image: `render_episode_thumbnail.py --video-bg-from <video_bg_source.png>` consumes a text-free scene render (`videoBgImagePrompt`: "absolutely no text/letters/logos/watermarks"); without it `video_bg.jpg` falls back to the text-baked cover and the cover's baked words leak into the video behind the subtitles. Generate `cover_source.png` (3:2, with baked hook text) AND `video_bg_source.png` (no text) per episode.
 - 2026-07-19: GPU/hardware video encoding + redundant-QC skip — `compose_media_video.py` auto-detects NVENC (NVIDIA) and falls back to libx264 `veryfast`; QSV/AMF opt-in via `--encoder`. Encoder is real-probed (an outdated NVIDIA driver lists h264_nvenc but can't open it). Default libx264 preset lowered to `veryfast` (quality gated by VBR bitrate caps, not preset). `run_all_series_full.py` now defaults `--qc-no-asr` so pack's QC skips Whisper (render's compose_and_qc already ran full ASR), removing the redundant ~2–3 min/series ASR pass.
