@@ -62,14 +62,23 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
         if args.qc_no_asr:
             render_cmd.append("--no-self-check")
         write(f"render: {' '.join(render_cmd)}")
-        proc = subprocess.run(render_cmd, cwd=str(REPO_ROOT), text=True, capture_output=True)
-        if proc.stdout:
-            write(proc.stdout)
-        if proc.stderr:
-            write(proc.stderr)
-        if proc.returncode != 0:
-            write(f"[{utc_now()}] render failed exit={proc.returncode}")
-            return int(proc.returncode)
+        proc = subprocess.Popen(
+            render_cmd,
+            cwd=str(REPO_ROOT),
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf-8",
+            errors="replace",
+            bufsize=1,
+        )
+        assert proc.stdout is not None
+        for line in proc.stdout:
+            write(line)
+        render_code = int(proc.wait())
+        if render_code != 0:
+            write(f"[{utc_now()}] render failed exit={render_code}")
+            return render_code
 
         pack_cmd = [
             py,
@@ -92,12 +101,20 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
             pack_cmd.append("--qc-no-asr")
         pack_cmd.extend(["--compose-encoder", "libx264"])
         write(f"pack: {' '.join(pack_cmd)}")
-        proc = subprocess.run(pack_cmd, cwd=str(REPO_ROOT), text=True, capture_output=True)
-        if proc.stdout:
-            write(proc.stdout)
-        if proc.stderr:
-            write(proc.stderr)
-        code = int(proc.returncode)
+        proc = subprocess.Popen(
+            pack_cmd,
+            cwd=str(REPO_ROOT),
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf-8",
+            errors="replace",
+            bufsize=1,
+        )
+        assert proc.stdout is not None
+        for line in proc.stdout:
+            write(line)
+        code = int(proc.wait())
         write(f"[{utc_now()}] production finished exit={code}")
         return code
 

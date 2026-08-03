@@ -1,0 +1,44 @@
+from __future__ import annotations
+
+import json
+import sys
+from argparse import Namespace
+from pathlib import Path
+
+
+REPO = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO / "scripts"))
+sys.path.insert(0, str(REPO / "workspace" / "shows" / "tools"))
+
+from elr import monitor_command  # noqa: E402
+from elr_production import build_context  # noqa: E402
+from elr_run_state import RunStateStore  # noqa: E402
+
+
+def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Path) -> None:
+    context = build_context(tmp_path, "series_c", 17, tmp_path / "youtube")
+    cmd = monitor_command(
+        context,
+        Path("python.exe"),
+        batch_size=20,
+        force=False,
+        log_path=tmp_path / "run.log",
+    )
+    assert str(context.workspace) in cmd
+    assert cmd[cmd.index("--batch-size") + 1] == "20"
+    assert cmd[cmd.index("--episode-num") + 1] == "17"
+    assert "--force" not in cmd
+
+
+def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:
+    path = tmp_path / "episode_017.json"
+    store = RunStateStore(path)
+    store.write({"episodeId": "episode_017", "status": "RUNNING", "phase": "PREPARE"})
+    store.update(phase="PREFLIGHT", detail="checking assets")
+
+    saved = json.loads(path.read_text(encoding="utf-8"))
+    assert saved["schema"] == "elr-production-run-v1"
+    assert saved["phase"] == "PREFLIGHT"
+    assert saved["detail"] == "checking assets"
+    assert saved["heartbeatAt"]
+    assert list(tmp_path.glob("*.tmp")) == []

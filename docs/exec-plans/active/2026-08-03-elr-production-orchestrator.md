@@ -67,6 +67,6 @@ verified complete package.
 
 - [x] Current working state committed and pushed as baseline `5cbec47`.
 - [x] Source and contracts complete.
-- [ ] Observable runner complete.
+- [x] Observable runner complete.
 - [ ] Atomic delivery complete.
 - [ ] Skill/docs/release validation complete.

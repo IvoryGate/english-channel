@@ -74,24 +74,24 @@ def run_step(
     logger.log(f"{label} started")
     logger.write(f"  command: {' '.join(cmd)}")
     started = time.monotonic()
-    proc = subprocess.run(
+    proc = subprocess.Popen(
         cmd,
         cwd=str(cwd),
         text=True,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         env=env or os.environ.copy(),
+        encoding="utf-8",
+        errors="replace",
+        bufsize=1,
     )
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        logger.write(f"    {line.rstrip()}")
+    code = int(proc.wait())
     elapsed = time.monotonic() - started
-    if proc.stdout:
-        logger.write("  stdout:")
-        for line in proc.stdout.rstrip().splitlines():
-            logger.write(f"    {line}")
-    if proc.stderr:
-        logger.write("  stderr:")
-        for line in proc.stderr.rstrip().splitlines():
-            logger.write(f"    {line}")
-    logger.log(f"{label} finished in {elapsed:.1f}s (exit {proc.returncode})")
-    return int(proc.returncode)
+    logger.log(f"{label} finished in {elapsed:.1f}s (exit {code})")
+    return code
 
 
 def _extract_draft_title(draft_path: Path) -> str:

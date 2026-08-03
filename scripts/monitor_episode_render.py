@@ -145,17 +145,23 @@ def run_subprocess(cmd: list[str], logger: MonitorLogger) -> int:
     env.pop("PYTORCH_CUDA_ALLOC_CONF", None)
     logger.write(f"  command: {' '.join(cmd)}")
     started = time.monotonic()
-    result = subprocess.run(cmd, cwd=str(REPO_ROOT), text=True, capture_output=True, env=env)
-    if result.stdout:
-        logger.write("  stdout:")
-        for line in result.stdout.rstrip().splitlines()[-40:]:
-            logger.write(f"    {line}")
-    if result.stderr:
-        logger.write("  stderr:")
-        for line in result.stderr.rstrip().splitlines()[-20:]:
-            logger.write(f"    {line}")
-    logger.log(f"subprocess finished in {_format_duration(time.monotonic() - started)} (exit {result.returncode})")
-    return int(result.returncode)
+    process = subprocess.Popen(
+        cmd,
+        cwd=str(REPO_ROOT),
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        env=env,
+        encoding="utf-8",
+        errors="replace",
+        bufsize=1,
+    )
+    assert process.stdout is not None
+    for line in process.stdout:
+        logger.write(f"    {line.rstrip()}")
+    code = int(process.wait())
+    logger.log(f"subprocess finished in {_format_duration(time.monotonic() - started)} (exit {code})")
+    return code
 
 
 def render_turn_batch(
