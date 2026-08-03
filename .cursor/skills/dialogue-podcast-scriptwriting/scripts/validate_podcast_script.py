@@ -70,7 +70,7 @@ SERIES_B_REQUIRED_MARKERS = {
 PROFILE_DEFAULTS: dict[str, dict[str, Any]] = {
     "general": {"min_words": 700, "max_words": 1800, "spoken_only": False},
     "polished_english": {"min_words": 1900, "max_words": 2800, "spoken_only": True, "structure": "polished"},
-    "series_a": {"min_words": 1600, "max_words": 2400, "spoken_only": True, "structure": "polished"},
+    "series_a": {"min_words": 1800, "max_words": 2400, "spoken_only": True, "structure": "polished"},
     "series_b": {"min_words": 1400, "max_words": 1900, "spoken_only": True, "structure": "series_b"},
     "series_c": {"min_words": 2000, "max_words": 2800, "spoken_only": True, "structure": "polished"},
 }

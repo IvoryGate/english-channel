@@ -124,7 +124,7 @@ MAX_RENDER_BATCH_SIZE = 20
 def validate_render_batch_size(batch_size: int) -> int:
     """Turns per VoxCPM subprocess — load once, render N turns, unload.
 
-    Default 10 balances 8GB VRAM stability vs model-reload overhead. Do not run
+    Default 20 balances model-load overhead against the tested 8GB VRAM ceiling. Do not run
     an entire episode in one process (134+ turns); that still CUDA-crashes.
     """
     if batch_size < 1:

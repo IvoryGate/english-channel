@@ -90,6 +90,25 @@ def test_sync_youtube_json_overwrites_stale_hook(tmp_path: Path) -> None:
     assert hook_text_matches_title(saved["hookText"], saved["title"])
 
 
+def test_sync_youtube_json_scaffolds_missing_file(tmp_path: Path) -> None:
+    episode_id = "episode_098"
+    title = "Learn One Positive English Line — Not a Speech, Just One | Easy English Podcast A2-B1"
+    (tmp_path / f"000_{episode_id}.draft.md").write_text(f"Title: {title}\n", encoding="utf-8")
+
+    report = sync_youtube_json(
+        tmp_path,
+        episode_id,
+        manifest={"showId": "series_b", "title": title, "description": "A practical lesson."},
+        write=True,
+    )
+
+    assert report["created"] is True
+    saved = json.loads((tmp_path / f"000_{episode_id}.youtube.json").read_text(encoding="utf-8"))
+    assert saved["title"] == title
+    assert saved["hookText"] == "Not a Speech, Just One"
+    assert saved["description"] == "A practical lesson."
+
+
 def extract_title(draft_path: Path) -> str:
     from episode_youtube_meta import extract_draft_title
 

@@ -19,5 +19,10 @@ pretrained_models/
 books/
 assets/
 reference/
-workspace/
+workspace/*
+!workspace/shows/
+workspace/shows/*
+!workspace/shows/tools/
+!workspace/shows/tools/*.py
+!workspace/shows/tools/*.json
 /_tmp_*.json
