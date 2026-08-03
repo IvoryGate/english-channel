@@ -10,7 +10,8 @@ REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "scripts"))
 sys.path.insert(0, str(REPO / "workspace" / "shows" / "tools"))
 
-from elr import monitor_command  # noqa: E402
+import elr  # noqa: E402
+from elr import command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
 
@@ -42,3 +43,25 @@ def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:
     assert saved["detail"] == "checking assets"
     assert saved["heartbeatAt"]
     assert list(tmp_path.glob("*.tmp")) == []
+
+
+def test_status_reads_durable_state_without_process_scan(tmp_path: Path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(elr, "REPO", tmp_path)
+    store = RunStateStore(tmp_path / "logs" / "elr_runs" / "episode_017.json")
+    store.write(
+        {
+            "episodeId": "episode_017",
+            "status": "DONE",
+            "phase": "DONE",
+            "pid": -1,
+            "logPath": str(tmp_path / "run.log"),
+            "seriesState": {"series_a": {"status": "DONE", "phase": "DONE"}},
+        }
+    )
+
+    code = command_status(Namespace(episode="17", json=False))
+
+    assert code == 0
+    output = capsys.readouterr().out
+    assert "status=DONE" in output
+    assert "series_a: status=DONE phase=DONE" in output

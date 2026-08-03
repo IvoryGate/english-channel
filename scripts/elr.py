@@ -278,6 +278,11 @@ def _detach(args: argparse.Namespace) -> int:
     child_args = [arg for arg in sys.argv[1:] if arg not in {"--detach", "--visible-window"}]
     child_args.extend(["--run-log", str(log_path)])
     cmd = [str(DEFAULT_PYTHON if DEFAULT_PYTHON.is_file() else Path(sys.executable)), "-u", str(Path(__file__).resolve()), *child_args]
+    store = RunStateStore(state_path(REPO, episode_id))
+    payload = _initial_state(args, contexts, log_path, status="STARTING")
+    payload["pid"] = -1
+    payload["command"] = subprocess.list2cmdline(cmd)
+    store.write(payload)
     creationflags = 0
     stdout: Any = subprocess.DEVNULL
     if args.visible_window and sys.platform == "win32":
@@ -291,11 +296,9 @@ def _detach(args: argparse.Namespace) -> int:
         creationflags=creationflags,
         env={**os.environ, "PYTHONUNBUFFERED": "1", "KMP_DUPLICATE_LIB_OK": "TRUE"},
     )
-    store = RunStateStore(state_path(REPO, episode_id))
-    payload = _initial_state(args, contexts, log_path, status="STARTING")
-    payload["pid"] = process.pid
-    payload["command"] = subprocess.list2cmdline(cmd)
-    store.write(payload)
+    # Update only launch facts. If the child already changed STARTING to
+    # RUNNING, RunStateStore.update preserves that newer status.
+    store.update(pid=process.pid, command=subprocess.list2cmdline(cmd), logPath=str(log_path))
     print(f"started pid={process.pid}")
     print(f"status={store.path}")
     print(f"log={log_path}")
