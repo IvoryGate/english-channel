@@ -12,7 +12,8 @@ sys.path.insert(0, str(REPO / "workspace" / "shows" / "tools"))
 
 import elr  # noqa: E402
 import elr_run_state  # noqa: E402
-from elr import command_status, monitor_command  # noqa: E402
+import monitor_episode_render  # noqa: E402
+from elr import audio_render_command, command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
 
@@ -30,6 +31,52 @@ def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Pa
     assert cmd[cmd.index("--batch-size") + 1] == "20"
     assert cmd[cmd.index("--episode-num") + 1] == "17"
     assert "--force" not in cmd
+
+
+def test_audio_render_command_defers_compose_and_visual_pack(tmp_path: Path) -> None:
+    context = build_context(tmp_path, "series_a", 17, tmp_path / "youtube")
+    cmd = audio_render_command(
+        context,
+        Path("python.exe"),
+        batch_size=20,
+        force=False,
+        log_path=tmp_path / "audio.log",
+    )
+
+    assert str(context.workspace / "000_episode_017.episode_manifest.json") in cmd
+    assert cmd[cmd.index("--batch-size") + 1] == "20"
+    assert "--turns-only" in cmd
+    assert "--force" not in cmd
+
+
+def test_turns_only_monitor_skips_compose_and_qc(tmp_path: Path, monkeypatch) -> None:
+    manifest = tmp_path / "000_episode_017.episode_manifest.json"
+    manifest.write_text('{"renderSettings": {}, "turns": []}\n', encoding="utf-8")
+    messages: list[str] = []
+
+    class Logger:
+        def log(self, message: str) -> None:
+            messages.append(message)
+
+    def unexpected_compose(**_kwargs: object) -> int:
+        raise AssertionError("compose_and_qc must be deferred in turns-only mode")
+
+    monkeypatch.setattr(monitor_episode_render, "compose_and_qc", unexpected_compose)
+    result = monitor_episode_render.monitor_render(
+        manifest_path=manifest,
+        python=Path("python.exe"),
+        device="cuda",
+        logger=Logger(),
+        batch_size=20,
+        force=False,
+        retry_on_failure=0,
+        cfg=2.35,
+        no_self_check=True,
+        turns_only=True,
+    )
+
+    assert result == 0
+    assert any("deferred to formal production" in message for message in messages)
 
 
 def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:

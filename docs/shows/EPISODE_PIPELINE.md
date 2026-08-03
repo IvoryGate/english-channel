@@ -164,13 +164,32 @@ The validator checks: title, description, exactly two hosts, balanced turns, CTA
 For episodes `015` and later, the pack's compose stage automatically adds the approved brand clips from `assets/branding/video/`. Do not add the clips manually in an editor or append them after export; the compose stage joins their audio and video with the program in one render. The following packaging step then measures the composed intro asset and shifts all YouTube chapters by its exact duration. See [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md#brand-open-and-close).
 
 **Only public production entry point:** `scripts/elr.py`. It derives the episode
-workspace, refreshes the manifest, runs preflight before model load, serializes
-A/B/C, streams progress, persists state, and verifies export before completion.
+workspace, refreshes the manifest, serializes local GPU work, streams progress,
+persists state, and verifies export before completion.
 
 ```powershell
+& $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
 & $py scripts/elr.py preflight --episode 17 --series all
 & $py scripts/elr.py produce --episode 17 --series all
 ```
+
+### Parallel visual and audio lane
+
+After script approval, do not leave the local GPU idle while the remote image
+service generates the native 16:9 cover and no-text background:
+
+1. Start `render-audio` immediately. Its audio-only preflight checks the draft,
+   manifest coverage, title, voice references, local runtime, memory, and
+   workspace capacity, but deliberately defers visual/branding/export checks.
+2. Generate and review the cover and video background remotely while VoxCPM
+   renders turn WAVs locally.
+3. Save both visual sources in the canonical episode workspace.
+4. Run full `preflight`, then `produce` or `resume`. Completed WAVs are reused;
+   formal production still owns QC, mastering, subtitles, composition,
+   packaging, verification, and export.
+
+`render-audio` may overlap remote image generation only. Do not run two local
+VoxCPM jobs at once; the global GPU lock continues to serialize A → B → C.
 
 For unattended work with a visible progress window use
 `--detach --visible-window`. The command prints the PID, state file, and log
@@ -243,8 +262,9 @@ render, QC, master, subtitles, compose, packaging, verification, and export:
 & $py scripts/elr.py produce --episode 17 --series series_b
 ```
 
-If either image is absent, preflight stops before loading VoxCPM. Generate the
-missing approved visual; do not skip the gate for a formal episode.
+If either image is absent, formal `preflight`/`produce` stops before packaging.
+`render-audio` is the only supported way to render reusable turn WAVs before
+those visuals arrive; do not skip the gate for a formal episode.
 
 ## Render (after manifest)
 
@@ -350,13 +370,15 @@ It is also wired as **step 5 of `pack_episode.py`** (between compose and export)
 
 1. Use the `elr-episode-production` Skill and `scripts/elr.py` for all formal
    render/pack/export work.
-2. Run preflight first. For a background run, use `--detach --visible-window`
+2. Once scripts are approved, start `render-audio` while generating visuals
+   remotely. After visuals are approved, run full preflight and `produce`.
+3. For a background run, use `--detach --visible-window`
    and report the printed PID, state path, and log path immediately.
-3. Answer progress questions with `scripts/elr.py status`; do not start a second
+4. Answer progress questions with `scripts/elr.py status`; do not start a second
    job because a terminal appears quiet.
-4. Resume an interrupted job with `resume`, never `produce --force`, unless the
+5. Resume an interrupted job with `resume`, never `produce --force`, unless the
    user explicitly requests new audio.
-5. After state reaches `DONE`, write the topic back as done so the next selector
+6. After the final production state reaches `DONE`, write the topic back as done so the next selector
    excludes it: `workspace/shows/tools/mark_topic_done.py --show <series>
    --episode <episode_id> --auto`.
 
@@ -368,6 +390,12 @@ It is also wired as **step 5 of `pack_episode.py`** (between compose and export)
 
 ## Revision history
 
+- 2026-08-03: Added the public `scripts/elr.py render-audio` stage. Agents now
+  start resumable local VoxCPM turn rendering immediately after script approval
+  while remote cover/background generation runs concurrently. Audio-first
+  preflight defers visual-only checks; formal `produce`/`resume` retains every
+  visual, QC, mastering, subtitle, compose, packaging, verification, and export
+  gate.
 - 2026-07-20: YouTube title 100-char hard limit enforced in the pipeline. `prepare_episode_youtube_packaging.py` and `export_episode_to_youtube_dir.py` now fail if `youtube.json` `title` exceeds 100 characters (YouTube's upload limit), with an actionable error pointing at the offending title. Series A/B/C bibles' Title formula sections now document the ≤100 rule and that the optional `| Learn English` suffix should be dropped first. Existing Series A episode_001/002 titles were shortened (109/111 → 93/95) and the `youtube.json` `title` fields updated to match.
 - 2026-07-20: Hardened the topic-selection candidate pipeline so fresh research actually reaches the backlog. Three fixes in `refresh_topic_backlog.py`: (1) **stop-word-filtered dedup** — `title_overlap` now strips ELR title boilerplate (`english`/`podcast`/`learn`/`daily`/`talk`/`life`/…) before comparing; previously the shared wrapper `"English Podcast For <X> | Learn English"` made every research candidate collide with every existing topic as a false duplicate, so `addedCount` was always 0 and the backlog never grew beyond the static seed — the "real investigation" was silently discarded. (2) **Per-channel cap** (`MAX_PER_CHANNEL_PER_SERIES = 3`) so one high-view channel cannot flood a single series' backlog with clones of its own playbook (the trending list was 18/30 from one channel). (3) **Channel → CEFR hint map** (`CHANNEL_LEVEL_HINT`) assigns each known competitor channel to its correct ELR series, with spine-keyword fallback, so an "Easy English" channel's topics don't land in series_c. Validated: a post-maxandmia refresh now adds 9/6/2 source-tracked candidates to series_a/b/c respectively, capped at 3 per channel, with `differentiationAngle` exposed for the scriptwriter.
 - 2026-07-21: Added **English Goal Podcast** (`englishgoalpodcast`, series_a B1-B2) to the competitor reference set. Channel registry moved to [`COMPETITOR_CHANNELS.md`](COMPETITOR_CHANNELS.md) (includes full topic-investigation flow summary).

@@ -164,6 +164,7 @@ def preflight_episode(
     *,
     runtime_checks: bool = True,
     scaffold_metadata: bool = True,
+    require_visuals: bool = True,
 ) -> PreflightReport:
     checks: list[CheckResult] = []
     paths = artifact_paths(context.workspace, context.episode_id)
@@ -254,27 +255,37 @@ def preflight_episode(
             action = "created" if sync.get("created") else "synchronized"
             checks.append(CheckResult("youtube-metadata", "pass", f"{action}: {sync['path']}"))
 
-    cover_ready = paths["coverBakedScene"].is_file() or paths["thumbnailPng"].is_file()
-    background_ready = paths["videoBgSource16x9"].is_file() or paths["videoBgJpg"].is_file()
-    checks.append(
-        CheckResult(
-            "cover-16x9",
-            "pass" if cover_ready else "error",
-            str(paths["coverBakedScene"] if paths["coverBakedScene"].is_file() else paths["thumbnailPng"]),
+    if require_visuals:
+        cover_ready = paths["coverBakedScene"].is_file() or paths["thumbnailPng"].is_file()
+        background_ready = paths["videoBgSource16x9"].is_file() or paths["videoBgJpg"].is_file()
+        checks.append(
+            CheckResult(
+                "cover-16x9",
+                "pass" if cover_ready else "error",
+                str(paths["coverBakedScene"] if paths["coverBakedScene"].is_file() else paths["thumbnailPng"]),
+            )
         )
-    )
-    checks.append(
-        CheckResult(
-            "background-16x9",
-            "pass" if background_ready else "error",
-            str(paths["videoBgSource16x9"] if paths["videoBgSource16x9"].is_file() else paths["videoBgJpg"]),
+        checks.append(
+            CheckResult(
+                "background-16x9",
+                "pass" if background_ready else "error",
+                str(paths["videoBgSource16x9"] if paths["videoBgSource16x9"].is_file() else paths["videoBgJpg"]),
+            )
         )
-    )
-    for name in ("english-listening-room-intro.mp4", "english-listening-room-outro.mp4"):
-        _check_file(checks, f"branding-{name}", context.repo_root / "assets" / "branding" / "video" / name)
+        for name in ("english-listening-room-intro.mp4", "english-listening-room-outro.mp4"):
+            _check_file(checks, f"branding-{name}", context.repo_root / "assets" / "branding" / "video" / name)
+    else:
+        checks.append(
+            CheckResult(
+                "visual-assets",
+                "warn",
+                "Deferred for audio-first rendering; formal produce/resume still requires cover, background, and branding.",
+            )
+        )
 
     _disk_check(checks, "workspace-disk", context.workspace)
-    _disk_check(checks, "export-disk", context.youtube_root)
+    if require_visuals:
+        _disk_check(checks, "export-disk", context.youtube_root)
     if runtime_checks:
         _runtime_checks(checks, context.repo_root)
 

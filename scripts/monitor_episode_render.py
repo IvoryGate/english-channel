@@ -246,6 +246,7 @@ def monitor_render(
     retry_on_failure: int,
     cfg: float,
     no_self_check: bool,
+    turns_only: bool = False,
 ) -> int:
     workspace = manifest_path.parent
     patch_cfg(manifest_path, cfg, logger)
@@ -282,6 +283,10 @@ def monitor_render(
         logger.log(f"error: {len(still)} turns still missing after render loop")
         return 1
 
+    if turns_only:
+        logger.log("turn rendering complete; compose and QC deferred to formal production")
+        return 0
+
     return compose_and_qc(
         manifest_path=manifest_path,
         python=python,
@@ -309,6 +314,11 @@ def parse_args() -> argparse.Namespace:
         "--no-self-check",
         action="store_true",
         help="Skip Whisper ASR in render compose+QC (pack runs layer-1 QC only with --qc-no-asr).",
+    )
+    parser.add_argument(
+        "--turns-only",
+        action="store_true",
+        help="Render/resume turn WAVs only; defer compose and QC to formal production.",
     )
     parser.add_argument("--python", type=Path, default=DEFAULT_PYTHON)
     parser.add_argument("--log-file", type=Path, default=REPO_ROOT / "logs" / "monitor_episode_render.log")
@@ -344,6 +354,7 @@ def main() -> int:
             retry_on_failure=args.retry_on_failure,
             cfg=args.cfg,
             no_self_check=args.no_self_check,
+            turns_only=args.turns_only,
         )
     finally:
         logger.log(

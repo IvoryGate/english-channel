@@ -1,6 +1,6 @@
 ---
 name: elr-episode-production
-description: Preflight, render, monitor, resume, verify, and export approved English Listening Room Series A/B/C episodes. Use after scripts and native 16:9 visuals are approved, when producing one or all series, checking a long-running episode job, recovering an interrupted render, or diagnosing why production has not started.
+description: Preflight, render, monitor, resume, verify, and export approved English Listening Room Series A/B/C episodes. Use after scripts are approved to overlap local audio rendering with remote visual generation, or after native 16:9 visuals are ready to produce, monitor, recover, verify, and export one or all series.
 ---
 
 # ELR Episode Production
@@ -19,6 +19,9 @@ $py = ".\.conda-env\python.exe"
 
 # Inspect scripts, manifests, visuals, runtime, memory, disk, and metadata.
 & $py scripts/elr.py preflight --episode 17 --series all
+
+# Audio-first: start local VoxCPM while cover/background image generation runs remotely.
+& $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
 
 # Foreground: progress stays visible in the current terminal.
 & $py scripts/elr.py produce --episode 17 --series all
@@ -39,18 +42,24 @@ wants existing turn audio regenerated.
 
 ## Workflow
 
-1. Confirm the script and native 16:9 cover/background are approved. This Skill
-   does not invent or revise content during a production run.
-2. Run `preflight`. Resolve every `ERROR` before GPU work. Do not bypass script
-   length, 98% manifest coverage, title length, voice reference, branding,
-   runtime, memory, or disk checks.
-3. Run `produce`. Prefer foreground when the user wants live progress; otherwise
+1. Confirm the script is approved. This Skill does not invent or revise content
+   during a production run.
+2. When visuals are not ready, immediately start `render-audio` and generate the
+   cover/background through the remote image tool at the same time. Audio-first
+   preflight still enforces script length, 98% manifest coverage, title length,
+   voice references, runtime, memory, and workspace disk. It defers only visual,
+   branding, and export checks and writes turn WAVs only.
+3. After the native 16:9 cover/background are approved, run `preflight`. Resolve
+   every `ERROR`; formal production must not bypass any visual or packaging gate.
+4. Run `produce` (or `resume` after an interruption). It reuses completed turn
+   WAVs, then performs QC, mastering, subtitles, composition, packaging,
+   verification, and export. Prefer foreground when the user wants live progress; otherwise
    use `--detach --visible-window` and immediately report the PID, state path,
    and log path printed by the command.
-4. Use `status` for progress. Do not infer activity from a silent chat command
+5. Use `status` for progress. Do not infer activity from a silent chat command
    and do not start a second job while the current PID is alive.
-5. If the process is interrupted, use `resume`, not `produce --force`.
-6. Completion means state `DONE` and three verified upload directories when
+6. If the process is interrupted, use `resume`, not `produce --force`.
+7. Completion means state `DONE` and three verified upload directories when
    `--series all` was selected. A workspace MP4 by itself is not completion.
 
 ## State And Failure Handling
@@ -60,9 +69,13 @@ its `logPath`. State records phase, PID, heartbeat, current series, per-series
 status, command, and failure details.
 
 - `STARTING` or `RUNNING` with a dead PID is interrupted and safe to resume.
+- `DONE` with phase `AUDIO_DONE` means turn WAVs are ready, not that an upload
+  package is complete; finish with `produce`/`resume` after visuals are ready.
 - A failed preflight never loads VoxCPM.
 - A stale GPU lock may be removed only after its PID is confirmed dead.
 - Series run A → B → C and never share the GPU concurrently.
+- Remote image generation may overlap the local `render-audio` job because it
+  does not consume the workstation GPU or production lock.
 - Video is written as `.partial.mp4`; exports are built in `.incomplete` and
   become final only after media and package verification.
 

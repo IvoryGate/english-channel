@@ -58,19 +58,24 @@ If CUDA memory is tight, close GPU-heavy applications and retry with:
 
 ## English Listening Room Production
 
-After an episode script and its native 16:9 cover/background are approved, use
-the production controller rather than launching render and pack scripts
-separately:
+Use the production controller after script approval rather than launching
+render and pack scripts separately. It can begin audio before the native 16:9
+cover/background is ready:
 
 ```powershell
 $py = ".\.conda-env\python.exe"
+& $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
 & $py scripts/elr.py preflight --episode 17 --series all
 & $py scripts/elr.py produce --episode 17 --series all
 & $py scripts/elr.py status --episode 17
 & $py scripts/elr.py resume --episode 17 --series all
 ```
 
-The controller derives canonical workspaces, runs A/B/C serially with batch size
-20, streams progress, persists state under `logs/elr_runs/`, resumes completed
-turns, and exports only after the final package passes verification. See
+Start `render-audio` as soon as scripts are approved while remote cover and
+background generation runs in parallel. It writes resumable turn WAVs only and
+does not require visual assets. Once visuals are approved, `produce` reuses the
+WAVs and keeps the full thumbnail, QC, mastering, subtitles, composition,
+packaging, verification, and export gates. The controller derives canonical
+workspaces, runs local GPU work serially with batch size 20, streams progress,
+and persists state under `logs/elr_runs/`. See
 `docs/shows/EPISODE_PIPELINE.md` and the `elr-episode-production` Skill.

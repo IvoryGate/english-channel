@@ -36,6 +36,7 @@ from gpu_production_lock import (  # noqa: E402
 DEFAULT_PYTHON = REPO / ".conda-env" / "python.exe"
 PREPARE_MANIFEST = TOOLS / "prepare_episode_manifest.py"
 MONITOR_PRODUCTION = REPO / "scripts" / "monitor_episode_production.py"
+MONITOR_RENDER = REPO / "scripts" / "monitor_episode_render.py"
 SERIES_CFG = {"series_a": 2.35, "series_b": 2.15, "series_c": 2.35}
 
 
@@ -128,6 +129,39 @@ def monitor_command(
         "2",
         "--qc-no-asr",
         "--log",
+        str(log_path),
+    ]
+    if force:
+        cmd.append("--force")
+    return cmd
+
+
+def audio_render_command(
+    context: EpisodeContext,
+    python: Path,
+    *,
+    batch_size: int,
+    force: bool,
+    log_path: Path,
+) -> list[str]:
+    manifest = context.workspace / f"000_{context.episode_id}.episode_manifest.json"
+    cmd = [
+        str(python),
+        "-u",
+        str(MONITOR_RENDER),
+        "--manifest",
+        str(manifest),
+        "--device",
+        "cuda",
+        "--cfg",
+        str(SERIES_CFG[context.show_id]),
+        "--batch-size",
+        str(batch_size),
+        "--retry-on-failure",
+        "2",
+        "--no-self-check",
+        "--turns-only",
+        "--log-file",
         str(log_path),
     ]
     if force:
@@ -269,6 +303,87 @@ def execute_production(args: argparse.Namespace) -> int:
         return 2
 
 
+def execute_audio_render(args: argparse.Namespace) -> int:
+    validate_render_batch_size(args.batch_size)
+    python = DEFAULT_PYTHON if DEFAULT_PYTHON.is_file() else Path(sys.executable)
+    contexts = _contexts(args)
+    episode_id = contexts[0].episode_id
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_path = Path(args.run_log) if args.run_log else REPO / "logs" / "elr_runs" / f"{episode_id}_audio_{timestamp}.log"
+    store = RunStateStore(state_path(REPO, episode_id))
+    logger = RunLogger(log_path)
+    store.write(_initial_state(args, contexts, log_path, status="RUNNING"))
+    logger.event(f"ELR audio-first render started episode={episode_id} series={[c.show_id for c in contexts]} batch={args.batch_size}")
+
+    try:
+        reports = []
+        for index, context in enumerate(contexts):
+            _set_series_state(store, context.show_id, phase="AUDIO_PREPARE", status="RUNNING")
+            logger.event(f"{context.show_id}: prepare manifest for audio")
+            code = run_streamed(prepare_command(context, python), logger=logger, heartbeat=store.heartbeat)
+            if code != 0:
+                raise RuntimeError(f"{context.show_id} prepare failed with exit {code}")
+
+            _set_series_state(store, context.show_id, phase="AUDIO_PREFLIGHT", status="RUNNING")
+            report = preflight_episode(
+                context,
+                runtime_checks=index == 0,
+                scaffold_metadata=True,
+                require_visuals=False,
+            )
+            reports.append(report)
+            for check in report.checks:
+                logger.write(f"  [{check.status.upper()}] {check.name}: {check.detail}")
+            if not report.ok:
+                raise RuntimeError(f"{context.show_id} audio preflight failed")
+            _set_series_state(store, context.show_id, phase="AUDIO_READY", status="READY")
+
+        if not reports_ok(reports):
+            raise RuntimeError("audio preflight failed")
+
+        with GpuProductionLock(f"elr_audio_{episode_id}"):
+            for context in contexts:
+                _set_series_state(store, context.show_id, phase="AUDIO_RENDER", status="RUNNING")
+                logger.event(f"{context.show_id}: render turn WAVs; visuals may be generated concurrently")
+                child_log = log_path.with_name(f"{log_path.stem}.{context.show_id}.render.log")
+                code = run_streamed(
+                    audio_render_command(
+                        context,
+                        python,
+                        batch_size=args.batch_size,
+                        force=args.force,
+                        log_path=child_log,
+                    ),
+                    logger=logger,
+                    heartbeat=store.heartbeat,
+                )
+                if code != 0:
+                    raise RuntimeError(f"{context.show_id} audio render failed with exit {code}")
+                _set_series_state(store, context.show_id, phase="AUDIO_DONE", status="DONE")
+
+        store.update(
+            status="DONE",
+            phase="AUDIO_DONE",
+            currentSeries="",
+            finishedAt=utc_now(),
+            detail="Turn WAVs complete. Run produce/resume after visual assets are ready.",
+        )
+        logger.event("ELR audio-first render completed")
+        return 0
+    except KeyboardInterrupt:
+        store.update(status="CANCELLED", phase="CANCELLED", finishedAt=utc_now(), error="Interrupted by user.")
+        logger.event("ELR audio-first render cancelled")
+        return 130
+    except Exception as exc:
+        current = store.read() or {}
+        current_show = str(current.get("currentSeries") or "")
+        if current_show:
+            _set_series_state(store, current_show, status="FAILED", error=str(exc))
+        store.update(status="FAILED", phase="FAILED", finishedAt=utc_now(), error=str(exc))
+        logger.event(f"ELR audio-first render failed: {exc}")
+        return 2
+
+
 def _detach(args: argparse.Namespace) -> int:
     validate_render_batch_size(args.batch_size)
     contexts = _contexts(args)
@@ -330,6 +445,31 @@ def command_produce(args: argparse.Namespace) -> int:
     return execute_production(args)
 
 
+def command_render_audio(args: argparse.Namespace) -> int:
+    validate_render_batch_size(args.batch_size)
+    if args.dry_run:
+        python = DEFAULT_PYTHON if DEFAULT_PYTHON.is_file() else Path(sys.executable)
+        for context in _contexts(args):
+            print(f"{context.show_id}: workspace={context.workspace}")
+            print("  prepare=" + subprocess.list2cmdline(prepare_command(context, python)))
+            print(
+                "  audio="
+                + subprocess.list2cmdline(
+                    audio_render_command(
+                        context,
+                        python,
+                        batch_size=args.batch_size,
+                        force=args.force,
+                        log_path=REPO / "logs" / "elr_runs" / f"{context.episode_id}.{context.show_id}.audio.log",
+                    )
+                )
+            )
+        return 0
+    if args.detach:
+        return _detach(args)
+    return execute_audio_render(args)
+
+
 def command_status(args: argparse.Namespace) -> int:
     episode_id = normalize_episode_id(args.episode)
     store = RunStateStore(state_path(REPO, episode_id))
@@ -389,6 +529,13 @@ def parse_args() -> argparse.Namespace:
     resume = subparsers.add_parser("resume", help="Resume using existing turn WAVs and package artifacts.")
     _add_run_args(resume)
     resume.set_defaults(func=command_produce, force=False)
+
+    render_audio = subparsers.add_parser(
+        "render-audio",
+        help="Render/resume turn WAVs while approved visual assets are generated separately.",
+    )
+    _add_run_args(render_audio)
+    render_audio.set_defaults(func=command_render_audio)
 
     status = subparsers.add_parser("status", help="Show persisted progress without inspecting a hidden terminal.")
     status.add_argument("--episode", required=True)
