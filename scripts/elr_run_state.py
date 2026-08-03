@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -32,7 +33,17 @@ class RunStateStore:
         data["heartbeatAt"] = data["updatedAt"]
         temporary = self.path.with_suffix(self.path.suffix + f".{os.getpid()}.tmp")
         temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-        os.replace(temporary, self.path)
+        # Windows readers, virus scanners, and file indexers can briefly hold the
+        # destination open.  Treat that as transient so a status heartbeat can
+        # never abort an otherwise successful multi-hour render.
+        for attempt in range(10):
+            try:
+                os.replace(temporary, self.path)
+                break
+            except PermissionError:
+                if attempt == 9:
+                    raise
+                time.sleep(min(0.05 * (2**attempt), 0.5))
         return data
 
     def update(self, **changes: Any) -> dict[str, Any]:

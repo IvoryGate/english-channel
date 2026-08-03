@@ -11,6 +11,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 sys.path.insert(0, str(REPO / "workspace" / "shows" / "tools"))
 
 import elr  # noqa: E402
+import elr_run_state  # noqa: E402
 from elr import command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
@@ -43,6 +44,28 @@ def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:
     assert saved["detail"] == "checking assets"
     assert saved["heartbeatAt"]
     assert list(tmp_path.glob("*.tmp")) == []
+
+
+def test_run_state_retries_transient_windows_replace_lock(tmp_path: Path, monkeypatch) -> None:
+    path = tmp_path / "episode_017.json"
+    store = RunStateStore(path)
+    real_replace = elr_run_state.os.replace
+    attempts = 0
+
+    def flaky_replace(source: Path, destination: Path) -> None:
+        nonlocal attempts
+        attempts += 1
+        if attempts < 3:
+            raise PermissionError("destination temporarily locked")
+        real_replace(source, destination)
+
+    monkeypatch.setattr(elr_run_state.os, "replace", flaky_replace)
+    monkeypatch.setattr(elr_run_state.time, "sleep", lambda _seconds: None)
+
+    store.write({"episodeId": "episode_017", "status": "RUNNING"})
+
+    assert attempts == 3
+    assert json.loads(path.read_text(encoding="utf-8"))["status"] == "RUNNING"
 
 
 def test_status_reads_durable_state_without_process_scan(tmp_path: Path, monkeypatch, capsys) -> None:
