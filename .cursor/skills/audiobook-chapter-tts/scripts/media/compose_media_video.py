@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -27,6 +28,50 @@ def resolve_ffmpeg() -> str:
         "ffmpeg was not found on PATH and the project-local Remotion binary is missing. "
         "Install dependencies with npm install or make ffmpeg available on PATH."
     )
+
+
+def resolve_ffprobe() -> str:
+    system_ffprobe = shutil.which("ffprobe")
+    if system_ffprobe:
+        return system_ffprobe
+    ffmpeg = Path(resolve_ffmpeg())
+    bundled_ffprobe = ffmpeg.with_name("ffprobe.exe")
+    if bundled_ffprobe.is_file():
+        return str(bundled_ffprobe)
+    raise FileNotFoundError("ffprobe was not found; it is required to verify a completed video.")
+
+
+def verify_composed_video(path: Path) -> dict[str, Any]:
+    result = subprocess.run(
+        [
+            resolve_ffprobe(),
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height:format=duration",
+            "-of",
+            "json",
+            str(path),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(result.stdout)
+    streams = list(payload.get("streams") or [])
+    if not streams:
+        raise RuntimeError(f"No video stream found in composed output: {path}")
+    width = int(streams[0].get("width") or 0)
+    height = int(streams[0].get("height") or 0)
+    duration = float((payload.get("format") or {}).get("duration") or 0)
+    if width != WIDTH or height != HEIGHT or duration <= 0:
+        raise RuntimeError(
+            f"Invalid composed output {path}: {width}x{height}, duration={duration:.3f}s; "
+            f"expected {WIDTH}x{HEIGHT} with positive duration."
+        )
+    return {"width": width, "height": height, "durationSec": duration}
 
 
 def _probe_encoder(encoder: str) -> bool:
@@ -257,12 +302,14 @@ def compose_media_video(
     bar_rgb = hex_to_rgb(tokens.wave_bar_color)
 
     render_bar_waveform_video(audio_wav, temp_wave, bar_rgb=bar_rgb)
+    partial_output = output_mp4.with_name(f"{output_mp4.stem}.partial{output_mp4.suffix}")
+    partial_output.unlink(missing_ok=True)
     command = build_ffmpeg_command(
         background_jpg=background_jpg,
         audio_wav=audio_wav,
         ass_path=ass_path,
         waveform_mov=temp_wave,
-        output_mp4=output_mp4,
+        output_mp4=partial_output,
         intro_mp4=intro_mp4,
         outro_mp4=outro_mp4,
         fonts_dir=fonts_dir,
@@ -270,6 +317,8 @@ def compose_media_video(
         preset=preset,
     )
     subprocess.run(command, check=True)
+    media_probe = verify_composed_video(partial_output)
+    os.replace(partial_output, output_mp4)
 
     used_encoder = "libx264"
     for cand in ("h264_nvenc", "h264_qsv", "h264_amf"):
@@ -295,6 +344,7 @@ def compose_media_video(
             "outroMp4": str(outro_mp4).replace("\\", "/") if outro_mp4 else None,
         },
         "videoEncoder": used_encoder,
+        "verification": media_probe,
         "ffmpegCommand": command,
     }
     if report_path:

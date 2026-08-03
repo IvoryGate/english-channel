@@ -271,7 +271,7 @@ def preflight_episode(
         )
     )
     for name in ("english-listening-room-intro.mp4", "english-listening-room-outro.mp4"):
-        _check_file(checks, f"branding-{name}", context.repo_root / "workspace" / "branding" / name)
+        _check_file(checks, f"branding-{name}", context.repo_root / "assets" / "branding" / "video" / name)
 
     _disk_check(checks, "workspace-disk", context.workspace)
     _disk_check(checks, "export-disk", context.youtube_root)

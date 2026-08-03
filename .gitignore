@@ -17,7 +17,11 @@ videos/
 tmp/
 pretrained_models/
 books/
-assets/
+assets/*
+!assets/branding/
+assets/branding/*
+!assets/branding/video/
+!assets/branding/video/*.mp4
 reference/
 workspace/*
 !workspace/shows/
