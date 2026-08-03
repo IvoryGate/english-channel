@@ -96,12 +96,12 @@ def prepare_outputs_from_scene(
     cover_text = parse_cover_text_layers(hook_text, youtube_payload)
 
     normalized_scene = scene_source.with_suffix(".scene.norm.jpg")
-    normalize_generated_cover(scene_source, normalized_scene)
+    normalize_generated_cover(scene_source, normalized_scene, mode="auto")
 
     video_bg_path = video_bg_source
     if video_bg_source and video_bg_source.is_file():
         normalized_bg = video_bg_source.with_suffix(".bg.norm.jpg")
-        normalize_generated_cover(video_bg_source, normalized_bg)
+        normalize_generated_cover(video_bg_source, normalized_bg, mode="auto")
         video_bg_path = normalized_bg
 
     report = compose_thumbnail_from_scene(
@@ -147,6 +147,30 @@ def prepare_outputs_from_generated(
 
     return {
         "mode": "generated-cover",
+        "coverSource": str(cover_source).replace("\\", "/"),
+        "videoBgSource": str(bg_source).replace("\\", "/"),
+        "thumbnailPng": str(thumbnail_png).replace("\\", "/"),
+        "videoBgJpg": str(video_bg_jpg).replace("\\", "/"),
+    }
+
+
+def prepare_outputs_from_baked_scene(
+    *,
+    cover_source: Path,
+    thumbnail_png: Path,
+    video_bg_jpg: Path,
+    video_bg_source: Path | None = None,
+) -> dict[str, str]:
+    """Export a native 16:9 cover whose typography is baked into the scene."""
+    if not cover_source.is_file():
+        raise FileNotFoundError(f"Generated baked cover not found: {cover_source}")
+
+    thumbnail_png.parent.mkdir(parents=True, exist_ok=True)
+    normalize_generated_cover(cover_source, thumbnail_png, mode="auto")
+    bg_source = video_bg_source if video_bg_source and video_bg_source.is_file() else cover_source
+    normalize_generated_cover(bg_source, video_bg_jpg, mode="auto")
+    return {
+        "mode": "native-16x9-baked-cover",
         "coverSource": str(cover_source).replace("\\", "/"),
         "videoBgSource": str(bg_source).replace("\\", "/"),
         "thumbnailPng": str(thumbnail_png).replace("\\", "/"),

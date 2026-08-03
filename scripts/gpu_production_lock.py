@@ -117,7 +117,7 @@ def release_gpu_lock() -> None:
     _holding = False
 
 
-DEFAULT_RENDER_BATCH_SIZE = 10
+DEFAULT_RENDER_BATCH_SIZE = 20
 MAX_RENDER_BATCH_SIZE = 20
 
 

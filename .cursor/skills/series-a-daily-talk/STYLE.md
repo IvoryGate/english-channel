@@ -4,7 +4,7 @@ Human-feel dialogue rules, hook templates, and 起承转合 structure for Ethan 
 
 Reference: [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) Section A.
 
-## A.1 Frozen cold-open chassis (use verbatim every episode)
+## A.1 Situation-first opening (choose; never use verbatim every episode)
 
 ```
 [Music sting]
@@ -15,6 +15,9 @@ Ethan: And I'm Ethan. And this is the English Listening Room. [+ hook-fusing lin
 ```
 
 Rules:
+- Begin with a recognisable situation or failed moment before any welcome line. The scene and stake land within 20 seconds.
+- Put the show/brand name once between 30 and 75 seconds; do not make it the first spoken idea.
+- Do not make the Word Tour, CEFR callout, comment request, or CTA part of the cold open.
 - **Nora intros first**, Ethan second (mirror Class's Anna-first pattern; Nora is the peer-coach lead).
 - Wait — per bible, Ethan is the learner and Nora the coach. Class pattern is teacher-first. So **Nora first** (coach), **Ethan second** (learner). Corrected:
 - Dual intro lives **inside the welcome sentence** (word ~20–60), never a separate beat.
@@ -77,11 +80,11 @@ Every turn carries `[Delivery: …]` per DELIVERY.md. Cues are natural-language 
 
 ## A.6 Title formula
 
-`English Podcast For [Daily Life / Easy] English Conversation | [Emotional scene hook] | Learn English`
+`[Specific daily situation or tension] | B1 English Conversation`
 
 Examples:
-- `English Podcast for daily life conversation | When Monday feels too heavy | Learn English`
-- `Easy English conversation podcast | The strength of staying calm | Learn English B2`
+- `Someone asks “Tell me about yourself” — what do you say? | B1 English`
+- `The conversation goes quiet — how do you keep talking? | B1 English`
 
 ## Revision history
 

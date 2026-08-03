@@ -10,6 +10,7 @@ from prepare_episode_youtube_packaging import (  # noqa: E402
     _ViewerChapterLabelBuilder,
     _parse_teaching_plan_threads,
     auto_derive_markers_from_draft,
+    resolve_video_intro_offset,
 )
 
 
@@ -126,3 +127,22 @@ Riley: Part one.
         {"turnId": "p001", "label": "One small sentence"},
         {"turnId": "p002", "label": "quiet confidence sounds different from loud voice"},
     ]
+
+
+def test_branding_intro_offset_uses_composed_intro_duration(tmp_path: Path, monkeypatch) -> None:
+    intro = tmp_path / "english-listening-room-intro.mp4"
+    intro.touch()
+    report = tmp_path / "000_episode_015.video_report.json"
+    report.write_text(
+        '{"branding":{"enabled":true,"introMp4":"' + str(intro).replace("\\", "\\\\") + '"}}',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "prepare_episode_youtube_packaging._probe_media_duration",
+        lambda path: 8.375,
+    )
+
+    offset, source = resolve_video_intro_offset({"videoReport": report})
+
+    assert offset == 8.375
+    assert source == "branding-intro-media"

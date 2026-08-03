@@ -146,31 +146,27 @@ def build_cover_image_prompt(
     ).replace(
         "Leave the center third of the frame relatively clean and uncluttered for subtitles. "
         "Absolutely no text, letters, logos, or watermarks anywhere in the image.",
-        "Leave breathing room in the center for typography.",
+        "Integrate a bold title into the centre of the artwork; do not use a blank slide-like rectangle.",
     )
 
     text_lines = [
-        f'Top-left level badge: "{show.level_badge}".',
-        f'Top-right small series label: "{tokens.label}".',
+        f'Top-left small level badge: "{show.level_badge}".',
+        f'Top-right small show label: "{tokens.label.split(" ·", 1)[0].title()}".',
     ]
     if cover_text.get("prefix"):
-        text_lines.append(f'Script-style connector text: "{cover_text["prefix"]}".')
+        text_lines.append(f'Small connector text: "{cover_text["prefix"]}".')
     if cover_text.get("main"):
-        text_lines.append(f'Large bold white hook line: "{cover_text["main"]}".')
+        text_lines.append(f'Largest central headline: "{cover_text["main"]}".')
     if cover_text.get("suffix"):
-        text_lines.append(
-            f'Accent pill banner in series color {tokens.bar_color}: "{cover_text["suffix"]}".'
-        )
-    if cover_text.get("badge"):
-        text_lines.append(f'Bottom capsule tag: "{cover_text["badge"]}".')
+        text_lines.append(f'Accent pill directly below: "{cover_text["suffix"]}".')
 
-    typography = " ".join(text_lines)
     return (
         f"{scene_block} "
-        f"Professional YouTube podcast thumbnail typography, crisp readable text baked into the image. "
-        f"{typography} "
-        f"Use accent color {tokens.bar_color}. High contrast, polished editorial layout. "
-        "No watermarks, no misspelled text, no extra random words."
+        "This is the final native 16:9 YouTube thumbnail: bake the following exact typography into the image, "
+        "with high contrast and natural integration into the scene. "
+        f"{' '.join(text_lines)} "
+        f"Use accent color {tokens.bar_color}. Render every quoted phrase exactly. "
+        "No extra text, no duplicate labels, no watermark."
     )
 
 

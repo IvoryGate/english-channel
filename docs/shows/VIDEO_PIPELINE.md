@@ -13,6 +13,23 @@ Static **2560×1440 (2K)** background + **above-head** ASS karaoke + **lower-mid
 - Karaoke: ASS `\kf` progressive fill (PrimaryColour = spoken, SecondaryColour = waiting)
 - Waveform: fixed-position frequency bars (FFT), bottom-aligned, grow upward only — no horizontal scroll
 
+## Brand open and close
+
+Episodes **15 and later** are composed as one continuous program:
+
+```text
+English Listening Room intro → episode body (karaoke + waveform) → English Listening Room outro
+```
+
+The approved source assets live under `assets/branding/video/`:
+
+- `english-listening-room-intro.mp4`
+- `english-listening-room-outro.mp4`
+
+`compose_episode_video.py` adds both automatically when the episode identifier ends in `015` or higher. The assets are scaled to the 2K program canvas and their audio is joined to the mastered body audio in the same encode, so there is no separate full-length second transcode. Episodes `001`–`014` retain their existing body-only format. Use `--no-branding` only for an explicit exception or troubleshooting run.
+
+The packaging step runs after compose and reads the compose report. For branded episodes it measures the approved intro asset and adds that exact duration to every YouTube chapter timestamp; this prevents the prior body-only three-second offset from drifting chapter links. The packaging report records both `videoIntroOffsetSec` and `videoIntroOffsetSource` for audit.
+
 ## Cover / background (production)
 
 **Recommended:** generate a **scene without text**, then overlay hook typography in code (keeps hosts consistent, text crisp).
@@ -41,10 +58,11 @@ See `docs/shows/thumbnail_templates.md` for host visual policy and `coverText` f
 
 `--dev-pil` exists only for quick local experiments.
 
-### Two cover modes
+### Three cover modes
 
-- **`--from-scene <scene_source.png>`** — scene has **no text**; hook typography is overlaid in code (`thumbnail_overlay.py`). Keeps hosts consistent and text crisp. Produces `thumbnail.png` (with overlaid text) and `video_bg.jpg` (no text).
-- **`--from-image <cover_source.png>`** — the cover already has hook text **baked into the pixels** (image-generation tool rendered the words). Used for the ELR series A/B/C `episode_001`/`episode_002` covers. Produces `thumbnail.png` (blur-fill-composite of the baked cover) and `video_bg.jpg`.
+- **`--from-baked-scene <cover_baked_16x9.png>`** — native 16:9 cover with typography baked into the artwork; the production default. It preserves the completed composition and uses a separate no-text background scene.
+- **`--from-scene <cover_scene_16x9.png>`** — optional native 16:9 no-text scene with programmatic `coverText` overlay.
+- **`--from-image <cover_source.png>`** — legacy-only path for an existing cover with hook text baked into pixels. It produces a blur-fill composite and should not be used for new episodes.
 
 ### Critical: the video background must be text-free
 
@@ -53,11 +71,11 @@ In **both** modes, `video_bg.jpg` (the still behind the karaoke subtitles in the
 ```powershell
 & $py workspace/shows/tools/render_episode_thumbnail.py `
   --show series_b --episode episode_002 --workspace $ws `
-  --from-image workspace/shows/series_b/episode_002/video/000_episode_002.cover_source.png `
+  --from-baked-scene workspace/shows/series_b/episode_002/video/000_episode_002.cover_baked_16x9.png `
   --video-bg-from workspace/shows/series_b/episode_002/video/000_episode_002.video_bg_source.png
 ```
 
-`video_bg_source.png` is generated from the `videoBgImagePrompt` ("absolutely no text, letters, logos, or watermarks anywhere"). If it is missing, `video_bg.jpg` falls back to the cover source — and in `--from-image` mode that cover has baked hook words, so the cover's text leaks into the video behind the subtitles. Always generate `cover_source.png` (3:2, with baked hook text) **and** `video_bg_source.png` (no text) per episode.
+`video_bg_source_16x9.png` is generated from the `videoBgImagePrompt` ("absolutely no text, letters, logos, or watermarks anywhere"). Always generate both a native 16:9 baked cover and a separate native 16:9 background per episode; the latter must reserve clean subtitle and waveform space.
 
 Series accent colors live in `workspace/shows/tools/show_config.json` under each show's `thumbnail` block. See also `docs/shows/thumbnail_templates.md`.
 
@@ -102,7 +120,7 @@ $env:KMP_DUPLICATE_LIB_OK = "TRUE"
 & $py workspace/shows/tools/generate_episode_subtitles.py `
   --show series_b --episode episode_001 --workspace $ws --device cpu
 
-# 4) ffmpeg compose (prefers master.wav)
+# 4) ffmpeg compose (prefers master.wav; episodes 015+ include ELR intro/outro automatically)
 #    Encoder auto-selects NVENC (NVIDIA GPU) when the driver supports it,
 #    otherwise libx264 veryfast. Quality is gated by -b:v 5M / -maxrate 6M
 #    (VBR), not by the preset, so veryfast is visually equivalent to medium
@@ -139,12 +157,12 @@ Manifest turns must match the spoken reference text for meaningful `referenceCov
 | `workspace/shows/tools/master_episode_audio.py` | Per-turn cleanup + loudnorm master |
 | `workspace/shows/tools/render_episode_thumbnail.py` | CLI |
 | `workspace/shows/tools/generate_episode_subtitles.py` | CLI |
-| `workspace/shows/tools/compose_episode_video.py` | CLI |
+| `workspace/shows/tools/compose_episode_video.py` | CLI + episode-15 branding gate |
 
 ## Dependencies
 
 - `Pillow` — thumbnail compositor
 - `faster-whisper` — word alignment (`apps/worker-py/requirements.txt`)
-- `ffmpeg` on PATH — video compose
+- `ffmpeg` on PATH — video compose. If absent, the project uses the local Remotion ffmpeg binary installed by `npm install`.
 
 Optional: bundle fonts under `assets/fonts/` for libass portability on Windows.

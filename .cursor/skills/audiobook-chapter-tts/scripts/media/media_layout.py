@@ -12,9 +12,9 @@ WAVE_HEIGHT = 117
 WAVE_X = (WIDTH - WAVE_WIDTH) // 2
 WAVE_Y = 1093
 
-# ASS karaoke (top / above heads)
-ASS_FONT_SIZE = 104
-ASS_MARGIN_V = 133
-ASS_OUTLINE = 2
+# ASS karaoke (centre, safely above the lower waveform panel)
+ASS_FONT_SIZE = 136
+ASS_MARGIN_V = 0
+ASS_OUTLINE = 6
 ASS_SHADOW = 0
-ASS_WORDS_PER_LINE = 6
+ASS_WORDS_PER_LINE = 5

@@ -22,12 +22,12 @@ workspace/shows/series_X/episode_XXX/
     000_episode_XXX.master.wav              # mastered program (-16 LUFS / -1.5 dBTP)
     000_episode_XXX.preloudnorm.wav          # intermediate
   video/
-    000_episode_XXX.cover_source.png         # generated cover (text baked in)
-    000_episode_XXX.video_bg_source.png       # generated no-text bg
+    000_episode_XXX.cover_baked_16x9.png      # generated native 16:9 thumbnail with baked text
+    000_episode_XXX.video_bg_source_16x9.png  # generated native 16:9 no-text background
     000_episode_XXX.thumbnail.png             # final thumbnail
     000_episode_XXX.video_bg.jpg              # final video bg
     000_episode_XXX.barwave.mov              # waveform overlay
-    000_episode_XXX.mp4                      # final composed video
+    000_episode_XXX.mp4                      # final composed video (episode 015+: ELR intro + body + outro)
   subtitles/
     000_episode_XXX.words.json                # aligned words
     000_episode_XXX.karaoke.ass                # karaoke ASS
@@ -110,7 +110,7 @@ The competitor set tracks dual-host English-learning podcasts plus BBC Learning 
 
 ## Scriptwriting & validation (before render)
 
-Each series has a specialized skill that owns the script draft, the human-feel rules, and the word band. Always start here — do not jump straight to render.
+Each series has a specialized skill that owns the script draft, the human-feel rules, and the word band. Always start here — do not jump straight to render. [`SCRIPT_QUALITY_STANDARD.md`](SCRIPT_QUALITY_STANDARD.md) is the cross-series pre-render gate for situation-first hooks, varied episode engines, and accurate learner promises.
 
 | Series | Skill | Word band | Profile |
 | --- | --- | --- | --- |
@@ -122,8 +122,8 @@ The legacy `dialogue-podcast-scriptwriting` skill remains as a routing fallback 
 
 ### Workflow
 
-1. **Read the series skill** (`SKILL.md` + `STYLE.md` + `SCRIPT_TEMPLATE.md` + `DELIVERY.md`) and the series bible (`docs/shows/series_X/bible.md`). Get the topic from `select_next_topic.py --show <series> --apply` (writes `topic_selection_<date>.json`); or fall back to a user brief. Reject political / duplicate themes — the selector already excludes produced topics, but confirm against `ELR_YOUTUBE_PUBLISH.md` hard rules.
-2. **Draft** using `SCRIPT_TEMPLATE.md` — frozen cold-open chassis, brand name "English Listening Room" spoken once, hook template, 起承转合 per the series ratio, every turn tagged `[Delivery: …]`, `characterProfiles` block in header.
+1. **Read the series skill** (`SKILL.md` + `STYLE.md` + `SCRIPT_TEMPLATE.md` + `DELIVERY.md`), [`SCRIPT_QUALITY_STANDARD.md`](SCRIPT_QUALITY_STANDARD.md), and the series bible (`docs/shows/series_X/bible.md`). Get the topic from `select_next_topic.py --show <series> --apply` (writes `topic_selection_<date>.json`); or fall back to a user brief. Reject political / duplicate themes — the selector already excludes produced topics, but confirm against `ELR_YOUTUBE_PUBLISH.md` hard rules.
+2. **Draft** using `SCRIPT_TEMPLATE.md` — situation-first opening, brand name "English Listening Room" spoken once after the scene has landed, flexible episode engine, every turn tagged `[Delivery: …]`, `characterProfiles` block in header.
 3. **Validate** the draft until `ok=true`:
 
 ```powershell
@@ -160,6 +160,8 @@ The validator checks: title, description, exactly two hosts, balanced turns, CTA
 | Subtitles | `generate_episode_subtitles.py --scripted-only --master-turns-dir` | `generate_chapter_srt.py` |
 
 ## Full production (after script approval)
+
+For episodes `015` and later, the pack's compose stage automatically adds the approved brand clips from `assets/branding/video/`. Do not add the clips manually in an editor or append them after export; the compose stage joins their audio and video with the program in one render. The following packaging step then measures the composed intro asset and shifts all YouTube chapters by its exact duration. See [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md#brand-open-and-close).
 
 **Recommended:** one detached monitor job (render → master → pack → export):
 
@@ -208,7 +210,7 @@ Visual identity is defined in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md) (palett
 
 ### Before pack: generate the cover scene
 
-1. **Print prompts** (no image-gen in this repo):
+1. **Print prompts**:
 
 ```powershell
 & $py workspace/shows/tools/render_episode_thumbnail.py `
@@ -217,9 +219,11 @@ Visual identity is defined in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md) (palett
   --print-prompts
 ```
 
-2. **Image-gen tool** (external) → save outputs as:
-   - `000_episode_XXX.cover_source.png` (full cover, typography baked in)
-   - `000_episode_XXX.video_bg_source.png` (no-text background)
+2. **Built-in image generation** → save native **16:9** scene files:
+   - `000_episode_XXX.cover_baked_16x9.png` (final thumbnail composition, with the exact `coverText` baked into the artwork)
+   - `000_episode_XXX.video_bg_source_16x9.png` (subtitle-friendly video background; no text, letters, logos, or watermarks)
+
+   Use `render_episode_thumbnail.py --from-baked-scene` with the first file and `--video-bg-from` with the second. The `--from-scene` path is optional for experimental programmatic overlays; `--from-image` remains only for already-generated 3:2 covers.
 
 3. **Fill `youtube.json`** with `coverScene` / `coverAction` / `coverOutfitFemale` / `coverOutfitMale` / `tags`. **Do not hand-write `hookText` or `title`** — both are auto-synced from draft `Title:` when you run `prepare_episode_manifest.py` or at pack step 0 (`episode_youtube_meta.py`). **Never reuse the previous episode's scene/outfit/action** — see per-episode flexibility policy in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
 

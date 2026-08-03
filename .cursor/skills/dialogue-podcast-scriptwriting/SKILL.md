@@ -15,7 +15,7 @@ description: Write two-person English learning podcast scripts for ELR Series A/
 4. **Series A** (Ethan/Nora, B1-B2): daily-talk + Class-style packaging; profile `series_a`.
 5. **Series B** (Riley/Sam, A2-B1): episode contract + simple parts; profile `series_b`.
 6. When market-informed drafting is requested, read **youtube-corpus-analysis** outputs — not raw competitor transcripts.
-7. Use `RESEARCH.md`, `SCRIPT_TEMPLATE.md`, and series bibles; draft original dialogue with exactly two hosts.
+7. Read `docs/shows/SCRIPT_QUALITY_STANDARD.md`, then use `RESEARCH.md`, `SCRIPT_TEMPLATE.md`, and series bibles; draft original dialogue with exactly two hosts and a situation-first opening.
 8. Run `QC.md`; stop after the draft and wait for user feedback before TTS prep.
 
 ### Render / pack (after script approval)

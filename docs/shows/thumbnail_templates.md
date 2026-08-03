@@ -6,14 +6,14 @@ Channel avatar stays neutral **ELR** brand. Each dialogue series uses a **fixed 
 
 ## Production workflow
 
-1. `--print-prompts` → `coverImagePrompt` + `videoBgImagePrompt` (no text in generated image)
-2. Image-generation tool → save `000_episode_XXX.cover_source.png` and optional `000_episode_XXX.video_bg_source.png`
-3. `render_episode_thumbnail.py --from-image ...` → normalize cover, export thumbnail + video background
+1. `--print-prompts` → `coverImagePrompt` (baked exact text) + `videoBgImagePrompt` (no text)
+2. Built-in image generation → save native **16:9** `000_episode_XXX.cover_baked_16x9.png` and `000_episode_XXX.video_bg_source_16x9.png`
+3. `render_episode_thumbnail.py --from-baked-scene ...` → preserve the completed cover, export thumbnail + video background
 4. (Automated) `pack_episode.py` step 0 runs the hookText consistency check + the render above; use `--skip-thumbnail` to defer.
 
 ## Cover normalization methodology
 
-Image-generation tools rarely emit a true 16:9 frame (they produce 3:2 1536x1024 even when "16:9" is requested), and ELR covers bake text — level badge, show label, hook title, brand tag — directly into the pixels. The normalization step must therefore **never crop text** and **never stretch** the artwork. `normalize_youtube_cover.py` exposes several modes; the pipeline picks one per artifact.
+The current built-in image-generation workflow produces native 16:9 scenes and bakes the planned typography into the final cover composition. `normalize_youtube_cover.py` preserves that native frame; it remains a fallback for 3:2 legacy covers.
 
 ### Mode map
 
@@ -26,7 +26,7 @@ Image-generation tools rarely emit a true 16:9 frame (they produce 3:2 1536x1024
 | `blur-fill` | Scale to fill width, center-crop to height, light Gaussian blur | Soft color-matched backdrop layer (no readable text) |
 | `blur-fill-composite` | `blur-fill` backdrop + sharp cover **height-filled** (no top/bottom gap), rounded corners + feather | **Episode thumbnails / covers** (`thumbnail.png`, `thumbnail_cover.jpg`) |
 
-### Episode cover = `blur-fill-composite` (default)
+### Legacy baked cover = `blur-fill-composite`
 
 The episode cover (with baked-in text) is normalized with `blur-fill-composite` so that:
 
@@ -45,7 +45,11 @@ Tuned defaults (in `normalize_youtube_cover.py::_blur_fill_composite`):
 
 > Tune `blur_radius` only (lower = sharper backdrop, higher = softer). Do **not** switch the cover to `auto`/`top-crop` — that re-introduces text cropping. Do **not** raise `safe_margin` unless a rare cover needs horizontal inset only.
 
-### Video background = `auto` (direct crop)
+### Native 16:9 baked scene = completed cover (default)
+
+For a native 16:9 baked scene, `prepare_outputs_from_baked_scene()` keeps the full frame intact. Use the separate no-text background scene for the composed video so subtitle and waveform areas stay clean.
+
+### Legacy video background = `auto` (direct crop)
 
 The video background (`video_bg.jpg`) is the **no-text scene** (`video_bg_source.png` if provided, else the cover source). It is normalized with `auto` (top-crop fill) so it fills 16:9 cleanly with no blur and no side bars — the center stays clean for subtitles and audio bars overlaid during video composition.
 
@@ -60,7 +64,7 @@ The video background (`video_bg.jpg`) is the **no-text scene** (`video_bg_source
 
 ### Why not just generate at 16:9?
 
-The image-generation tool's `aspect_ratio="16:9"` still returns 3:2. Even if a future tool emits true 16:9, baked-in text placed near the frame edge remains at risk under any downstream crop (square/vertical reformat, player UI overlays). The `blur-fill-composite` method is robust to both: it preserves the full artwork and lets the blurred fill absorb any ratio mismatch. Keep this method even after tooling improves.
+Keep `blur-fill-composite` only for archival 3:2 covers. New native 16:9 baked covers preserve the finished composition directly.
 
 Host visual anchors live in [`workspace/characters/registry.json`](../../workspace/characters/registry.json). **Faces and age bands are fixed per host**; scene, outfits, and actions change per episode via `youtube.json`.
 
@@ -166,8 +170,8 @@ Keep existing Regency drama-hook chapter thumbnails; do not reuse podcast templa
 Artifacts now live in typed subdirectories (see [`EPISODE_PIPELINE.md`](EPISODE_PIPELINE.md) "Episode directory structure"). The cover-source and video-bg-source images that this tool consumes/produces:
 
 ```text
-workspace/shows/series_X/episode_XXX/video/000_episode_XXX.cover_source.png
-workspace/shows/series_X/episode_XXX/video/000_episode_XXX.video_bg_source.png
+workspace/shows/series_X/episode_XXX/video/000_episode_XXX.cover_baked_16x9.png
+workspace/shows/series_X/episode_XXX/video/000_episode_XXX.video_bg_source_16x9.png
 workspace/shows/series_X/episode_XXX/video/000_episode_XXX.thumbnail.png
 workspace/shows/series_X/episode_XXX/video/000_episode_XXX.video_bg.jpg
 ```

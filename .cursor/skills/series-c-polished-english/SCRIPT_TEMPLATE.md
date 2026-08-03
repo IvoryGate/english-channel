@@ -37,8 +37,7 @@ characterProfiles:
 
 ```
 [Music sting]
-Leo:  Hey. Welcome back to Polished English, the show where two people talk
-      about real life, and you overhear the English you actually need.
+Leo:  [Open in the exact work or social tension. Do not start with a welcome.]
 Mia:  I'm Mia.
 Leo:  And I'm Leo. And this is the English Listening Room.
 ```
@@ -184,7 +183,7 @@ Leo:  Bye.
 ## Validation checklist
 
 - [ ] Header has all fields including `characterProfiles` and `Archetype`
-- [ ] Cold open uses frozen chassis verbatim
+- [ ] Cold open opens with the exact work or social tension before the brand
 - [ ] "English Listening Room" spoken once after dual intro
 - [ ] Hook uses one of 4 templates (thesis-first default)
 - [ ] Early contract (P0) promises slow end recap within first ~3 min

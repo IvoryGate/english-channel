@@ -25,6 +25,7 @@ METADATA_LABELS = {
     "cold open",
     "cta",
     "description",
+    "episode engine",
     "early contract",
     "episode contract",
     "estimated duration",
@@ -74,6 +75,11 @@ PROFILE_DEFAULTS: dict[str, dict[str, Any]] = {
     "series_c": {"min_words": 2000, "max_words": 2800, "spoken_only": True, "structure": "polished"},
 }
 
+FROZEN_COLD_OPEN_PHRASES = (
+    "hey, hey, english learners. welcome back to daily talk",
+    "welcome back to polished english, where two people talk about real life",
+)
+
 
 def _host_line_match(line: str) -> re.Match[str] | None:
     return HOST_LINE_RE.match(line) or MARKDOWN_HOST_LINE_RE.match(line)
@@ -92,6 +98,7 @@ def validate_script_text(
     lines = text.splitlines()
     host_turns: Counter[str] = Counter()
     spoken_text_parts: list[str] = []
+    spoken_turns: list[str] = []
     issues: list[dict[str, str]] = []
     title_present = any(line.lower().startswith("title:") for line in lines)
     description_present = any(line.lower().startswith("description:") for line in lines)
@@ -106,7 +113,9 @@ def validate_script_text(
             host = match.group("host").strip()
             if host.lower() not in METADATA_LABELS:
                 host_turns[host] += 1
-                spoken_text_parts.append(match.group("text").strip())
+                spoken_turn = match.group("text").strip()
+                spoken_text_parts.append(spoken_turn)
+                spoken_turns.append(spoken_turn)
 
     total_words = word_count(" ".join(spoken_text_parts)) if spoken_only else word_count(text)
     if not title_present:
@@ -126,6 +135,36 @@ def validate_script_text(
         issues.append({"code": "TOO_LONG", "message": f"Script has {total_words} words, above maximum {max_words}."})
     if not cta_present:
         issues.append({"code": "MISSING_CTA", "message": "End with one learner action or CTA."})
+
+    if profile in {"polished_english", "series_a", "series_b", "series_c"}:
+        opening = " ".join(spoken_turns[:2]).lower()
+        if any(phrase in text_lower for phrase in FROZEN_COLD_OPEN_PHRASES):
+            issues.append(
+                {
+                    "code": "FROZEN_COLD_OPEN",
+                    "message": "Replace the inherited greeting chassis with a specific situation, failed moment, or social tension.",
+                }
+            )
+        elif re.search(r"\bwelcome\s+(back|to)\b|\benglish learners\b", opening):
+            issues.append(
+                {
+                    "code": "GREETING_FIRST_OPEN",
+                    "message": "Open with the learner's situation before the welcome or show name.",
+                }
+            )
+
+        repeated_turns = [
+            turn
+            for turn, count in Counter(re.sub(r"\s+", " ", item.lower()) for item in spoken_turns).items()
+            if count >= 5 and word_count(turn) >= 4
+        ]
+        if repeated_turns:
+            issues.append(
+                {
+                    "code": "EXCESSIVE_EXACT_REPETITION",
+                    "message": "Reduce a verbatim learner phrase repeated five or more times in the same script.",
+                }
+            )
 
     structure = profile_config.get("structure")
     if structure == "polished":

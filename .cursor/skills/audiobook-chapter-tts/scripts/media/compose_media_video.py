@@ -14,10 +14,26 @@ from media.thumbnail_tokens import ThumbnailTokens, hex_to_rgb
 _HW_CACHE: str | None = None
 
 
+def resolve_ffmpeg() -> str:
+    """Use PATH ffmpeg when available, otherwise the project-local Remotion binary."""
+    system_ffmpeg = shutil.which("ffmpeg")
+    if system_ffmpeg:
+        return system_ffmpeg
+    repo_root = Path(__file__).resolve().parents[5]
+    bundled_ffmpeg = repo_root / "node_modules" / "@remotion" / "compositor-win32-x64-msvc" / "ffmpeg.exe"
+    if bundled_ffmpeg.is_file():
+        return str(bundled_ffmpeg)
+    raise FileNotFoundError(
+        "ffmpeg was not found on PATH and the project-local Remotion binary is missing. "
+        "Install dependencies with npm install or make ffmpeg available on PATH."
+    )
+
+
 def _probe_encoder(encoder: str) -> bool:
     """Actually open `encoder` on a tiny test pattern (list check is not enough)."""
-    ffmpeg = shutil.which("ffmpeg")
-    if not ffmpeg:
+    try:
+        ffmpeg = resolve_ffmpeg()
+    except FileNotFoundError:
         return False
     try:
         proc = subprocess.run(
@@ -79,6 +95,8 @@ def build_ffmpeg_command(
     ass_path: Path,
     waveform_mov: Path,
     output_mp4: Path,
+    intro_mp4: Path | None = None,
+    outro_mp4: Path | None = None,
     fonts_dir: Path | None = None,
     preset: str = "veryfast",
     crf: int = 18,
@@ -96,12 +114,32 @@ def build_ffmpeg_command(
     else:
         ass_filter = f"ass='{ass}'"
 
-    filter_complex = (
-        f"[0:v]scale={WIDTH}:{HEIGHT},setsar=1[bg];"
-        f"[1:v]scale={WAVE_WIDTH}:{WAVE_HEIGHT},format=rgba[wave];"
+    use_branding = intro_mp4 is not None or outro_mp4 is not None
+    if use_branding and (intro_mp4 is None or outro_mp4 is None):
+        raise ValueError("intro_mp4 and outro_mp4 must be supplied together")
+
+    background_index = 1 if use_branding else 0
+    waveform_index = 2 if use_branding else 1
+    audio_index = 3 if use_branding else 2
+    main_filter = (
+        f"[{background_index}:v]scale={WIDTH}:{HEIGHT},setsar=1[bg];"
+        f"[{waveform_index}:v]scale={WAVE_WIDTH}:{WAVE_HEIGHT},format=rgba[wave];"
         f"[bg][wave]overlay={WAVE_X}:{WAVE_Y}:shortest=1:format=auto[bgwave];"
-        f"[bgwave]{ass_filter}[v]"
+        f"[bgwave]{ass_filter},fps=30,format=yuv420p[mainv]"
     )
+    if use_branding:
+        outro_index = 4
+        filter_complex = (
+            f"[0:v]scale={WIDTH}:{HEIGHT},setsar=1,fps=30,format=yuv420p[introv];"
+            f"[0:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[introa];"
+            f"{main_filter};"
+            f"[{audio_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[maina];"
+            f"[{outro_index}:v]scale={WIDTH}:{HEIGHT},setsar=1,fps=30,format=yuv420p[outrov];"
+            f"[{outro_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[outroa];"
+            f"[introv][introa][mainv][maina][outrov][outroa]concat=n=3:v=1:a=1[v][a]"
+        )
+    else:
+        filter_complex = main_filter.replace("[mainv]", "[v]")
 
     # Pick encoder: hardware (NVENC/QSV/AMF) when available for fast GPU encoding
     # with quality parity to libx264 medium; fall back to libx264 otherwise.
@@ -155,12 +193,15 @@ def build_ffmpeg_command(
             "-bufsize", bufsize,
         ]
 
-    return [
-        "ffmpeg",
+    input_args = [
         "-y",
         "-hide_banner",
         "-loglevel",
         "error",
+    ]
+    if use_branding:
+        input_args.extend(["-i", str(intro_mp4)])
+    input_args.extend([
         "-loop",
         "1",
         "-framerate",
@@ -171,12 +212,19 @@ def build_ffmpeg_command(
         str(waveform_mov),
         "-i",
         str(audio_wav),
+    ])
+    if use_branding:
+        input_args.extend(["-i", str(outro_mp4)])
+
+    return [
+        resolve_ffmpeg(),
+        *input_args,
         "-filter_complex",
         filter_complex,
         "-map",
         "[v]",
         "-map",
-        "2:a",
+        "[a]" if use_branding else str(audio_index) + ":a",
         *video_args,
         "-c:a",
         "aac",
@@ -199,6 +247,8 @@ def compose_media_video(
     fonts_dir: Path | None = None,
     report_path: Path | None = None,
     waveform_mov: Path | None = None,
+    intro_mp4: Path | None = None,
+    outro_mp4: Path | None = None,
     encoder: str = "auto",
     preset: str = "veryfast",
 ) -> dict[str, Any]:
@@ -213,6 +263,8 @@ def compose_media_video(
         ass_path=ass_path,
         waveform_mov=temp_wave,
         output_mp4=output_mp4,
+        intro_mp4=intro_mp4,
+        outro_mp4=outro_mp4,
         fonts_dir=fonts_dir,
         encoder=encoder,
         preset=preset,
@@ -237,6 +289,11 @@ def compose_media_video(
         "waveHeight": WAVE_HEIGHT,
         "waveX": WAVE_X,
         "waveY": WAVE_Y,
+        "branding": {
+            "enabled": intro_mp4 is not None and outro_mp4 is not None,
+            "introMp4": str(intro_mp4).replace("\\", "/") if intro_mp4 else None,
+            "outroMp4": str(outro_mp4).replace("\\", "/") if outro_mp4 else None,
+        },
         "videoEncoder": used_encoder,
         "ffmpegCommand": command,
     }

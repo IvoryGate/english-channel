@@ -125,7 +125,7 @@ Sam:   Bye.
 ## Validation checklist
 
 - [ ] Header has all fields including `characterProfiles`
-- [ ] Cold open uses frozen chassis verbatim
+- [ ] Cold open opens with a concrete task or mishap before the brand
 - [ ] "English Listening Room" spoken once after dual intro
 - [ ] Hook uses one of 3 templates (contrarian-number default)
 - [ ] 3 teaching beats with learner-asks 4-beat loop
