@@ -40,8 +40,15 @@ def test_workspace_contract_rejects_free_form_path(tmp_path: Path) -> None:
         assert_canonical_workspace(tmp_path, "series_b", 16, tmp_path / "somewhere-else")
 
 
-def test_manifest_includes_host_lines_before_first_section() -> None:
-    draft = """Ethan: This opening used to disappear.
+def test_manifest_starts_after_header_and_includes_markdown_sections() -> None:
+    draft = """characterProfiles:
+  Ethan: "curious learner"
+  Nora: "warm coach"
+
+---
+
+## Intro Hook
+Ethan: This opening used to disappear.
 Nora: It is part of the spoken episode.
 
 [Teaching Plan]

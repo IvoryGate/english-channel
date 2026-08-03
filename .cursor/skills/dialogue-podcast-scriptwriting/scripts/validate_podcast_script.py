@@ -106,8 +106,18 @@ def validate_script_text(
     text_lower = text.lower()
     profile_config = PROFILE_DEFAULTS.get(profile, PROFILE_DEFAULTS["general"])
     spoken_only = bool(profile_config.get("spoken_only"))
+    in_character_profiles = False
 
     for line in lines:
+        stripped = line.strip()
+        if stripped.lower() == "characterprofiles:":
+            in_character_profiles = True
+            continue
+        if in_character_profiles:
+            if not line[:1].isspace() or stripped.startswith(("[", "#", "---")):
+                in_character_profiles = False
+            else:
+                continue
         match = _host_line_match(line)
         if match:
             host = match.group("host").strip()

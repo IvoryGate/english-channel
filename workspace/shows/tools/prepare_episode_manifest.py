@@ -18,6 +18,7 @@ VOICE_PROFILES_PATH = REPO_ROOT / "workspace" / "dialogue_podcast_research" / "v
 
 DELIVERY_RE = re.compile(r"^\[Delivery:\s*(.+?)\]\s*$")
 SECTION_RE = re.compile(r"^\[(.+?)\]\s*$")
+MARKDOWN_SECTION_RE = re.compile(r"^#{1,6}\s+(.+?)\s*$")
 METADATA_LINE_RE = re.compile(r"^(Title|Description|Target Level|Estimated Duration|Hosts|Show Profile|Archetype|Learner Problem|Key Phrases|T1|T2|T3):")
 
 
@@ -72,19 +73,22 @@ def parse_turns(text: str, show: dict[str, Any]) -> list[dict[str, Any]]:
     turns: list[dict[str, Any]] = []
     section = ""
     delivery_cue = ""
-    # Host lines before the first bracketed section are still spoken script.
-    # Older behavior silently omitted these turns and produced incomplete audio.
-    in_script = True
+    in_script = False
 
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped:
+            continue
+        if stripped == "---":
+            in_script = True
             continue
         delivery_match = DELIVERY_RE.match(stripped)
         if delivery_match:
             delivery_cue = delivery_match.group(1)
             continue
         section_match = SECTION_RE.match(stripped)
+        if not section_match:
+            section_match = MARKDOWN_SECTION_RE.match(stripped)
         if section_match:
             section = section_match.group(1)
             in_script = section not in skip_sections
@@ -122,14 +126,21 @@ def source_spoken_word_count(text: str, show: dict[str, Any]) -> int:
     hosts = set(show["hosts"])
     skip_sections = {"Teaching Plan", "Structure Map", "Publish Packaging", "Episode Contract"}
     section = ""
+    in_script = False
     total = 0
     for line in text.splitlines():
         stripped = line.strip()
+        if stripped == "---":
+            in_script = True
+            continue
         section_match = SECTION_RE.match(stripped)
+        if not section_match:
+            section_match = MARKDOWN_SECTION_RE.match(stripped)
         if section_match:
             section = section_match.group(1)
+            in_script = section not in skip_sections
             continue
-        if section in skip_sections:
+        if not in_script or section in skip_sections:
             continue
         host_match = host_pattern.match(stripped)
         if host_match and host_match.group(1) in hosts:
