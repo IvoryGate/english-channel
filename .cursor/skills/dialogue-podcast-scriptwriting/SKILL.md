@@ -20,13 +20,8 @@ description: Write two-person English learning podcast scripts for ELR Series A/
 
 ### Render / pack (after script approval)
 
-See `docs/shows/EPISODE_PIPELINE.md`. **Production monitor** (audiobook parity):
-
-1. **Full job:** `scripts/monitor_episode_production.py --detach --force ...`  
-   Per-turn VoxCPM render (retry on crash) → master → scripted subs → compose → export.  
-   Log: `logs/monitor_episode_<show>_<episode>.log`
-2. Do **not** block chat; poll log when user asks.
-3. Human QC after render self-check; pack runs automatically in monitor (master always refreshed unless `--skip-master` added later).
+Hand off to the `elr-episode-production` Skill. Its public entry point is
+`scripts/elr.py`; do not launch the low-level monitor or pack scripts directly.
 
 ### Opt-in workflows
 
@@ -36,8 +31,8 @@ See `docs/shows/EPISODE_PIPELINE.md`. **Production monitor** (audiobook parity):
 | Validate legacy polished_english draft | `validate_podcast_script.py --profile series_c` |
 | Extract host reference clips (ops) | `extract_host_reference_clips.py` |
 | Prepare render manifest | `workspace/shows/tools/prepare_episode_manifest.py` |
-| Render episode (VoxCPM) | `scripts/run_episode_render.py --manifest ...` (long jobs) |
-| Pack episode (master + video) | `scripts/launch_episode_pack.py --detach ...` (background + log) |
+| Produce approved episode | Use `elr-episode-production`: `scripts/elr.py produce ...` |
+| Check or resume production | Use `elr-episode-production`: `status` / `resume` |
 | Rewrite one section | Revise only the named section and preserve host roles |
 
 ### Related skills (do not duplicate here)

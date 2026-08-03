@@ -151,33 +151,39 @@ The validator checks: title, description, exactly two hosts, balanced turns, CTA
 | Script draft + validation | series skill + `validate_podcast_script.py` | (audiobook: source text QC) |
 | Thumbnail + video bg | `render_episode_thumbnail.py` (now step 0 in pack) | `cover_pipeline.py` |
 | Render turns + raw concat + QC | `render_episode.py` | `render_chapter.py` |
-| Stable GPU launch | `scripts/monitor_episode_render.py` (per-turn/batch + retry) | `monitor_book_chapters.py` |
-| Full production | `scripts/monitor_episode_production.py --detach` | monitor + packaging |
+| Stable GPU launch | `scripts/elr.py produce` (preflight + serial retry/resume) | `monitor_book_chapters.py` |
+| Production status | `scripts/elr.py status` | monitor status |
 | QC report file | `check_episode.py --write-report` | `check_chapter.py --write-report` |
 | Master | `master_episode_audio.py` | (audiobook: peak boost only) |
 | YouTube packaging (title + description + chapter timestamps) | `prepare_episode_youtube_packaging.py` (step 5 in pack) | `prepare_youtube_packaging.py` |
-| Full pack | `pack_episode.py` / `scripts/launch_episode_pack.py --detach` | monitor + packaging |
+| Full pack | internal `pack_episode.py`, invoked by `scripts/elr.py` | monitor + packaging |
 | Subtitles | `generate_episode_subtitles.py --scripted-only --master-turns-dir` | `generate_chapter_srt.py` |
 
 ## Full production (after script approval)
 
 For episodes `015` and later, the pack's compose stage automatically adds the approved brand clips from `assets/branding/video/`. Do not add the clips manually in an editor or append them after export; the compose stage joins their audio and video with the program in one render. The following packaging step then measures the composed intro asset and shifts all YouTube chapters by its exact duration. See [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md#brand-open-and-close).
 
-**Recommended:** one detached monitor job (render → master → pack → export):
+**Only public production entry point:** `scripts/elr.py`. It derives the episode
+workspace, refreshes the manifest, runs preflight before model load, serializes
+A/B/C, streams progress, persists state, and verifies export before completion.
 
 ```powershell
-& $py scripts/monitor_episode_production.py `
-  --show series_b --episode episode_001 `
-  --workspace workspace/shows/series_b/episode_001 `
-  --episode-num 1 --force --detach
+& $py scripts/elr.py preflight --episode 17 --series all
+& $py scripts/elr.py produce --episode 17 --series all
 ```
 
-Log: `logs/monitor_episode_series_b_episode_001.log`
+For unattended work with a visible progress window use
+`--detach --visible-window`. The command prints the PID, state file, and log
+path. Query the durable state at any time:
+
+```powershell
+& $py scripts/elr.py status --episode 17
+```
 
 ### Why per-turn monitor?
 
 Loading VoxCPM once for 134 turns in one process often CUDA-crashes on 8GB GPUs.
-`monitor_episode_render.py` renders **batches of turns per subprocess** (default `--batch-size 10`):
+The internal monitor renders **batches of turns per subprocess** (default `--batch-size 20`):
 one model load → up to N turns → unload. Retries failed batches, resumes when WAVs already exist,
 then compose+QC once at the end. Do **not** set batch-size to the full episode turn count.
 
@@ -187,21 +193,22 @@ One heavy GPU job at a time — enforced by `scripts/gpu_production_lock.py` (`l
 
 | Rule | Why |
 |------|-----|
-| **`--batch-size` default 10, max 20** | One VoxCPM load per batch; avoids per-turn reload overhead. Entire episode in one process still OOMs |
+| **`--batch-size` default 20, max 20** | One VoxCPM load per batch; tested balance between load overhead and 8GB VRAM. Entire episodes still OOM |
 | **`torch.cuda.empty_cache()` between turns** | Keeps VRAM stable within a batch on 8GB GPUs |
 | **Global GPU lock** on all production entry points | Prevents duplicate relaunches stacking 2× VoxCPM or VoxCPM + NVENC |
 | **Render `--no-self-check` when pack uses `--qc-no-asr`** | Skips redundant Whisper load after turns; pack runs layer-1 QC only |
 | **Pack compose defaults to `libx264`** (CPU) | ffmpeg NVENC contends with VoxCPM on the same NVIDIA GPU |
-| **Serial series** in `run_all_series_full.py` / `resume_episode_production.py` | A → B → C; never parallel renders |
+| **Serial series** in `scripts/elr.py` | A → B → C; never parallel renders |
 
-Entry points that acquire the lock: `monitor_episode_production.py`, `run_all_series_full.py`, `resume_episode_production.py`, `run_episode_pack.py`. Child render/pack subprocesses inherit the parent lock (same tree).
+`scripts/elr.py` holds the lock for the full selected series set. Internal child
+render/pack subprocesses inherit the parent lock.
 
 **Do not** start a second production script while one holds the lock. If a process crashed and left a stale lock, delete `logs/gpu_production.lock` only after confirming the PID is dead.
 
 Resume after interrupt:
 
 ```powershell
-& $py scripts/resume_episode_production.py --episode episode_003 --episode-num 3 --detach
+& $py scripts/elr.py resume --episode 17 --series all --detach --visible-window
 ```
 
 ## Visual generation & pack (after script approval)
@@ -229,21 +236,15 @@ Visual identity is defined in [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md) (palett
 
 ### Pack (one-dragon)
 
-Step 0 (thumbnail + hookText check) runs automatically unless `--skip-thumbnail`:
+After both images are saved, the production controller performs thumbnail,
+render, QC, master, subtitles, compose, packaging, verification, and export:
 
 ```powershell
-& $py scripts/launch_episode_pack.py `
-  --show series_b --episode episode_001 `
-  --workspace workspace/shows/series_b/episode_001 `
-  --episode-num 1 `
-  --detach
+& $py scripts/elr.py produce --episode 17 --series series_b
 ```
 
-If the cover scene is not ready yet, skip step 0:
-
-```powershell
-& $py scripts/launch_episode_pack.py ... --detach --skip-thumbnail
-```
+If either image is absent, preflight stops before loading VoxCPM. Generate the
+missing approved visual; do not skip the gate for a formal episode.
 
 ## Render (after manifest)
 
@@ -291,26 +292,19 @@ One job: **thumbnail (step 0) → QC → master → scripted subs → compose �
 **YouTube title hard limit (100 chars).** `prepare_episode_youtube_packaging.py` (step 5) fails the pack if `youtube.json` `title` exceeds 100 characters — YouTube silently truncates or rejects longer titles. Author the title ≤100 from the start; the `| Learn English` suffix on Series A titles is optional and should be dropped first if a title is over 100. The same guard runs in `export_episode_to_youtube_dir.py` as a safety net.
 
 ```powershell
-& $py scripts/launch_episode_pack.py `
-  --show series_b --episode episode_001 `
-  --workspace workspace/shows/series_b/episode_001 `
-  --episode-num 1 `
-  --detach
+& $py scripts/elr.py produce --episode 17 --series series_b
 ```
 
-Log: `logs/episode_pack_*.log`. Subtitles use **scripted-only** (no 134× Whisper).
+The state file identifies the exact run log. Subtitles use **scripted-only**
+(no per-turn Whisper pass).
 
 Resume when master exists:
 
 ```powershell
-& $py scripts/launch_episode_pack.py ... --detach --skip-master
+& $py scripts/elr.py resume --episode 17 --series series_b
 ```
 
-Skip the cover/thumbnail step (e.g. cover not generated yet):
-
-```powershell
-& $py scripts/launch_episode_pack.py ... --detach --skip-thumbnail
-```
+Do not skip required cover, manifest, QC, or export checks for a formal package.
 
 ## YouTube packaging (step 5, post-audio)
 
@@ -354,23 +348,22 @@ It is also wired as **step 5 of `pack_episode.py`** (between compose and export)
 
 ## Agent behavior
 
-### Render (VoxCPM)
-
-1. Use `scripts/run_episode_render.py --manifest ...` (not nested Cursor Wait chains).
-2. For full episode: `--skip-existing` to resume.
-3. After render completes, **summarize QC self-check** from stdout; wait for human before pack.
-
-### Pack (master + video)
-
-1. Start **`scripts/launch_episode_pack.py --detach`** (or skill wrapper under `dialogue-podcast-scriptwriting/scripts/`).
-2. Tell user **log path** and episode id; do **not** block chat on compose/ffmpeg.
-3. Poll log or artifacts when user asks; do not restart if job is already running.
-4. After pack/export completes, write the topic back as done so the next `select_next_topic.py` run excludes it: `workspace/shows/tools/mark_topic_done.py --show <series> --episode <episode_id> --auto`.
+1. Use the `elr-episode-production` Skill and `scripts/elr.py` for all formal
+   render/pack/export work.
+2. Run preflight first. For a background run, use `--detach --visible-window`
+   and report the printed PID, state path, and log path immediately.
+3. Answer progress questions with `scripts/elr.py status`; do not start a second
+   job because a terminal appears quiet.
+4. Resume an interrupted job with `resume`, never `produce --force`, unless the
+   user explicitly requests new audio.
+5. After state reaches `DONE`, write the topic back as done so the next selector
+   excludes it: `workspace/shows/tools/mark_topic_done.py --show <series>
+   --episode <episode_id> --auto`.
 
 ### Do not
 
 - Run 134-turn Whisper subtitle alignment in agent shell (use `--scripted-only`).
-- Nest long jobs inside Cursor agent blocking shell without `--detach`.
+- Start production through a low-level compatibility script.
 - Auto-fix flagged turns without human confirmation.
 
 ## Revision history

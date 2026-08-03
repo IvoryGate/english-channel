@@ -30,6 +30,18 @@ verified complete package.
 - Generating new episode content or replacing approved visual assets.
 - Parallel GPU rendering.
 
+## System Boundaries
+
+- Public controller and state: `scripts/elr.py`, `scripts/elr_production.py`,
+  `scripts/elr_run_state.py`.
+- Internal render/pack/export tools: `scripts/monitor_episode_*.py` and
+  `workspace/shows/tools/`.
+- Media composition: `.cursor/skills/audiobook-chapter-tts/scripts/media/`.
+- Operator contract: `.cursor/skills/elr-episode-production/`, `README.md`, and
+  `docs/shows/`.
+- Runtime outputs remain ignored under `workspace/` and `logs/`; only reusable
+  show tools and approved branding assets are versioned.
+
 ## Milestones
 
 1. **Source and contracts** — track show tools; add canonical path helpers,
@@ -69,4 +81,26 @@ verified complete package.
 - [x] Source and contracts complete.
 - [x] Observable runner complete.
 - [x] Atomic delivery complete.
-- [ ] Skill/docs/release validation complete.
+- [x] Skill/docs/release validation complete.
+
+**State:** completed by the primary agent on 2026-08-03.
+
+## Validation
+
+- `npm run check:encoding` passed.
+- Architecture and docs-index checks passed.
+- `npm run build` passed for API, web, and shared types.
+- Full Python suite passed: 29 tests.
+- `elr-episode-production` passed `quick_validate.py`.
+- Episode 016 all-series dry-run resolved exactly three canonical workspaces and
+  batch size 20.
+- Real Series A 016 preflight verified CUDA, VoxCPM files, 20.2 GiB available
+  memory, disk, branding, paths, and 99.1% manifest coverage; it correctly
+  rejected the historical 1708-word script against the new 1800-word minimum.
+
+## Archive Criteria
+
+- [x] All four milestones are implemented and tested.
+- [x] Public workflow documentation points to one controller.
+- [x] No final MP4 or export directory is promoted before verification.
+- [x] Plan moved to `completed/` with the finishing change.

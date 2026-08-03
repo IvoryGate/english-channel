@@ -58,7 +58,7 @@ $man = "workspace/shows/series_a/episode_001/000_episode_001.episode_manifest.js
 .\.conda-env\python.exe workspace/shows/tools/prepare_episode_manifest.py --draft workspace/shows/series_a/episode_001/000_episode_001.draft.md
 .\.conda-env\python.exe scripts/run_episode_render.py --manifest $man --skip-existing
 # After human audio OK:
-.\.conda-env\python.exe scripts/launch_episode_pack.py --show series_a --episode episode_001 --workspace workspace/shows/series_a/episode_001 --detach
+.\.conda-env\python.exe scripts/elr.py produce --episode 1 --series series_a --detach --visible-window
 # After pack/export completes, write the topic back as done:
 .\.conda-env\python.exe workspace/shows/tools/mark_topic_done.py --show series_a --episode episode_001 --auto
 ```

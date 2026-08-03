@@ -28,6 +28,12 @@ The approved source assets live under `assets/branding/video/`:
 
 `compose_episode_video.py` adds both automatically when the episode identifier ends in `015` or higher. The assets are scaled to the 2K program canvas and their audio is joined to the mastered body audio in the same encode, so there is no separate full-length second transcode. Episodes `001`–`014` retain their existing body-only format. Use `--no-branding` only for an explicit exception or troubleshooting run.
 
+Compose writes to `*.partial.mp4` and promotes the file only after ffprobe
+confirms a 2560×1440 video stream with positive duration. Export similarly
+builds `episodeNN.incomplete`, checks all seven upload files plus the 2K video
+and cover gates, then atomically promotes the directory. A crashed encode or
+copy therefore cannot masquerade as a final product.
+
 The packaging step runs after compose and reads the compose report. For branded episodes it measures the approved intro asset and adds that exact duration to every YouTube chapter timestamp; this prevents the prior body-only three-second offset from drifting chapter links. The packaging report records both `videoIntroOffsetSec` and `videoIntroOffsetSource` for audit.
 
 ## Cover / background (production)

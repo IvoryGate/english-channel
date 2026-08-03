@@ -76,7 +76,9 @@ cd H:\english-channel
   --episode-num 1
 ```
 
-Run in **background** with `--detach` (audiobook monitor parity). Agent: `scripts/launch_episode_pack.py --detach ...`. Log: `logs/episode_pack_*.log`.  
+Run through `scripts/elr.py produce`; for unattended work use
+`--detach --visible-window`. Query `scripts/elr.py status --episode N` instead
+of guessing from a silent terminal. The state record contains the exact log.
 Subtitles use **`--scripted-only`** (audiobook timing from WAV duration + script — no 134× Whisper).  
 Shortcut: `scripts\run_series_b_ep001_pack.ps1` (add `--skip-master` if master already exists).
 

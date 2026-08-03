@@ -55,3 +55,22 @@ Your preferred local model is `openbmb/VoxCPM2`.
 If CUDA memory is tight, close GPU-heavy applications and retry with:
 
 - `.\.venv\Scripts\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --no-optimize`
+
+## English Listening Room Production
+
+After an episode script and its native 16:9 cover/background are approved, use
+the production controller rather than launching render and pack scripts
+separately:
+
+```powershell
+$py = ".\.conda-env\python.exe"
+& $py scripts/elr.py preflight --episode 17 --series all
+& $py scripts/elr.py produce --episode 17 --series all
+& $py scripts/elr.py status --episode 17
+& $py scripts/elr.py resume --episode 17 --series all
+```
+
+The controller derives canonical workspaces, runs A/B/C serially with batch size
+20, streams progress, persists state under `logs/elr_runs/`, resumes completed
+turns, and exports only after the final package passes verification. See
+`docs/shows/EPISODE_PIPELINE.md` and the `elr-episode-production` Skill.
