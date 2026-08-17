@@ -37,6 +37,8 @@
   "visual": {
     "backgroundRequired": true,
     "backgroundStrategy": "generated_editorial_scene",
+    "thumbnailRequired": true,
+    "thumbnailStrategy": "dedicated_editorial_cover",
     "brandLogo": "branding/english_listening_room_avatar_v2.png",
     "artDirection": "warm mature editorial illustration with calm caption space",
     "audienceSignal": "welcoming to adult women 25-44 without excluding other learners",

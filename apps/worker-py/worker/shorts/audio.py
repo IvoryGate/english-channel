@@ -111,6 +111,19 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
     }
 
 
+def _tempo_factor_for_variant(raw_duration: float, manifest: dict[str, Any]) -> float:
+    planned = float(manifest["durationPlannedSec"])
+    cutoff = float(manifest.get("renderSettings", {}).get("durationVariantCutoffSec", 50.0))
+    planned_is_short = planned <= cutoff
+    raw_is_short = raw_duration <= cutoff
+    if planned_is_short == raw_is_short:
+        return 1.0
+    factor = raw_duration / planned
+    if not 0.5 <= factor <= 2.0:
+        raise ValueError(f"Required tempo factor {factor:.3f} is outside ffmpeg's safe range")
+    return factor
+
+
 def _master_audio(raw_path: Path, master_path: Path, manifest: dict[str, Any]) -> None:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
@@ -118,6 +131,12 @@ def _master_audio(raw_path: Path, master_path: Path, manifest: dict[str, Any]) -
     target = float(manifest["renderSettings"]["loudnessTargetLufs"])
     peak = float(manifest["renderSettings"]["truePeakMaxDb"])
     sample_rate = int(manifest["renderSettings"]["audioSampleRate"])
+    raw_duration = float(sf.info(raw_path).duration)
+    tempo_factor = _tempo_factor_for_variant(raw_duration, manifest)
+    filters = []
+    if tempo_factor != 1.0:
+        filters.append(f"atempo={tempo_factor:.6f}")
+    filters.append(f"loudnorm=I={target}:TP={peak}:LRA=11")
     subprocess.run(
         [
             ffmpeg,
@@ -125,7 +144,7 @@ def _master_audio(raw_path: Path, master_path: Path, manifest: dict[str, Any]) -
             "-i",
             str(raw_path),
             "-af",
-            f"loudnorm=I={target}:TP={peak}:LRA=11",
+            ",".join(filters),
             "-ar",
             str(sample_rate),
             "-ac",
@@ -167,15 +186,21 @@ def _sync_timing(
     audio_manifest: dict[str, Any],
     master_path: Path,
 ) -> None:
+    source_duration = 0.0
+    turns_dir = workspace / "audio" / "turns"
+    for turn in audio_manifest["turns"]:
+        source_duration += float(sf.info(turns_dir / str(turn["filename"])).duration)
+        source_duration += float(turn.get("pauseAfterSec", 0.1))
+    master_duration = float(sf.info(master_path).duration)
+    timeline_scale = master_duration / source_duration
     cursor = 0.0
     timings: dict[str, tuple[float, float]] = {}
-    turns_dir = workspace / "audio" / "turns"
     for index, turn in enumerate(audio_manifest["turns"]):
         audio_path = turns_dir / str(turn["filename"])
-        duration = float(sf.info(audio_path).duration)
+        duration = float(sf.info(audio_path).duration) * timeline_scale
         timings[str(turn["sourceId"])] = (cursor, cursor + duration)
         cursor += duration
-        cursor += float(turn.get("pauseAfterSec", 0.1))
+        cursor += float(turn.get("pauseAfterSec", 0.1)) * timeline_scale
     for turn in manifest["turns"]:
         start, end = timings[str(turn["id"])]
         turn["startSec"] = round(start, 3)
@@ -183,12 +208,13 @@ def _sync_timing(
     manifest["hookEndSec"] = round(timings["hook"][1], 3)
     manifest["promptStartSec"] = round(timings["prompt"][0], 3)
     manifest["answerStartSec"] = round(timings["answer"][0], 3)
-    manifest["durationSec"] = round(float(sf.info(master_path).duration), 3)
+    manifest["durationSec"] = round(master_duration, 3)
     manifest["audio"] = {
         "status": "ready",
         "master": str(master_path.relative_to(workspace)),
         "renderer": "voxcpm2-short-form-v1",
         "sourceManifest": "audio_manifest.json",
+        "timelineScale": round(timeline_scale, 6),
     }
 
 

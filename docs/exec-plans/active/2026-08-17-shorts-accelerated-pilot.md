@@ -39,6 +39,11 @@ the channel identity remain out of scope.
   08:00 with Related Video verified after reopening the saved item.
 - `elr-s-004` passed local and Studio checks and is scheduled for 2026-08-19
   20:30 with Related Video verified after reopening the saved item.
+- Dedicated 9:16 discovery covers are now a production gate from `elr-s-005`
+  onward; video screenshots are retained only as the initial baseline.
+- `elr-s-005` and `elr-s-006` are packaged with unique content hashes,
+  dedicated covers, passing visual/audio QC, and reserved release slots on
+  2026-08-20 at 08:00 and 20:30 respectively; Studio upload remains pending.
 - YouTube API OAuth is absent; the signed-in English Listening Room Studio
   session is the verified upload fallback.
 

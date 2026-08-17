@@ -1,9 +1,13 @@
 import React from 'react';
-import {CalculateMetadataFunction, Composition} from 'remotion';
+import {CalculateMetadataFunction, Composition, Still} from 'remotion';
 import {
   EnglishListeningRoomShort,
   EnglishListeningRoomShortProps,
 } from './english-listening-room-short';
+import {
+  EnglishListeningRoomShortThumbnail,
+  EnglishListeningRoomShortThumbnailProps,
+} from './english-listening-room-short-thumbnail';
 
 const defaultProps: EnglishListeningRoomShortProps = {
   format: 'micro_story',
@@ -32,15 +36,32 @@ const calculateMetadata: CalculateMetadataFunction<EnglishListeningRoomShortProp
   durationInFrames: Math.ceil(props.durationSec * 30),
 });
 
+const defaultThumbnailProps: EnglishListeningRoomShortThumbnailProps = {
+  format: 'listen_choose',
+  cefr: 'A2',
+  headline: 'Fifteen or Fifty?',
+  backgroundImage: 'shorts/elr-s-001/story-background-v2.png',
+  brandLogo: 'branding/english_listening_room_avatar_v2.png',
+};
+
 export const ShortsRoot: React.FC = () => (
-  <Composition
-    id="EnglishListeningRoomShort"
-    component={EnglishListeningRoomShort}
-    durationInFrames={900}
-    fps={30}
-    width={1080}
-    height={1920}
-    defaultProps={defaultProps}
-    calculateMetadata={calculateMetadata}
-  />
+  <>
+    <Composition
+      id="EnglishListeningRoomShort"
+      component={EnglishListeningRoomShort}
+      durationInFrames={900}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={defaultProps}
+      calculateMetadata={calculateMetadata}
+    />
+    <Still
+      id="EnglishListeningRoomShortThumbnail"
+      component={EnglishListeningRoomShortThumbnail}
+      width={1080}
+      height={1920}
+      defaultProps={defaultThumbnailProps}
+    />
+  </>
 );

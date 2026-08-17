@@ -59,6 +59,16 @@ def build_render_props(manifest: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_thumbnail_props(manifest: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "format": manifest["format"],
+        "cefr": manifest["cefr"],
+        "headline": manifest["thumbnailHeadline"],
+        "backgroundImage": manifest["visual"]["backgroundImage"],
+        "brandLogo": manifest["visual"]["brandLogo"],
+    }
+
+
 def _remotion_command(repo_root: Path) -> list[str]:
     executable = "remotion.cmd" if os.name == "nt" else "remotion"
     direct_candidates = [
@@ -175,4 +185,33 @@ def render_short(
         silent_path.unlink()
     else:
         silent_path.replace(output_path)
+    return output_path
+
+
+def render_thumbnail(repo_root: Path, manifest: dict[str, Any]) -> Path:
+    workspace = ensure_workspace(repo_root, str(manifest["shortId"]))
+    background_image = manifest.get("visual", {}).get("backgroundImage")
+    if not background_image:
+        raise ValueError("A generated editorial background is required before thumbnail rendering")
+    background_path = repo_root / "public" / str(background_image)
+    if not background_path.is_file():
+        raise FileNotFoundError(f"Short background image does not exist: {background_path}")
+    brand_logo = repo_root / "public" / str(manifest["visual"]["brandLogo"])
+    if not brand_logo.is_file():
+        raise FileNotFoundError(f"Short brand logo does not exist: {brand_logo}")
+    props_path = workspace / "reports" / "thumbnail_props.json"
+    atomic_write_json(props_path, build_thumbnail_props(manifest))
+    output_path = workspace / "package" / f"{manifest['shortId']}.thumbnail.png"
+    command = [
+        *_remotion_command(repo_root),
+        "still",
+        "src/shorts/index.ts",
+        "EnglishListeningRoomShortThumbnail",
+        str(output_path),
+        f"--props={props_path}",
+    ]
+    browser = _browser_executable()
+    if browser is not None:
+        command.append(f"--browser-executable={browser}")
+    subprocess.run(command, cwd=repo_root, check=True)
     return output_path

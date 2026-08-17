@@ -64,6 +64,13 @@ production visuals. Art direction is warm, mature, calm, and especially
 welcoming to the channel's core women aged 25-44 without excluding other
 learners.
 
+Every upload also requires a dedicated 9:16 discovery cover. It reuses the
+approved story illustration but adds a short editorial headline, format label,
+CEFR level, and channel identity. The cover is uploaded as Studio metadata and
+is never inserted as a static opening card: Shorts Feed performance still
+depends on the live first frame and hook. Screenshot thumbnails are not the
+production default.
+
 Each manifest stores a visual brief and the approved background path. The
 renderer combines that image with a restrained pan/zoom, the existing English
 Listening Room avatar, a persistent wordmark, readable editorial caption card,
@@ -103,10 +110,16 @@ $env:ELR_SHORTS_DEVICE = "cuda"
 The renderer uses the owning repository's global GPU lock, so a scheduled Short
 cannot overlap a long-form VoxCPM or Whisper production job.
 
+Measured delivery is preserved unless it crosses the pre-registered short/long
+duration boundary. In that case only, mastering applies a bounded tempo
+correction toward the planned duration and scales the caption timeline by the
+same factor, so an experiment item cannot silently enter the wrong variant.
+
 ### 3. Render 9:16 video
 
 ```powershell
 & $py scripts/shorts.py render --short elr-s-001
+& $py scripts/shorts.py render-thumbnail --short elr-s-001
 ```
 
 The data-driven Remotion composition is 1080x1920 at 30 fps. It has no long-form
@@ -128,8 +141,8 @@ For a silent visual smoke proof only:
 ```
 
 Packaging fails before upload when duration, privacy, generated background,
-brand, CTA, dimensions, stream presence, render duration drift, or electrical
-hum are invalid. The audio gate measures stationary 50 Hz and 60 Hz harmonic
+dedicated thumbnail, brand, CTA, dimensions, stream presence, render duration
+drift, or electrical hum are invalid. The audio gate measures stationary 50 Hz and 60 Hz harmonic
 families against their local spectral floor; suspicious material is held for
 review and a strong mains signature blocks packaging. A passing package writes
 private-upload metadata and records `packaged` in the duplicate-safe

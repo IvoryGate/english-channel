@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .ledger import record_publication
-from .qc import check_audio, check_manifest, check_video
+from .qc import check_audio, check_manifest, check_thumbnail, check_video
 from .workspace import atomic_write_json, ensure_workspace
 
 
@@ -24,11 +24,14 @@ def package_short(
         if require_audio
         else {"status": "skipped", "errors": [], "warnings": []}
     )
+    thumbnail_path = workspace / "package" / f"{manifest['shortId']}.thumbnail.png"
+    thumbnail_qc = check_thumbnail(thumbnail_path, manifest)
     status = (
         "pass"
         if content_qc["status"] == "pass"
         and video_qc["status"] == "pass"
         and audio_qc["status"] in {"pass", "skipped"}
+        and thumbnail_qc["status"] == "pass"
         else "fail"
     )
     report = {
@@ -39,6 +42,7 @@ def package_short(
         "video": str(video_path),
         "contentQc": content_qc,
         "audioQc": audio_qc,
+        "thumbnailQc": thumbnail_qc,
         "videoQc": video_qc,
         "upload": {
             "title": manifest["title"],
@@ -48,6 +52,7 @@ def package_short(
             "language": "en",
             "categoryId": "27",
             "relatedVideoId": manifest.get("relatedVideoId"),
+            "thumbnail": str(thumbnail_path),
         },
     }
     report_path = workspace / "package" / "upload.json"

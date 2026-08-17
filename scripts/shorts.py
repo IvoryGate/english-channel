@@ -17,7 +17,7 @@ from worker.shorts.contracts import ContractError, load_and_validate  # noqa: E4
 from worker.shorts.ledger import load_ledger, record_publication  # noqa: E402
 from worker.shorts.packaging import package_short  # noqa: E402
 from worker.shorts.qc import check_manifest  # noqa: E402
-from worker.shorts.render import render_short  # noqa: E402
+from worker.shorts.render import render_short, render_thumbnail  # noqa: E402
 from worker.shorts.review import build_review, write_review  # noqa: E402
 from worker.shorts.workspace import (  # noqa: E402
     bootstrap_portfolio,
@@ -105,6 +105,14 @@ def command_render_audio(args: argparse.Namespace) -> int:
     _product, _portfolio = load_contracts(args)
     manifest_path, manifest = find_manifest(REPO, args.short)
     output = render_audio(REPO, manifest_path, manifest, force=args.force)
+    print(output)
+    return 0
+
+
+def command_render_thumbnail(args: argparse.Namespace) -> int:
+    _product, _portfolio = load_contracts(args)
+    _path, manifest = find_manifest(REPO, args.short)
+    output = render_thumbnail(REPO, manifest)
     print(output)
     return 0
 
@@ -239,6 +247,13 @@ def build_parser() -> argparse.ArgumentParser:
     render_audio_parser.add_argument("--short", required=True)
     render_audio_parser.add_argument("--force", action="store_true")
     render_audio_parser.set_defaults(func=command_render_audio)
+
+    render_thumbnail_parser = subparsers.add_parser(
+        "render-thumbnail", help="Render a dedicated 9:16 Shorts discovery cover"
+    )
+    add_contract_args(render_thumbnail_parser)
+    render_thumbnail_parser.add_argument("--short", required=True)
+    render_thumbnail_parser.set_defaults(func=command_render_thumbnail)
 
     package = subparsers.add_parser("package", help="Probe and create a private upload package")
     add_contract_args(package)

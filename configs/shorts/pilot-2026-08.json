@@ -5,6 +5,7 @@
     {
       "shortId": "elr-s-001",
       "title": "Can You Understand This Simple Morning Story?",
+      "thumbnailHeadline": "Why Was Mia Late?",
       "format": "micro_story",
       "cefr": "A2",
       "durationSec": 42,
@@ -28,6 +29,7 @@
     {
       "shortId": "elr-s-002",
       "title": "A Tiny Mistake Changed His Whole Morning",
+      "thumbnailHeadline": "Forty-Six or Sixty-Four?",
       "format": "micro_story",
       "cefr": "A2",
       "durationSec": 54,
@@ -52,6 +54,7 @@
     {
       "shortId": "elr-s-003",
       "title": "What Did She Forget at the Supermarket?",
+      "thumbnailHeadline": "What Did Nora Forget?",
       "format": "micro_story",
       "cefr": "A2",
       "durationSec": 54,
@@ -76,6 +79,7 @@
     {
       "shortId": "elr-s-004",
       "title": "The Bus Driver Remembered Her Name",
+      "thumbnailHeadline": "How Did He Know?",
       "format": "micro_story",
       "cefr": "A2",
       "durationSec": 42,
@@ -98,6 +102,7 @@
     {
       "shortId": "elr-s-005",
       "title": "Did He Say Fifteen or Fifty?",
+      "thumbnailHeadline": "Fifteen or Fifty?",
       "format": "listen_choose",
       "cefr": "A2",
       "durationSec": 42,
@@ -115,11 +120,13 @@
       "relatedShow": "series_b",
       "relatedVideoId": null,
       "visualBrief": "Elegant travel-ticket counter scene with a focused adult learner listening carefully, designed around the contrast between fifteen and fifty.",
+      "backgroundImage": "shorts/elr-s-005/story-background-v1.png",
       "experimentAssignments": {"hook": "question", "duration": "short"}
     },
     {
       "shortId": "elr-s-006",
       "title": "The Word That Changes This Airport Sentence",
+      "thumbnailHeadline": "Which Word Means Late?",
       "format": "listen_choose",
       "cefr": "B1",
       "durationSec": 54,
@@ -137,11 +144,13 @@
       "relatedShow": "series_a",
       "relatedVideoId": null,
       "visualBrief": "Calm airport departure-lounge illustration with a woman checking a delayed flight board and holding a small carry-on.",
+      "backgroundImage": "shorts/elr-s-006/story-background-v1.png",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
     },
     {
       "shortId": "elr-s-007",
       "title": "Can You Catch the Polite Refusal?",
+      "thumbnailHeadline": "Catch the Polite No",
       "format": "dialogue",
       "cefr": "B1",
       "durationSec": 54,
@@ -169,6 +178,7 @@
     {
       "shortId": "elr-s-008",
       "title": "The Coffee Shop Order That Sounds Natural",
+      "thumbnailHeadline": "Order Coffee Naturally",
       "format": "dialogue",
       "cefr": "A2",
       "durationSec": 42,
@@ -193,6 +203,7 @@
     {
       "shortId": "elr-s-009",
       "title": "What Does “I'm Good” Mean Here?",
+      "thumbnailHeadline": "What Does “I'm Good” Mean?",
       "format": "dialogue",
       "cefr": "B1",
       "durationSec": 42,
@@ -217,6 +228,7 @@
     {
       "shortId": "elr-s-010",
       "title": "Elizabeth Bennet Heard an Unexpected Name",
+      "thumbnailHeadline": "An Unexpected Name",
       "format": "classic_cliffhanger",
       "cefr": "B1",
       "durationSec": 54,
@@ -239,6 +251,7 @@
     {
       "shortId": "elr-s-011",
       "title": "Why Did Everyone Stop Talking?",
+      "thumbnailHeadline": "Why Did Everyone Stop?",
       "format": "classic_cliffhanger",
       "cefr": "B1",
       "durationSec": 42,
@@ -260,6 +273,7 @@
     {
       "shortId": "elr-s-012",
       "title": "Can You Hear “Used To” in Fast English?",
+      "thumbnailHeadline": "Can You Hear “Used To”?",
       "format": "listen_choose",
       "cefr": "B1",
       "durationSec": 54,

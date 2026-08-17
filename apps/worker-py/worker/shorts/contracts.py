@@ -144,6 +144,9 @@ def validate_entry(entry: dict[str, Any], product: dict[str, Any], where: str) -
     if hook_style not in VALID_HOOK_STYLES:
         raise ContractError(f"{where}.hookStyle must be one of {sorted(VALID_HOOK_STYLES)}")
     _required_string(entry, "hook", where)
+    thumbnail_headline = _required_string(entry, "thumbnailHeadline", where)
+    if len(thumbnail_headline) > 32:
+        raise ContractError(f"{where}.thumbnailHeadline exceeds 32 characters")
     _required_string(entry, "prompt", where)
     _required_string(entry, "answer", where)
     _required_string(entry, "relatedShow", where)
@@ -286,6 +289,7 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "width": int(product["quality"]["width"]),
         "height": int(product["quality"]["height"]),
         "title": entry["title"],
+        "thumbnailHeadline": entry["thumbnailHeadline"],
         "description": (
             f"Practice {entry['cefr']} English listening in under one minute. "
             f"Answer: {entry['answer']}"
@@ -311,6 +315,7 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "publication": {"status": "planned", "privacy": "private"},
         "renderSettings": {
             "interTurnSilenceSec": 0.12,
+            "durationVariantCutoffSec": product["quality"]["durationVariantCutoffSec"],
             "loudnessTargetLufs": product["quality"]["loudnessTargetLufs"],
             "truePeakMaxDb": product["quality"]["truePeakMaxDb"],
             "audioSampleRate": product["quality"]["audioSampleRate"],

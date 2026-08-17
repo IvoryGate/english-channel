@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import struct
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -220,4 +221,32 @@ def check_video(path: Path, manifest: dict[str, Any], *, require_audio: bool) ->
         "probe": probe,
         "audioMaxVolumeDb": audio_peak,
         "sha256": sha256_file(path),
+    }
+
+
+def check_thumbnail(path: Path, manifest: dict[str, Any]) -> dict[str, Any]:
+    errors: list[str] = []
+    width = 0
+    height = 0
+    if not path.is_file():
+        errors.append("THUMBNAIL_MISSING")
+    else:
+        with path.open("rb") as stream:
+            header = stream.read(24)
+        if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+            errors.append("THUMBNAIL_NOT_PNG")
+        else:
+            width, height = struct.unpack(">II", header[16:24])
+            if width != int(manifest["width"]):
+                errors.append("THUMBNAIL_WIDTH_INVALID")
+            if height != int(manifest["height"]):
+                errors.append("THUMBNAIL_HEIGHT_INVALID")
+    return {
+        "schema": "elr-short-thumbnail-qc-v1",
+        "shortId": manifest.get("shortId"),
+        "status": "fail" if errors else "pass",
+        "errors": errors,
+        "width": width,
+        "height": height,
+        "sha256": sha256_file(path) if path.is_file() else None,
     }

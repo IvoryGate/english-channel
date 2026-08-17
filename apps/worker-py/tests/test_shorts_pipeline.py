@@ -9,11 +9,11 @@ import pytest
 import soundfile as sf
 
 from worker.shorts.analytics import ingest_snapshot
-from worker.shorts.audio import build_audio_manifest
+from worker.shorts.audio import _tempo_factor_for_variant, build_audio_manifest
 from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
 from worker.shorts.ledger import load_ledger, record_publication
-from worker.shorts.qc import check_audio
-from worker.shorts.render import build_render_props
+from worker.shorts.qc import check_audio, check_thumbnail
+from worker.shorts.render import build_render_props, build_thumbnail_props
 from worker.shorts.review import build_review, write_review
 from worker.shorts.workspace import bootstrap_portfolio, read_json
 from worker.shorts.youtube import upload_private
@@ -146,6 +146,37 @@ def test_render_props_paginate_mobile_caption_text() -> None:
     assert "shortId" not in props
 
 
+def test_thumbnail_props_are_discovery_specific_and_hide_internal_id() -> None:
+    product, portfolio = contracts()
+    manifest = build_manifest(portfolio["entries"][4], product, portfolio["cycleId"])
+
+    props = build_thumbnail_props(manifest)
+
+    assert props["headline"] == "Fifteen or Fifty?"
+    assert props["backgroundImage"]
+    assert props["brandLogo"]
+    assert "shortId" not in props
+
+
+def test_thumbnail_qc_requires_vertical_png(tmp_path: Path) -> None:
+    product, portfolio = contracts()
+    manifest = build_manifest(portfolio["entries"][4], product, portfolio["cycleId"])
+    thumbnail = tmp_path / "cover.png"
+    png_header = (
+        b"\x89PNG\r\n\x1a\n"
+        + b"\x00\x00\x00\x0dIHDR"
+        + (1080).to_bytes(4, "big")
+        + (1920).to_bytes(4, "big")
+    )
+    thumbnail.write_bytes(png_header)
+
+    report = check_thumbnail(thumbnail, manifest)
+
+    assert report["status"] == "pass"
+    assert report["width"] == 1080
+    assert report["height"] == 1920
+
+
 def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Path, monkeypatch) -> None:
     product, portfolio = contracts()
     model = tmp_path / "pretrained_models" / "VoxCPM2"
@@ -163,6 +194,15 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
     assert {turn["speaker"] for turn in audio_manifest["turns"]} == {"Riley"}
     prompt = next(turn for turn in audio_manifest["turns"] if turn["sourceId"] == "prompt")
     assert prompt["pauseAfterSec"] == 2.25
+
+
+def test_audio_pacing_only_corrects_a_crossed_duration_variant() -> None:
+    product, portfolio = contracts()
+    short_manifest = build_manifest(portfolio["entries"][4], product, portfolio["cycleId"])
+    long_manifest = build_manifest(portfolio["entries"][5], product, portfolio["cycleId"])
+
+    assert _tempo_factor_for_variant(49.2, short_manifest) == 1.0
+    assert _tempo_factor_for_variant(47.9, long_manifest) == pytest.approx(47.9 / 54.0)
 
 
 def test_audio_qc_rejects_stationary_sixty_hertz_hum(tmp_path: Path) -> None:
