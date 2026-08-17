@@ -68,8 +68,9 @@
       "prompt": "What did Nora forget?",
       "answer": "She forgot the coffee.",
       "relatedShow": "series_b",
-      "relatedVideoId": null,
+      "relatedVideoId": "uZ65glXynTA",
       "visualBrief": "Cozy kitchen illustration of a woman unpacking groceries and laughing when she discovers coffee filters but no coffee.",
+      "backgroundImage": "shorts/elr-s-003/story-background-v1.png",
       "experimentAssignments": {"hook": "question", "duration": "long", "format": "story"}
     },
     {
@@ -89,8 +90,9 @@
       "prompt": "How did the driver know her name?",
       "answer": "He saw it on her badge.",
       "relatedShow": "series_b",
-      "relatedVideoId": null,
+      "relatedVideoId": "tGfTQk42w_4",
       "visualBrief": "Warm morning bus scene where a friendly driver greets a commuting woman whose name badge is visible but not readable.",
+      "backgroundImage": "shorts/elr-s-004/story-background-v1.png",
       "experimentAssignments": {"hook": "statement", "duration": "short"}
     },
     {

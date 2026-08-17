@@ -35,6 +35,10 @@ the channel identity remain out of scope.
 - **Last update:** 2026-08-17
 - `elr-s-001` is scheduled for 2026-08-18 20:30.
 - `elr-s-002` is scheduled for 2026-08-18 08:00.
+- `elr-s-003` passed local and Studio checks and is scheduled for 2026-08-19
+  08:00 with Related Video verified after reopening the saved item.
+- `elr-s-004` passed local and Studio checks and is scheduled for 2026-08-19
+  20:30 with Related Video verified after reopening the saved item.
 - YouTube API OAuth is absent; the signed-in English Listening Room Studio
   session is the verified upload fallback.
 
