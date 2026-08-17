@@ -47,6 +47,29 @@ def test_pilot_contract_has_controlled_format_mix_and_balanced_experiments() -> 
     assert duration_counts == {"short": 6, "long": 6}
 
 
+def test_accelerated_pilot_has_two_daily_release_slots() -> None:
+    product, _ = contracts()
+    publishing = product["publishing"]
+    slots = publishing["slots"]
+
+    assert publishing["timezone"] == "Asia/Shanghai"
+    assert publishing["weeklyShorts"] == 14
+    assert len(slots) == 14
+    for weekday in (
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ):
+        assert [slot["time"] for slot in slots if slot["weekday"] == weekday] == [
+            "08:00",
+            "20:30",
+        ]
+
+
 def test_duplicate_content_is_rejected() -> None:
     product, portfolio = contracts()
     duplicate = json.loads(json.dumps(portfolio))

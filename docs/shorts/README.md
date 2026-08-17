@@ -150,6 +150,18 @@ The refresh token defaults to the ignored
 `workspace/shorts/ops/youtube_token.json`. A scheduled run can refresh it
 without opening a browser. Never commit either credential file.
 
+If OAuth has not been provisioned yet, an authenticated Codex in-app browser
+may use YouTube Studio as the operational fallback. Before uploading, verify
+that Studio is signed in to `English Listening Room`, search the Shorts table
+by title, and compare the local content key so an existing draft or scheduled
+upload is never duplicated. Upload privately, set audience and metadata, set
+and re-open the Related Video field to verify it persisted, wait for both
+copyright and community checks, then schedule only within an explicitly
+authorized publishing window. Record the returned YouTube ID in the local
+publication ledger. A signed-out session, different channel, account check, or
+ambiguous duplicate is a blocking condition. This fallback keeps operations
+moving, but OAuth remains the preferred unattended path.
+
 Upload is intentionally private and idempotent:
 
 ```powershell
@@ -165,6 +177,23 @@ YouTube's documented Data API does not expose the Studio Related Video field.
 The ledger therefore retains `relatedVideoId`, and the Studio step must set and
 verify the related long-form video before scheduling. A missing value never
 silently falls back to a description URL.
+
+## Accelerated pilot cadence
+
+The cold-start validation window publishes two Shorts per day at 08:00 and
+20:30 Asia/Shanghai. This is a bounded learning cadence, not an assumption that
+upload volume causes growth. Each morning/evening pair changes one assigned
+variable only, keeps unrelated creative decisions matched, and avoids two
+near-identical topics on the same day. Maintain at least two scheduled items of
+inventory when production is healthy.
+
+Use the first three hours only for delivery and processing anomalies. At 24
+hours, record engaged-view rate, viewed-versus-swiped behavior when available,
+average percentage viewed, subscribers per 1,000 engaged views, interactions,
+and related long-form uplift. Do not declare a winner until the configured
+seven-day age and minimum sample gates are satisfied. If quality, copyright,
+channel identity, or upload integrity fails, reduce cadence before relaxing a
+quality gate.
 
 ## Analytics and experiments
 

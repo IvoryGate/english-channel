@@ -20,7 +20,7 @@
       "prompt": "Why was Mia late?",
       "answer": "She spent time looking for another umbrella and missed her bus.",
       "relatedShow": "series_b",
-      "relatedVideoId": null,
+      "relatedVideoId": "uZ65glXynTA",
       "visualBrief": "Warm editorial illustration of Mia at her apartment door facing morning rain, holding coffee and a work bag beside an empty umbrella stand.",
       "backgroundImage": "shorts/elr-s-001/story-background-v2.png",
       "experimentAssignments": {"hook": "question", "duration": "short", "format": "story"}
@@ -44,8 +44,9 @@
       "prompt": "Which number did Leo need?",
       "answer": "Forty-six, not sixty-four.",
       "relatedShow": "series_b",
-      "relatedVideoId": null,
+      "relatedVideoId": "am_mcfiWuNM",
       "visualBrief": "Contemporary editorial street scene of a nervous man in a suit realizing he is outside the wrong building before an interview.",
+      "backgroundImage": "shorts/elr-s-002/story-background-v1.png",
       "experimentAssignments": {"hook": "statement", "duration": "long", "format": "story"}
     },
     {

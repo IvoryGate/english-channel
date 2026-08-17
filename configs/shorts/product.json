@@ -50,12 +50,23 @@
   },
   "publishing": {
     "timezone": "Asia/Shanghai",
-    "weeklyShorts": 3,
-    "maxChannelUploadsPerWeek": 5,
+    "weeklyShorts": 14,
+    "maxChannelUploadsPerWeek": 18,
     "slots": [
+      {"weekday": "Monday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Monday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Tuesday", "time": "08:00", "slot": "morning"},
       {"weekday": "Tuesday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Wednesday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Wednesday", "time": "20:30", "slot": "evening"},
       {"weekday": "Thursday", "time": "08:00", "slot": "morning"},
-      {"weekday": "Saturday", "time": "20:30", "slot": "evening"}
+      {"weekday": "Thursday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Friday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Friday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Saturday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Saturday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Sunday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Sunday", "time": "20:30", "slot": "evening"}
     ],
     "defaultPrivacy": "private",
     "requireRelatedVideo": true,
