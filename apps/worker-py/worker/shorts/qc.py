@@ -9,6 +9,9 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+import soundfile as sf
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -61,6 +64,75 @@ def audio_max_volume_db(path: Path) -> float | None:
     return None
 
 
+def analyze_mains_hum(path: Path) -> dict[str, Any]:
+    """Measure stationary 50/60 Hz families against their local spectral floor."""
+    audio, sample_rate = sf.read(path, dtype="float32", always_2d=False)
+    if audio.ndim > 1:
+        audio = np.mean(audio, axis=1)
+    samples = np.asarray(audio, dtype=np.float64)
+    if samples.size < sample_rate:
+        raise ValueError("At least one second of audio is required for mains-hum analysis")
+    samples -= float(np.mean(samples))
+    spectrum = np.abs(np.fft.rfft(samples * np.hanning(samples.size))) ** 2 + 1e-30
+    frequencies = np.fft.rfftfreq(samples.size, 1.0 / float(sample_rate))
+    families: list[dict[str, Any]] = []
+    for base_hz in (50, 60):
+        harmonics: list[dict[str, float]] = []
+        for multiple in range(1, 6):
+            target_hz = float(base_hz * multiple)
+            signal_mask = np.abs(frequencies - target_hz) < 0.35
+            noise_distance = np.abs(frequencies - target_hz)
+            noise_mask = (noise_distance > 1.5) & (noise_distance < 6.0)
+            signal_power = float(np.median(spectrum[signal_mask]))
+            noise_power = float(np.median(spectrum[noise_mask]))
+            prominence_db = 10.0 * np.log10(signal_power / noise_power)
+            harmonics.append({"frequencyHz": target_hz, "prominenceDb": round(float(prominence_db), 2)})
+        strongest = sorted(item["prominenceDb"] for item in harmonics)[-2:]
+        family_score = float(np.median(strongest))
+        families.append(
+            {
+                "baseFrequencyHz": base_hz,
+                "scoreDb": round(family_score, 2),
+                "harmonics": harmonics,
+            }
+        )
+    return {
+        "schema": "elr-short-mains-hum-v1",
+        "sampleRate": int(sample_rate),
+        "durationSec": round(samples.size / float(sample_rate), 3),
+        "families": families,
+        "maxScoreDb": max(item["scoreDb"] for item in families),
+    }
+
+
+def check_audio(path: Path, product: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not path.is_file():
+        return {
+            "schema": "elr-short-audio-qc-v1",
+            "shortId": manifest.get("shortId"),
+            "status": "fail",
+            "errors": ["MASTER_AUDIO_MISSING"],
+            "warnings": [],
+        }
+    hum = analyze_mains_hum(path)
+    score = float(hum["maxScoreDb"])
+    quality = product["quality"]
+    if score > float(quality["mainsHumHardMaxDb"]):
+        errors.append("ELECTRICAL_HUM_DETECTED")
+    elif score > float(quality["mainsHumWarningDb"]):
+        warnings.append("ELECTRICAL_HUM_REVIEW")
+    return {
+        "schema": "elr-short-audio-qc-v1",
+        "shortId": manifest.get("shortId"),
+        "status": "fail" if errors else "pass",
+        "errors": errors,
+        "warnings": warnings,
+        "mainsHum": hum,
+    }
+
+
 def check_manifest(manifest: dict[str, Any], product: dict[str, Any]) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -79,6 +151,14 @@ def check_manifest(manifest: dict[str, Any], product: dict[str, Any]) -> dict[st
         errors.append("HOOK_MISSING")
     if not manifest.get("turns"):
         errors.append("TURNS_MISSING")
+    visual = manifest.get("visual") or {}
+    if product.get("visual", {}).get("backgroundRequired") and not visual.get("backgroundImage"):
+        errors.append("GENERATED_BACKGROUND_MISSING")
+    if not visual.get("brandLogo"):
+        errors.append("BRAND_LOGO_MISSING")
+    cta = str(manifest.get("cta", ""))
+    if not cta or len(cta) > int(product["cta"]["maxChars"]):
+        errors.append("CTA_INVALID")
     if product["publishing"].get("requireRelatedVideo") and not manifest.get("relatedVideoId"):
         warnings.append("RELATED_VIDEO_PENDING")
     if manifest.get("publication", {}).get("privacy") != "private":

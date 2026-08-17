@@ -43,7 +43,6 @@ def build_render_props(manifest: dict[str, Any]) -> dict[str, Any]:
                 }
             )
     return {
-        "shortId": manifest["shortId"],
         "format": manifest["format"],
         "cefr": manifest["cefr"],
         "durationSec": manifest["durationSec"],
@@ -54,6 +53,9 @@ def build_render_props(manifest: dict[str, Any]) -> dict[str, Any]:
         "answer": manifest["answer"],
         "promptStartSec": manifest["promptStartSec"],
         "answerStartSec": manifest["answerStartSec"],
+        "backgroundImage": manifest["visual"]["backgroundImage"],
+        "brandLogo": manifest["visual"]["brandLogo"],
+        "cta": manifest["cta"],
     }
 
 
@@ -138,6 +140,15 @@ def render_short(
     audio_path: Path | None = None,
 ) -> Path:
     workspace = ensure_workspace(repo_root, str(manifest["shortId"]))
+    background_image = manifest.get("visual", {}).get("backgroundImage")
+    if not background_image:
+        raise ValueError("A generated editorial background is required before rendering")
+    background_path = repo_root / "public" / str(background_image)
+    if not background_path.is_file():
+        raise FileNotFoundError(f"Short background image does not exist: {background_path}")
+    brand_logo = repo_root / "public" / str(manifest["visual"]["brandLogo"])
+    if not brand_logo.is_file():
+        raise FileNotFoundError(f"Short brand logo does not exist: {brand_logo}")
     props_path = workspace / "reports" / "render_props.json"
     atomic_write_json(props_path, build_render_props(manifest))
     silent_path = workspace / "video" / f"{manifest['shortId']}.silent.mp4"

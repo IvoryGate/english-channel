@@ -7,17 +7,22 @@
       "title": "Can You Understand This Simple Morning Story?",
       "format": "micro_story",
       "cefr": "A2",
-      "durationSec": 30,
+      "durationSec": 42,
       "hookStyle": "question",
       "hook": "Why was Mia late even though she woke up early?",
       "turns": [
-        {"speaker": "narrator", "text": "Mia woke up early, made coffee, and packed her bag. She felt proud of herself."},
-        {"speaker": "narrator", "text": "Then she opened the front door and saw the rain. Her umbrella was still at the office."}
+        {"speaker": "narrator", "text": "Mia woke up before her alarm, made coffee, and packed her laptop. For once, her morning felt completely under control."},
+        {"speaker": "narrator", "text": "At the front door, she heard heavy rain against the windows. She reached for the umbrella stand, but it was empty."},
+        {"speaker": "narrator", "text": "Then she remembered: yesterday, she had left her umbrella beside her desk at the office."},
+        {"speaker": "narrator", "text": "She searched the kitchen, the bedroom, and even the closet. Finally, she found an old yellow umbrella behind a suitcase."},
+        {"speaker": "narrator", "text": "By the time Mia stepped outside, her bus was already turning the corner."}
       ],
       "prompt": "Why was Mia late?",
-      "answer": "She went back to find another umbrella.",
+      "answer": "She spent time looking for another umbrella and missed her bus.",
       "relatedShow": "series_b",
       "relatedVideoId": null,
+      "visualBrief": "Warm editorial illustration of Mia at her apartment door facing morning rain, holding coffee and a work bag beside an empty umbrella stand.",
+      "backgroundImage": "shorts/elr-s-001/story-background-v2.png",
       "experimentAssignments": {"hook": "question", "duration": "short", "format": "story"}
     },
     {
@@ -25,17 +30,22 @@
       "title": "A Tiny Mistake Changed His Whole Morning",
       "format": "micro_story",
       "cefr": "A2",
-      "durationSec": 42,
+      "durationSec": 54,
       "hookStyle": "statement",
       "hook": "One small number sent Leo to the wrong place.",
       "turns": [
-        {"speaker": "narrator", "text": "Leo had an interview at number forty-six. He was nervous, so he checked the address three times."},
-        {"speaker": "narrator", "text": "But he read sixty-four instead of forty-six. A friendly shopkeeper noticed his suit and showed him the building across the street."}
+        {"speaker": "narrator", "text": "Leo had an interview at number forty-six. He was nervous, so he checked the address three times before leaving home."},
+        {"speaker": "narrator", "text": "On the train, he quietly repeated the number: forty-six, forty-six, forty-six. He wanted to arrive early and feel prepared."},
+        {"speaker": "narrator", "text": "But when he reached the street, he walked into building sixty-four. The lobby was a small clothing shop, not an office."},
+        {"speaker": "narrator", "text": "A friendly shopkeeper noticed his suit and asked about the interview. Then she pointed to the building across the road."},
+        {"speaker": "narrator", "text": "Leo looked at the two numbers again and laughed. He had read sixty-four instead of forty-six all morning."},
+        {"speaker": "narrator", "text": "He hurried across the street and arrived with one minute to spare. This time, he checked the door twice."}
       ],
       "prompt": "Which number did Leo need?",
       "answer": "Forty-six, not sixty-four.",
       "relatedShow": "series_b",
       "relatedVideoId": null,
+      "visualBrief": "Contemporary editorial street scene of a nervous man in a suit realizing he is outside the wrong building before an interview.",
       "experimentAssignments": {"hook": "statement", "duration": "long", "format": "story"}
     },
     {
@@ -43,17 +53,22 @@
       "title": "What Did She Forget at the Supermarket?",
       "format": "micro_story",
       "cefr": "A2",
-      "durationSec": 40,
+      "durationSec": 54,
       "hookStyle": "question",
       "hook": "Nora bought everything on her list—or did she?",
       "turns": [
-        {"speaker": "narrator", "text": "Nora bought bread, eggs, tomatoes, and milk. At the checkout, she smiled because she remembered every item."},
-        {"speaker": "narrator", "text": "At home, she opened the bag and laughed. She had bought coffee filters, but no coffee."}
+        {"speaker": "narrator", "text": "Nora stopped at the supermarket after work. She needed bread, eggs, tomatoes, milk, coffee, and a box of coffee filters."},
+        {"speaker": "narrator", "text": "The store was crowded, but she moved carefully through every aisle. Each time she found something, she checked her list."},
+        {"speaker": "narrator", "text": "At the checkout, Nora looked into her cart and smiled. Bread, eggs, tomatoes, milk, and filters were all there."},
+        {"speaker": "narrator", "text": "At home, she put everything away. The next morning, she opened the cupboard and reached for the coffee."},
+        {"speaker": "narrator", "text": "There was an empty space beside the filters. Nora checked both shopping bags, then checked the car."},
+        {"speaker": "narrator", "text": "Finally, she laughed at her perfect shopping trip. She had remembered the coffee filters, but forgotten the coffee itself."}
       ],
       "prompt": "What did Nora forget?",
       "answer": "She forgot the coffee.",
       "relatedShow": "series_b",
       "relatedVideoId": null,
+      "visualBrief": "Cozy kitchen illustration of a woman unpacking groceries and laughing when she discovers coffee filters but no coffee.",
       "experimentAssignments": {"hook": "question", "duration": "long", "format": "story"}
     },
     {
@@ -61,17 +76,20 @@
       "title": "The Bus Driver Remembered Her Name",
       "format": "micro_story",
       "cefr": "A2",
-      "durationSec": 28,
+      "durationSec": 42,
       "hookStyle": "statement",
       "hook": "A normal bus ride became the best part of Ava's day.",
       "turns": [
-        {"speaker": "narrator", "text": "Ava took the same bus every morning, but she never spoke to the driver."},
-        {"speaker": "narrator", "text": "On Friday, he smiled and said, Have a good day, Ava. Her name was printed on her work badge."}
+        {"speaker": "narrator", "text": "Ava took the same bus every morning. She always sat near the front, but she had never spoken to the driver."},
+        {"speaker": "narrator", "text": "On Friday, Ava was tired after a difficult week. She tapped her card, looked down, and quietly said good morning."},
+        {"speaker": "narrator", "text": "When she reached her stop, the driver smiled and said, Have a good day, Ava. She stopped in surprise."},
+        {"speaker": "narrator", "text": "Then Ava noticed her work badge beside her coat. Her name was printed there in large, clear letters."}
       ],
       "prompt": "How did the driver know her name?",
       "answer": "He saw it on her badge.",
       "relatedShow": "series_b",
       "relatedVideoId": null,
+      "visualBrief": "Warm morning bus scene where a friendly driver greets a commuting woman whose name badge is visible but not readable.",
       "experimentAssignments": {"hook": "statement", "duration": "short"}
     },
     {
@@ -79,17 +97,21 @@
       "title": "Did He Say Fifteen or Fifty?",
       "format": "listen_choose",
       "cefr": "A2",
-      "durationSec": 26,
+      "durationSec": 42,
       "hookStyle": "question",
       "hook": "Listen once: fifteen or fifty?",
       "turns": [
-        {"speaker": "narrator", "text": "The ticket costs fifty dollars."},
-        {"speaker": "narrator", "text": "Listen to the stress: FIF-ty. The first part is stronger."}
+        {"speaker": "narrator", "text": "You are buying a ticket. Listen to the clerk: The ticket costs fifty dollars. Was that fifteen or fifty?"},
+        {"speaker": "narrator", "text": "Listen again: The ticket costs fifty dollars. In fifty, the first part is strong: FIF-ty."},
+        {"speaker": "narrator", "text": "Now compare it with fifteen. In fifteen, the final part is strong: fif-TEEN. The stress moves to the end."},
+        {"speaker": "narrator", "text": "One more time: The ticket costs fifty dollars. Keep your attention on the strong first syllable."},
+        {"speaker": "narrator", "text": "Choose your answer before the reveal. Did the clerk say fifteen dollars, or fifty dollars?"}
       ],
       "prompt": "A: fifteen. B: fifty.",
       "answer": "B: fifty dollars.",
       "relatedShow": "series_b",
       "relatedVideoId": null,
+      "visualBrief": "Elegant travel-ticket counter scene with a focused adult learner listening carefully, designed around the contrast between fifteen and fifty.",
       "experimentAssignments": {"hook": "question", "duration": "short"}
     },
     {
@@ -97,17 +119,21 @@
       "title": "The Word That Changes This Airport Sentence",
       "format": "listen_choose",
       "cefr": "B1",
-      "durationSec": 44,
+      "durationSec": 54,
       "hookStyle": "statement",
       "hook": "One quiet word tells you whether the flight is late.",
       "turns": [
-        {"speaker": "narrator", "text": "The flight has been delayed until eight fifteen. Which word means it will leave later than planned?"},
-        {"speaker": "narrator", "text": "The answer is delayed. Notice that until gives the new expected time, not the length of the delay."}
+        {"speaker": "narrator", "text": "Imagine you are waiting at an airport gate. An announcement says: The flight has been delayed until eight fifteen."},
+        {"speaker": "narrator", "text": "Which word tells you the flight will leave later than planned? Listen once more and focus on the important change."},
+        {"speaker": "narrator", "text": "The flight has been delayed until eight fifteen. The key word is delayed. It means the original time has changed."},
+        {"speaker": "narrator", "text": "Notice that until gives the new expected departure time. It does not tell you how many minutes the delay will last."},
+        {"speaker": "narrator", "text": "If the flight was scheduled for seven thirty, you can calculate the delay. But first, you only need the key word."}
       ],
       "prompt": "Which word means later than planned?",
       "answer": "Delayed.",
       "relatedShow": "series_a",
       "relatedVideoId": null,
+      "visualBrief": "Calm airport departure-lounge illustration with a woman checking a delayed flight board and holding a small carry-on.",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
     },
     {
@@ -115,18 +141,26 @@
       "title": "Can You Catch the Polite Refusal?",
       "format": "dialogue",
       "cefr": "B1",
-      "durationSec": 41,
+      "durationSec": 54,
       "hookStyle": "question",
       "hook": "Which sentence really means no?",
       "turns": [
         {"speaker": "riley", "text": "Would you like to join us for dinner tonight?"},
         {"speaker": "sam", "text": "I'd love to, but I already have plans. Maybe next week?"},
-        {"speaker": "riley", "text": "No problem. Let's choose another day."}
+        {"speaker": "sam", "text": "I promised my sister I would help her move into a new apartment tonight."},
+        {"speaker": "riley", "text": "That makes sense. We can easily move dinner to a different evening."},
+        {"speaker": "riley", "text": "Of course. Is Wednesday better for you?"},
+        {"speaker": "sam", "text": "Wednesday should work. I can confirm tomorrow morning."},
+        {"speaker": "riley", "text": "Perfect. I will wait before making the reservation."},
+        {"speaker": "sam", "text": "Thanks for understanding. I really do want to come."},
+        {"speaker": "sam", "text": "Great. I will check my calendar after work and send you a message."},
+        {"speaker": "riley", "text": "No problem. We will choose a day that works for everyone."}
       ],
       "prompt": "Did Sam accept the invitation?",
       "answer": "No. I'd love to, but... is a polite refusal here.",
       "relatedShow": "series_a",
       "relatedVideoId": null,
+      "visualBrief": "Friendly dinner invitation between two adult friends in a warm restaurant, one responding politely and apologetically.",
       "experimentAssignments": {"hook": "question", "duration": "long", "format": "dialogue"}
     },
     {
@@ -134,18 +168,23 @@
       "title": "The Coffee Shop Order That Sounds Natural",
       "format": "dialogue",
       "cefr": "A2",
-      "durationSec": 29,
+      "durationSec": 42,
       "hookStyle": "statement",
       "hook": "This tiny change makes the order sound natural.",
       "turns": [
         {"speaker": "riley", "text": "Give me a coffee."},
         {"speaker": "sam", "text": "Try: Could I have a coffee, please?"},
-        {"speaker": "riley", "text": "Could I have a coffee, please?"}
+        {"speaker": "riley", "text": "Could I have a coffee, please?"},
+        {"speaker": "sam", "text": "That sounds friendly and natural. You can also say, Can I get a coffee, please?"},
+        {"speaker": "riley", "text": "Can I get a coffee, please?"},
+        {"speaker": "sam", "text": "Good. Both questions are polite. Give me a coffee sounds too direct in this situation."},
+        {"speaker": "riley", "text": "So I will use a question and add please. That feels much warmer and more respectful."}
       ],
       "prompt": "Which version would you use?",
       "answer": "Could I have a coffee, please?",
       "relatedShow": "series_a",
       "relatedVideoId": null,
+      "visualBrief": "Welcoming neighborhood coffee shop where an adult woman practices a polite order with a supportive barista.",
       "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
     },
     {
@@ -153,18 +192,23 @@
       "title": "What Does “I'm Good” Mean Here?",
       "format": "dialogue",
       "cefr": "B1",
-      "durationSec": 31,
+      "durationSec": 42,
       "hookStyle": "question",
       "hook": "Does I'm good describe a feeling—or refuse an offer?",
       "turns": [
         {"speaker": "sam", "text": "Would you like another slice of cake?"},
         {"speaker": "riley", "text": "I'm good, thanks. It was delicious."},
-        {"speaker": "sam", "text": "Here, I'm good means no more, thank you."}
+        {"speaker": "sam", "text": "Are you sure? There is one small piece left."},
+        {"speaker": "riley", "text": "Yes, I'm good. I could not eat another bite."},
+        {"speaker": "sam", "text": "Here, I'm good does not describe Riley's mood. It politely means no more, thank you."},
+        {"speaker": "riley", "text": "The context matters. After an offer, I'm good can be a friendly refusal."},
+        {"speaker": "sam", "text": "Exactly. Riley enjoyed the cake, but she does not want another slice right now."}
       ],
       "prompt": "Did Riley want more cake?",
       "answer": "No. I'm good politely refused it.",
       "relatedShow": "series_c",
       "relatedVideoId": null,
+      "visualBrief": "Relaxed home gathering where one friend offers another slice of cake and the other politely declines with a smile.",
       "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
     },
     {
@@ -172,17 +216,21 @@
       "title": "Elizabeth Bennet Heard an Unexpected Name",
       "format": "classic_cliffhanger",
       "cefr": "B1",
-      "durationSec": 45,
+      "durationSec": 54,
       "hookStyle": "statement",
       "hook": "One name changed the mood of the entire room.",
       "turns": [
-        {"speaker": "narrator", "text": "Elizabeth was listening politely when the conversation turned to a wealthy gentleman in Derbyshire."},
-        {"speaker": "narrator", "text": "Then she heard the name Darcy. She looked up at once, but said nothing. Why had he come back into the story now?"}
+        {"speaker": "narrator", "text": "Elizabeth was sitting quietly in a crowded parlor. Around her, people discussed weather, travel, and families she hardly knew."},
+        {"speaker": "narrator", "text": "She listened politely until the conversation turned to a wealthy gentleman with a large estate somewhere in Derbyshire."},
+        {"speaker": "narrator", "text": "At first, Elizabeth paid little attention. Then the speaker mentioned a familiar house, and finally said the name Darcy."},
+        {"speaker": "narrator", "text": "Elizabeth looked up at once, but she said nothing. Nobody in the room seemed to notice the change in her expression."},
+        {"speaker": "narrator", "text": "She wondered why his name had returned now, and what surprising news the speaker might reveal next. The conversation quietly continued."}
       ],
       "prompt": "What made Elizabeth look up?",
       "answer": "She heard Darcy's name.",
       "relatedShow": "classic_pride_prejudice",
       "relatedVideoId": null,
+      "visualBrief": "Refined Regency parlor illustration of Elizabeth Bennet looking up sharply after hearing an unexpected name.",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
     },
     {
@@ -190,17 +238,20 @@
       "title": "Why Did Everyone Stop Talking?",
       "format": "classic_cliffhanger",
       "cefr": "B1",
-      "durationSec": 30,
+      "durationSec": 42,
       "hookStyle": "question",
       "hook": "A letter arrived, and the room became silent.",
       "turns": [
-        {"speaker": "narrator", "text": "The letter carried no signature, only a date and one urgent sentence."},
-        {"speaker": "narrator", "text": "Do not leave the house tomorrow morning. They read it twice. Then someone knocked at the door."}
+        {"speaker": "narrator", "text": "The letter arrived just before dinner. It carried no signature, only a date and one urgent sentence."},
+        {"speaker": "narrator", "text": "Do not leave the house tomorrow morning. Clara read the words aloud, and everyone around the table became silent."},
+        {"speaker": "narrator", "text": "They checked the envelope twice, but found no name and no return address. Outside, the wind moved through the trees."},
+        {"speaker": "narrator", "text": "Then someone knocked at the front door. Nobody stood up. The knock came again, louder than before."}
       ],
       "prompt": "What happened after they read the letter?",
       "answer": "Someone knocked at the door.",
       "relatedShow": "classic_persuasion",
       "relatedVideoId": null,
+      "visualBrief": "Atmospheric Regency room with an unsigned letter on a table and the shadow of a visitor beyond the door.",
       "experimentAssignments": {"hook": "question", "duration": "short"}
     },
     {
@@ -208,17 +259,21 @@
       "title": "Can You Hear “Used To” in Fast English?",
       "format": "listen_choose",
       "cefr": "B1",
-      "durationSec": 43,
+      "durationSec": 54,
       "hookStyle": "statement",
       "hook": "In fast speech, these two words almost disappear.",
       "turns": [
-        {"speaker": "narrator", "text": "I used to walk to work, but now I take the train."},
-        {"speaker": "narrator", "text": "Used to describes a past habit that is no longer true. In natural speech, used to often sounds like yoosta."}
+        {"speaker": "narrator", "text": "Listen to this sentence at a natural speed: I used to walk to work, but now I take the train."},
+        {"speaker": "narrator", "text": "Did you hear used to clearly? In fast speech, the words often join together and sound more like yoosta."},
+        {"speaker": "narrator", "text": "Listen again: I used to walk to work. The phrase describes a repeated habit in the past."},
+        {"speaker": "narrator", "text": "The second half gives the contrast: but now I take the train. That tells us the old habit has changed."},
+        {"speaker": "narrator", "text": "One final listen: I used to walk to work, but now I take the train. Focus on the quiet joined words."}
       ],
       "prompt": "Is walking to work still the speaker's habit?",
       "answer": "No. It was a habit in the past.",
       "relatedShow": "series_c",
       "relatedVideoId": null,
+      "visualBrief": "Contemporary commuter illustration contrasting a remembered walk to work with a present-day train journey.",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
     }
   ]

@@ -4,12 +4,15 @@ import csv
 import json
 from pathlib import Path
 
+import numpy as np
 import pytest
+import soundfile as sf
 
 from worker.shorts.analytics import ingest_snapshot
 from worker.shorts.audio import build_audio_manifest
 from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
 from worker.shorts.ledger import load_ledger, record_publication
+from worker.shorts.qc import check_audio
 from worker.shorts.render import build_render_props
 from worker.shorts.review import build_review, write_review
 from worker.shorts.workspace import bootstrap_portfolio, read_json
@@ -51,6 +54,11 @@ def test_duplicate_content_is_rejected() -> None:
     duplicate["entries"][1]["turns"] = duplicate["entries"][0]["turns"]
     duplicate["entries"][1]["prompt"] = duplicate["entries"][0]["prompt"]
     duplicate["entries"][1]["answer"] = duplicate["entries"][0]["answer"]
+    duplicate["entries"][1]["hookStyle"] = duplicate["entries"][0]["hookStyle"]
+    duplicate["entries"][1]["durationSec"] = duplicate["entries"][0]["durationSec"]
+    duplicate["entries"][1]["experimentAssignments"] = duplicate["entries"][0][
+        "experimentAssignments"
+    ]
 
     with pytest.raises(ContractError, match="Duplicate content"):
         validate_portfolio(duplicate, product)
@@ -104,13 +112,15 @@ def test_publication_ledger_rejects_duplicate_youtube_id_and_backward_state(tmp_
 
 def test_render_props_paginate_mobile_caption_text() -> None:
     product, portfolio = contracts()
-    manifest = build_manifest(portfolio["entries"][1], product, portfolio["cycleId"])
+    manifest = build_manifest(portfolio["entries"][0], product, portfolio["cycleId"])
     props = build_render_props(manifest)
 
     assert props["durationSec"] == manifest["durationSec"]
     assert all(len(scene["text"]) <= 50 or " " not in scene["text"] for scene in props["scenes"])
     assert props["scenes"][0]["startSec"] == 1.5
     assert props["answerStartSec"] > props["promptStartSec"]
+    assert props["backgroundImage"]
+    assert "shortId" not in props
 
 
 def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Path, monkeypatch) -> None:
@@ -126,10 +136,26 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
 
     audio_manifest = build_audio_manifest(tmp_path, manifest)
 
-    assert len(audio_manifest["turns"]) == 5
+    assert len(audio_manifest["turns"]) == 8
     assert {turn["speaker"] for turn in audio_manifest["turns"]} == {"Riley"}
     prompt = next(turn for turn in audio_manifest["turns"] if turn["sourceId"] == "prompt")
     assert prompt["pauseAfterSec"] == 2.25
+
+
+def test_audio_qc_rejects_stationary_sixty_hertz_hum(tmp_path: Path) -> None:
+    product, portfolio = contracts()
+    manifest = build_manifest(portfolio["entries"][0], product, portfolio["cycleId"])
+    sample_rate = 48000
+    seconds = 4
+    time = np.arange(sample_rate * seconds, dtype=np.float64) / sample_rate
+    audio = 0.03 * np.sin(2 * np.pi * 60.0 * time)
+    audio_path = tmp_path / "hum.wav"
+    sf.write(audio_path, audio, sample_rate, subtype="PCM_16")
+
+    report = check_audio(audio_path, product, manifest)
+
+    assert report["status"] == "fail"
+    assert "ELECTRICAL_HUM_DETECTED" in report["errors"]
 
 
 def test_private_upload_is_idempotent_before_google_client_is_loaded(tmp_path: Path) -> None:

@@ -6,7 +6,6 @@ import {
 } from './english-listening-room-short';
 
 const defaultProps: EnglishListeningRoomShortProps = {
-  shortId: 'elr-s-000',
   format: 'micro_story',
   cefr: 'A2',
   durationSec: 30,
@@ -24,6 +23,9 @@ const defaultProps: EnglishListeningRoomShortProps = {
   answer: 'You heard a short English story.',
   promptStartSec: 21,
   answerStartSec: 26,
+  backgroundImage: 'shorts/elr-s-001/story-background-v2.png',
+  brandLogo: 'branding/english_listening_room_avatar_v2.png',
+  cta: 'Subscribe for your next listening story.',
 };
 
 const calculateMetadata: CalculateMetadataFunction<EnglishListeningRoomShortProps> = ({props}) => ({

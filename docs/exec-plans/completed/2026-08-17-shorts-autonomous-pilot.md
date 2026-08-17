@@ -58,6 +58,10 @@ agent-run Shorts operating loop.
   and the 70/20/10 portfolio allocation into the next plan.
 - Kept public publishing closed behind product policy, an environment gate,
   and an explicit command acknowledgement.
+- Revised the production template after pilot review to use 42/54-second
+  treatments, story-specific generated editorial imagery, the existing ELR
+  avatar and wordmark, a final CTA, no internal viewer-facing IDs, and a
+  blocking 50/60 Hz mains-hum quality gate.
 
 ## Plan
 

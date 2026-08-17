@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .ledger import record_publication
-from .qc import check_manifest, check_video
+from .qc import check_audio, check_manifest, check_video
 from .workspace import atomic_write_json, ensure_workspace
 
 
@@ -19,7 +19,18 @@ def package_short(
     video_path = workspace / "video" / f"{manifest['shortId']}.mp4"
     content_qc = check_manifest(manifest, product)
     video_qc = check_video(video_path, manifest, require_audio=require_audio)
-    status = "pass" if content_qc["status"] == "pass" and video_qc["status"] == "pass" else "fail"
+    audio_qc = (
+        check_audio(workspace / "audio" / "master.wav", product, manifest)
+        if require_audio
+        else {"status": "skipped", "errors": [], "warnings": []}
+    )
+    status = (
+        "pass"
+        if content_qc["status"] == "pass"
+        and video_qc["status"] == "pass"
+        and audio_qc["status"] in {"pass", "skipped"}
+        else "fail"
+    )
     report = {
         "schema": "elr-short-package-v1",
         "shortId": manifest["shortId"],
@@ -27,6 +38,7 @@ def package_short(
         "status": status,
         "video": str(video_path),
         "contentQc": content_qc,
+        "audioQc": audio_qc,
         "videoQc": video_qc,
         "upload": {
             "title": manifest["title"],

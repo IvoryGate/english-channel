@@ -6,7 +6,7 @@
     "primaryAge": "25-44",
     "devicePriority": "mobile"
   },
-  "promise": "One understandable English moment in under 45 seconds.",
+  "promise": "One useful English moment in 35 to 55 seconds.",
   "pilotSize": 12,
   "formatAllocation": {
     "micro_story": 4,
@@ -15,9 +15,10 @@
     "classic_cliffhanger": 2
   },
   "quality": {
-    "durationMinSec": 20,
-    "durationTargetMaxSec": 45,
-    "durationHardMaxSec": 55,
+    "durationMinSec": 36,
+    "durationTargetMaxSec": 55,
+    "durationHardMaxSec": 59,
+    "durationVariantCutoffSec": 50,
     "titleTargetMaxChars": 55,
     "titleHardMaxChars": 100,
     "captionMaxLines": 2,
@@ -29,7 +30,23 @@
     "fps": 30,
     "audioSampleRate": 48000,
     "loudnessTargetLufs": -14.0,
-    "truePeakMaxDb": -1.5
+    "truePeakMaxDb": -1.5,
+    "mainsHumWarningDb": 8.0,
+    "mainsHumHardMaxDb": 12.0
+  },
+  "visual": {
+    "backgroundRequired": true,
+    "backgroundStrategy": "generated_editorial_scene",
+    "brandLogo": "branding/english_listening_room_avatar_v2.png",
+    "artDirection": "warm mature editorial illustration with calm caption space",
+    "audienceSignal": "welcoming to adult women 25-44 without excluding other learners",
+    "internalIdsVisible": false
+  },
+  "cta": {
+    "enabled": true,
+    "startBeforeEndSec": 3.5,
+    "defaultCopy": "Subscribe for your next listening story.",
+    "maxChars": 52
   },
   "publishing": {
     "timezone": "Asia/Shanghai",

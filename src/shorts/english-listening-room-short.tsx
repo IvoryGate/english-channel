@@ -2,8 +2,10 @@ import React from 'react';
 import {
   AbsoluteFill,
   Easing,
+  Img,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
@@ -16,7 +18,6 @@ export type ShortScene = {
 };
 
 export type EnglishListeningRoomShortProps = {
-  shortId: string;
   format: 'micro_story' | 'listen_choose' | 'dialogue' | 'classic_cliffhanger';
   cefr: 'A2' | 'B1';
   durationSec: number;
@@ -27,20 +28,23 @@ export type EnglishListeningRoomShortProps = {
   answer: string;
   promptStartSec: number;
   answerStartSec: number;
+  backgroundImage: string;
+  brandLogo: string;
+  cta: string;
 };
 
 const palettes = {
-  micro_story: {top: '#103E48', bottom: '#071E26', accent: '#FFCF66', soft: '#D6F4F1'},
-  listen_choose: {top: '#253B76', bottom: '#101A3C', accent: '#FFD166', soft: '#E9EEFF'},
-  dialogue: {top: '#5A315B', bottom: '#25172E', accent: '#7EE0D6', soft: '#F7E9FA'},
-  classic_cliffhanger: {top: '#49351F', bottom: '#1F180F', accent: '#E8C98D', soft: '#FFF4DD'},
+  micro_story: {accent: '#B85F5A', ink: '#39251D', paper: '#FFF8EF'},
+  listen_choose: {accent: '#647A72', ink: '#28332F', paper: '#F7FAF5'},
+  dialogue: {accent: '#9B6285', ink: '#392735', paper: '#FFF7FC'},
+  classic_cliffhanger: {accent: '#9B7243', ink: '#34291F', paper: '#FFF9ED'},
 } as const;
 
 const formatLabels = {
-  micro_story: 'MICRO STORY',
-  listen_choose: 'LISTEN & CHOOSE',
-  dialogue: 'REAL ENGLISH',
-  classic_cliffhanger: 'CLASSIC CLIFFHANGER',
+  micro_story: 'A tiny English story',
+  listen_choose: 'Listen & choose',
+  dialogue: 'Real-life English',
+  classic_cliffhanger: 'Classic cliffhanger',
 } as const;
 
 const SpeakerChip: React.FC<{speaker: string; accent: string}> = ({speaker, accent}) => {
@@ -51,15 +55,16 @@ const SpeakerChip: React.FC<{speaker: string; accent: string}> = ({speaker, acce
     <div
       style={{
         alignSelf: speaker === 'riley' ? 'flex-start' : 'flex-end',
-        backgroundColor: accent,
+        backgroundColor: `${accent}1F`,
+        border: `2px solid ${accent}55`,
         borderRadius: 999,
-        color: '#10232B',
-        fontSize: 30,
+        color: accent,
+        fontFamily: 'Inter, Arial, sans-serif',
+        fontSize: 27,
         fontWeight: 800,
-        letterSpacing: 1.5,
-        marginBottom: 22,
-        padding: '10px 24px',
-        textTransform: 'uppercase',
+        marginBottom: 20,
+        padding: '9px 22px',
+        textTransform: 'capitalize',
       }}
     >
       {speaker}
@@ -78,15 +83,19 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
   const hookActive = second < props.hookEndSec;
   const promptActive = second >= props.promptStartSec && second < props.answerStartSec;
   const answerActive = second >= props.answerStartSec;
+  const ctaActive = second >= props.durationSec - 3.5;
   const sceneStartFrame = activeScene ? Math.round(activeScene.startSec * fps) : 0;
   const entrance = spring({
     fps,
     frame: Math.max(0, frame - sceneStartFrame),
-    config: {damping: 16, stiffness: 150, mass: 0.8},
+    config: {damping: 18, stiffness: 135, mass: 0.85},
   });
-  const hookScale = interpolate(frame, [0, 12], [0.94, 1], {
+  const hookScale = interpolate(frame, [0, 14], [0.96, 1], {
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
+  });
+  const backgroundScale = interpolate(frame, [0, durationInFrames], [1.04, 1.12], {
+    extrapolateRight: 'clamp',
   });
   const progress = `${Math.max(0, Math.min(100, (frame / durationInFrames) * 100))}%`;
   const mainText = hookActive
@@ -97,75 +106,107 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
         ? props.prompt
         : activeScene?.text ?? props.hook;
   const eyebrow = hookActive
-    ? 'LISTEN CLOSELY'
+    ? 'Listen closely'
     : answerActive
-      ? 'ANSWER'
+      ? 'The answer'
       : promptActive
-        ? 'YOUR TURN'
+        ? 'Your turn'
         : activeScene?.speaker === 'narrator'
-          ? 'KEEP LISTENING'
-          : 'CONVERSATION';
+          ? 'Keep listening'
+          : 'Conversation';
 
   return (
     <AbsoluteFill
       style={{
-        background: `linear-gradient(160deg, ${palette.top} 0%, ${palette.bottom} 75%)`,
-        color: '#FFFFFF',
-        fontFamily: 'Inter, Manrope, Arial, sans-serif',
+        backgroundColor: '#4A352C',
+        color: palette.ink,
+        fontFamily: 'Inter, Arial, sans-serif',
         overflow: 'hidden',
       }}
     >
-      <div
+      <Img
+        src={staticFile(props.backgroundImage)}
         style={{
-          background: `radial-gradient(circle, ${palette.accent}33 0%, transparent 68%)`,
-          height: 900,
-          opacity: 0.85,
-          position: 'absolute',
-          right: -340,
-          top: -250,
-          width: 900,
+          height: '100%',
+          objectFit: 'cover',
+          transform: `scale(${backgroundScale}) translateX(-1.2%)`,
+          width: '100%',
         }}
       />
-      <div
+      <AbsoluteFill
         style={{
-          border: `2px solid ${palette.accent}2B`,
-          borderRadius: 72,
-          bottom: 230,
-          left: -220,
-          position: 'absolute',
-          transform: 'rotate(18deg)',
-          width: 720,
-          height: 720,
+          background:
+            'linear-gradient(180deg, rgba(45,30,24,0.58) 0%, rgba(45,30,24,0.04) 25%, rgba(45,30,24,0.12) 62%, rgba(45,30,24,0.72) 100%)',
         }}
       />
 
-      <div style={{display: 'flex', justifyContent: 'space-between', padding: '78px 64px 0'}}>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          left: 54,
+          position: 'absolute',
+          right: 54,
+          top: 58,
+        }}
+      >
+        <div style={{alignItems: 'center', display: 'flex', gap: 18}}>
+          <div
+            style={{
+              backgroundColor: '#FFF9F0',
+              border: '3px solid rgba(255,255,255,0.82)',
+              borderRadius: 999,
+              boxShadow: '0 8px 24px rgba(42,25,18,0.25)',
+              height: 88,
+              overflow: 'hidden',
+              width: 88,
+            }}
+          >
+            <Img
+              src={staticFile(props.brandLogo)}
+              style={{height: '100%', objectFit: 'cover', width: '100%'}}
+            />
+          </div>
+          <div style={{color: '#FFF9F0', textShadow: '0 3px 18px rgba(34,20,14,0.55)'}}>
+            <div style={{fontFamily: 'Georgia, serif', fontSize: 31, fontWeight: 700}}>
+              English Listening Room
+            </div>
+            <div style={{fontSize: 20, fontWeight: 650, letterSpacing: 1.4, marginTop: 3}}>
+              LISTEN • UNDERSTAND • GROW
+            </div>
+          </div>
+        </div>
         <div
           style={{
-            border: `2px solid ${palette.accent}`,
+            backgroundColor: 'rgba(255,249,240,0.9)',
             borderRadius: 999,
+            boxShadow: '0 6px 20px rgba(42,25,18,0.18)',
             color: palette.accent,
-            fontSize: 27,
-            fontWeight: 900,
-            letterSpacing: 2.4,
-            padding: '12px 24px',
+            fontSize: 24,
+            fontWeight: 800,
+            padding: '12px 19px',
           }}
         >
-          {formatLabels[props.format]}
+          {props.cefr}
         </div>
-        <div style={{color: palette.soft, fontSize: 30, fontWeight: 900}}>{props.cefr}</div>
       </div>
 
       <div
         style={{
+          backgroundColor: 'rgba(255,249,240,0.91)',
+          border: '2px solid rgba(255,255,255,0.7)',
+          borderRadius: 42,
+          boxShadow: '0 26px 70px rgba(43,25,18,0.3)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          left: 74,
-          minHeight: 920,
+          left: 62,
+          minHeight: hookActive ? 430 : 500,
+          padding: '54px 52px 58px',
           position: 'absolute',
-          right: 74,
-          top: 300,
+          right: 62,
+          top: hookActive ? 600 : 690,
         }}
       >
         {!hookActive && !promptActive && !answerActive && activeScene ? (
@@ -173,53 +214,77 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
         ) : null}
         <div
           style={{
-            color: answerActive ? palette.accent : palette.soft,
-            fontSize: 27,
-            fontWeight: 900,
-            letterSpacing: 3.2,
-            marginBottom: 34,
+            color: palette.accent,
+            fontSize: 25,
+            fontWeight: 850,
+            letterSpacing: 1.2,
+            marginBottom: 25,
           }}
         >
-          {eyebrow}
+          {eyebrow} · {formatLabels[props.format]}
         </div>
         <div
           style={{
-            fontSize: hookActive || promptActive ? 76 : answerActive ? 70 : 66,
-            fontWeight: 850,
-            letterSpacing: -2.2,
-            lineHeight: 1.16,
+            fontFamily: 'Georgia, Times New Roman, serif',
+            fontSize: hookActive || promptActive ? 67 : answerActive ? 59 : 55,
+            fontWeight: 700,
+            letterSpacing: -1.25,
+            lineHeight: 1.18,
             opacity: hookActive ? 1 : entrance,
-            textShadow: '0 8px 30px rgba(0,0,0,0.28)',
             transform: hookActive
               ? `scale(${hookScale})`
-              : `translateY(${interpolate(entrance, [0, 1], [28, 0])}px)`,
+              : `translateY(${interpolate(entrance, [0, 1], [20, 0])}px)`,
           }}
         >
           {mainText}
         </div>
         {promptActive ? (
-          <div
-            style={{
-              color: palette.accent,
-              fontSize: 30,
-              fontWeight: 750,
-              letterSpacing: 1.2,
-              marginTop: 46,
-            }}
-          >
-            Pause. Say your answer out loud.
+          <div style={{color: palette.accent, fontSize: 27, fontWeight: 750, marginTop: 34}}>
+            Pause and say your answer aloud.
           </div>
         ) : null}
       </div>
 
-      <div style={{bottom: 118, left: 64, position: 'absolute', right: 64}}>
-        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 24}}>
-          <div style={{fontSize: 29, fontWeight: 850, letterSpacing: 0.5}}>English Listening Room</div>
-          <div style={{color: palette.soft, fontSize: 24, fontWeight: 700}}>{props.shortId}</div>
+      <div
+        style={{
+          alignItems: 'center',
+          bottom: 92,
+          display: 'flex',
+          flexDirection: 'column',
+          left: 62,
+          opacity: ctaActive ? interpolate(second, [props.durationSec - 3.5, props.durationSec - 3], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) : 0,
+          position: 'absolute',
+          right: 62,
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: palette.paper,
+            borderRadius: 999,
+            boxShadow: '0 12px 34px rgba(42,25,18,0.28)',
+            color: palette.accent,
+            fontFamily: 'Georgia, serif',
+            fontSize: 30,
+            fontWeight: 700,
+            padding: '18px 34px',
+          }}
+        >
+          {props.cta}
         </div>
-        <div style={{backgroundColor: '#FFFFFF24', borderRadius: 999, height: 8, overflow: 'hidden'}}>
-          <div style={{backgroundColor: palette.accent, borderRadius: 999, height: '100%', width: progress}} />
-        </div>
+      </div>
+
+      <div
+        style={{
+          backgroundColor: 'rgba(255,249,240,0.32)',
+          bottom: 42,
+          height: 5,
+          left: 62,
+          overflow: 'hidden',
+          position: 'absolute',
+          right: 62,
+        }}
+      >
+        <div style={{backgroundColor: '#FFF7EA', height: '100%', width: progress}} />
       </div>
     </AbsoluteFill>
   );

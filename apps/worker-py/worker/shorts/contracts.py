@@ -94,6 +94,21 @@ def validate_product(product: dict[str, Any]) -> None:
             raise ContractError(f"product.quality.{key} must be numeric")
     if quality["durationMinSec"] >= quality["durationHardMaxSec"]:
         raise ContractError("durationMinSec must be below durationHardMaxSec")
+    cutoff = quality.get("durationVariantCutoffSec")
+    if not isinstance(cutoff, (int, float)) or not (
+        quality["durationMinSec"] <= cutoff < quality["durationHardMaxSec"]
+    ):
+        raise ContractError("durationVariantCutoffSec must sit inside the allowed duration range")
+    visual = product.get("visual")
+    if not isinstance(visual, dict) or visual.get("backgroundStrategy") != "generated_editorial_scene":
+        raise ContractError("product.visual must define the generated editorial background strategy")
+    _required_string(visual, "brandLogo", "product.visual")
+    cta = product.get("cta")
+    if not isinstance(cta, dict) or not cta.get("enabled"):
+        raise ContractError("product.cta must be enabled")
+    cta_copy = _required_string(cta, "defaultCopy", "product.cta")
+    if len(cta_copy) > int(cta.get("maxChars", 0)):
+        raise ContractError("product.cta.defaultCopy exceeds maxChars")
     publishing = product.get("publishing")
     if not isinstance(publishing, dict) or publishing.get("defaultPrivacy") != "private":
         raise ContractError("publishing.defaultPrivacy must remain private for the pilot")
@@ -132,6 +147,12 @@ def validate_entry(entry: dict[str, Any], product: dict[str, Any], where: str) -
     _required_string(entry, "prompt", where)
     _required_string(entry, "answer", where)
     _required_string(entry, "relatedShow", where)
+    _required_string(entry, "visualBrief", where)
+    background_image = entry.get("backgroundImage")
+    if background_image is not None and (
+        not isinstance(background_image, str) or not background_image.strip()
+    ):
+        raise ContractError(f"{where}.backgroundImage must be null or a non-empty string")
     related_video = entry.get("relatedVideoId")
     if related_video is not None and (not isinstance(related_video, str) or not related_video.strip()):
         raise ContractError(f"{where}.relatedVideoId must be null or a non-empty string")
@@ -155,9 +176,26 @@ def validate_entry(entry: dict[str, Any], product: dict[str, Any], where: str) -
         raise ContractError(f"{where}.experimentAssignments must be a non-empty object")
     if assignments.get("hook") != hook_style:
         raise ContractError(f"{where} hook experiment must match hookStyle")
-    expected_duration = "short" if float(duration) <= 31 else "long"
+    expected_duration = (
+        "short" if float(duration) <= float(quality["durationVariantCutoffSec"]) else "long"
+    )
     if assignments.get("duration") != expected_duration:
         raise ContractError(f"{where} duration experiment must be {expected_duration}")
+    spoken_words = sum(
+        _word_count(str(value))
+        for value in [
+            entry["hook"],
+            *(turn["text"] for turn in turns),
+            entry["prompt"],
+            entry["answer"],
+        ]
+    )
+    minimum_words = int(float(duration) * (2.1 if expected_duration == "short" else 2.15))
+    if spoken_words < minimum_words:
+        raise ContractError(
+            f"{where} has {spoken_words} spoken words; at least {minimum_words} are required "
+            f"for the {expected_duration} duration treatment"
+        )
 
 
 def validate_portfolio(portfolio: dict[str, Any], product: dict[str, Any]) -> None:
@@ -262,6 +300,13 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "answerStartSec": round(max(body_end + 3.0, duration - 4.5), 3),
         "relatedShow": entry["relatedShow"],
         "relatedVideoId": entry.get("relatedVideoId"),
+        "visual": {
+            "brief": entry["visualBrief"],
+            "backgroundImage": entry.get("backgroundImage"),
+            "brandLogo": product["visual"]["brandLogo"],
+            "artDirection": product["visual"]["artDirection"],
+        },
+        "cta": product["cta"]["defaultCopy"],
         "experimentAssignments": entry["experimentAssignments"],
         "publication": {"status": "planned", "privacy": "private"},
         "renderSettings": {

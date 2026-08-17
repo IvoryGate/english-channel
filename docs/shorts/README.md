@@ -5,8 +5,11 @@
 Shorts are the acquisition and experiment layer for the existing English
 Listening Room shows. They are not a fourth long-form show.
 
-The product promise is: **one understandable English moment in under 45
-seconds** for mobile-first A2-B1 adult learners.
+The product promise is: **one useful English moment in 35 to 55 seconds** for
+mobile-first A2-B1 adult learners. YouTube currently classifies eligible square
+or vertical uploads up to three minutes as Shorts, but this acquisition pilot
+deliberately keeps a 59-second hard ceiling. The first experiment compares
+roughly 42-second and 54-second treatments instead of using 20-second clips.
 
 The first controlled cycle contains twelve Shorts:
 
@@ -53,6 +56,21 @@ copy; revisions receive a new `shortId`.
 
 ## Production
 
+### Visual direction and brand
+
+Every production Short requires a story-specific generated editorial
+background. Pure code gradients and generic technology motifs are not accepted
+production visuals. Art direction is warm, mature, calm, and especially
+welcoming to the channel's core women aged 25-44 without excluding other
+learners.
+
+Each manifest stores a visual brief and the approved background path. The
+renderer combines that image with a restrained pan/zoom, the existing English
+Listening Room avatar, a persistent wordmark, readable editorial caption card,
+and one final CTA: `Subscribe for your next listening story.` Internal Short
+IDs never appear in the viewer-facing composition. Missing imagery, logo, or
+CTA fails preflight rather than falling back to a generic production design.
+
 ### 1. Preflight
 
 ```powershell
@@ -92,9 +110,10 @@ cannot overlap a long-form VoxCPM or Whisper production job.
 ```
 
 The data-driven Remotion composition is 1080x1920 at 30 fps. It has no long-form
-intro or outro. Hook, caption pages, question, answer, speaker chips, format
-palette, and progress are driven by the manifest. Audio is muxed after visual
-rendering so generated files never need to enter the Remotion source tree.
+intro or outro. Generated scene, hook, caption pages, question, answer, speaker
+chips, brand treatment, CTA, and progress are driven by the manifest. Audio is
+muxed after visual rendering so generated audio files never need to enter the
+Remotion source tree.
 
 For a silent visual smoke proof only:
 
@@ -108,8 +127,11 @@ For a silent visual smoke proof only:
 & $py scripts/shorts.py package --short elr-s-001
 ```
 
-Packaging fails before upload when duration, privacy, dimensions, stream
-presence, or render duration drift are invalid. A passing package writes
+Packaging fails before upload when duration, privacy, generated background,
+brand, CTA, dimensions, stream presence, render duration drift, or electrical
+hum are invalid. The audio gate measures stationary 50 Hz and 60 Hz harmonic
+families against their local spectral floor; suspicious material is held for
+review and a strong mains signature blocks packaging. A passing package writes
 private-upload metadata and records `packaged` in the duplicate-safe
 publication ledger.
 
