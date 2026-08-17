@@ -1,0 +1,60 @@
+{
+  "schema": "elr-shorts-product-v1",
+  "channel": "English Listening Room",
+  "audience": {
+    "cefr": ["A2", "B1"],
+    "primaryAge": "25-44",
+    "devicePriority": "mobile"
+  },
+  "promise": "One understandable English moment in under 45 seconds.",
+  "pilotSize": 12,
+  "formatAllocation": {
+    "micro_story": 4,
+    "listen_choose": 3,
+    "dialogue": 3,
+    "classic_cliffhanger": 2
+  },
+  "quality": {
+    "durationMinSec": 20,
+    "durationTargetMaxSec": 45,
+    "durationHardMaxSec": 55,
+    "titleTargetMaxChars": 55,
+    "titleHardMaxChars": 100,
+    "captionMaxLines": 2,
+    "captionMaxCharsPerLine": 28,
+    "hookMaxSec": 1.5,
+    "maxSilentOpeningSec": 0.25,
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "audioSampleRate": 48000,
+    "loudnessTargetLufs": -14.0,
+    "truePeakMaxDb": -1.5
+  },
+  "publishing": {
+    "timezone": "Asia/Shanghai",
+    "weeklyShorts": 3,
+    "maxChannelUploadsPerWeek": 5,
+    "slots": [
+      {"weekday": "Tuesday", "time": "20:30", "slot": "evening"},
+      {"weekday": "Thursday", "time": "08:00", "slot": "morning"},
+      {"weekday": "Saturday", "time": "20:30", "slot": "evening"}
+    ],
+    "defaultPrivacy": "private",
+    "requireRelatedVideo": true,
+    "publicPublishingEnabled": false
+  },
+  "experiments": {
+    "minimumEntriesPerVariant": 3,
+    "minimumEngagedViewsPerVariant": 200,
+    "winnerRelativeLift": 0.1,
+    "secondaryGuardrailDrop": 0.1,
+    "decisionAgeDays": 7,
+    "allocation": {"proven": 0.7, "adjacent": 0.2, "explore": 0.1}
+  },
+  "metrics": {
+    "primary": ["engaged_view_rate", "average_percentage_viewed"],
+    "business": ["subscribers_per_1000_engaged", "long_form_views_per_1000_engaged"],
+    "secondary": ["interactions_per_1000_engaged", "views"]
+  }
+}

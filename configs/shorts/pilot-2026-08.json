@@ -1,0 +1,225 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "pilot-2026-08",
+  "entries": [
+    {
+      "shortId": "elr-s-001",
+      "title": "Can You Understand This Simple Morning Story?",
+      "format": "micro_story",
+      "cefr": "A2",
+      "durationSec": 30,
+      "hookStyle": "question",
+      "hook": "Why was Mia late even though she woke up early?",
+      "turns": [
+        {"speaker": "narrator", "text": "Mia woke up early, made coffee, and packed her bag. She felt proud of herself."},
+        {"speaker": "narrator", "text": "Then she opened the front door and saw the rain. Her umbrella was still at the office."}
+      ],
+      "prompt": "Why was Mia late?",
+      "answer": "She went back to find another umbrella.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "short", "format": "story"}
+    },
+    {
+      "shortId": "elr-s-002",
+      "title": "A Tiny Mistake Changed His Whole Morning",
+      "format": "micro_story",
+      "cefr": "A2",
+      "durationSec": 42,
+      "hookStyle": "statement",
+      "hook": "One small number sent Leo to the wrong place.",
+      "turns": [
+        {"speaker": "narrator", "text": "Leo had an interview at number forty-six. He was nervous, so he checked the address three times."},
+        {"speaker": "narrator", "text": "But he read sixty-four instead of forty-six. A friendly shopkeeper noticed his suit and showed him the building across the street."}
+      ],
+      "prompt": "Which number did Leo need?",
+      "answer": "Forty-six, not sixty-four.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "long", "format": "story"}
+    },
+    {
+      "shortId": "elr-s-003",
+      "title": "What Did She Forget at the Supermarket?",
+      "format": "micro_story",
+      "cefr": "A2",
+      "durationSec": 40,
+      "hookStyle": "question",
+      "hook": "Nora bought everything on her list—or did she?",
+      "turns": [
+        {"speaker": "narrator", "text": "Nora bought bread, eggs, tomatoes, and milk. At the checkout, she smiled because she remembered every item."},
+        {"speaker": "narrator", "text": "At home, she opened the bag and laughed. She had bought coffee filters, but no coffee."}
+      ],
+      "prompt": "What did Nora forget?",
+      "answer": "She forgot the coffee.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "long", "format": "story"}
+    },
+    {
+      "shortId": "elr-s-004",
+      "title": "The Bus Driver Remembered Her Name",
+      "format": "micro_story",
+      "cefr": "A2",
+      "durationSec": 28,
+      "hookStyle": "statement",
+      "hook": "A normal bus ride became the best part of Ava's day.",
+      "turns": [
+        {"speaker": "narrator", "text": "Ava took the same bus every morning, but she never spoke to the driver."},
+        {"speaker": "narrator", "text": "On Friday, he smiled and said, Have a good day, Ava. Her name was printed on her work badge."}
+      ],
+      "prompt": "How did the driver know her name?",
+      "answer": "He saw it on her badge.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-005",
+      "title": "Did He Say Fifteen or Fifty?",
+      "format": "listen_choose",
+      "cefr": "A2",
+      "durationSec": 26,
+      "hookStyle": "question",
+      "hook": "Listen once: fifteen or fifty?",
+      "turns": [
+        {"speaker": "narrator", "text": "The ticket costs fifty dollars."},
+        {"speaker": "narrator", "text": "Listen to the stress: FIF-ty. The first part is stronger."}
+      ],
+      "prompt": "A: fifteen. B: fifty.",
+      "answer": "B: fifty dollars.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-006",
+      "title": "The Word That Changes This Airport Sentence",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "statement",
+      "hook": "One quiet word tells you whether the flight is late.",
+      "turns": [
+        {"speaker": "narrator", "text": "The flight has been delayed until eight fifteen. Which word means it will leave later than planned?"},
+        {"speaker": "narrator", "text": "The answer is delayed. Notice that until gives the new expected time, not the length of the delay."}
+      ],
+      "prompt": "Which word means later than planned?",
+      "answer": "Delayed.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-007",
+      "title": "Can You Catch the Polite Refusal?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 41,
+      "hookStyle": "question",
+      "hook": "Which sentence really means no?",
+      "turns": [
+        {"speaker": "riley", "text": "Would you like to join us for dinner tonight?"},
+        {"speaker": "sam", "text": "I'd love to, but I already have plans. Maybe next week?"},
+        {"speaker": "riley", "text": "No problem. Let's choose another day."}
+      ],
+      "prompt": "Did Sam accept the invitation?",
+      "answer": "No. I'd love to, but... is a polite refusal here.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "long", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-008",
+      "title": "The Coffee Shop Order That Sounds Natural",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 29,
+      "hookStyle": "statement",
+      "hook": "This tiny change makes the order sound natural.",
+      "turns": [
+        {"speaker": "riley", "text": "Give me a coffee."},
+        {"speaker": "sam", "text": "Try: Could I have a coffee, please?"},
+        {"speaker": "riley", "text": "Could I have a coffee, please?"}
+      ],
+      "prompt": "Which version would you use?",
+      "answer": "Could I have a coffee, please?",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-009",
+      "title": "What Does “I'm Good” Mean Here?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 31,
+      "hookStyle": "question",
+      "hook": "Does I'm good describe a feeling—or refuse an offer?",
+      "turns": [
+        {"speaker": "sam", "text": "Would you like another slice of cake?"},
+        {"speaker": "riley", "text": "I'm good, thanks. It was delicious."},
+        {"speaker": "sam", "text": "Here, I'm good means no more, thank you."}
+      ],
+      "prompt": "Did Riley want more cake?",
+      "answer": "No. I'm good politely refused it.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-010",
+      "title": "Elizabeth Bennet Heard an Unexpected Name",
+      "format": "classic_cliffhanger",
+      "cefr": "B1",
+      "durationSec": 45,
+      "hookStyle": "statement",
+      "hook": "One name changed the mood of the entire room.",
+      "turns": [
+        {"speaker": "narrator", "text": "Elizabeth was listening politely when the conversation turned to a wealthy gentleman in Derbyshire."},
+        {"speaker": "narrator", "text": "Then she heard the name Darcy. She looked up at once, but said nothing. Why had he come back into the story now?"}
+      ],
+      "prompt": "What made Elizabeth look up?",
+      "answer": "She heard Darcy's name.",
+      "relatedShow": "classic_pride_prejudice",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-011",
+      "title": "Why Did Everyone Stop Talking?",
+      "format": "classic_cliffhanger",
+      "cefr": "B1",
+      "durationSec": 30,
+      "hookStyle": "question",
+      "hook": "A letter arrived, and the room became silent.",
+      "turns": [
+        {"speaker": "narrator", "text": "The letter carried no signature, only a date and one urgent sentence."},
+        {"speaker": "narrator", "text": "Do not leave the house tomorrow morning. They read it twice. Then someone knocked at the door."}
+      ],
+      "prompt": "What happened after they read the letter?",
+      "answer": "Someone knocked at the door.",
+      "relatedShow": "classic_persuasion",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-012",
+      "title": "Can You Hear “Used To” in Fast English?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 43,
+      "hookStyle": "statement",
+      "hook": "In fast speech, these two words almost disappear.",
+      "turns": [
+        {"speaker": "narrator", "text": "I used to walk to work, but now I take the train."},
+        {"speaker": "narrator", "text": "Used to describes a past habit that is no longer true. In natural speech, used to often sounds like yoosta."}
+      ],
+      "prompt": "Is walking to work still the speaker's habit?",
+      "answer": "No. It was a habit in the past.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

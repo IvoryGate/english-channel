@@ -37,6 +37,20 @@ Agent-first, frontend-backend separated audiobook workflow platform centered on 
 
 Artifacts are written under `artifacts/<chapterId>/<jobId>/` with `chapter.wav` and `trace.json`.
 
+## Shorts pilot
+
+The autonomous Shorts controller validates the twelve-item pilot, creates
+canonical workspaces, renders 9:16 packages, prevents duplicate uploads, and
+evaluates YouTube Analytics experiments:
+
+```powershell
+.\.conda-env\python.exe scripts/shorts.py plan
+.\.conda-env\python.exe scripts/shorts.py bootstrap
+```
+
+See [`docs/shorts/README.md`](docs/shorts/README.md) for production, private
+upload, analytics, review, recovery, and autonomy gates.
+
 ## Local VoxCPM2 Setup On Windows
 
 Your preferred local model is `openbmb/VoxCPM2`.

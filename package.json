@@ -12,6 +12,8 @@
     "dev:api": "npm run dev --workspace @english-channel/api",
     "brand:preview": "remotion studio src/brand/index.ts",
     "brand:render:intro": "remotion render src/brand/index.ts EnglishListeningRoomIntro workspace/branding/english-listening-room-intro-v1.mp4",
+    "shorts:preview": "remotion studio src/shorts/index.ts",
+    "shorts:plan": ".\\.conda-env\\python.exe scripts/shorts.py plan",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run check:encoding && npm run build --workspace @english-channel/shared-types && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
     "test": "npm run test --workspaces --if-present && npm run test:py",
@@ -29,10 +31,11 @@
     "node": ">=20.0.0"
   },
   "devDependencies": {
-    "@remotion/bundler": "^4.0.504",
-    "@remotion/cli": "^4.0.504",
-    "@remotion/media-utils": "^4.0.504",
-    "@remotion/renderer": "^4.0.504",
-    "remotion": "^4.0.504"
+    "@remotion/bundler": "4.0.504",
+    "@remotion/cli": "4.0.504",
+    "@remotion/media-utils": "4.0.504",
+    "@remotion/renderer": "4.0.504",
+    "remotion": "4.0.504",
+    "zod": "4.4.3"
   }
 }

@@ -10,5 +10,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": ["src/brand"]
+  "include": ["src/brand", "src/shorts"]
 }
