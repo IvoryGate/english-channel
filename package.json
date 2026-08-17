@@ -10,6 +10,7 @@
   "scripts": {
     "dev:web": "npm run dev --workspace @english-channel/web",
     "dev:api": "npm run dev --workspace @english-channel/api",
+    "classics:ops": ".\\.conda-env\\python.exe scripts/classics.py",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run check:encoding && npm run build --workspace @english-channel/shared-types && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
     "test": "npm run test --workspaces --if-present && npm run test:py",

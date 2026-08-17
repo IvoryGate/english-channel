@@ -55,3 +55,13 @@ Your preferred local model is `openbmb/VoxCPM2`.
 If CUDA memory is tight, close GPU-heavy applications and retry with:
 
 - `.\.venv\Scripts\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --no-optimize`
+
+## Classic Listening Operations
+
+Classic Listening uses a rights-gated, event-sourced lifecycle. The tracked policy starts at authority level 0, so local production can proceed but uploads and public transitions are rejected.
+
+- Inspect policy: `npm run classics:ops -- policy`
+- Inspect a chapter: `npm run classics:ops -- status --book persuasion --chapter 1`
+- Register a chapter: `npm run classics:ops -- transition --book persuasion --chapter 1 --to DISCOVERED --actor codex --reason "Register chapter" --idempotency-key persuasion-001-discovered`
+
+Runtime events are written under `workspace/classics/operations/` and are intentionally ignored by Git. See `docs/classics/AUTONOMOUS_OPERATING_MODEL.md` before changing authority or publication policy.
