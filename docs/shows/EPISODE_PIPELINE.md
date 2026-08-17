@@ -311,6 +311,12 @@ One job: **thumbnail (step 0) → QC → master → scripted subs → compose �
 
 **YouTube title hard limit (100 chars).** `prepare_episode_youtube_packaging.py` (step 5) fails the pack if `youtube.json` `title` exceeds 100 characters — YouTube silently truncates or rejects longer titles. Author the title ≤100 from the start; the `| Learn English` suffix on Series A titles is optional and should be dropped first if a title is over 100. The same guard runs in `export_episode_to_youtube_dir.py` as a safety net.
 
+**Workspace-only production.** The public controller accepts `--skip-export` on
+`produce` and `resume`. This keeps the verified MP4, WAV, subtitles, thumbnail,
+YouTube metadata, and reports in the canonical episode workspace while skipping
+the duplicate copy under `H:\Youtube`. Repository-managed production uses this
+mode unless an external upload directory is explicitly requested.
+
 ```powershell
 & $py scripts/elr.py produce --episode 17 --series series_b
 ```

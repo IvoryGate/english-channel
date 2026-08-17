@@ -24,16 +24,16 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
 
 # Foreground: progress stays visible in the current terminal.
-& $py scripts/elr.py produce --episode 17 --series all
+& $py scripts/elr.py produce --episode 17 --series all --skip-export
 
 # Background with a visible Windows console for an unattended run.
-& $py scripts/elr.py produce --episode 17 --series all --detach --visible-window
+& $py scripts/elr.py produce --episode 17 --series all --skip-export --detach --visible-window
 
 # Read durable state even if the production terminal is hidden or closed.
 & $py scripts/elr.py status --episode 17
 
 # Continue after an interruption; completed turn WAVs are reused.
-& $py scripts/elr.py resume --episode 17 --series all --detach --visible-window
+& $py scripts/elr.py resume --episode 17 --series all --skip-export --detach --visible-window
 ```
 
 Use `--series series_a|series_b|series_c` for one series. The batch size is 20
@@ -51,16 +51,20 @@ wants existing turn audio regenerated.
    branding, and export checks and writes turn WAVs only.
 3. After the native 16:9 cover/background are approved, run `preflight`. Resolve
    every `ERROR`; formal production must not bypass any visual or packaging gate.
-4. Run `produce` (or `resume` after an interruption). It reuses completed turn
-   WAVs, then performs QC, mastering, subtitles, composition, packaging,
-   verification, and export. Prefer foreground when the user wants live progress; otherwise
+4. Run `produce --skip-export` (or `resume --skip-export` after an interruption).
+   It reuses completed turn WAVs, then performs QC, mastering, subtitles,
+   composition, packaging, and verification in the canonical episode workspace.
+   External `H:\Youtube` export is opt-in and runs only when the user explicitly
+   requests it by omitting `--skip-export`. Prefer foreground when the user wants live progress; otherwise
    use `--detach --visible-window` and immediately report the PID, state path,
    and log path printed by the command.
 5. Use `status` for progress. Do not infer activity from a silent chat command
    and do not start a second job while the current PID is alive.
 6. If the process is interrupted, use `resume`, not `produce --force`.
-7. Completion means state `DONE` and three verified upload directories when
-   `--series all` was selected. A workspace MP4 by itself is not completion.
+7. For `--skip-export`, completion means state `DONE` and verified MP4,
+   subtitles, audio, metadata, and reports in all requested canonical episode
+   workspaces. Without `--skip-export`, completion also requires the external
+   upload directories. A workspace MP4 by itself is not completion.
 
 ## State And Failure Handling
 

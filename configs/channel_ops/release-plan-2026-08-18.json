@@ -1,0 +1,37 @@
+{
+  "schema": "elr-release-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "slots": [
+    {
+      "showId": "series_b",
+      "episodeId": "episode_020",
+      "scheduledAt": "2026-08-18T20:00:00+08:00"
+    },
+    {
+      "showId": "series_a",
+      "episodeId": "episode_020",
+      "scheduledAt": "2026-08-20T20:00:00+08:00"
+    },
+    {
+      "showId": "series_c",
+      "episodeId": "episode_020",
+      "scheduledAt": "2026-08-23T20:00:00+08:00"
+    },
+    {
+      "showId": "series_b",
+      "episodeId": "episode_021",
+      "scheduledAt": "2026-08-25T20:00:00+08:00"
+    },
+    {
+      "showId": "series_a",
+      "episodeId": "episode_021",
+      "scheduledAt": "2026-08-27T20:00:00+08:00"
+    },
+    {
+      "showId": "series_c",
+      "episodeId": "episode_021",
+      "scheduledAt": "2026-08-30T20:00:00+08:00"
+    }
+  ]
+}
+

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import tempfile
 from pathlib import Path
 
 
@@ -22,25 +23,65 @@ def build_concat_audio(
         subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(clips[0]), str(output_wav)], check=True)
         return output_wav
 
-    filter_parts: list[str] = []
-    concat_inputs: list[str] = []
-    for index, clip in enumerate(clips):
-        filter_parts.append(f"[{index}:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=mono[a{index}]")
-        concat_inputs.append(f"[a{index}]")
-        if index < len(clips) - 1 and gap_sec > 0:
-            silence_label = f"s{index}"
-            filter_parts.append(
-                f"anullsrc=r=44100:cl=mono,atrim=0:{gap_sec},asetpts=N/SR/TB[{silence_label}]"
-            )
-            concat_inputs.append(f"[{silence_label}]")
+    # Keep clip paths in a concat manifest instead of placing every input on
+    # the command line. Large Series C episodes otherwise exceed Windows'
+    # CreateProcess command-length limit before ffmpeg can start.
+    with tempfile.TemporaryDirectory(prefix="elr_reference_concat_") as tmp:
+        tmp_dir = Path(tmp)
+        list_file = tmp_dir / "concat.txt"
+        silence = tmp_dir / "gap.wav"
+        lines: list[str] = []
 
-    n = len(concat_inputs)
-    filter_complex = ";".join(filter_parts) + f";{''.join(concat_inputs)}concat=n={n}:v=0:a=1[out]"
-    command = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
-    for clip in clips:
-        command.extend(["-i", str(clip)])
-    command.extend(["-filter_complex", filter_complex, "-map", "[out]", str(output_wav)])
-    subprocess.run(command, check=True)
+        if gap_sec > 0 and len(clips) > 1:
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-hide_banner",
+                    "-loglevel",
+                    "error",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "anullsrc=r=48000:cl=mono",
+                    "-t",
+                    str(gap_sec),
+                    "-c:a",
+                    "pcm_s16le",
+                    str(silence),
+                ],
+                check=True,
+            )
+
+        for index, clip in enumerate(clips):
+            lines.append(f"file '{clip.resolve().as_posix()}'")
+            if gap_sec > 0 and index < len(clips) - 1:
+                lines.append(f"file '{silence.resolve().as_posix()}'")
+        list_file.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                str(list_file),
+                "-ar",
+                "44100",
+                "-ac",
+                "1",
+                "-c:a",
+                "pcm_s16le",
+                str(output_wav),
+            ],
+            check=True,
+        )
     return output_wav
 
 

@@ -10,9 +10,24 @@ Companion packaging reference: [audiobook YOUTUBE.md](../../.cursor/skills/audio
 3. **No politics:** skip elections, parties, wars, geopolitical conflict, and partisan culture-war framing. Stay on daily English, study methods, workplace communication, and social skills.
 4. **No topic reuse:** do not repeat a prior `publicTitle` / `slug` already shipped or reserved in any series backlog with status `draft|rendering|published`, or already present under `H:\Youtube\`.
 5. **Style:** covers and video backgrounds are **2D comic / hand-drawn** (not photoreal). Generate a native **16:9 final cover with typography baked into the artwork**; generate a separate native 16:9 video background with no text.
-6. **Export root:** `H:\Youtube\<SeriesFolder>\episodeNN\` with **local numbering** (zero-padded, matching Pride layout vibe).
+6. **Workspace source of truth:** publish from the verified canonical episode
+   workspace. `H:\Youtube` export is optional and occurs only when explicitly
+   requested; do not create a duplicate package by default.
+7. **Publication identity:** before any remote upload or metadata edit, verify
+   that series ID, episode ID, CEFR band, title, description, playlist, MP4
+   duration, and asset fingerprints all describe the same canonical episode.
+   Abort on cross-series mismatches or duplicate titles with different media.
+8. **Idempotent remote create:** one canonical MP4 fingerprint maps to one
+   YouTube video ID. A retry resumes or verifies that video; it never creates a
+   second upload.
 
-## Series folders on `H:\Youtube`
+These two identity rules are release blockers after the 2026-08-17 incident in
+which Polished English 019 media was published with First Steps 019 metadata.
+See [`YOUTUBE_BASELINE_2026-08-17.md`](YOUTUBE_BASELINE_2026-08-17.md).
+
+## Optional external export folders
+
+When external export is explicitly requested, use these folders:
 
 | Show | Folder |
 | --- | --- |
@@ -22,9 +37,10 @@ Companion packaging reference: [audiobook YOUTUBE.md](../../.cursor/skills/audio
 
 Numbering increments per series (`episode02`, …). Never put episode numbers in the **public YouTube title**.
 
-## Deliverables per episode folder
+## Deliverables
 
-Mirror audiobook shipping shape:
+The verified workspace deliverables are authoritative. An optional external
+export mirrors this shape:
 
 ```text
 H:\Youtube\<SeriesFolder>\episodeNN\
@@ -88,7 +104,35 @@ Shortcut: `scripts\run_series_b_ep001_pack.ps1` (add `--skip-master` if master a
 12. **Compose thumbnail** — `--from-baked-scene` / `--video-bg-from` preserves the native 16:9 baked cover. `--from-image` is legacy-only for a pre-existing 3:2 cover.
 13. **Subtitles** — `pack_episode.py` uses `_master_turns` + **scripted-only** (real clip durations + script text). Karaoke: ASS `\kf`; spoken **ivory `#FFF8E7`**, waiting gray `#B0B0B0`.
 14. **Compose / export** — included in pack step; compose prefers **`master.wav`** (~5 Mbps video).
-15. **Backlog** — mark topic `published`; record export path.
+15. **Remote preflight** — resolve the publication ledger entry and compare the
+   verified local fingerprints with title, description, thumbnail, subtitles,
+   playlist, CEFR band, duration, and any existing remote video ID.
+16. **Private upload and verification** — upload as private, persist the video
+   ID immediately, wait for processing, and re-read every remote field before
+   scheduling. Public writes remain disabled until the approved channel policy
+   permits them.
+17. **Backlog** — mark topic `published` only after the remote public state is
+   verified; record the YouTube video ID and URL, not an optional export path.
+
+Run the publication gate before opening Studio:
+
+```powershell
+& .\.conda-env\python.exe scripts\channel_ops.py `
+  --repo-root . `
+  --policy configs\channel_ops\policy.json `
+  --ledger workspace\channel_ops\publications.json `
+  preflight --show series_b --episode 20
+
+& .\.conda-env\python.exe scripts\channel_ops.py `
+  --repo-root . `
+  --policy configs\channel_ops\policy.json `
+  --ledger workspace\channel_ops\publications.json `
+  validate-plan --plan configs\channel_ops\release-plan-2026-08-18.json
+```
+
+An `ok: false` result is a hard stop. This includes CJK characters in public
+title/description copy, metadata/package mismatch, video below 2560×1440,
+duplicate title/media identity, wrong playlist identity, or unsafe cadence.
 
 ## Resolution source of truth
 

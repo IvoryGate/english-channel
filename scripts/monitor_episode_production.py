@@ -1,4 +1,4 @@
-"""Full episode production monitor: render (per-turn retry) → pack → export.
+"""Full episode production monitor: render (per-turn retry) → pack → optional export.
 
 Audiobook parity for unattended Series A/B/C delivery after scripts are approved.
 
@@ -99,6 +99,8 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
         ]
         if args.qc_no_asr:
             pack_cmd.append("--qc-no-asr")
+        if args.skip_export:
+            pack_cmd.append("--skip-export")
         pack_cmd.extend(["--compose-encoder", "libx264"])
         write(f"pack: {' '.join(pack_cmd)}")
         proc = subprocess.Popen(
@@ -120,7 +122,7 @@ def run_production(args: argparse.Namespace, log_path: Path) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Monitor full episode production (render→pack→export).")
+    parser = argparse.ArgumentParser(description="Monitor full episode production (render→pack→optional export).")
     parser.add_argument("--show", required=True)
     parser.add_argument("--episode", required=True)
     parser.add_argument("--workspace", required=True)
@@ -132,6 +134,7 @@ def main() -> int:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--retry-on-failure", type=int, default=2)
     parser.add_argument("--qc-no-asr", action="store_true")
+    parser.add_argument("--skip-export", action="store_true")
     parser.add_argument("--log", default="")
     parser.add_argument("--python", default=str(DEFAULT_PYTHON))
     parser.add_argument("--detach", action="store_true")

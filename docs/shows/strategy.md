@@ -1,5 +1,14 @@
 # English Listening Room — Multi-Series Strategy
 
+> Growth, publication, experimentation, analytics, and autonomy are governed by
+> [`AUTONOMOUS_GROWTH_SYSTEM.md`](AUTONOMOUS_GROWTH_SYSTEM.md). Until its
+> baseline is complete, the existing 63-video dialogue inventory is the
+> experiment bank and new episode production beyond episode 021 is paused.
+> The first signed-in Studio baseline is recorded in
+> [`YOUTUBE_BASELINE_2026-08-17.md`](YOUTUBE_BASELINE_2026-08-17.md). It selects
+> First Steps for reach, Daily Talk for satisfaction, and Polished English as a
+> low-cadence authority/conversion bet.
+
 Channel umbrella: **English Listening Room (ELR)**. One neutral channel brand for two complementary promises: Classic Listening literary audiobooks and levelled practical-English dialogue series. The ready-to-paste live channel copy lives in [`CHANNEL_DESCRIPTION.md`](CHANNEL_DESCRIPTION.md).
 
 ## Active series (A/B/C)
@@ -10,6 +19,11 @@ Channel umbrella: **English Listening Room (ELR)**. One neutral channel brand fo
 | **B** | First Steps | A2-B1 | Riley & Sam | Weekly |
 | **C** | Polished English | B2-C1 | Leo & Mia | Every 2 weeks |
 | **Classic** | Pride & Prejudice Audiobook | — | Narrator | Automated / daily |
+
+For the two-week 020/021 validation sprint, use one weekly slot per series so
+each product role gets two observations quickly. After that sprint, the working
+capacity prior returns to 50% First Steps, 35% Daily Talk, and 15% Polished
+English until a complete 28-day cycle is reviewed.
 
 **Cancelled for now:** Series D (Quick Fix short format).
 
@@ -82,6 +96,7 @@ Shared tooling:
 
 ## Related docs
 
+- [`AUTONOMOUS_GROWTH_SYSTEM.md`](AUTONOMOUS_GROWTH_SYSTEM.md)
 - [`series_a/bible.md`](series_a/bible.md)
 - [`series_b/bible.md`](series_b/bible.md)
 - [`series_c/bible.md`](series_c/bible.md)

@@ -1,0 +1,24 @@
+{
+  "schema": "elr-channel-policy-v1",
+  "timezone": "Asia/Shanghai",
+  "minChannelSpacingHours": 48,
+  "minSameSeriesSpacingHours": 168,
+  "shows": {
+    "series_a": {
+      "publicName": "Daily Talk",
+      "levelBand": "B1-B2",
+      "playlistId": "PLUALyXHUPuM0"
+    },
+    "series_b": {
+      "publicName": "First Steps",
+      "levelBand": "A2-B1",
+      "playlistId": "PLV6UzOzdXS_w"
+    },
+    "series_c": {
+      "publicName": "Polished English",
+      "levelBand": "B2-C1",
+      "playlistId": "PLeDOm-qygJM4"
+    }
+  }
+}
+

@@ -33,6 +33,21 @@ def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Pa
     assert "--force" not in cmd
 
 
+def test_monitor_command_can_skip_external_export(tmp_path: Path) -> None:
+    context = build_context(tmp_path, "series_b", 20, tmp_path / "youtube")
+    cmd = monitor_command(
+        context,
+        Path("python.exe"),
+        batch_size=20,
+        force=False,
+        log_path=tmp_path / "run.log",
+        skip_export=True,
+    )
+
+    assert "--skip-export" in cmd
+    assert "--youtube-root" in cmd
+
+
 def test_audio_render_command_defers_compose_and_visual_pack(tmp_path: Path) -> None:
     context = build_context(tmp_path, "series_a", 17, tmp_path / "youtube")
     cmd = audio_render_command(

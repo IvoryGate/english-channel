@@ -106,6 +106,7 @@ def monitor_command(
     batch_size: int,
     force: bool,
     log_path: Path,
+    skip_export: bool = False,
 ) -> list[str]:
     cmd = [
         str(python),
@@ -133,6 +134,8 @@ def monitor_command(
     ]
     if force:
         cmd.append("--force")
+    if skip_export:
+        cmd.append("--skip-export")
     return cmd
 
 
@@ -208,6 +211,7 @@ def _initial_state(
         "episodeId": contexts[0].episode_id,
         "series": [context.show_id for context in contexts],
         "batchSize": args.batch_size,
+        "skipExport": bool(getattr(args, "skip_export", False)),
         "status": status,
         "phase": "STARTING",
         "pid": os.getpid(),
@@ -268,8 +272,10 @@ def execute_production(args: argparse.Namespace) -> int:
 
         with GpuProductionLock(f"elr_{episode_id}"):
             for context in contexts:
-                _set_series_state(store, context.show_id, phase="RENDER_PACK_EXPORT", status="RUNNING")
-                logger.event(f"{context.show_id}: render, pack, verify, export")
+                production_phase = "RENDER_PACK" if args.skip_export else "RENDER_PACK_EXPORT"
+                activity = "render, pack, verify" if args.skip_export else "render, pack, verify, export"
+                _set_series_state(store, context.show_id, phase=production_phase, status="RUNNING")
+                logger.event(f"{context.show_id}: {activity}")
                 child_log = log_path.with_name(f"{log_path.stem}.{context.show_id}.log")
                 code = run_streamed(
                     monitor_command(
@@ -278,6 +284,7 @@ def execute_production(args: argparse.Namespace) -> int:
                         batch_size=args.batch_size,
                         force=args.force,
                         log_path=child_log,
+                        skip_export=args.skip_export,
                     ),
                     logger=logger,
                     heartbeat=store.heartbeat,
@@ -286,7 +293,8 @@ def execute_production(args: argparse.Namespace) -> int:
                     raise RuntimeError(f"{context.show_id} production failed with exit {code}")
                 _set_series_state(store, context.show_id, phase="DONE", status="DONE")
 
-        store.update(status="DONE", phase="DONE", currentSeries="", finishedAt=utc_now(), detail="All requested series completed.")
+        detail = "All requested series completed in workspace." if args.skip_export else "All requested series completed."
+        store.update(status="DONE", phase="DONE", currentSeries="", finishedAt=utc_now(), detail=detail)
         logger.event("ELR production completed")
         return 0
     except KeyboardInterrupt:
@@ -436,6 +444,7 @@ def command_produce(args: argparse.Namespace) -> int:
                         batch_size=args.batch_size,
                         force=args.force,
                         log_path=REPO / "logs" / "elr_runs" / f"{context.episode_id}.{context.show_id}.log",
+                        skip_export=args.skip_export,
                     )
                 )
             )
@@ -503,6 +512,11 @@ def _add_run_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--youtube-root", default=r"H:\Youtube")
     parser.add_argument("--batch-size", type=int, default=DEFAULT_RENDER_BATCH_SIZE)
     parser.add_argument("--force", action="store_true", help="Re-render existing turn WAVs.")
+    parser.add_argument(
+        "--skip-export",
+        action="store_true",
+        help="Keep verified products in the episode workspace and skip copying them to --youtube-root.",
+    )
     parser.add_argument("--detach", action="store_true", help="Run in the background and return PID/status/log paths.")
     parser.add_argument("--visible-window", action="store_true", help="With --detach on Windows, open a visible console.")
     parser.add_argument("--dry-run", action="store_true", help="Print canonical paths and commands without writing or running.")
