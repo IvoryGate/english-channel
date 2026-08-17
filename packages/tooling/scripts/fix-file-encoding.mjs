@@ -10,6 +10,8 @@ const ignoredDirs = new Set([
   ".next",
   "dist",
   "artifacts",
+  "logs",
+  "videos",
   "assets",
   "pretrained_models",
   ".pytest_cache",
@@ -35,6 +37,7 @@ const checkedNames = new Set([".gitignore", ".editorconfig"]);
 
 function walk(dir, files = []) {
   for (const entry of readdirSync(dir)) {
+    if (entry.startsWith("_tmp_")) continue;
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {

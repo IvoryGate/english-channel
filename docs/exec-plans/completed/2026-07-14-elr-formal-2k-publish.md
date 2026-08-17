@@ -20,13 +20,10 @@ Ship one **formal** YouTube package per dialogue series at **≥2K (2560×1440)*
 
 ## Status
 
-- **State:** first formal packs shipped to `H:\Youtube` (2K); VoxCPM load still broken → interim Edge-TTS audio
-- **Last update:** 2026-07-14 evening
-
-## Remaining
-
-- Restore VoxCPM load; re-render A/B/C episode01 audio with clones; re-export over same folders
-- Prefer live corpus trending refresh before next topic lock when rate limits allow
+- **State:** completed; the first 2K packs shipped and VoxCPM production was
+  subsequently restored. Ongoing episode production is owned by the ELR
+  production orchestrator plan.
+- **Last update:** 2026-08-03
 
 ## Plan
 

@@ -2,10 +2,13 @@
 
 ## Where Research Lives
 
-YouTube acquisition and analysis are **separate skills**:
+YouTube acquisition and analysis feed the **topic-selection pipeline** (see [`docs/shows/EPISODE_PIPELINE.md`](../../../docs/shows/EPISODE_PIPELINE.md) § Topic selection and [`docs/shows/COMPETITOR_CHANNELS.md`](../../../docs/shows/COMPETITOR_CHANNELS.md)).
 
-- **youtube-podcast-research** — discover, collect, rank trending videos
-- **youtube-corpus-analysis** — patterns, transcript beats, episode briefs, Markdown report
+- **Real investigation (scrape, anti-ban)** — `scripts/run_research_refresh.py --channel <slug>` refreshes one competitor channel at a time into the local corpus, then re-runs offline analysis.
+- **Offline topic merge** — `workspace/shows/tools/refresh_topic_backlog.py --all` reads analysis JSON and merges candidate topics into each series `topic_backlog.json` (records `sourceCompetitor`, `sourceTitle`, `differentiationAngle`).
+- **Offline pick next topic** — `workspace/shows/tools/select_next_topic.py --show series_X --apply`.
+
+Legacy skill names (`youtube-podcast-research`, `youtube-corpus-analysis`) refer to the same corpus under `workspace/dialogue_podcast_research/youtube_corpus/`.
 
 Default analysis outputs:
 

@@ -1,9 +1,28 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildServer } from "../src/index.js";
+import type { Providers } from "../src/providers/index.js";
+
+function createTestProviders(): Providers {
+  return {
+    queue: {
+      enqueueTtsJob: async () => undefined,
+      close: async () => undefined
+    },
+    tts: {
+      runInline: async () => ({
+        jobId: "test-job",
+        chapterId: "ch-001",
+        modelId: "test-model",
+        tracePath: "trace.json",
+        audioPath: "chapter.wav"
+      })
+    }
+  };
+}
 
 test("POST /jobs creates queued job", async () => {
-  const app = buildServer();
+  const app = buildServer(createTestProviders());
   const response = await app.inject({
     method: "POST",
     url: "/jobs",

@@ -1,6 +1,6 @@
 ---
 name: series-a-daily-talk
-description: Write Series A (Daily Talk, B1-B2) two-host English learning podcast scripts for Ethan & Nora with audiobook-parity delivery cues, frozen cold-open chassis, English Listening Room brand name, and human-feel dialogue (sparse fillers, multi-line runs, long/short sentence variation). Use when the user asks to create or revise a Series A episode script.
+description: Write Series A (Daily Talk, B1-B2) two-host English learning podcast scripts for Ethan & Nora with situation-first openings, audiobook-parity delivery cues, English Listening Room brand name, and human-feel dialogue (sparse fillers, multi-line runs, long/short sentence variation). Use when the user asks to create or revise a Series A episode script.
 ---
 
 # Series A — Daily Talk
@@ -12,7 +12,7 @@ description: Write Series A (Daily Talk, B1-B2) two-host English learning podcas
 1. Read [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) Section A (Class reference) and [`docs/shows/series_a/bible.md`](../../../docs/shows/series_a/bible.md).
 2. Get the topic from `select_next_topic.py --show series_a --apply` (writes `workspace/shows/series_a/topic_selection_<date>.json`); or fall back to a user brief. The selector reads real competitor research and excludes already-produced topics. Reject political / duplicate themes per [`ELR_YOUTUBE_PUBLISH.md`](../../../docs/shows/ELR_YOUTUBE_PUBLISH.md) hard rules.
 3. Choose one hook template from STYLE.md §A.2 (A–E). Do not mix templates.
-4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) — frozen cold-open chassis, then 起承转合 per STYLE.md §A.4.
+4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) and [`docs/shows/SCRIPT_QUALITY_STANDARD.md`](../../../docs/shows/SCRIPT_QUALITY_STANDARD.md) — select a situation-first engine, then use 起承转合 as a flexible pacing map.
 5. Tag every turn with `[Delivery: …]` per DELIVERY.md. Include `characterProfiles` block in header.
 6. Run `validate_podcast_script.py --profile series_a` on the draft. Fix until `ok=true`.
 7. Stop and wait for user feedback before TTS prep.

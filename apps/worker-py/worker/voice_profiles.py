@@ -77,8 +77,8 @@ ELR_SERIES_A_ETHAN = VoiceProfile(
         "There's something really beautiful about knowing that people from different places, "
         "different lives, and different stories are all meeting here through English."
     ),
-    prompt_wav_path="assets/voices/series_a/nora_reference_clean.wav",
-    reference_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    prompt_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
     cfg_value=2.35,
     inference_timesteps=10,
     normalize=False,
@@ -94,8 +94,8 @@ ELR_SERIES_A_NORA = VoiceProfile(
         "every time you share your thoughts with us, it makes this space feel more real, "
         "more alive, and more special."
     ),
-    prompt_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
-    reference_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    prompt_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/nora_reference_clean.wav",
     cfg_value=2.35,
     inference_timesteps=10,
     normalize=False,

@@ -10,6 +10,8 @@ const ignoredDirs = new Set([
   ".next",
   "dist",
   "artifacts",
+  "logs",
+  "videos",
   "assets",
   "books",
   "reference",
@@ -41,6 +43,7 @@ const strayUnicodeCarriage = String.fromCodePoint(0x0a0d);
 
 function walk(dir, files = []) {
   for (const entry of readdirSync(dir)) {
+    if (entry.startsWith("_tmp_")) continue;
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {

@@ -9,7 +9,7 @@ Companion packaging reference: [audiobook YOUTUBE.md](../../.cursor/skills/audio
 2. **Topic first:** analyze learner-search / competitor **hot themes** before locking a title. Prefer corpus tools under `youtube-podcast-research` + `youtube-corpus-analysis` when corpus is fresh; otherwise use show `topic_backlog.json` + bible + recent ELR uploads.
 3. **No politics:** skip elections, parties, wars, geopolitical conflict, and partisan culture-war framing. Stay on daily English, study methods, workplace communication, and social skills.
 4. **No topic reuse:** do not repeat a prior `publicTitle` / `slug` already shipped or reserved in any series backlog with status `draft|rendering|published`, or already present under `H:\Youtube\`.
-5. **Style:** covers and video backgrounds are **2D comic / hand-drawn** (not photoreal). Typography is **baked into the cover image** (no production PIL overlay).
+5. **Style:** covers and video backgrounds are **2D comic / hand-drawn** (not photoreal). Generate a native **16:9 final cover with typography baked into the artwork**; generate a separate native 16:9 video background with no text.
 6. **Export root:** `H:\Youtube\<SeriesFolder>\episodeNN\` with **local numbering** (zero-padded, matching Pride layout vibe).
 
 ## Series folders on `H:\Youtube`
@@ -76,14 +76,16 @@ cd H:\english-channel
   --episode-num 1
 ```
 
-Run in **background** with `--detach` (audiobook monitor parity). Agent: `scripts/launch_episode_pack.py --detach ...`. Log: `logs/episode_pack_*.log`.  
+Run through `scripts/elr.py produce`; for unattended work use
+`--detach --visible-window`. Query `scripts/elr.py status --episode N` instead
+of guessing from a silent terminal. The state record contains the exact log.
 Subtitles use **`--scripted-only`** (audiobook timing from WAV duration + script — no 134× Whisper).  
 Shortcut: `scripts\run_series_b_ep001_pack.ps1` (add `--skip-master` if master already exists).
 
 9. **YouTube copy** — `title`, description body, tags, `coverText` layers in `youtube.json` + `youtube_description.txt`.
-10. **Prompts** — `render_episode_thumbnail.py --print-prompts` (covers ask for **2560×1440**; comic style).
-11. **Image gen** — bake typography into cover; video bg **no text**.
-12. **Normalize** — `--from-image` / `--video-bg-from` (normalize forces 2560×1440).
+10. **Prompts** — `render_episode_thumbnail.py --print-prompts` (native **16:9 / 2560×1440**, comic style, exact baked cover typography).
+11. **Image gen** — generate a complete thumbnail cover with the specified text baked into the composition, plus a separate subtitle-friendly video background with **no text**.
+12. **Compose thumbnail** — `--from-baked-scene` / `--video-bg-from` preserves the native 16:9 baked cover. `--from-image` is legacy-only for a pre-existing 3:2 cover.
 13. **Subtitles** — `pack_episode.py` uses `_master_turns` + **scripted-only** (real clip durations + script text). Karaoke: ASS `\kf`; spoken **ivory `#FFF8E7`**, waiting gray `#B0B0B0`.
 14. **Compose / export** — included in pack step; compose prefers **`master.wav`** (~5 Mbps video).
 15. **Backlog** — mark topic `published`; record export path.

@@ -1,6 +1,6 @@
 # English Listening Room — Multi-Series Strategy
 
-Channel umbrella: **English Listening Room (ELR)**. One neutral channel brand; multiple levelled dialogue series plus Classic Listening audiobooks.
+Channel umbrella: **English Listening Room (ELR)**. One neutral channel brand for two complementary promises: Classic Listening literary audiobooks and levelled practical-English dialogue series. The ready-to-paste live channel copy lives in [`CHANNEL_DESCRIPTION.md`](CHANNEL_DESCRIPTION.md).
 
 ## Active series (A/B/C)
 
