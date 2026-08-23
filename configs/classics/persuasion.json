@@ -1,0 +1,109 @@
+{
+  "schema": "classic-listening-book-v1",
+  "book": {
+    "slug": "persuasion",
+    "title": "Persuasion",
+    "author": "Jane Austen",
+    "language": "en",
+    "originalPublicationYear": 1817,
+    "chapterCount": 24
+  },
+  "source": {
+    "provider": "Project Gutenberg",
+    "ebookId": 105,
+    "pageUrl": "https://www.gutenberg.org/ebooks/105",
+    "publicDomainStatement": "Public domain in the USA",
+    "path": "books/public-domain/persuasion-jane-austen-gutenberg-105.epub",
+    "sha256": "f848c20f7445a04cf56465c9325a06dc44480bcaa3bf464363239ea61e54f477",
+    "chapterHeadingPattern": "^CHAPTER\\s+([IVXLCDM]+)\\.?$",
+    "boilerplateStopMarkers": [
+      "*** END OF THE PROJECT GUTENBERG EBOOK PERSUASION ***",
+      "THE FULL PROJECT GUTENBERG LICENSE"
+    ]
+  },
+  "release": {
+    "seriesPolicyRef": "configs/classics/series.json",
+    "programId": "classic-listening-baseline"
+  },
+  "voice": {
+    "mode": "single",
+    "profileId": "classic-listening-riley-narrator",
+    "acceptanceStatus": "blocked_electronic_texture",
+    "sourceProfileId": "elr-series-b-riley",
+    "referencePath": "assets/voices/series_b/riley_reference_clean.wav",
+    "referenceSha256": "9330f8278c50fae1a7142953b73cbec3bd89f7fafe61d76ecb24681985b4b189",
+    "globalControl": "one consistent female audiobook narrator, same Riley timbre throughout, mature reflective Regency literary delivery, restrained emotion, clear sentence shape, no character voice imitation",
+    "narrationCue": "calm reflective literary narration",
+    "dialogueCue": "light natural dialogue, same narrator timbre",
+    "cfgValue": 2.15,
+    "inferenceTimesteps": 12,
+    "normalize": false,
+    "denoise": false
+  },
+  "render": {
+    "modelId": "pretrained_models/VoxCPM2",
+    "device": "cuda",
+    "optimize": true,
+    "sampleRate": 48000,
+    "channels": 1,
+    "interSegmentSilenceSec": 0.34,
+    "shortSegmentWordThreshold": 12,
+    "maxSegmentWords": 30
+  },
+  "mastering": {
+    "integratedLufs": -16.0,
+    "truePeakDb": -1.5,
+    "loudnessRange": 11.0
+  },
+  "branding": {
+    "primaryAudience": "women aged 55 and over",
+    "avatarPath": "assets/branding/english_listening_room_avatar_v2.png",
+    "introOutputPath": "assets/branding/video/classic-listening-intro.mp4",
+    "outroOutputPath": "assets/branding/video/classic-listening-outro.mp4",
+    "width": 2560,
+    "height": 1440,
+    "introBackgroundPath": "public/classics/persuasion/classic-listening-intro-bg-v2.png",
+    "outroBackgroundPath": "public/classics/persuasion/classic-listening-outro-bg-v2.png",
+    "introVoicePath": "public/classics/persuasion/classic-listening-intro-voice-v4.wav",
+    "outroVoicePath": "public/classics/persuasion/classic-listening-outro-voice-v5b.wav",
+    "introSpokenText": "Welcome to Classic Listening, from the English Listening Room. Persuasion, by Jane Austen. Chapter One.",
+    "outroSpokenText": "Thank you for listening. Subscribe to the English Listening Room, and continue with Chapter Two of Persuasion.",
+    "voiceLeadSilenceSec": 0.16,
+    "voiceTailSilenceSec": 0.42,
+    "voiceCfgValue": 2.15,
+    "voiceInferenceTimesteps": 12,
+    "outroVoiceCfgValue": 1.9,
+    "outroVoiceInferenceTimesteps": 16,
+    "introCopy": [
+      "CLASSIC LISTENING",
+      "PERSUASION",
+      "BY JANE AUSTEN"
+    ],
+    "outroCopy": [
+      "CONTINUE THE STORY",
+      "SUBSCRIBE FOR THE NEXT CHAPTER",
+      "ENGLISH LISTENING ROOM"
+    ]
+  },
+  "visual": {
+    "styleId": "classic-regency-cinematic-v1",
+    "referenceCovers": [
+      "videos/pride&prejudice/chapter_47/chapter_47-封面.jpg",
+      "videos/pride&prejudice/chapter_61/chapter_61-封面.jpg"
+    ],
+    "sceneDirection": "bright, warm, emotionally comforting Regency scene for a primarily 55-plus female audience; honey-gold daylight or a well-lit cozy evening, inviting period interiors, flowers, books, tea, and an emotionally specific chapter hook",
+    "typographyDirection": "large high-contrast white serif title, book title, chapter number, FULL AUDIOBOOK, and By Jane Austen",
+    "bodyBackgroundDirection": "calmer text-free Regency scene with warm high-key light, furnished lower thirds, and clean central subtitle space",
+    "chapterBackgrounds": {
+      "1": "public/classics/persuasion/chapter-01-cover-bg-v2.png",
+      "2": "public/classics/persuasion/chapter-02-cover-bg-v1.png",
+      "3": "public/classics/persuasion/chapter-03-cover-bg-v1.png"
+    },
+    "width": 2560,
+    "height": 1440
+  },
+  "export": {
+    "seriesFolder": "Classic Listening/Persuasion",
+    "chapterDirectoryPattern": "chapter{chapter:02d}"
+  }
+}

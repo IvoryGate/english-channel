@@ -134,3 +134,16 @@ Runtime events are written under `workspace/classics/operations/` and are
 intentionally ignored by Git. See
 [`docs/classics/AUTONOMOUS_OPERATING_MODEL.md`](docs/classics/AUTONOMOUS_OPERATING_MODEL.md)
 before changing authority or publication policy.
+
+The same controller exposes the protected Persuasion production adapter:
+
+```powershell
+.\.conda-env\python.exe scripts/classics.py ingest --book persuasion
+.\.conda-env\python.exe scripts/classics.py preflight --book persuasion --chapter 1
+.\.conda-env\python.exe scripts/classics.py status --book persuasion
+```
+
+Heavy production commands share the repository GPU lock with ELR and Shorts.
+New Riley/VoxCPM2 audio generation is intentionally rejected by the tracked
+`blocked_electronic_texture` acceptance state; ingestion, inspection, and
+existing-artifact review remain available.

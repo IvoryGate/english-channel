@@ -67,17 +67,47 @@ Existing capabilities to reuse:
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-08-23.
-- State: implementation and generated review artifacts exist only in the
-  protected dirty `codex/classics-persuasion-pilot` worktree. The chapter 1 V2
-  review package is complete; chapters 2-3 and publication remain blocked on a
-  clean long-form narrator/provider passing listening review.
-- Target branch: a dedicated salvage branch after the clean Classics foundation
-  is absorbed.
-- Intake warning: this ELR branch contributes the durable pilot plan, not the
-  unfinished Persuasion source tree. Preserve the dirty worktree until code,
-  tests, updated plans, and selected provenance-reviewed assets are committed
-  separately. Do not overwrite it with this historical branch version.
+- Last updated: 2026-08-24.
+- State: source code is protected at `8d548d0` and is being semantically ported
+  onto the accepted Classic Listening foundation. The chapter 1 V2 review
+  package exists, but chapters 2-3 and all publication remain blocked until a
+  clean narrator/provider passes the tracked acceptance policy.
+- Intake branch: `codex/persuasion-pilot-intake`.
+- Protected source: `codex/classics-persuasion-pilot`; its 33 media files are
+  retained untracked and fingerprinted in
+  `docs/classics/PERSUASION_MEDIA_INVENTORY.md`.
+
+### Progress Log — 2026-08-08
+
+- Created the isolated `codex/classics-persuasion-pilot` worktree from current `origin/main`; the unrelated dirty ELR branch remains untouched.
+- Added the versioned `Persuasion` config, canonical Classic Listening paths, atomic state storage, EPUB spine ingestion, exact source coverage segmentation, preflight checks, and the public `ingest`, `preflight`, `preview-voice`, and `status` commands.
+- Verified the registered Project Gutenberg EPUB and extracted exactly 24 chapters / 83,527 words. Chapter 24 excludes the embedded Gutenberg license. Chapter 1 contains 2,596 words and 72 stable single-voice segments with 100% normalized ordered coverage.
+- Registered `classic-listening-riley-narrator` against the Series B Riley clean reference and verified the reference SHA-256. Added a low-peak-memory VoxCPM2 loading path after reproducing the upstream loader's host-memory spike.
+- Rejected the first generated sample after ASR proved that VoxCPM2 spoke the parenthetical style-control text. Changed synthesis to source-only text, regenerated the sample, and verified the ASR result exactly matches the selected Austen sentence.
+- Generated text-free intro/outro and chapter-cover backgrounds with ImageGen. Added deterministic 2560x1440 Remotion compositions that preserve the existing ELR avatar and exact typography. Rendered an 8.04-second 2K intro, an 8.04-second 2K outro, and a 2K chapter 1 cover candidate.
+- Focused Python tests pass (`12 passed`). Media probes confirm native 2560x1440 H.264 outputs and 2560x1440 PNG storyboards.
+- Current gate: user approval of the Riley voice direction and the classic visual direction. Full chapter rendering remains intentionally blocked until approval.
+- Release tooling note: the Remotion source and local render are working, but `package-lock.json` has not yet been refreshed because the required network approval was rejected by the current Codex usage limit. Do not commit or release with the package manifest/lock mismatch unresolved.
+- Visual review feedback established that historical Classic Listening viewers are primarily women aged 55 and over. The first dark-library treatment was rejected as too simple, too empty through the middle/lower frame, and silent. The bright honey/ivory/blush backgrounds and female-led chapter cover remain valid, but the card-based branding treatment and synthetic music-only audio were also rejected. Version 3 uses VoxCPM2-generated Riley speech, a hero-scale ELR avatar, voice-timed kinetic typography, drawn ink paths, an opening-book animation, and stable large-type reading beats. The earlier video candidates remain versioned and are not promoted as approved assets.
+- Version 3 voice and render verification is complete. VoxCPM2 generated a 9.06-second intro and 8.74-second outro from the registered Series B Riley reference. The final 2560x1440 H.264/AAC candidates are 10.048 and 11.051 seconds, with integrated speech loudness of -16.3 and -15.7 LUFS and true peaks below -2.4 dBTP. Research inputs were the existing ELR spoken-brand clips, W3C older-user guidance on readable presentation and sufficient time, Adobe kinetic-typography guidance on voice-led text motion, and YouTube's 5-20-second end-screen timing and staged-element guidance.
+- Version 3 was rejected for an electronic voice artifact and an unattractive opening-book device. Version 4 regenerates both spoken clips from the Riley reference at the project's documented corrective setting of `cfgValue: 2.15` and 12 inference steps, rather than attempting to hide the artifact with aggressive filtering. ASR recovered the intended wording from both new clips, and high-frequency energy above 8 kHz fell most clearly on the outro. The final 2560x1440 H.264/AAC candidates remain 10.048 and 11.051 seconds, measure -16.3 and -15.3 LUFS, and peak below -2.4 dBTP. The book drawing is removed completely and replaced by a synchronized, text-led action cue with a drawn play symbol: `BEGIN CHAPTER ONE` in the intro and `SUBSCRIBE AND CONTINUE` in the outro. Version 4 remains a listening-approval candidate because objective checks cannot replace subjective review of voice texture.
+- Listening review accepted the version 4 intro but found a small residual electronic quality in the outro. Two outro-only regenerations were compared. Candidate A (`cfgValue: 2.0`, 14 steps) increased high-frequency energy and was rejected. Candidate B (`cfgValue: 1.9`, 16 steps) preserved the complete ASR transcript with lower model guidance and was promoted to the version 5 outro candidate. The intro remains untouched. The rebuilt 2560x1440 H.264/AAC outro is 11.051 seconds, measures -15.7 LUFS with a -2.4 dBTP true peak, and retains the approved action-cue visuals.
+- The version 5 branding direction is approved for production. The rollout scope is now chapters 1-3, each delivered as a complete YouTube upload package rather than audio-only output. The controller now supports full chapter audio rendering, chapter ranges with a shared loaded model, structural/acoustic QC, mastering, SRT/ASS generation, chapter-specific intro/outro speech, deterministic 2K thumbnails, body-video rendering, final composition, verification, and export metadata. Chapters 2 and 3 received new text-free historical scenes through ImageGen; required title copy remains deterministic. Narration is being rendered serially on the GPU, with completed segment WAVs retained for resume.
+
+### Quality Revision — 2026-08-17
+
+- User review blocked publication of the V1 chapter packages for three reasons: audible electronic/current-like voice texture, subtitles that do not track the spoken audio closely enough, and a single static body image that makes long chapters feel inert.
+- The next approval artifact is a versioned, approximately two-minute chapter 1 V2 proof. It must include representative narration, a long subtitle split, three plot-relevant historical scenes, restrained camera motion, and sentence-boundary crossfades. Existing V1 exports remain intact until the proof is approved.
+- Voice correction begins with small Riley A/B samples rather than immediately regenerating all three chapters. Candidate settings are compared for content recovery, high-frequency texture, long-sentence stability, loudness, and listening quality. A gentle post-process may be evaluated only after generation settings are selected.
+- Subtitle timing is derived from actual per-word audio timestamps. Normal cues retain the complete spoken source segment; only text that exceeds the two-line display limit is split, at punctuation or semantic boundaries using real word times. Burned body subtitles start at body time zero, while exported YouTube SRT files add the measured intro offset.
+- Each chapter receives a tracked scene manifest keyed to narration segment ranges. Target density is 8-12 story beats per chapter, with scene changes only at sentence or paragraph boundaries, 1.2-1.8 second crossfades, and restrained 2-4 percent pan/zoom motion.
+- ImageGen remains text-free and background-only. Distinct scene prompts are dispatched as independent built-in image jobs in bounded parallel waves, then checked for period accuracy, character/style continuity, warm older-audience lighting, subtitle-safe composition, malformed anatomy, accidental text, and watermarks before project adoption.
+- After V2 proof approval, chapters 1-3 will be regenerated and repackaged with new versioned outputs. Release gates include structural QC PASS, ASR content review, subtitle coverage and sync sampling, visual transition inspection, native 2560x1440 media probes, and complete YouTube package verification.
+- The chapter 1 V2 proof is now built and awaits listening approval. It uses isolated Riley candidate B (`cfgValue: 1.9`, 16 steps) across segments 001-005, 21 source-only cues aligned from word timestamps, and three ImageGen historical scenes with 1.5-second crossfades plus restrained 2-4 percent motion. The 118.97-second proof probes as native 2560x1440 H.264 with 48 kHz AAC; V1 chapter files and exports were not replaced.
+- The approved proof settings have now been extended across the full chapter 1 review package. Candidate B rendered all 106 expected audio segments with structural QC `PASS`; the mastered body is 1178.9 seconds at 48 kHz, with a -1.499 dBFS peak and no missing or extra segments. Word alignment produced 247 source-only subtitle cues with mean ASR similarity 0.9818. Eleven plot-specific warm Regency scenes cover the chapter with 1.5-second crossfades and restrained motion; eight new text-free backgrounds were generated through built-in ImageGen and recorded in the tracked scene manifest.
+- The final review video is exactly 20:00 at native 2560x1440 with 48 kHz stereo AAC. A timestamp-reset filter concat now fully re-encodes the intro, body, and outro to prevent the H.264 timestamp/index corruption found during the first final-package inspection. Post-repair QA sampled the intro, every body-scene region, and the outro; an automated full-program scan found no black interval lasting one second or longer. The complete YouTube package is exported for review, not uploaded or marked published.
+- A follow-up investigation found that the audible artifact is speech-coupled high-frequency texture rather than removable stationary hum. A native 48 kHz Riley candidate was prepared, but VoxCPM2 resamples reference input to its 16 kHz encoder rate, so the planned reference-rate A/B was stopped before producing or promoting any comparison artifact. Further release work is blocked on a clean TTS provider/model passing blind listening review, not on additional denoise or reference upsampling.
+- The reusable product, publishing, experiment, analytics, and retrospective contract is now defined in `docs/classics/AUTONOMOUS_OPERATING_MODEL.md`; implementation is tracked separately in `docs/exec-plans/active/2026-08-17-classic-listening-autonomous-operations.md`.
 
 ## Audited Input
 
@@ -116,6 +146,9 @@ Existing capabilities to reuse:
 15. Intro/outro backgrounds use a warmer classic-literature language: Regency library or drawing room, parchment and engraved ornament, candlelight, aged paper, deep brown/burgundy/antique-gold accents, and restrained motion. The existing lines `one conversation at a time` and other podcast-specific copy are not used. Candidate copy is `Classic Listening`, `Persuasion`, `By Jane Austen` for the intro and `Continue the story` / `Subscribe for the next chapter` for the outro.
 16. Chapter covers continue the established `Pride and Prejudice` visual family: cinematic historically grounded Regency scene, warm dramatic light, emotional chapter hook, large high-contrast white serif typography, book title, chapter number, `FULL AUDIOBOOK`, and author line. Do not use the A/B/C comic podcast layout. Generate the scene without text, then add exact typography deterministically to avoid misspellings.
 17. YouTube upload remains a human action. The pipeline ends at a verified package plus a publication ledger entry in `exported` state.
+18. The primary historical audience for this line is women aged 55 and over. Visuals therefore prioritize brightness, warmth, legibility, emotional reassurance, familiar domestic detail, and welcoming female-centered imagery. Night scenes remain honey-lit and cozy rather than dark; middle and lower thirds remain intentionally furnished. Branding clips require coordinated audio and more than a single static title motion.
+19. Branding audio follows the established show workflow: VoxCPM2 synthesizes dedicated spoken intros and outros using the same Riley reference as the audiobook narrator. Instrumental-only branding audio is not a substitute. The motion language is voice-led kinetic typography rather than a collection of presentation cards: each spoken phrase triggers a text reveal, ink stroke, title assembly, or page turn. The exact ELR avatar remains a hero element at roughly half the frame height, and emoji are forbidden. Older-viewer guidance requires large high-contrast type, limited simultaneous messages, stable reading holds, and restrained camera movement. The outro keeps a stable final state long enough for a YouTube end-screen overlay.
+20. Branding voice generation may override the chapter narrator's synthesis parameters when a documented quality correction is needed. For version 4, branding uses `cfgValue: 2.15` and 12 inference steps while preserving the registered Riley reference and persisting the override in the generation trace. The book-page motif is prohibited; lower-third motion instead carries an explicit, readable action cue synchronized to the voice.
 
 ## Canonical Runtime Layout
 
@@ -156,6 +189,7 @@ Expected operator surface:
 $py = ".\.conda-env\python.exe"
 & $py scripts/classics.py ingest --book persuasion
 & $py scripts/classics.py preflight --book persuasion --chapter 1
+& $py scripts/classics.py render-brand-voice --book persuasion
 & $py scripts/classics.py render-audio --book persuasion --chapter 1 --detach --visible-window
 & $py scripts/classics.py qc --book persuasion --chapter 1
 & $py scripts/classics.py package --book persuasion --chapter 1

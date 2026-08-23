@@ -20,7 +20,9 @@
   publication ledger, private-upload boundary, analytics snapshots, QC, and
   review decisions.
 - `apps/worker-py/worker/classics/`: Classic Listening rights, policy,
-  append-only lifecycle, authority, and audio-acceptance foundation.
+  append-only lifecycle, authority, audio-acceptance foundation, and protected
+  Persuasion production adapter for source ingestion, aligned subtitles,
+  multi-scene proofing, QC, and package construction.
 - `src/shorts/`: data-driven Remotion 9:16 compositions. Generated audio and
   video remain in ignored `workspace/shorts/`.
 
@@ -123,3 +125,10 @@ The product config references the shared channel release policy and submits a
 cadence request. It does not own total upload capacity or public scheduling
 authority. Authority level 0 remains fail-closed for upload, scheduling, and
 publishing.
+
+The production adapter adds book config, EPUB ingestion, canonical paths,
+resume state, render/QC helpers, and Remotion compositions without replacing
+the lifecycle types, schema, repository, service, or transport. Heavy commands
+enter through the hardware provider and currently share
+`logs/gpu_production.lock` with ELR and Shorts. This is the conservative bridge
+until the channel resource-lease service becomes authoritative.

@@ -56,6 +56,11 @@ Not included:
 5. Update the branch ledger and source plans; archive this plan only when the
    production adapter is accepted locally.
 
+The source-only `continue_persuasion_1_3.ps1` polling helper is preserved in
+the checkpoint but intentionally excluded from the unified adapter: it embeds
+an absolute repository path, can wait indefinitely, and represents an obsolete
+attempt to continue generation with the now-blocked voice provider.
+
 ## Validation
 
 - The source branch has a code-only checkpoint whose diff excludes `public/`

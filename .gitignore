@@ -13,6 +13,7 @@ __pycache__/
 venv/
 .conda-env/
 artifacts/
+exports/
 logs/
 videos/
 tmp/
