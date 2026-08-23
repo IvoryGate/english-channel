@@ -15,8 +15,9 @@ The integrated baseline combines the frontend/backend VoxCPM2 platform with
 Dialogue / English Listening Room research, show definitions, script skills,
 resumable production, QC, packaging, and publication preflight. The Shorts
 adapter and the rights-gated Classic Listening foundation are also integrated.
-The unfinished Persuasion production implementation remains protected in its
-original uncommitted worktree. Start with:
+The Persuasion production adapter is integrated, while its 33 generated review
+assets remain protected and untracked in the original source worktree. Start
+with:
 
 - [`docs/YOUTUBE_OPERATING_SYSTEM.md`](docs/YOUTUBE_OPERATING_SYSTEM.md) for the
   target product and operating model.

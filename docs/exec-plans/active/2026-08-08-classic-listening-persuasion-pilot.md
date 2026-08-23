@@ -68,10 +68,11 @@ Existing capabilities to reuse:
 
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: source code is protected at `8d548d0` and is being semantically ported
-  onto the accepted Classic Listening foundation. The chapter 1 V2 review
-  package exists, but chapters 2-3 and all publication remain blocked until a
-  clean narrator/provider passes the tracked acceptance policy.
+- State: source code is protected at `8d548d0` and the production adapter is
+  integrated locally at `dd9cdce` on the accepted Classic Listening foundation.
+  The chapter 1 V2 review package exists, but chapters 2-3 and all publication
+  remain blocked until a clean narrator/provider passes the tracked acceptance
+  policy.
 - Intake branch: `codex/persuasion-pilot-intake`.
 - Protected source: `codex/classics-persuasion-pilot`; its 33 media files are
   retained untracked and fingerprinted in

@@ -21,8 +21,8 @@ Included:
   publication, and autonomy contracts.
 - Reconcile every live branch and worktree as `absorb`, `supersede`, `preserve`,
   or `retire` before branch cleanup.
-- Preserve and later commit the unfinished Persuasion worktree without mixing
-  it into an unrelated branch.
+- Preserve the inventoried Persuasion media while retaining its protected code
+  checkpoint and reviewed production-adapter intake.
 - Adopt one canonical channel controller and durable operations store.
 - Keep dialogue long form, Shorts, and Classic Listening as product adapters
   behind shared planning, scheduling, resource, publication, analytics, and
@@ -78,10 +78,12 @@ Product adapters retained behind the control plane:
 - Last updated: 2026-08-23.
 - State: Phase 0 inventory and protection rules are complete. ELR is absorbed
   locally at `92bbc57`, Shorts at `8e39d68`, and the Classic Listening
-  foundation at `9f4a7a3`; all pass full gates but are not trunk until reviewed
-  and merged. Channel release capacity is now tracked outside product configs.
-  The next intake is a protected semantic salvage of the dirty Persuasion
-  worktree.
+  foundation at `9f4a7a3`, and the protected Persuasion production adapter at
+  `dd9cdce`; all pass full gates but are not trunk until reviewed and merged.
+  Channel release capacity is tracked outside product configs, and all accepted
+  heavy entry points share the repository GPU mutex. The next intake is
+  selective parity review of the legacy research, mastering, and audiobook
+  branches before shared identity/database work begins.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.
@@ -99,8 +101,9 @@ Product adapters retained behind the control plane:
   explicit prerequisite and verification command.
 - Add `.worktrees/` to the repository ignore policy so local worktree
   administration cannot be committed as a gitlink again.
-- Preserve the Persuasion worktree until its code, tests, plans, and selected
-  production assets are committed on its own branch.
+- Preserve the Persuasion media until each asset has provenance and an approved
+  Git or artifact-store disposition. Its code, tests, and plans are protected
+  at `8d548d0` and integrated at `dd9cdce`.
 
 Exit: the reconciliation document is reviewable and no unique work is
 unaccounted for.
@@ -226,8 +229,9 @@ System acceptance gates:
    names or commit counts alone.
 3. The Shorts branch lacks newer ELR channel-operations files in its tree;
    merging it as a replacement would regress publication safeguards.
-4. The Persuasion worktree contains substantial uncommitted code and media.
-   It is a protected intake source until a dedicated salvage commit exists.
+4. The Persuasion worktree originally contained substantial uncommitted code
+   and media. Code is now checkpointed and integrated; the 33 fingerprinted
+   media files remain a protected intake source.
 5. The clean Classics foundation and unfinished Persuasion implementation both
    add `worker/classics/` with different contracts. Land and adapt them in that
    order; do not overwrite either tree wholesale.

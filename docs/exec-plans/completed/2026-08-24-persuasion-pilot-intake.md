@@ -37,8 +37,7 @@ Not included:
 - Source branch: `codex/classics-persuasion-pilot` at `0c245ec` plus 76 dirty
   status entries before protection.
 - Last updated: 2026-08-24.
-- State: source code protected at `8d548d0`; media manifest recorded; semantic
-  port pending.
+- State: completed locally at `dd9cdce`; source code and media remain protected.
 - Source media: 33 untracked PNG/WAV/JSON files, 55,819,675 bytes (53.23 MiB), retained
   in place and excluded from the initial code checkpoint.
 - Publication hold: shared public scheduling is disabled, Classic Listening
@@ -73,6 +72,24 @@ attempt to continue generation with the now-blocked voice provider.
 - Authority level 0 rejects upload/schedule/public transitions.
 - No credential, EPUB, model weight, generated chapter audio, exported video,
   or unreviewed binary enters the integration commit.
+
+Completed on 2026-08-24:
+
+- Source code checkpoint: `8d548d0`, 43 files and 5,430 inserted lines; only
+  `public/` remains untracked in the protected source worktree.
+- Media integrity: all 33 manifest entries rehashed successfully after intake;
+  total size remains 55,819,675 bytes.
+- Focused Persuasion, Classics foundation, and voice-profile suite: 36 passed.
+- Full Python suite: 88 passed; every Node workspace suite passed.
+- Encoding, shared-types build, workspace TypeScript lint, root Remotion
+  TypeScript check, architecture, documentation, and Python compile gates
+  passed.
+- Package-lock offline dry run reported up to date.
+- Production CLI help and lifecycle policy commands passed. Persuasion
+  preflight exits blocked before GPU work with explicit voice-acceptance,
+  source, reference, and inventory findings.
+- No tracked media, runtime workspace, EPUB, model, credential, or export was
+  introduced. Public scheduling and product authority remain disabled/level 0.
 
 ## Known Risks
 

@@ -29,9 +29,10 @@ YouTube writes, or discarding generated assets.
   local operations/media state but remain protected until separately
   classified.
 - No git stashes were present.
-- Existing worktrees: root `main`, clean Shorts, clean Classics foundation, and
+- Initial worktrees: root `main`, clean Shorts, clean Classics foundation, and
   dirty Persuasion pilot. The unification worktree was then created separately
-  from `origin/main`.
+  from `origin/main`. Persuasion code is now checkpointed; only its inventoried
+  media remains untracked.
 
 Branch divergence counts below are relative to `origin/main` and have the form
 `trunk-only / branch-only`.
@@ -45,7 +46,7 @@ Branch divergence counts below are relative to `origin/main` and have the form
 | `feat/elr-series-scriptwriting-pipeline` (`d965773`) | source branch preserved; absorbed locally by `codex/elr-dialogue-intake` at `92bbc57` | dialogue research, topics, scripts, production, QC, packaging, publication preflight, channel baseline, autonomous-growth design | absorbed locally; PR pending | intake retains source history, removes the accidental gitlink, reconciles plans, isolates API tests from Redis/port side effects, and passes lint plus full Node/Python tests |
 | `codex/shorts-pipeline-pilot` (`fb25a62`) | source branch/worktree preserved; absorbed locally by `codex/shorts-adapter-intake` at `8e39d68` | complete Shorts adapter, vertical render, QC, ledger, private upload, analytics, experiments, accelerated-pilot evidence | absorbed locally; PR pending | intake preserves newer ELR code, centralizes channel release capacity, requires external-state reconciliation, and passes focused plus full gates |
 | `codex/classics-autonomous-foundation` (`741b999`) | source branch/worktree preserved; absorbed locally by `codex/classics-foundation-intake` at `9f4a7a3` | rights and policy schemas, append-only lifecycle, authority gates, audio-provider boundary | absorbed locally; PR pending | intake binds cadence to shared channel policy, retains authority level 0 and the audio blocker, and passes focused plus full gates |
-| `codex/classics-persuasion-pilot` (`0c245ec`) | dirty worktree; no committed divergence; 5 modified plus 71 untracked files | EPUB ingestion, segmentation, audio/QC, aligned subtitles, packaging, Remotion visuals, tests, plans, generated pilot assets | preserve with highest priority | create a dedicated salvage branch after Classics foundation; commit source/tests/docs separately from selected assets; fix package manifest/lock mismatch; never overwrite the worktree |
+| `codex/classics-persuasion-pilot` (`8d548d0`) | source code checkpointed; worktree retains only 33 untracked media files | EPUB ingestion, segmentation, audio/QC, aligned subtitles, packaging, Remotion visuals, tests, plans, generated pilot assets | production adapter absorbed locally at `dd9cdce`; media preserved | semantic intake retains foundation lifecycle/authority, binds release and audio status to shared policy, uses the shared GPU lock, fingerprints all 33 media files, and passes focused plus full gates |
 | `feat/youtube-research-topic-selection` (`379ac46`) | clean branch; `7 / 4`; all 43 changed paths also exist on later ELR branch, 19 with identical blobs | corpus collection, trend scoring, browser research, competitor analysis | supersede after parity audit | compare 24 differing paths and port only tests or behavior absent from maintained ELR code |
 | `feat/episode-audio-mastering` (`7615554`) | clean branch; `7 / 1`; three changed paths also exist but differ on ELR | mastering acceptance documentation and a focused test | supersede after selective port | compare test and mastering contract; port missing assertions/docs, not the whole stale branch |
 | `feat/audiobook-skill-opt-in-srt` (`9dce05c`) | clean branch; `7 / 5`; all 41 changed paths also exist on later ELR branch, 16 identical | audiobook segmentation, subtitles, media, packaging, and operator guidance | supersede after parity audit | compare 25 differing paths against maintained audiobook tooling; retain only unique behavior and tests |
@@ -80,10 +81,11 @@ branch/worktree, not current trunk.
    18 total channel uploads per week, while its README still contains an older
    three-Short/five-total cadence section. Dialogue has a separate spacing
    policy. A product adapter cannot decide total channel capacity.
-3. **Competing Classics trees.** The clean foundation and dirty Persuasion
-   worktree both add `apps/worker-py/worker/classics/` from the same trunk base
-   with different designs. They require a manual semantic port, not a tree
-   overwrite.
+3. **Competing Classics trees, resolved locally.** The clean foundation and
+   Persuasion worktree both added `apps/worker-py/worker/classics/` from the same
+   trunk base with different designs. Intake `dd9cdce` retained lifecycle and
+   authority layers and ported production behavior rather than overwriting the
+   tree.
 4. **Shorts would regress ELR if merged as a replacement.** Compared with the
    newer ELR head, the Shorts tree lacks the newer `channel_ops` package,
    publication configs, autonomous-growth docs, and related tests.
@@ -110,8 +112,10 @@ branch/worktree, not current trunk.
    Completed locally at `8e39d68`; it is not trunk until reviewed and merged.
 4. Land the clean Classics autonomous foundation. Completed locally at
    `9f4a7a3`; it is not trunk until reviewed and merged.
-5. Create a salvage commit for the dirty Persuasion worktree, then port it onto
-   the foundation through reviewed domain-level conflict resolution.
+5. Create a salvage commit for the initially dirty Persuasion worktree, then port it onto
+   the foundation through reviewed domain-level conflict resolution. Completed
+   locally with source checkpoint `8d548d0` and adapter intake `dd9cdce`; media
+   remains protected by its SHA-256 inventory.
 6. Audit research, mastering, and audiobook legacy branches against the
    resulting trunk; port only unique behavior/tests.
 7. Introduce the shared channel identity/data contracts and migrate ledgers.
@@ -137,19 +141,14 @@ Before marking any source absorbed or superseded:
 
 ## Protected Worktree Note
 
-The Persuasion worktree is the only confirmed dirty product-code worktree in
-this snapshot. Its 76 status entries break down as:
+The Persuasion worktree no longer contains uncommitted product code. Commit
+`8d548d0` protects its 43 code/test/config/doc paths; the unified adapter was
+ported at `dd9cdce`, and the existing package lock already satisfies the exact
+Remotion dependency set. The remaining 33 untracked files are 55,819,675 bytes
+of PNG/WAV/JSON review media. Every path, size, and SHA-256 is recorded in
+`docs/classics/PERSUASION_MEDIA_INVENTORY.md` and reverified after intake.
 
-- 5 modified tracked files;
-- 25 untracked files under `apps/`;
-- 1 untracked config;
-- 3 untracked documents/plans;
-- 33 untracked `public/` assets;
-- 2 untracked scripts;
-- 5 untracked `src/` files;
-- `remotion.config.ts` and `tsconfig.json`.
-
-The worktree also records an unresolved package manifest/lock mismatch and an
-audio-quality blocker. Both must remain visible in the salvage plan. Generated
-assets require provenance/size review before selecting which belong in Git;
-their presence does not authorize deletion or bulk commit.
+Those assets remain protected in place. Audio is still blocked by the
+speech-coupled electronic texture, and visual/prompt provenance is not yet
+complete. Their presence does not authorize deletion, bulk commit, upload, or
+publication.
