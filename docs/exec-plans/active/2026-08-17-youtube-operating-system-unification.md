@@ -76,10 +76,11 @@ Product adapters retained behind the control plane:
 - Branch: `codex/youtube-operating-system-foundation` from `origin/main` at
   `0c245ec`.
 - Last updated: 2026-08-23.
-- State: Phase 0 inventory and protection rules are complete. The ELR dialogue
-  pipeline is absorbed locally at `92bbc57` with full gates passing; it is not
-  trunk until reviewed and merged. The next product intake after that merge is
-  Shorts, followed by the clean Classics foundation.
+- State: Phase 0 inventory and protection rules are complete. ELR is absorbed
+  locally at `92bbc57`, and Shorts at `8e39d68`; both pass full gates but are
+  not trunk until reviewed and merged. Channel release capacity is now tracked
+  outside the Shorts product config. The next intake is the clean Classics
+  foundation before any Persuasion salvage.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

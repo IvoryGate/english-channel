@@ -44,8 +44,10 @@ Not included:
 - Parent: `codex/elr-dialogue-intake` at `ceef2f2`.
 - Intake source: `codex/shorts-pipeline-pilot` at `fb25a62`.
 - Last updated: 2026-08-23.
-- State: source merged, architecture conflict resolved, channel-owned release
-  capacity implemented, and all local gates pass. Merge commit pending.
+- State: complete locally at merge commit `8e39d68`. Architecture is reconciled,
+  channel release capacity is centralized, all local gates pass, and the source
+  worktree remains intact. PR review and trunk merge await explicit remote
+  approval.
 - Publication hold: no remote YouTube write is authorized.
 - Cleanup hold: no branch, worktree, generated media, or runtime state deletion.
 
