@@ -10,6 +10,10 @@
   "scripts": {
     "dev:web": "npm run dev --workspace @english-channel/web",
     "dev:api": "npm run dev --workspace @english-channel/api",
+    "classics:preview": "remotion studio src/classics/index.ts",
+    "classics:render:intro": "remotion render src/classics/index.ts ClassicListeningIntro assets/branding/video/classic-listening-intro.mp4",
+    "classics:render:outro": "remotion render src/classics/index.ts ClassicListeningOutro assets/branding/video/classic-listening-outro.mp4",
+    "classics:still:cover": "remotion still src/classics/index.ts PersuasionChapter1Cover workspace/classics/persuasion/chapter_001/video/chapter-01-cover.png",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run check:encoding && npm run build --workspace @english-channel/shared-types && npm run lint --workspaces --if-present && npm run check:architecture && npm run check:docs && npm run lint:py",
     "test": "npm run test --workspaces --if-present && npm run test:py",
@@ -25,5 +29,11 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "^4.0.504",
+    "@remotion/cli": "^4.0.504",
+    "@remotion/renderer": "^4.0.504",
+    "remotion": "^4.0.504"
   }
 }
