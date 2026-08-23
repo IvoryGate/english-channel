@@ -2,7 +2,7 @@
   "name": "english-channel",
   "version": "0.1.0",
   "private": true,
-  "description": "Agent-first VoxCPM audiobook workflow platform",
+  "description": "Agent-first operating system for an AI-driven YouTube channel",
   "workspaces": [
     "apps/*",
     "packages/*"

@@ -1,8 +1,32 @@
 # English Channel
 
-Agent-first, frontend-backend separated audiobook workflow platform centered on VoxCPM2.
+Agent-first operating system for building and running an AI-driven YouTube
+channel through market research, portfolio planning, content production, safe
+publication, analytics, controlled experiments, retrospectives, and iterative
+optimization.
 
-## Monorepo Layout
+The strategic goal is a sustainable path to one million subscribers. The
+system is being unified around one channel control plane while retaining
+specialized dialogue, Shorts, and Classic Listening production adapters.
+
+## Current State
+
+Current trunk combines the original frontend/backend VoxCPM2 platform with the
+first tracked Dialogue / English Listening Room show definitions, script
+skills, and local episode-production drivers. Research automation, resumable
+operations, Shorts, and Classic Listening capabilities remain distributed
+across separate branches and one protected uncommitted worktree. Start with:
+
+- [`docs/YOUTUBE_OPERATING_SYSTEM.md`](docs/YOUTUBE_OPERATING_SYSTEM.md) for the
+  target product and operating model.
+- [`docs/BRANCH_RECONCILIATION.md`](docs/BRANCH_RECONCILIATION.md) for the
+  branch, worktree, capability, and intake inventory.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for current and target system
+  boundaries.
+- [`docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md`](docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md)
+  for the phased implementation and release gates.
+
+## Current Monorepo Layout
 
 - `apps/web`: Next.js frontend for job orchestration and playback.
 - `apps/api`: Fastify backend for task management and queue orchestration.
