@@ -1,0 +1,5 @@
+interface:
+  display_name: "ELR Episode Production"
+  short_description: "Stable observable production for ELR Series A/B/C"
+  brand_color: "#E9A319"
+  default_prompt: "Use $elr-episode-production to preflight and produce an approved ELR episode."

@@ -4,7 +4,7 @@ Human-feel dialogue rules, contrarian hooks, and 起承转合 structure for Rile
 
 Reference: [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) Section B.
 
-## B.1 Frozen cold-open chassis (use verbatim every episode)
+## B.1 Situation-first opening (choose; never use verbatim every episode)
 
 ```
 [Music sting]
@@ -13,6 +13,9 @@ Sam:   And I'm Sam. Welcome to the English Listening Room. [+ hook teaser line]
 ```
 
 Rules:
+- Start with the task or mishap before names, branding, or the level label. Give the first usable line within 90 seconds.
+- Put the show/brand name once between 30 and 75 seconds.
+- Contrarian-number is one hook option, not the default. Do not use it in consecutive episodes.
 - **Riley intros first** (coach), **Sam second** (learner) — mirror J&May's May-first pattern.
 - Intro is **fused with hook teaser** — no separate "welcome" sentence.
 - "English Listening Room" spoken once right after dual intro — brand beat.
@@ -110,11 +113,11 @@ Every turn carries `[Delivery: …]` per DELIVERY.md. Cues are natural-language:
 
 ## B.6 Title formula
 
-`Learn [N] English [topic] — [contrarian claim] | Easy English Podcast A2-B1`
+`[Concrete beginner situation] — [usable spoken result] | A2-B1`
 
 Examples:
-- `Learn 5 English Tenses — Not 12, Just 5 | Easy English Podcast A2-B1`
-- `Learn English Small Talk — 3 Lines, Not 30 | Easy English Podcast A2-B1`
+- `I can't hear you on the phone — say this in English | A2-B1`
+- `The barista asks your name — answer without freezing | A2-B1`
 
 ## Revision history
 

@@ -48,7 +48,9 @@ Not included:
 - Parent: `codex/youtube-operating-system-foundation` at `7487393`.
 - Intake source: `feat/elr-series-scriptwriting-pipeline` at `d965773`.
 - Last updated: 2026-08-23.
-- State: intake branch created; semantic merge and validation pending.
+- State: source history merged; expected documentation conflicts are resolved,
+  the accidental Shorts gitlink is removed from the index, plans are
+  reconciled, and all required local gates pass. Merge commit pending.
 - Safety hold: no worktree, branch, runtime file, or generated asset cleanup.
 - Publication hold: this plan grants no remote YouTube write authority.
 
@@ -78,6 +80,17 @@ Not included:
 - `git diff --check`
 - No tracked entry exists below `.worktrees/`.
 - No command in validation performs a remote YouTube mutation.
+
+Validation record, 2026-08-23:
+
+- `npm run lint`: passed.
+- `npm test`: passed, including 42 Python tests.
+- API tests use explicit fake providers and no longer bind port 4000 or connect
+  to Redis when importing the server builder.
+- `scripts/elr.py --help` and `scripts/channel_ops.py --help`: passed without a
+  remote mutation.
+- Index checks found no unmerged entries, gitlinks, credential signatures, or
+  whitespace errors.
 
 ## Risks And Decisions
 

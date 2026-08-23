@@ -15,18 +15,13 @@ description: Write two-person English learning podcast scripts for ELR Series A/
 4. **Series A** (Ethan/Nora, B1-B2): daily-talk + Class-style packaging; profile `series_a`.
 5. **Series B** (Riley/Sam, A2-B1): episode contract + simple parts; profile `series_b`.
 6. When market-informed drafting is requested, read **youtube-corpus-analysis** outputs — not raw competitor transcripts.
-7. Use `RESEARCH.md`, `SCRIPT_TEMPLATE.md`, and series bibles; draft original dialogue with exactly two hosts.
+7. Read `docs/shows/SCRIPT_QUALITY_STANDARD.md`, then use `RESEARCH.md`, `SCRIPT_TEMPLATE.md`, and series bibles; draft original dialogue with exactly two hosts and a situation-first opening.
 8. Run `QC.md`; stop after the draft and wait for user feedback before TTS prep.
 
 ### Render / pack (after script approval)
 
-See `docs/shows/EPISODE_PIPELINE.md`. **Production monitor** (audiobook parity):
-
-1. **Full job:** `scripts/monitor_episode_production.py --detach --force ...`  
-   Per-turn VoxCPM render (retry on crash) → master → scripted subs → compose → export.  
-   Log: `logs/monitor_episode_<show>_<episode>.log`
-2. Do **not** block chat; poll log when user asks.
-3. Human QC after render self-check; pack runs automatically in monitor (master always refreshed unless `--skip-master` added later).
+Hand off to the `elr-episode-production` Skill. Its public entry point is
+`scripts/elr.py`; do not launch the low-level monitor or pack scripts directly.
 
 ### Opt-in workflows
 
@@ -36,8 +31,8 @@ See `docs/shows/EPISODE_PIPELINE.md`. **Production monitor** (audiobook parity):
 | Validate legacy polished_english draft | `validate_podcast_script.py --profile series_c` |
 | Extract host reference clips (ops) | `extract_host_reference_clips.py` |
 | Prepare render manifest | `workspace/shows/tools/prepare_episode_manifest.py` |
-| Render episode (VoxCPM) | `scripts/run_episode_render.py --manifest ...` (long jobs) |
-| Pack episode (master + video) | `scripts/launch_episode_pack.py --detach ...` (background + log) |
+| Produce approved episode | Use `elr-episode-production`: `scripts/elr.py produce ...` |
+| Check or resume production | Use `elr-episode-production`: `status` / `resume` |
 | Rewrite one section | Revise only the named section and preserve host roles |
 
 ### Related skills (do not duplicate here)

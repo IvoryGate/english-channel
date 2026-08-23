@@ -1,22 +1,27 @@
 # Architecture
 
-## Current Trunk
+## Current Implementation
 
 - `apps/web`: UI for TTS jobs and playback.
-- `apps/api`: Fastify orchestration, validation, and queue boundary.
+- `apps/api`: Fastify orchestration and validation. The API process owns the
+  Redis/BullMQ consumer and launches the Python VoxCPM runner for each claimed
+  job; Python does not consume a separate RQ queue.
 - `apps/worker-py`: local VoxCPM generation pipeline and tracked Dialogue voice
   profiles.
-- Redis: asynchronous job queue.
-- `artifacts/`: generated `chapter.wav` and `trace.json` job outputs.
-- `.cursor/skills/`, `docs/shows/`, and `scripts/`: first-generation Dialogue /
-  English Listening Room script, brand, packaging, and local episode-production
-  workflows.
+- `artifacts/`: generated `chapter.wav` and `trace.json` outputs. API job records
+  persist under `artifacts/jobs.json` by default and can be moved with
+  `JOB_STORE_PATH`.
+- `.cursor/skills/`, `docs/shows/`, `scripts/`, and
+  `workspace/shows/tools/`: Dialogue / English Listening Room research, script,
+  brand, resumable production, QC, packaging, and local operations workflows.
+- `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
+  and release-preflight prototype retained as a migration input.
 
-Current trunk does not yet provide a shared channel control plane. Later
-Dialogue research and resumable operations, Shorts, Classic Listening, channel
-operations, analytics, and experiment work exist on branches and worktrees
-catalogued in [`BRANCH_RECONCILIATION.md`](BRANCH_RECONCILIATION.md). Do not
-infer that an unmerged capability is available from trunk.
+The current implementation does not yet provide the shared channel control
+plane. Shorts, Classic Listening, later analytics, and shared experiment work
+remain on branches and worktrees catalogued in
+[`BRANCH_RECONCILIATION.md`](BRANCH_RECONCILIATION.md). Do not infer that an
+unmerged capability is available from trunk.
 
 ## Target System
 

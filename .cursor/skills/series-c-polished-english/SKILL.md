@@ -12,7 +12,7 @@ description: Write Series C (Polished English, B2-C1) two-host English learning 
 1. Read [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) (cross-channel), [`docs/shows/series_c/bible.md`](../../../docs/shows/series_c/bible.md), [`docs/shows/strategy.md`](../../../docs/shows/strategy.md), and character identity files [`workspace/characters/leo/identity.md`](../../../workspace/characters/leo/identity.md) + [`workspace/characters/mia/identity.md`](../../../workspace/characters/mia/identity.md).
 2. Get the topic from `select_next_topic.py --show series_c --apply` (writes `workspace/shows/series_c/topic_selection_<date>.json`); or fall back to a user brief. The selector reads real competitor research and excludes already-produced topics. Pick a theme + archetype (A narrative / B checklist / C topic-deep; default A). Reject political / duplicate themes.
 3. Design 2–3 threads (no more). Each thread = a communicative move or sticky idea.
-4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) — thesis-first hook, 起承转合 per STYLE.md §C.4, question-flow transitions, micro-pocket after first thread, conflict recycle, honest word tour.
+4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) and [`docs/shows/SCRIPT_QUALITY_STANDARD.md`](../../../docs/shows/SCRIPT_QUALITY_STANDARD.md) — select a situation-first engine; use the thesis, question-flow, micro-pocket, and recycle only where they strengthen that engine.
 5. Tag every turn with `[Delivery: …]` per DELIVERY.md. Include `characterProfiles` block in header.
 6. Run `validate_podcast_script.py --profile series_c` on the draft. Fix until `ok=true`.
 7. Stop and wait for user feedback before TTS prep.

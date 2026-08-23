@@ -11,11 +11,11 @@ specialized dialogue, Shorts, and Classic Listening production adapters.
 
 ## Current State
 
-Current trunk combines the original frontend/backend VoxCPM2 platform with the
-first tracked Dialogue / English Listening Room show definitions, script
-skills, and local episode-production drivers. Research automation, resumable
-operations, Shorts, and Classic Listening capabilities remain distributed
-across separate branches and one protected uncommitted worktree. Start with:
+The integrated baseline combines the frontend/backend VoxCPM2 platform with
+Dialogue / English Listening Room research, show definitions, script skills,
+resumable production, QC, packaging, and publication preflight. Shorts and
+Classic Listening capabilities remain distributed across separate branches
+and one protected uncommitted worktree. Start with:
 
 - [`docs/YOUTUBE_OPERATING_SYSTEM.md`](docs/YOUTUBE_OPERATING_SYSTEM.md) for the
   target product and operating model.
@@ -79,3 +79,27 @@ Your preferred local model is `openbmb/VoxCPM2`.
 If CUDA memory is tight, close GPU-heavy applications and retry with:
 
 - `.\.venv\Scripts\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --no-optimize`
+
+## English Listening Room Production
+
+Use the production controller after script approval rather than launching
+render and pack scripts separately. It can begin audio before the native 16:9
+cover/background is ready:
+
+```powershell
+$py = ".\.conda-env\python.exe"
+& $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
+& $py scripts/elr.py preflight --episode 17 --series all
+& $py scripts/elr.py produce --episode 17 --series all
+& $py scripts/elr.py status --episode 17
+& $py scripts/elr.py resume --episode 17 --series all
+```
+
+Start `render-audio` as soon as scripts are approved while remote cover and
+background generation runs in parallel. It writes resumable turn WAVs only and
+does not require visual assets. Once visuals are approved, `produce` reuses the
+WAVs and keeps the full thumbnail, QC, mastering, subtitles, composition,
+packaging, verification, and export gates. The controller derives canonical
+workspaces, runs local GPU work serially with batch size 20, streams progress,
+and persists state under `logs/elr_runs/`. See
+`docs/shows/EPISODE_PIPELINE.md` and the `elr-episode-production` Skill.

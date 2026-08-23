@@ -11,8 +11,8 @@ description: Write Series B (First Steps, A2-B1) two-host English learning podca
 
 1. Read [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) Section B (J&May reference) and [`docs/shows/series_b/bible.md`](../../../docs/shows/series_b/bible.md).
 2. Get the topic from `select_next_topic.py --show series_b --apply` (writes `workspace/shows/series_b/topic_selection_<date>.json`); or fall back to a user brief. The selector reads real competitor research and excludes already-produced topics. Reject political / duplicate themes.
-3. Choose one hook template from STYLE.md §B.2 (1–3). Contrarian-number is the default and most viral.
-4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) — frozen cold-open chassis, then 起承转合 per STYLE.md §B.4.
+3. Choose one hook template from STYLE.md §B.2 (1–3); rotate away from the previous episode's architecture and title shape.
+4. Draft using [`SCRIPT_TEMPLATE.md`](SCRIPT_TEMPLATE.md) and [`docs/shows/SCRIPT_QUALITY_STANDARD.md`](../../../docs/shows/SCRIPT_QUALITY_STANDARD.md) — use 起承转合 as a flexible pacing map, not a repeated opening formula.
 5. Tag every turn with `[Delivery: …]` per DELIVERY.md. Include `characterProfiles` block in header.
 6. Run `validate_podcast_script.py --profile series_b` on the draft. Fix until `ok=true`.
 7. Stop and wait for user feedback before TTS prep.

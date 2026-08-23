@@ -22,6 +22,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_PYTHON = REPO / ".conda-env" / "python.exe"
+sys.path.insert(0, str(REPO / "scripts"))
+from gpu_production_lock import acquire_gpu_lock, DEFAULT_RENDER_BATCH_SIZE, release_gpu_lock, validate_render_batch_size  # noqa: E402
 
 # series -> (cfgValue) from workspace/shows/tools/show_config.json renderSettings
 SERIES_CFG = {
@@ -67,50 +69,15 @@ def run_one(series: str, py: str, log_path: Path, youtube_root: str, qc_no_asr: 
     return int(proc.returncode)
 
 
-def _pid_alive(pid: int) -> bool:
-    try:
-        import ctypes
-        kernel32 = ctypes.windll.kernel32
-        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-        STILL_ACTIVE = 259
-        h = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
-        if not h:
-            return False
-        try:
-            exit_code = ctypes.c_ulong()
-            if not kernel32.GetExitCodeProcess(h, ctypes.byref(exit_code)):
-                return False
-            return exit_code.value == STILL_ACTIVE
-        finally:
-            kernel32.CloseHandle(h)
-    except Exception:
-        return False
-
-
 def acquire_lock(log_path: Path) -> int | None:
-    """Single-instance guard. Returns the locked PID, or None if another live
-    instance is already running (prevents concurrent GPU renders / OOM)."""
-    lock_path = log_path.parent / "all_series_full.lock"
-    if lock_path.is_file():
-        try:
-            old_pid = int(lock_path.read_text(encoding="utf-8").strip())
-        except ValueError:
-            old_pid = -1
-        if old_pid > 0 and _pid_alive(old_pid):
-            print(f"REFUSE: another instance is running (pid={old_pid}); remove {lock_path} only if it crashed.", flush=True)
-            return None
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    lock_path.write_text(str(os.getpid()), encoding="utf-8")
-    return os.getpid()
+    """Global GPU production lock — one VoxCPM/ffmpeg compose job at a time."""
+    _ = log_path
+    return acquire_gpu_lock("run_all_series_full")
 
 
 def release_lock(log_path: Path) -> None:
-    lock_path = log_path.parent / "all_series_full.lock"
-    try:
-        if lock_path.is_file() and lock_path.read_text(encoding="utf-8").strip() == str(os.getpid()):
-            lock_path.unlink()
-    except OSError:
-        pass
+    _ = log_path
+    release_gpu_lock()
 
 
 def main() -> int:
@@ -123,11 +90,18 @@ def main() -> int:
         default=True,
         help="Pack QC layer-1 only (default True; render's compose_and_qc already ran full ASR).",
     )
-    parser.add_argument("--batch-size", type=int, default=12, help="Turns per VoxCPM load (serial; preview proved 14 stable).")
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=DEFAULT_RENDER_BATCH_SIZE,
+        help=f"Turns per VoxCPM subprocess (default {DEFAULT_RENDER_BATCH_SIZE}; load once per batch).",
+    )
     parser.add_argument("--episode", default="episode_001", help="Episode dir id (e.g. episode_001, episode_002).")
     parser.add_argument("--episode-num", type=int, default=1, help="Episode number for packaging/youtube.")
     parser.add_argument("--detach", action="store_true")
     args = parser.parse_args()
+
+    validate_render_batch_size(args.batch_size)
 
     py = str(DEFAULT_PYTHON if DEFAULT_PYTHON.is_file() else sys.executable)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")

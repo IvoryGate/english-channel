@@ -27,8 +27,7 @@ characterProfiles:
 
 ```
 [Music sting]
-Nora:  Hey, hey, English learners. Welcome back to Daily Talk, your cozy place
-       to learn easy English through real life conversations.
+Nora:  [Open in the specific scene, mistake, or social tension. Do not start with a welcome.]
 Ethan: I'm Ethan.
 Nora:  And I'm Nora. And this is the English Listening Room.
 ```
@@ -128,7 +127,7 @@ Ethan: Bye.
 ## Validation checklist
 
 - [ ] Header has all fields including `characterProfiles`
-- [ ] Cold open uses frozen chassis verbatim
+- [ ] Cold open opens with a specific scene or failed moment before the brand
 - [ ] "English Listening Room" spoken once after dual intro
 - [ ] Hook uses one of 5 templates (A–E)
 - [ ] 3–5 teaching beats with inline vocab glosses
