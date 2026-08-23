@@ -34,8 +34,9 @@ Not included:
 
 - Owner: Codex primary agent.
 - Branch: `codex/classics-autonomous-foundation` from fetched `origin/main` at `0c245ec`.
-- Last updated: 2026-08-17.
-- State: foundation implementation complete; awaiting review and merge.
+- Last updated: 2026-08-23.
+- State: accepted into the local unified intake at `9f4a7a3`; remote review and
+  merge remain pending.
 - The current Riley/VoxCPM2 narrator remains blocked by speech-coupled electronic texture. Its 16 kHz reference encoder makes reference upsampling irrelevant.
 
 ## Plan
@@ -63,7 +64,9 @@ Completed on 2026-08-17:
 - CLI policy, empty status, transition, status replay, and idempotent retry passed.
 - Encoding, documentation index, architecture, and full lint checks passed.
 - Web, shared-types, and tooling tests passed.
-- The pre-existing API test suite still requires a running Redis service; with Redis absent it repeatedly reconnects and was stopped. No Classic Listening code imports or changes the API package.
+- During unified intake, the API test harness no longer binds a port or connects
+  to Redis as an import side effect. The full repository suite now passes:
+  67 Python tests plus every Node workspace suite.
 
 ## Risks And Decisions
 

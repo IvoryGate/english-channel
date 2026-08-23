@@ -77,10 +77,11 @@ Product adapters retained behind the control plane:
   `0c245ec`.
 - Last updated: 2026-08-23.
 - State: Phase 0 inventory and protection rules are complete. ELR is absorbed
-  locally at `92bbc57`, and Shorts at `8e39d68`; both pass full gates but are
-  not trunk until reviewed and merged. Channel release capacity is now tracked
-  outside the Shorts product config. The next intake is the clean Classics
-  foundation before any Persuasion salvage.
+  locally at `92bbc57`, Shorts at `8e39d68`, and the Classic Listening
+  foundation at `9f4a7a3`; all pass full gates but are not trunk until reviewed
+  and merged. Channel release capacity is now tracked outside product configs.
+  The next intake is a protected semantic salvage of the dirty Persuasion
+  worktree.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

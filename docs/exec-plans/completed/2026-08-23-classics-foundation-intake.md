@@ -43,7 +43,7 @@ Not included:
 - Parent: `codex/shorts-adapter-intake` at `24af3b0`.
 - Intake source: `codex/classics-autonomous-foundation` at `741b999`.
 - Last updated: 2026-08-23.
-- State: source and plan audited; semantic merge pending.
+- State: completed locally at `9f4a7a3`; focused and full gates pass.
 - Safety hold: Persuasion worktree and all branches/assets remain untouched.
 - Publication hold: authority level 0 and channel public scheduling disabled.
 
@@ -66,6 +66,18 @@ Not included:
 - No runtime event file, credential, generated asset, or Persuasion worktree
   content enters the commit.
 - Upload/schedule/public transitions remain rejected at authority level 0.
+
+Completed on 2026-08-23:
+
+- Focused Classic Listening suite: 12 passed.
+- Full Python suite: 67 passed; all Node workspace suites passed.
+- Encoding, shared-types build, TypeScript lint, architecture, documentation,
+  and Python compile gates passed.
+- Direct CLI help and `npm run classics:ops -- policy` passed.
+- The tracked release request resolves to `classic-listening-baseline` in the
+  shared channel policy, where audio acceptance is explicitly blocked.
+- The Persuasion worktree, generated assets, runtime events, and credentials
+  were not modified or added.
 
 ## Risks And Decisions
 
