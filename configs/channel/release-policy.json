@@ -1,0 +1,25 @@
+{
+  "schema": "youtube-channel-release-policy-v1",
+  "timezone": "Asia/Shanghai",
+  "authority": {
+    "defaultPrivacy": "private",
+    "publicSchedulingEnabled": false,
+    "explicitApprovalRequired": true
+  },
+  "capacity": {
+    "maxChannelUploadsPerRolling7Days": 18,
+    "reservationRequired": true
+  },
+  "programs": {
+    "shorts-accelerated-pilot-2026-08": {
+      "productLine": "shorts",
+      "status": "reconciliation_required",
+      "requestedUploadsPerWeek": 14,
+      "startsOn": "2026-08-18",
+      "endsOn": "2026-08-31",
+      "preferredDailyWindows": ["08:00", "20:30"],
+      "minimumReadyInventory": 2,
+      "decisionWindowDays": 14
+    }
+  }
+}

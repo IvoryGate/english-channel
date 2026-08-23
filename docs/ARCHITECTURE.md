@@ -16,6 +16,11 @@
   brand, resumable production, QC, packaging, and local operations workflows.
 - `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
   and release-preflight prototype retained as a migration input.
+- `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
+  publication ledger, private-upload boundary, analytics snapshots, QC, and
+  review decisions.
+- `src/shorts/`: data-driven Remotion 9:16 compositions. Generated audio and
+  video remain in ignored `workspace/shorts/`.
 
 The current implementation does not yet provide the shared channel control
 plane. Shorts, Classic Listening, later analytics, and shared experiment work
@@ -94,3 +99,7 @@ behavior remains in its adapter. If two adapters independently implement
 publication identity, channel cadence, analytics availability, experiment
 assignment, authority, or GPU ownership, treat that as a migration defect and
 move the rule to the control plane with tests.
+
+Shorts keep a separate vertical media domain. Existing 16:9 episode and
+audiobook layout constants must not be imported into `src/shorts` or the Shorts
+quality contract.

@@ -44,7 +44,8 @@ Not included:
 - Parent: `codex/elr-dialogue-intake` at `ceef2f2`.
 - Intake source: `codex/shorts-pipeline-pilot` at `fb25a62`.
 - Last updated: 2026-08-23.
-- State: source audited; semantic merge pending.
+- State: source merged, architecture conflict resolved, channel-owned release
+  capacity implemented, and all local gates pass. Merge commit pending.
 - Publication hold: no remote YouTube write is authorized.
 - Cleanup hold: no branch, worktree, generated media, or runtime state deletion.
 
@@ -70,6 +71,15 @@ Not included:
 - No product config can set the total channel upload ceiling.
 - No unmerged entry, gitlink, secret signature, generated cache, or whitespace
   error enters the commit.
+
+Validation record, 2026-08-23:
+
+- Focused Shorts tests: 13 passed.
+- `npm run lint`: passed.
+- `npm test`: passed, including 55 Python tests.
+- `scripts/shorts.py --help`: passed without a remote mutation.
+- Credential scan found only the expected code-level `refresh_token` attribute
+  check; no credential value or private key signature was present.
 
 ## Risks And Decisions
 
