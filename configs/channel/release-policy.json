@@ -20,6 +20,14 @@
       "preferredDailyWindows": ["08:00", "20:30"],
       "minimumReadyInventory": 2,
       "decisionWindowDays": 14
+    },
+    "classic-listening-baseline": {
+      "productLine": "classic_listening",
+      "status": "blocked_audio_acceptance",
+      "requestedUploadsPerWeek": 2,
+      "preferredDailyWindows": [],
+      "minimumReadyInventory": 3,
+      "decisionWindowDays": 28
     }
   }
 }

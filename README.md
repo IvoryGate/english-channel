@@ -13,9 +13,10 @@ specialized dialogue, Shorts, and Classic Listening production adapters.
 
 The integrated baseline combines the frontend/backend VoxCPM2 platform with
 Dialogue / English Listening Room research, show definitions, script skills,
-resumable production, QC, packaging, and publication preflight. Shorts and
-Classic Listening capabilities remain distributed across separate branches
-and one protected uncommitted worktree. Start with:
+resumable production, QC, packaging, and publication preflight. The Shorts
+adapter and the rights-gated Classic Listening foundation are also integrated.
+The unfinished Persuasion production implementation remains protected in its
+original uncommitted worktree. Start with:
 
 - [`docs/YOUTUBE_OPERATING_SYSTEM.md`](docs/YOUTUBE_OPERATING_SYSTEM.md) for the
   target product and operating model.
@@ -117,3 +118,19 @@ packaging, verification, and export gates. The controller derives canonical
 workspaces, runs local GPU work serially with batch size 20, streams progress,
 and persists state under `logs/elr_runs/`. See
 `docs/shows/EPISODE_PIPELINE.md` and the `elr-episode-production` Skill.
+
+## Classic Listening Operations
+
+Classic Listening uses a rights-gated, event-sourced lifecycle. The tracked
+policy starts at authority level 0, so local packaging can proceed but uploads
+and public transitions are rejected. Its release cadence is only a request;
+channel capacity and authorization come from the shared release policy.
+
+- Inspect policy: `npm run classics:ops -- policy`
+- Inspect a chapter: `npm run classics:ops -- status --book persuasion --chapter 1`
+- Register a chapter: `npm run classics:ops -- transition --book persuasion --chapter 1 --to DISCOVERED --actor codex --reason "Register chapter" --idempotency-key persuasion-001-discovered`
+
+Runtime events are written under `workspace/classics/operations/` and are
+intentionally ignored by Git. See
+[`docs/classics/AUTONOMOUS_OPERATING_MODEL.md`](docs/classics/AUTONOMOUS_OPERATING_MODEL.md)
+before changing authority or publication policy.

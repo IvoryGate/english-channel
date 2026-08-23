@@ -19,12 +19,14 @@
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
   publication ledger, private-upload boundary, analytics snapshots, QC, and
   review decisions.
+- `apps/worker-py/worker/classics/`: Classic Listening rights, policy,
+  append-only lifecycle, authority, and audio-acceptance foundation.
 - `src/shorts/`: data-driven Remotion 9:16 compositions. Generated audio and
   video remain in ignored `workspace/shorts/`.
 
 The current implementation does not yet provide the shared channel control
-plane. Shorts, Classic Listening, later analytics, and shared experiment work
-remain on branches and worktrees catalogued in
+plane. The unfinished Persuasion production implementation, later analytics,
+and shared experiment work remain on branches and worktrees catalogued in
 [`BRANCH_RECONCILIATION.md`](BRANCH_RECONCILIATION.md). Do not infer that an
 unmerged capability is available from trunk.
 
@@ -103,3 +105,21 @@ move the rule to the control plane with tests.
 Shorts keep a separate vertical media domain. Existing 16:9 episode and
 audiobook layout constants must not be imported into `src/shorts` or the Shorts
 quality contract.
+
+## Classic Listening Foundation
+
+Classic Listening autonomous operations follow the same strict dependency order:
+
+- `worker/classics/types.py`: domain values only.
+- `worker/classics/schema.py`: tracked config and persisted-event validation.
+- `worker/classics/repo.py`: rights catalog and append-only operation ledger.
+- `worker/classics/service.py`: transition, authority, evidence, and audio-acceptance policy.
+- `worker/classics/transport.py`: operator command boundary.
+- `worker/classics/providers/`: protocols for TTS, publishing, analytics, and other external systems.
+
+Tracked policy is stored under `configs/classics/`. Runtime event history is stored under `workspace/classics/operations/`; current lifecycle state is always reconstructed from events rather than inferred from generated files.
+
+The product config references the shared channel release policy and submits a
+cadence request. It does not own total upload capacity or public scheduling
+authority. Authority level 0 remains fail-closed for upload, scheduling, and
+publishing.

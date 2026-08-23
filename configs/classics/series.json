@@ -1,0 +1,33 @@
+{
+  "schema": "classic-listening-series-v1",
+  "series": {
+    "slug": "classic-listening",
+    "authorityLevel": 0,
+    "publicationTerritories": ["US", "GB"],
+    "primaryAudience": "women aged 55 and over"
+  },
+  "cadence": {
+    "requestedChaptersPerWeek": 2,
+    "readyBufferChapters": 3
+  },
+  "release": {
+    "policyRef": "configs/channel/release-policy.json",
+    "programId": "classic-listening-baseline",
+    "requiredGates": [
+      "rights",
+      "source",
+      "audio",
+      "subtitles",
+      "visuals",
+      "media",
+      "packaging"
+    ]
+  },
+  "analytics": {
+    "snapshotWindowsHours": [6, 24, 72, 168, 336, 672]
+  },
+  "experiments": {
+    "maxThumbnailVariants": 3,
+    "requireSingleChangedVariable": true
+  }
+}
