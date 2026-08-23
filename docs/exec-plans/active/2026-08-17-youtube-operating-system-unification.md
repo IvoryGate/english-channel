@@ -76,9 +76,10 @@ Product adapters retained behind the control plane:
 - Branch: `codex/youtube-operating-system-foundation` from `origin/main` at
   `0c245ec`.
 - Last updated: 2026-08-23.
-- State: Phase 0 inventory, protection rules, target architecture, and branch
-  intake documentation are complete on the foundation branch. The next code
-  slice is the ELR dialogue intake from latest trunk.
+- State: Phase 0 inventory and protection rules are complete. The ELR dialogue
+  pipeline is absorbed locally at `92bbc57` with full gates passing; it is not
+  trunk until reviewed and merged. The next product intake after that merge is
+  Shorts, followed by the clean Classics foundation.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

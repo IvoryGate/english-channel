@@ -48,9 +48,10 @@ Not included:
 - Parent: `codex/youtube-operating-system-foundation` at `7487393`.
 - Intake source: `feat/elr-series-scriptwriting-pipeline` at `d965773`.
 - Last updated: 2026-08-23.
-- State: source history merged; expected documentation conflicts are resolved,
-  the accidental Shorts gitlink is removed from the index, plans are
-  reconciled, and all required local gates pass. Merge commit pending.
+- State: complete locally at merge commit `92bbc57`. Expected documentation
+  conflicts are resolved, the accidental Shorts gitlink is absent, plans are
+  reconciled, and all required local gates pass. PR review and trunk merge are
+  pending explicit remote approval.
 - Safety hold: no worktree, branch, runtime file, or generated asset cleanup.
 - Publication hold: this plan grants no remote YouTube write authority.
 

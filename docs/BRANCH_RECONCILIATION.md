@@ -42,7 +42,7 @@ Branch divergence counts below are relative to `origin/main` and have the form
 | --- | --- | --- | --- | --- |
 | `main` (`2a22230`) | root worktree; `7 / 0`; local untracked runtime files | bootstrap platform and local models | preserve, then fast-forward | first classify root untracked files; do not use this stale tree as an integration base |
 | `origin/main` (`0c245ec`) | latest known trunk | reviewed trunk and branch point for current work | canonical base | fetch/reconfirm before every intake PR |
-| `feat/elr-series-scriptwriting-pipeline` (`d965773`) | local branch; `1 / 16`; one commit ahead of its remote | dialogue research, topics, scripts, production, QC, packaging, publication preflight, channel baseline, autonomous-growth design | absorb first | rebase/port onto latest main; remove accidental `.worktrees/shorts-pipeline-pilot` gitlink; reconcile active plans; run full gates |
+| `feat/elr-series-scriptwriting-pipeline` (`d965773`) | source branch preserved; absorbed locally by `codex/elr-dialogue-intake` at `92bbc57` | dialogue research, topics, scripts, production, QC, packaging, publication preflight, channel baseline, autonomous-growth design | absorbed locally; PR pending | intake retains source history, removes the accidental gitlink, reconciles plans, isolates API tests from Redis/port side effects, and passes lint plus full Node/Python tests |
 | `codex/shorts-pipeline-pilot` (`fb25a62`) | clean worktree; `0 / 21`; four commits ahead of its remote | complete Shorts adapter, vertical render, QC, ledger, private upload, analytics, experiments, active accelerated pilot | absorb after ELR | retain Shorts-only files; do not accept deletion of newer ELR `channel_ops`; move channel cadence limits out of product config; resolve shared package/docs files |
 | `codex/classics-autonomous-foundation` (`741b999`) | clean worktree; `0 / 1`; plan says implementation complete | rights and policy schemas, append-only lifecycle, authority gates, audio-provider boundary | absorb before Persuasion | review/merge as a focused foundation and archive its plan in the finishing PR |
 | `codex/classics-persuasion-pilot` (`0c245ec`) | dirty worktree; no committed divergence; 5 modified plus 71 untracked files | EPUB ingestion, segmentation, audio/QC, aligned subtitles, packaging, Remotion visuals, tests, plans, generated pilot assets | preserve with highest priority | create a dedicated salvage branch after Classics foundation; commit source/tests/docs separately from selected assets; fix package manifest/lock mismatch; never overwrite the worktree |
@@ -103,7 +103,9 @@ branch/worktree, not current trunk.
 ## Required Intake Order
 
 1. Protect and classify all dirty/untracked roots; take no cleanup action.
+   Completed locally in the foundation inventory; protections remain active.
 2. Land the ELR dialogue branch as the maintained production baseline.
+   Completed locally at `92bbc57`; it is not trunk until reviewed and merged.
 3. Port the Shorts adapter onto that baseline and centralize channel cadence.
 4. Land the clean Classics autonomous foundation.
 5. Create a salvage commit for the dirty Persuasion worktree, then port it onto
