@@ -37,8 +37,9 @@ Not included:
 - Source branch: `codex/classics-persuasion-pilot` at `0c245ec` plus 76 dirty
   status entries before protection.
 - Last updated: 2026-08-24.
-- State: source inventory complete; protected checkpoint pending.
-- Source media: 33 untracked PNG/WAV/JSON files, approximately 48 MiB, retained
+- State: source code protected at `8d548d0`; media manifest recorded; semantic
+  port pending.
+- Source media: 33 untracked PNG/WAV/JSON files, 55,819,675 bytes (53.23 MiB), retained
   in place and excluded from the initial code checkpoint.
 - Publication hold: shared public scheduling is disabled, Classic Listening
   authority remains level 0, and audio acceptance remains blocked.
