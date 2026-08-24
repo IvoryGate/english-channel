@@ -336,11 +336,11 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py import-dialogue --source <ledger.json>
 & $py scripts/channel.py import-shorts --source <ledger.json>
 & $py scripts/channel.py import-classics --source <operations-directory>
+& $py scripts/channel.py resources status
 
 # Target commands not implemented by the identity foundation:
 & $py scripts/channel.py reconcile
 & $py scripts/channel.py plan --horizon 28d
-& $py scripts/channel.py resources status
 & $py scripts/channel.py run --next
 & $py scripts/channel.py publish preflight --item <id>
 & $py scripts/channel.py publish upload-private --item <id>

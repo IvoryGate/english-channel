@@ -15,6 +15,7 @@ from .types import (
     ImportSummary,
     InventorySummary,
     NormalizedIdentityRecord,
+    ResourceLease,
 )
 
 
@@ -578,3 +579,155 @@ class SqliteChannelRepository:
                 }
                 for row in rows
             )
+
+    @staticmethod
+    def _lease(row: sqlite3.Row) -> ResourceLease:
+        return ResourceLease(
+            lease_id=str(row["lease_id"]),
+            resource_id=str(row["resource_id"]),
+            owner_id=str(row["owner_id"]),
+            owner_pid=int(row["owner_pid"]),
+            parent_pid=int(row["parent_pid"]),
+            label=str(row["label"]),
+            intent_hash=str(row["intent_hash"]),
+            priority=int(row["priority"]),
+            acquired_at=str(row["acquired_at"]),
+            heartbeat_at=str(row["heartbeat_at"]),
+            expires_at=str(row["expires_at"]),
+            released_at=str(row["released_at"]) if row["released_at"] else None,
+            release_reason=str(row["release_reason"]) if row["release_reason"] else None,
+        )
+
+    def active_lease(self, resource_id: str) -> ResourceLease | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM resource_leases WHERE resource_id = ? AND released_at IS NULL",
+                (resource_id,),
+            ).fetchone()
+            return self._lease(row) if row else None
+
+    def try_acquire_lease(self, lease: ResourceLease) -> ResourceLease | None:
+        with self._connect() as connection:
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                active = connection.execute(
+                    "SELECT * FROM resource_leases WHERE resource_id = ? AND released_at IS NULL",
+                    (lease.resource_id,),
+                ).fetchone()
+                if active:
+                    connection.rollback()
+                    return self._lease(active)
+                connection.execute(
+                    """
+                    INSERT INTO resource_leases(
+                        lease_id, resource_id, owner_id, owner_pid, parent_pid,
+                        label, intent_hash, priority, acquired_at, heartbeat_at,
+                        expires_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        lease.lease_id,
+                        lease.resource_id,
+                        lease.owner_id,
+                        lease.owner_pid,
+                        lease.parent_pid,
+                        lease.label,
+                        lease.intent_hash,
+                        lease.priority,
+                        lease.acquired_at,
+                        lease.heartbeat_at,
+                        lease.expires_at,
+                    ),
+                )
+                connection.commit()
+                return None
+            except BaseException:
+                connection.rollback()
+                raise
+
+    def heartbeat_lease(self, lease_id: str, owner_id: str, heartbeat_at: str, expires_at: str) -> ResourceLease:
+        with self._connect() as connection:
+            cursor = connection.execute(
+                """
+                UPDATE resource_leases SET heartbeat_at = ?, expires_at = ?
+                WHERE lease_id = ? AND owner_id = ? AND released_at IS NULL
+                """,
+                (heartbeat_at, expires_at, lease_id, owner_id),
+            )
+            if cursor.rowcount != 1:
+                connection.rollback()
+                raise RepositoryError(f"Active lease is no longer owned by {owner_id}: {lease_id}")
+            connection.commit()
+        lease = self.active_lease_by_id(lease_id)
+        if lease is None:
+            raise RepositoryError(f"Lease disappeared after heartbeat: {lease_id}")
+        return lease
+
+    def active_lease_by_id(self, lease_id: str) -> ResourceLease | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM resource_leases WHERE lease_id = ? AND released_at IS NULL",
+                (lease_id,),
+            ).fetchone()
+            return self._lease(row) if row else None
+
+    def release_lease(self, lease_id: str, owner_id: str, released_at: str, reason: str) -> bool:
+        with self._connect() as connection:
+            cursor = connection.execute(
+                """
+                UPDATE resource_leases SET released_at = ?, release_reason = ?
+                WHERE lease_id = ? AND owner_id = ? AND released_at IS NULL
+                """,
+                (released_at, reason, lease_id, owner_id),
+            )
+            connection.commit()
+            return cursor.rowcount == 1
+
+    def recover_and_acquire(
+        self, stale_lease_id: str, lease: ResourceLease, recovered_at: str
+    ) -> ResourceLease | None:
+        with self._connect() as connection:
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                active = connection.execute(
+                    "SELECT * FROM resource_leases WHERE resource_id = ? AND released_at IS NULL",
+                    (lease.resource_id,),
+                ).fetchone()
+                if not active or active["lease_id"] != stale_lease_id:
+                    connection.rollback()
+                    return self._lease(active) if active else None
+                connection.execute(
+                    """
+                    UPDATE resource_leases SET released_at = ?, release_reason = 'expired_owner_dead'
+                    WHERE lease_id = ?
+                    """,
+                    (recovered_at, stale_lease_id),
+                )
+                connection.execute(
+                    """
+                    INSERT INTO resource_leases(
+                        lease_id, resource_id, owner_id, owner_pid, parent_pid,
+                        label, intent_hash, priority, acquired_at, heartbeat_at,
+                        expires_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        lease.lease_id, lease.resource_id, lease.owner_id,
+                        lease.owner_pid, lease.parent_pid, lease.label,
+                        lease.intent_hash, lease.priority, lease.acquired_at,
+                        lease.heartbeat_at, lease.expires_at,
+                    ),
+                )
+                connection.commit()
+                return None
+            except BaseException:
+                connection.rollback()
+                raise
+
+    def list_leases(self, *, active_only: bool = True) -> tuple[ResourceLease, ...]:
+        where = "WHERE released_at IS NULL" if active_only else ""
+        with self._connect() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM resource_leases {where} ORDER BY acquired_at, lease_id"
+            ).fetchall()
+            return tuple(self._lease(row) for row in rows)

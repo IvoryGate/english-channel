@@ -81,13 +81,14 @@ Product adapters retained behind the control plane:
   foundation at `9f4a7a3`, and the protected Persuasion production adapter at
   `dd9cdce`; all pass full gates but are not trunk until reviewed and merged.
   Channel release capacity is tracked outside product configs, and all accepted
-  heavy entry points share the repository GPU mutex. Legacy research,
+  heavy entry points share the channel's exclusive SQLite GPU lease. Legacy research,
   mastering, and audiobook parity is complete at `298cfa4`, with all 87 source
   paths classified. Phase 1 intake is therefore complete locally. Phase 2 now
-  has an implemented local identity foundation at `721969f`: tracked policy, versioned
-  SQLite migrations, three legacy-ledger adapters, provenance retention, and
-  fail-closed collision reports. Real runtime import review and the shared
-  lifecycle still remain before identity migration is complete.
+  has an implemented local identity foundation at `721969f`: tracked policy,
+  versioned SQLite migrations, three legacy-ledger adapters, provenance
+  retention, and fail-closed collision reports. The initial `gpu_heavy` lease
+  adds heartbeats and safe stale-owner recovery. Real runtime import review,
+  shared lifecycle, and generalized scheduling still remain.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

@@ -15,9 +15,10 @@
   `workspace/shows/tools/`: Dialogue / English Listening Room research, script,
   brand, resumable production, QC, packaging, and local operations workflows.
 - `apps/worker-py/worker/channel/`: the implemented shared identity foundation,
-  versioned SQLite repository, legacy-ledger adapters, collision reporting, and
-  local-only channel CLI. It does not yet implement shared lifecycle, resource,
-  publication, analytics, experiment, or decision services.
+  versioned SQLite repository, legacy-ledger adapters, collision reporting,
+  exclusive heavy-resource leases, and local-only channel CLI. It does not yet
+  implement shared lifecycle, generalized capacity planning, publication,
+  analytics, experiment, or decision services.
 - `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
   and release-preflight prototype retained as a migration input.
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
@@ -97,10 +98,11 @@ The implemented migration contract and operator commands are documented in
 ## Resource Safety Baseline
 
 The local 8 GB GPU runs at most one heavy VoxCPM, Whisper, or NVENC job at a
-time. Existing branches enforce this with a PID lock. The target control plane
-replaces it with recoverable resource leases, queue priority, heartbeat,
-capacity accounting, and visibility while preserving the one-heavy-GPU-job
-safety limit initially.
+time. The control plane now enforces this with an exclusive SQLite lease,
+30-second heartbeat, expiry-plus-dead-owner recovery, and lease history.
+`logs/gpu_production.lock` is a conservative compatibility mirror, not the
+source of truth. Queue priority, aging, reservations, and generalized CPU,
+RAM, disk, network, quota, and human-review capacity remain future work.
 
 ## Change Rule
 
@@ -135,6 +137,6 @@ publishing.
 The production adapter adds book config, EPUB ingestion, canonical paths,
 resume state, render/QC helpers, and Remotion compositions without replacing
 the lifecycle types, schema, repository, service, or transport. Heavy commands
-enter through the hardware provider and currently share
-`logs/gpu_production.lock` with ELR and Shorts. This is the conservative bridge
-until the channel resource-lease service becomes authoritative.
+enter through the hardware provider and share the channel `gpu_heavy` resource
+lease with ELR and Shorts. The legacy lock path remains mirrored during the
+transition for older inspection tools.

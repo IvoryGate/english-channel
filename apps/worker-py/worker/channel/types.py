@@ -113,3 +113,28 @@ class InventorySummary:
     unresolved_collision_count: int
     content_by_product_line: dict[str, int] = field(default_factory=dict)
 
+
+@dataclass(frozen=True)
+class ResourcePolicy:
+    resource_id: str
+    capacity: int
+    lease_ttl_sec: int
+    heartbeat_interval_sec: int
+    recovery: str
+
+
+@dataclass(frozen=True)
+class ResourceLease:
+    lease_id: str
+    resource_id: str
+    owner_id: str
+    owner_pid: int
+    parent_pid: int
+    label: str
+    intent_hash: str
+    priority: int
+    acquired_at: str
+    heartbeat_at: str
+    expires_at: str
+    released_at: str | None = None
+    release_reason: str | None = None

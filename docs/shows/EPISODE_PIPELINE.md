@@ -208,7 +208,9 @@ then compose+QC once at the end. Do **not** set batch-size to the full episode t
 
 ### GPU memory policy (8GB / stability)
 
-One heavy GPU job at a time — enforced by `scripts/gpu_production_lock.py` (`logs/gpu_production.lock`).
+One heavy GPU job at a time — enforced by the shared SQLite `gpu_heavy` lease
+through `scripts/gpu_production_lock.py`. `logs/gpu_production.lock` is a
+compatibility mirror.
 
 | Rule | Why |
 |------|-----|
@@ -222,7 +224,10 @@ One heavy GPU job at a time — enforced by `scripts/gpu_production_lock.py` (`l
 `scripts/elr.py` holds the lock for the full selected series set. Internal child
 render/pack subprocesses inherit the parent lock.
 
-**Do not** start a second production script while one holds the lock. If a process crashed and left a stale lock, delete `logs/gpu_production.lock` only after confirming the PID is dead.
+**Do not** start a second production script while one holds the lease. Inspect
+ownership with `.\.conda-env\python.exe scripts/channel.py resources status`.
+Automatic recovery requires an expired lease and a confirmed dead PID. Deleting
+the compatibility lock file does not release the SQLite lease.
 
 Resume after interrupt:
 

@@ -10,6 +10,7 @@ publication coordinator, analytics system, or experiment engine.
 The foundation is deliberately local-only. It reads tracked policy and legacy
 local ledgers, writes `workspace/channel/channel.sqlite`, and has no YouTube,
 Studio, credential, upload, scheduling, deletion, or public mutation provider.
+It also owns the first shared resource lease: one exclusive heavy GPU job.
 
 ## Tracked And Runtime Truth
 
@@ -43,6 +44,8 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py status
 & $py scripts/channel.py inventory
 & $py scripts/channel.py collisions
+& $py scripts/channel.py resources status
+& $py scripts/channel.py resources status --all
 
 & $py scripts/channel.py import-dialogue `
   --source workspace/channel_ops/publications.json
@@ -62,6 +65,11 @@ also initialize safely, so a missing database is not a prerequisite failure.
 `status` and `inventory` are read-only. `collisions` returns exit code 1 while
 unresolved collisions exist. An import also returns 1 if any incoming item was
 blocked by a collision and 2 for invalid input or repository failure.
+
+`resources status` reads the authoritative lease table. `--all` includes
+released and recovered history. Product controllers acquire leases through the
+backward-compatible `gpu_production_lock` API; operators do not manually insert
+or delete lease rows.
 
 ## Import Guarantees
 
@@ -103,6 +111,8 @@ The initial migration owns:
 - duplicate prevention: `artifacts`, `publications`;
 - provenance and review: `import_runs`, `import_records`,
   `identity_collisions`.
+- resource coordination: append-preserving `resource_leases` with one partial
+  unique active lease per resource.
 
 Legacy lifecycle and publication statuses are retained as source facts. They
 are not silently promoted into one current lifecycle, because the three
@@ -127,10 +137,23 @@ remain the recovery source.
 
 1. Review real local imports and add audited collision resolution plus shared
    lifecycle events.
-2. Replace the process lock with durable resource leases while preserving one
-   heavy 8 GB GPU job at a time.
+2. Extend the initial heavy-GPU lease into CPU, RAM, disk, network, quota, and
+   human-review capacity with priority aging and reservations.
 3. Add channel release reservations and authority policy.
 4. Add provider-based private publication and immutable analytics snapshots.
 5. Add experiments, retrospectives, evidence-linked decisions, and portfolio
    feedback.
 
+## Heavy GPU Lease Recovery
+
+`configs/channel/resources.json` fixes `gpu_heavy` capacity at one, a 120-second
+TTL, and a 30-second heartbeat. Long-running accepted entry points refresh the
+lease in a daemon thread. A contender cannot evict a live process even if its
+heartbeat is late. Automatic recovery requires both expiry and a confirmed
+dead owner PID; the old lease is closed with `expired_owner_dead` before the
+replacement is inserted in the same transaction.
+
+`logs/gpu_production.lock` remains a compatibility mirror for older status
+tools. Deleting that file does not release the authoritative SQLite lease and
+cannot permit overlapping GPU work. Use `scripts/channel.py resources status`
+to diagnose ownership. Process termination remains an explicit operator action.

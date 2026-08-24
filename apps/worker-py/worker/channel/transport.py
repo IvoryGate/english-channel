@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .repo import PolicyMismatchError, RepositoryError, SqliteChannelRepository
-from .schema import SchemaError, load_channel_policy
+from .schema import SchemaError, load_channel_policy, load_resource_policies
 from .service import ChannelIdentityService
 from .types import CollisionRecord, ImportSummary, InventorySummary
 
@@ -91,6 +91,9 @@ def build_parser() -> argparse.ArgumentParser:
     shorts.add_argument("--source", type=Path, required=True)
     classics = subparsers.add_parser("import-classics", help="Import Classic Listening event ledgers.")
     classics.add_argument("--source", type=Path, required=True, help="Operations directory containing events.jsonl files.")
+    resources = subparsers.add_parser("resources", help="Inspect shared local resource leases.")
+    resources.add_argument("action", choices=("status",))
+    resources.add_argument("--all", action="store_true", help="Include released lease history.")
     return parser
 
 
@@ -103,6 +106,19 @@ def main(argv: list[str] | None = None) -> int:
         policy = load_channel_policy(policy_path)
         repository = SqliteChannelRepository(database_path)
         service = ChannelIdentityService(policy, repository)
+        if args.command == "resources":
+            service.initialize()
+            load_resource_policies(repo_root / "configs" / "channel" / "resources.json")
+            leases = repository.list_leases(active_only=not args.all)
+            _print(
+                {
+                    "database": str(database_path),
+                    "activeOnly": not args.all,
+                    "leases": [asdict(item) for item in leases],
+                    "remoteMutationAuthority": False,
+                }
+            )
+            return 0
         if args.command == "init":
             _print(inventory_payload(service.initialize()))
             return 0
@@ -132,4 +148,3 @@ def main(argv: list[str] | None = None) -> int:
     except (FileNotFoundError, json.JSONDecodeError, PolicyMismatchError, RepositoryError, SchemaError, ValueError) as exc:
         _print({"ok": False, "error": str(exc)})
         return 2
-

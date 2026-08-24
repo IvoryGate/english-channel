@@ -36,7 +36,8 @@ Excluded:
 - Branch: `codex/channel-resource-leases`.
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: implementation pending.
+- State: implementation, compatibility bridge, focused tests, and operator
+  documentation complete; full repository gates and archival remain.
 - Authority: local resource coordination only.
 
 ## Validation

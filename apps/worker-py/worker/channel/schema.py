@@ -11,6 +11,7 @@ from .types import (
     LegacySource,
     NormalizedIdentityRecord,
     ProductLinePolicy,
+    ResourcePolicy,
     SeriesPolicy,
 )
 
@@ -125,6 +126,44 @@ def parse_channel_policy(payload: dict[str, Any]) -> ChannelPolicy:
 
 def load_channel_policy(path: Path) -> ChannelPolicy:
     return parse_channel_policy(read_json_object(path))
+
+
+def parse_resource_policies(payload: dict[str, Any]) -> tuple[ResourcePolicy, ...]:
+    if payload.get("schema") != "youtube-channel-resources-v1":
+        raise SchemaError(f"Unsupported resource policy schema: {payload.get('schema')!r}")
+    raw_resources = payload.get("resources")
+    if not isinstance(raw_resources, list) or not raw_resources:
+        raise SchemaError("resources must be a non-empty list")
+    policies: list[ResourcePolicy] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(raw_resources):
+        item = _object(raw, f"resources[{index}]")
+        resource_id = validate_identifier(
+            _string(item, "id", f"resources[{index}]"), f"resources[{index}].id"
+        )
+        if resource_id in seen:
+            raise SchemaError(f"Duplicate resource id: {resource_id}")
+        seen.add(resource_id)
+        capacity = item.get("capacity")
+        ttl = item.get("leaseTtlSec")
+        heartbeat = item.get("heartbeatIntervalSec")
+        recovery = item.get("recovery")
+        if capacity != 1:
+            raise SchemaError(f"{resource_id}.capacity must be 1 in the initial scheduler")
+        if not isinstance(ttl, int) or isinstance(ttl, bool) or ttl < 30:
+            raise SchemaError(f"{resource_id}.leaseTtlSec must be at least 30")
+        if not isinstance(heartbeat, int) or isinstance(heartbeat, bool) or heartbeat < 5:
+            raise SchemaError(f"{resource_id}.heartbeatIntervalSec must be at least 5")
+        if heartbeat * 2 >= ttl:
+            raise SchemaError(f"{resource_id} heartbeat interval must be less than half its TTL")
+        if recovery != "expired_and_owner_dead":
+            raise SchemaError(f"Unsupported recovery policy for {resource_id}: {recovery!r}")
+        policies.append(ResourcePolicy(resource_id, capacity, ttl, heartbeat, recovery))
+    return tuple(policies)
+
+
+def load_resource_policies(path: Path) -> tuple[ResourcePolicy, ...]:
+    return parse_resource_policies(read_json_object(path))
 
 
 def normalize_dialogue_ledger(source: LegacySource) -> tuple[NormalizedIdentityRecord, ...]:

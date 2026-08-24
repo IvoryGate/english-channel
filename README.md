@@ -94,12 +94,16 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py status
 & $py scripts/channel.py inventory
 & $py scripts/channel.py collisions
+& $py scripts/channel.py resources status
 ```
 
 Runtime state is stored in the ignored
 `workspace/channel/channel.sqlite`. See
 [`docs/CHANNEL_CONTROL_PLANE.md`](docs/CHANNEL_CONTROL_PLANE.md) before
 importing real Dialogue, Shorts, or Classic Listening ledgers.
+Heavy Dialogue, Shorts, and Classic Listening entry points acquire the same
+SQLite-backed `gpu_heavy` lease and keep the legacy lock file only as a
+transition mirror.
 
 ## Local VoxCPM2 Setup On Windows
 
