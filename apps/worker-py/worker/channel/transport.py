@@ -91,6 +91,11 @@ def build_parser() -> argparse.ArgumentParser:
     shorts.add_argument("--source", type=Path, required=True)
     classics = subparsers.add_parser("import-classics", help="Import Classic Listening event ledgers.")
     classics.add_argument("--source", type=Path, required=True, help="Operations directory containing events.jsonl files.")
+    remote = subparsers.add_parser("import-youtube-rss", help="Import an immutable public YouTube RSS capture.")
+    remote.add_argument("--source", type=Path, required=True)
+    remote.add_argument("--scope", required=True)
+    reconcile = subparsers.add_parser("reconcile", help="Compare canonical publications with a remote capture.")
+    reconcile.add_argument("--capture-id")
     resources = subparsers.add_parser("resources", help="Inspect shared local resource leases.")
     resources.add_argument("action", choices=("status",))
     resources.add_argument("--all", action="store_true", help="Include released lease history.")
@@ -119,6 +124,37 @@ def main(argv: list[str] | None = None) -> int:
                 }
             )
             return 0
+        if args.command == "import-youtube-rss":
+            capture_id, inserted, item_count = service.import_youtube_rss(
+                args.source, scope=args.scope
+            )
+            _print(
+                {
+                    "captureId": capture_id,
+                    "inserted": inserted,
+                    "itemCount": item_count,
+                    "remoteMutationAuthority": False,
+                }
+            )
+            return 0
+        if args.command == "reconcile":
+            report = service.reconcile(args.capture_id)
+            _print(
+                {
+                    "captureId": report.capture_id,
+                    "channelId": report.channel_id,
+                    "scope": report.scope,
+                    "remoteCount": report.remote_count,
+                    "localPublicationCount": report.local_publication_count,
+                    "matchedRemoteIds": list(report.matched_remote_ids),
+                    "remoteOnlyIds": list(report.remote_only_ids),
+                    "localOutsideCaptureIds": list(report.local_outside_capture_ids),
+                    "titleDisagreements": list(report.title_disagreements),
+                    "completeRemoteInventory": False,
+                    "remoteMutationAuthority": False,
+                }
+            )
+            return 1 if report.remote_only_ids or report.title_disagreements else 0
         if args.command == "init":
             _print(inventory_payload(service.initialize()))
             return 0

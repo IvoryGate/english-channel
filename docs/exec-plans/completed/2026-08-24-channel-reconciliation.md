@@ -36,18 +36,35 @@ Excluded:
 - Branch: `codex/channel-reconciliation`.
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: local discovery and read-only remote capture pending.
+- State: completed and archived on 2026-08-24.
 - Authority: reconciliation/read only.
+
+## Results
+
+- Formal database: `workspace/channel/channel.sqlite`, schema version 3.
+- Local imports: 11 Dialogue plus four Shorts publications; no Classics
+  operations ledger was available.
+- Remote capture: 15 recent public RSS items with immutable source SHA-256 and
+  explicit `public_rss_recent_max_15_no_private_unlisted` scope.
+- Reconciliation: 15 matched, zero remote-only, zero local-outside-capture,
+  zero title disagreements, and zero unresolved collisions.
+- Evidence report: `docs/CHANNEL_RECONCILIATION_2026-08-24.md`.
+- Remote mutations: none.
 
 ## Validation
 
-- Local ledger source hashes are unchanged before and after import.
-- Every remote capture records source, collection time, scope, and SHA-256.
-- Re-import is idempotent.
-- Remote-only and local-only fixtures remain explicit rather than becoming
-  inferred matches.
-- No browser or provider action mutates remote state.
-- Focused tests, isolated CLI smoke, lint, and full tests pass.
+- Local ledger source hashes were unchanged before and after import.
+- The remote capture records source, collection time, explicit scope, and
+  SHA-256.
+- Re-import idempotency is covered by tests.
+- Remote-only, local-only, and title-disagreement fixtures remain explicit
+  rather than becoming inferred matches.
+- No browser or provider action mutated remote state.
+- Focused channel tests: 18 passed.
+- Isolated CLI smoke: schema v3 initialized, all three ledgers plus RSS
+  imported, and 15 of 15 remote IDs reconciled with exit code 0.
+- `npm run lint`: passed.
+- `npm test`: passed, including 130 Python tests.
 
 ## Completion Criteria
 
@@ -57,3 +74,8 @@ Excluded:
 - The report identifies every unresolved mismatch and recommended next action.
 - Code, tests, docs, and validation are committed together and the plan is
   archived if no required reconciliation work remains.
+
+All completion criteria are satisfied for the declared public RSS boundary.
+Credentialed Studio/provider inventory is intentionally deferred as a later
+slice because it expands the evidence source, not because an item inside this
+capture remains unresolved.

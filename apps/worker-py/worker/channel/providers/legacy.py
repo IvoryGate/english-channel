@@ -65,3 +65,9 @@ class LegacyLedgerProvider:
             payload=streams,
         )
 
+    def read_bytes(self, path: Path) -> tuple[Path, bytes, str]:
+        resolved = path.resolve()
+        if not resolved.is_file():
+            raise FileNotFoundError(f"Source capture does not exist: {resolved}")
+        value = resolved.read_bytes()
+        return resolved, value, hashlib.sha256(value).hexdigest()

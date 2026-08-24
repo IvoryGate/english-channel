@@ -4,8 +4,10 @@
 
 The shared channel domain gives Dialogue, Shorts, and Classic Listening one
 canonical identity store. It is the first implemented slice of the target
-control plane; it is not yet the portfolio planner, resource scheduler,
-publication coordinator, analytics system, or experiment engine.
+control plane and now includes immutable public-remote captures, read-only
+reconciliation, and one exclusive heavy-resource lease. It is not yet the
+portfolio planner, general resource scheduler, publication coordinator,
+analytics system, or experiment engine.
 
 The foundation is deliberately local-only. It reads tracked policy and legacy
 local ledgers, writes `workspace/channel/channel.sqlite`, and has no YouTube,
@@ -19,6 +21,8 @@ It also owns the first shared resource lease: one exclusive heavy GPU job.
 - `apps/worker-py/worker/channel/migrations/` is the tracked database schema.
 - `workspace/channel/channel.sqlite` is the ignored transactional identity
   store.
+- `workspace/channel/raw/` contains immutable provider/export captures; their
+  declared scope is part of the evidence and must not be widened by inference.
 - Dialogue `workspace/channel_ops/publications.json`, Shorts
   `workspace/shorts/operations/publication_ledger.json`, and Classic Listening
   `workspace/classics/operations/**/events.jsonl` remain read-only migration
@@ -55,6 +59,12 @@ $py = ".\.conda-env\python.exe"
 
 & $py scripts/channel.py import-classics `
   --source workspace/classics/operations
+
+& $py scripts/channel.py import-youtube-rss `
+  --source workspace/channel/raw/youtube-public-rss-20260824T030911Z.xml `
+  --scope public_rss_recent_max_15_no_private_unlisted
+
+& $py scripts/channel.py reconcile
 ```
 
 Global `--policy` and `--database` overrides must appear before the subcommand.
@@ -65,6 +75,16 @@ also initialize safely, so a missing database is not a prerequisite failure.
 `status` and `inventory` are read-only. `collisions` returns exit code 1 while
 unresolved collisions exist. An import also returns 1 if any incoming item was
 blocked by a collision and 2 for invalid input or repository failure.
+
+`import-youtube-rss` parses an already captured public YouTube RSS file and
+stores its bytes fingerprint, channel ID, declared scope, items, titles, URLs,
+timestamps, and media kind. It never fetches or changes YouTube. Identical
+source bytes plus scope are idempotent. `reconcile` compares the newest capture
+by default, or `--capture-id <id>`, to canonical YouTube publications. It
+returns 1 while a remote-only item or title disagreement exists. Its JSON
+always reports `completeRemoteInventory: false` and
+`remoteMutationAuthority: false` because an RSS window cannot prove Studio
+completeness or authorize account writes.
 
 `resources status` reads the authoritative lease table. `--all` includes
 released and recovered history. Product controllers acquire leases through the
@@ -104,7 +124,7 @@ manually to make a report disappear.
 
 ## Schema Boundaries
 
-The initial migration owns:
+The versioned migrations own:
 
 - policy identities: `channels`, `product_lines`, `series`;
 - canonical identity: `content_items`, `source_aliases`;
@@ -113,6 +133,7 @@ The initial migration owns:
   `identity_collisions`.
 - resource coordination: append-preserving `resource_leases` with one partial
   unique active lease per resource.
+- remote evidence: immutable `remote_captures` and `remote_inventory_items`.
 
 Legacy lifecycle and publication statuses are retained as source facts. They
 are not silently promoted into one current lifecycle, because the three
@@ -135,14 +156,18 @@ remain the recovery source.
 
 ## Next Control-Plane Slices
 
-1. Review real local imports and add audited collision resolution plus shared
-   lifecycle events.
-2. Extend the initial heavy-GPU lease into CPU, RAM, disk, network, quota, and
+1. Add an authenticated read-only YouTube provider/export path for private,
+   unlisted, older public, playlist, and visibility reconciliation.
+2. Add audited collision resolution plus shared lifecycle events.
+3. Extend the initial heavy-GPU lease into CPU, RAM, disk, network, quota, and
    human-review capacity with priority aging and reservations.
-3. Add channel release reservations and authority policy.
-4. Add provider-based private publication and immutable analytics snapshots.
-5. Add experiments, retrospectives, evidence-linked decisions, and portfolio
+4. Add channel release reservations and authority policy.
+5. Add provider-based private publication and immutable analytics snapshots.
+6. Add experiments, retrospectives, evidence-linked decisions, and portfolio
    feedback.
+
+The reviewed 2026-08-24 runtime import and its evidence limits are recorded in
+[`CHANNEL_RECONCILIATION_2026-08-24.md`](CHANNEL_RECONCILIATION_2026-08-24.md).
 
 ## Heavy GPU Lease Recovery
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,7 @@ from .types import (
     NormalizedIdentityRecord,
     ProductLinePolicy,
     ResourcePolicy,
+    RemoteInventoryItem,
     SeriesPolicy,
 )
 
@@ -166,6 +168,58 @@ def load_resource_policies(path: Path) -> tuple[ResourcePolicy, ...]:
     return parse_resource_policies(read_json_object(path))
 
 
+def parse_youtube_rss(value: bytes) -> tuple[str, tuple[RemoteInventoryItem, ...]]:
+    try:
+        root = ET.fromstring(value)
+    except ET.ParseError as exc:
+        raise SchemaError(f"Invalid YouTube RSS XML: {exc}") from exc
+    namespaces = {
+        "atom": "http://www.w3.org/2005/Atom",
+        "yt": "http://www.youtube.com/xml/schemas/2015",
+    }
+    channel_id = root.findtext("yt:channelId", default="", namespaces=namespaces).strip()
+    if not channel_id:
+        raise SchemaError("YouTube RSS capture has no channel ID")
+    entries = root.findall("atom:entry", namespaces)
+    items: list[RemoteInventoryItem] = []
+    seen: set[str] = set()
+    for index, entry in enumerate(entries):
+        remote_id = (entry.findtext("yt:videoId", default="", namespaces=namespaces)).strip()
+        entry_channel = (entry.findtext("yt:channelId", default="", namespaces=namespaces)).strip()
+        title = (entry.findtext("atom:title", default="", namespaces=namespaces)).strip()
+        link = entry.find("atom:link[@rel='alternate']", namespaces)
+        url = str(link.attrib.get("href", "")).strip() if link is not None else ""
+        if not remote_id or not title or not url or not entry_channel:
+            raise SchemaError(f"YouTube RSS entry {index} is missing identity fields")
+        if remote_id in seen:
+            raise SchemaError(f"Duplicate YouTube video ID in RSS capture: {remote_id}")
+        if channel_id != entry_channel:
+            raise SchemaError("YouTube RSS capture contains more than one channel ID")
+        seen.add(remote_id)
+        published = entry.findtext("atom:published", default=None, namespaces=namespaces)
+        updated = entry.findtext("atom:updated", default=None, namespaces=namespaces)
+        raw = {
+            "videoId": remote_id,
+            "channelId": entry_channel,
+            "title": title,
+            "url": url,
+            "publishedAt": published,
+            "updatedAt": updated,
+        }
+        items.append(
+            RemoteInventoryItem(
+                remote_id=remote_id,
+                title=title,
+                published_at=published,
+                updated_at=updated,
+                url=url,
+                media_kind="short" if "/shorts/" in url else "video",
+                raw_payload=raw,
+            )
+        )
+    return channel_id, tuple(items)
+
+
 def normalize_dialogue_ledger(source: LegacySource) -> tuple[NormalizedIdentityRecord, ...]:
     payload = _object(source.payload, source.locator)
     publications = payload.get("publications")
@@ -217,7 +271,7 @@ def normalize_shorts_ledger(
                 product_line_id="shorts",
                 series_id=series_id,
                 local_item_id=short_id,
-                title=None,
+                title=str(item["title"]).strip() if item.get("title") else None,
                 source_state=str(item["status"]) if item.get("status") else None,
                 media_sha256=None,
                 youtube_video_id=str(youtube_id).strip() if youtube_id else None,

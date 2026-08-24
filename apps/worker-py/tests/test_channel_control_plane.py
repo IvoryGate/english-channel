@@ -109,11 +109,11 @@ def test_initializes_versioned_policy_identity_store(tmp_path: Path) -> None:
     inventory = identity.initialize()
     repeated = identity.initialize()
 
-    assert inventory.schema_version == 2
+    assert inventory.schema_version == 3
     assert inventory.channel_count == 1
     assert inventory.product_line_count == 3
     assert inventory.series_count == 4
-    assert repeated.schema_version == 2
+    assert repeated.schema_version == 3
     assert repeated.import_run_count == 0
 
 

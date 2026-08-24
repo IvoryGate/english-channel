@@ -15,6 +15,8 @@ from .types import (
     ImportSummary,
     InventorySummary,
     NormalizedIdentityRecord,
+    ReconciliationReport,
+    RemoteInventoryCapture,
     ResourceLease,
 )
 
@@ -731,3 +733,98 @@ class SqliteChannelRepository:
                 f"SELECT * FROM resource_leases {where} ORDER BY acquired_at, lease_id"
             ).fetchall()
             return tuple(self._lease(row) for row in rows)
+
+    def import_remote_capture(self, capture: RemoteInventoryCapture) -> tuple[str, bool]:
+        with self._connect() as connection:
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                existing = connection.execute(
+                    """
+                    SELECT capture_id FROM remote_captures
+                    WHERE provider = ? AND channel_id = ? AND scope = ? AND source_sha256 = ?
+                    """,
+                    (capture.provider, capture.channel_id, capture.scope, capture.source_sha256),
+                ).fetchone()
+                if existing:
+                    connection.rollback()
+                    return str(existing["capture_id"]), False
+                connection.execute(
+                    """
+                    INSERT INTO remote_captures(
+                        capture_id, provider, channel_id, scope, source_locator,
+                        source_sha256, collected_at, item_count
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        capture.capture_id, capture.provider, capture.channel_id,
+                        capture.scope, capture.source_locator, capture.source_sha256,
+                        capture.collected_at, len(capture.items),
+                    ),
+                )
+                for item in capture.items:
+                    connection.execute(
+                        """
+                        INSERT INTO remote_inventory_items(
+                            capture_id, remote_id, title, published_at, updated_at,
+                            url, media_kind, raw_payload
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            capture.capture_id, item.remote_id, item.title,
+                            item.published_at, item.updated_at, item.url,
+                            item.media_kind, canonical_json(item.raw_payload),
+                        ),
+                    )
+                connection.commit()
+                return capture.capture_id, True
+            except BaseException:
+                connection.rollback()
+                raise
+
+    def reconcile_remote_capture(self, capture_id: str | None = None) -> ReconciliationReport:
+        with self._connect() as connection:
+            capture = connection.execute(
+                "SELECT * FROM remote_captures WHERE capture_id = ?"
+                if capture_id
+                else "SELECT * FROM remote_captures ORDER BY collected_at DESC, capture_id DESC LIMIT 1",
+                (capture_id,) if capture_id else (),
+            ).fetchone()
+            if not capture:
+                raise RepositoryError("No remote inventory capture is available")
+            remote_rows = connection.execute(
+                "SELECT remote_id, title FROM remote_inventory_items WHERE capture_id = ?",
+                (capture["capture_id"],),
+            ).fetchall()
+            local_rows = connection.execute(
+                """
+                SELECT p.remote_id, c.title
+                FROM publications p JOIN content_items c ON c.content_id = p.content_id
+                WHERE p.provider = 'youtube'
+                """
+            ).fetchall()
+            remote = {str(row["remote_id"]): str(row["title"]) for row in remote_rows}
+            local = {
+                str(row["remote_id"]): str(row["title"]) if row["title"] is not None else ""
+                for row in local_rows
+            }
+            matched = sorted(remote.keys() & local.keys())
+            disagreements = tuple(
+                {
+                    "remoteId": remote_id,
+                    "localTitle": local[remote_id],
+                    "remoteTitle": remote[remote_id],
+                }
+                for remote_id in matched
+                if local[remote_id] and local[remote_id] != remote[remote_id]
+            )
+            return ReconciliationReport(
+                capture_id=str(capture["capture_id"]),
+                channel_id=str(capture["channel_id"]),
+                scope=str(capture["scope"]),
+                remote_count=len(remote),
+                local_publication_count=len(local),
+                matched_remote_ids=tuple(matched),
+                remote_only_ids=tuple(sorted(remote.keys() - local.keys())),
+                local_outside_capture_ids=tuple(sorted(local.keys() - remote.keys())),
+                title_disagreements=disagreements,
+            )

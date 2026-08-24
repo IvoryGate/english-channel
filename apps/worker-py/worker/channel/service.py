@@ -12,12 +12,15 @@ from .schema import (
     normalize_classics_ledgers,
     normalize_dialogue_ledger,
     normalize_shorts_ledger,
+    parse_youtube_rss,
 )
 from .types import (
     ChannelPolicy,
     ImportRequest,
     ImportSummary,
     InventorySummary,
+    ReconciliationReport,
+    RemoteInventoryCapture,
     ResourceLease,
     ResourcePolicy,
 )
@@ -84,6 +87,29 @@ class ChannelIdentityService:
 
     def inventory(self) -> InventorySummary:
         return self.repository.inventory()
+
+    def import_youtube_rss(self, path: Path, *, scope: str) -> tuple[str, bool, int]:
+        self.initialize()
+        declared_scope = scope.strip()
+        if not declared_scope:
+            raise ValueError("Remote inventory capture scope must not be empty")
+        resolved, value, source_sha256 = self.legacy_provider.read_bytes(path)
+        channel_id, items = parse_youtube_rss(value)
+        capture = RemoteInventoryCapture(
+            capture_id=f"capture:{uuid.uuid4()}",
+            provider="youtube_public_rss",
+            channel_id=channel_id,
+            scope=declared_scope,
+            source_locator=str(resolved),
+            source_sha256=source_sha256,
+            collected_at=self.now(),
+            items=items,
+        )
+        capture_id, inserted = self.repository.import_remote_capture(capture)
+        return capture_id, inserted, len(items)
+
+    def reconcile(self, capture_id: str | None = None) -> ReconciliationReport:
+        return self.repository.reconcile_remote_capture(capture_id)
 
 
 class ResourceBusyError(RuntimeError):

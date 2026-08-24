@@ -75,7 +75,7 @@ Product adapters retained behind the control plane:
 - Owner: Codex primary agent.
 - Branch: `codex/youtube-operating-system-foundation` from `origin/main` at
   `0c245ec`.
-- Last updated: 2026-08-23.
+- Last updated: 2026-08-24.
 - State: Phase 0 inventory and protection rules are complete. ELR is absorbed
   locally at `92bbc57`, Shorts at `8e39d68`, and the Classic Listening
   foundation at `9f4a7a3`, and the protected Persuasion production adapter at
@@ -87,8 +87,12 @@ Product adapters retained behind the control plane:
   has an implemented local identity foundation at `721969f`: tracked policy,
   versioned SQLite migrations, three legacy-ledger adapters, provenance
   retention, and fail-closed collision reports. The initial `gpu_heavy` lease
-  at `71cbb14` adds heartbeats and safe stale-owner recovery. Real runtime import review,
-  shared lifecycle, and generalized scheduling still remain.
+  at `71cbb14` adds heartbeats and safe stale-owner recovery. The 2026-08-24
+  reviewed runtime baseline imports 11 Dialogue and four Shorts publications
+  and reconciles all 15 items in an immutable public RSS window with no
+  collisions or disagreements. The boundary still excludes private, unlisted,
+  playlist, and potentially older public inventory. Shared lifecycle and
+  generalized scheduling remain.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

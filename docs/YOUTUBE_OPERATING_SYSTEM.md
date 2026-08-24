@@ -336,10 +336,11 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py import-dialogue --source <ledger.json>
 & $py scripts/channel.py import-shorts --source <ledger.json>
 & $py scripts/channel.py import-classics --source <operations-directory>
+& $py scripts/channel.py import-youtube-rss --source <capture.xml> --scope <scope>
+& $py scripts/channel.py reconcile
 & $py scripts/channel.py resources status
 
 # Target commands not implemented by the identity foundation:
-& $py scripts/channel.py reconcile
 & $py scripts/channel.py plan --horizon 28d
 & $py scripts/channel.py run --next
 & $py scripts/channel.py publish preflight --item <id>
@@ -351,11 +352,18 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py retrospective 28d
 ```
 
-Until real legacy imports and collision review are complete, existing product
-commands are not interchangeable and their local ledgers remain migration
-inputs rather than channel truth. See
+During migration, existing product commands are not interchangeable and their
+local ledgers remain provenance-bearing inputs rather than independent channel
+truth. The available real publication ledgers have been reviewed and imported;
+future ledgers must follow the same collision-preserving path. See
 [`CHANNEL_CONTROL_PLANE.md`](CHANNEL_CONTROL_PLANE.md) for the implemented
 boundary.
+
+The formal 2026-08-24 baseline maps all 15 publications in one public RSS
+capture. That capture explicitly excludes private and unlisted items and may
+omit older public inventory; it is not a substitute for a credentialed Studio
+or provider inventory. See
+[`CHANNEL_RECONCILIATION_2026-08-24.md`](CHANNEL_RECONCILIATION_2026-08-24.md).
 
 ## Million-Subscriber Roadmap
 

@@ -138,3 +138,39 @@ class ResourceLease:
     expires_at: str
     released_at: str | None = None
     release_reason: str | None = None
+
+
+@dataclass(frozen=True)
+class RemoteInventoryItem:
+    remote_id: str
+    title: str
+    published_at: str | None
+    updated_at: str | None
+    url: str
+    media_kind: str
+    raw_payload: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class RemoteInventoryCapture:
+    capture_id: str
+    provider: str
+    channel_id: str
+    scope: str
+    source_locator: str
+    source_sha256: str
+    collected_at: str
+    items: tuple[RemoteInventoryItem, ...]
+
+
+@dataclass(frozen=True)
+class ReconciliationReport:
+    capture_id: str
+    channel_id: str
+    scope: str
+    remote_count: int
+    local_publication_count: int
+    matched_remote_ids: tuple[str, ...]
+    remote_only_ids: tuple[str, ...]
+    local_outside_capture_ids: tuple[str, ...]
+    title_disagreements: tuple[dict[str, str], ...]
