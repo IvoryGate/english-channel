@@ -84,7 +84,7 @@ Product adapters retained behind the control plane:
   heavy entry points share the repository GPU mutex. Legacy research,
   mastering, and audiobook parity is complete at `298cfa4`, with all 87 source
   paths classified. Phase 1 intake is therefore complete locally. Phase 2 now
-  has an implemented local identity foundation: tracked policy, versioned
+  has an implemented local identity foundation at `721969f`: tracked policy, versioned
   SQLite migrations, three legacy-ledger adapters, provenance retention, and
   fail-closed collision reports. Real runtime import review and the shared
   lifecycle still remain before identity migration is complete.

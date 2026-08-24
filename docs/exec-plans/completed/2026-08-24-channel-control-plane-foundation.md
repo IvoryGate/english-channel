@@ -12,8 +12,9 @@ ledgers.
 - Branch: `codex/channel-control-plane-foundation`.
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: implementation and focused tests complete; documentation, isolated CLI
-  smoke test, full repository gates, and completion archival remain.
+- State: completed locally at `721969f`. The implementation, documentation,
+  isolated CLI smoke test, real Dialogue-ledger rehearsal, and full repository
+  gates pass.
 - Authority: local state only; no remote mutations are implemented or granted.
 
 ## Scope
@@ -76,21 +77,29 @@ Excluded:
 
 ## Validation
 
-- Focused channel tests cover migration, all three import formats,
-  idempotency, collision isolation, provenance retention, and inventory.
-- A fixture import proves the same YouTube ID and media SHA cannot map to two
-  content items.
-- `scripts/channel.py --help` and an isolated `init/status` smoke test pass.
-- `npm run check:encoding`
-- `npm run check:docs`
-- `npm run check:architecture`
-- `npm run lint`
-- `npm test`
+- Focused channel tests: 8 passed. Coverage includes transactional migration
+  rollback, all three import formats, idempotency, collision isolation,
+  provenance retention, inventory, policy rejection, and CLI authority output.
+- Duplicate fixture proof: one incoming item with a reused YouTube ID and media
+  SHA produced two retained collision facts and no second canonical item.
+- `scripts/channel.py --help`: passed without opening a browser or contacting a
+  remote service.
+- Isolated `init/status` smoke: schema version 1, one channel, three product
+  lines, five series, and `remoteMutationAuthority: false`.
+- Real Dialogue-ledger rehearsal: 3 items, 3 artifacts, 3 publications, 0
+  collisions. The source file SHA-256 was identical before and after import.
+  No Shorts or Classic Listening runtime ledger existed to rehearse.
+- `npm run lint`: passed, including encoding, TypeScript, Remotion,
+  architecture, docs, and Python compilation checks.
+- `npm test`: passed outside the restricted sandbox after the sandboxed Node
+  process failed in `uv_os_get_passwd` before assertions. The successful run
+  included all Node suites and 120 Python tests.
 
 ## Completion Criteria
 
 - All deliverables are implemented and validated.
-- Legacy source files remain byte-for-byte untouched by imports.
-- The plan is moved to `completed/` in the same change that records validation.
-- Phase 2 remains active until real local and remote inventory has been
+- The available real Dialogue source remained byte-for-byte untouched; fixture
+  tests prove the same behavior for Shorts and Classics sources.
+- This plan is archived with its validation record. Phase 2 remains active in
+  the parent unification plan until real local and remote inventory has been
   reconciled and each identity resolves without an unreviewed collision.
