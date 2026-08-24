@@ -339,6 +339,10 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py import-youtube-rss --source <capture.xml> --scope <scope>
 & $py scripts/channel.py reconcile
 & $py scripts/channel.py resources status
+& $py scripts/channel.py release status
+& $py scripts/channel.py release reserve --content-id <id> --program <id> `
+  --scheduled-at <iso-8601> --idempotency-key <key>
+& $py scripts/channel.py release cancel --reservation-id <id> --reason <reason>
 
 # Target commands not implemented by the identity foundation:
 & $py scripts/channel.py plan --horizon 28d

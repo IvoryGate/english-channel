@@ -5,6 +5,7 @@ import hashlib
 import uuid
 from pathlib import Path
 from typing import Callable
+from zoneinfo import ZoneInfo
 
 from .providers import LegacyLedgerProvider, pid_alive
 from .repo import SqliteChannelRepository
@@ -20,6 +21,8 @@ from .types import (
     ImportSummary,
     InventorySummary,
     ReconciliationReport,
+    ReleasePolicy,
+    ReleaseReservation,
     RemoteInventoryCapture,
     ResourceLease,
     ResourcePolicy,
@@ -118,6 +121,102 @@ class ResourceBusyError(RuntimeError):
         super().__init__(
             f"Resource {lease.resource_id} is held by pid={lease.owner_pid} "
             f"label={lease.label} until {lease.expires_at}"
+        )
+
+
+class ReleaseReservationService:
+    def __init__(
+        self,
+        channel_policy: ChannelPolicy,
+        release_policy: ReleasePolicy,
+        repository: SqliteChannelRepository,
+        *,
+        now: Callable[[], str] = utc_now,
+    ) -> None:
+        self.channel_policy = channel_policy
+        self.release_policy = release_policy
+        self.repository = repository
+        self.now = now
+        known = {item.product_line_id for item in channel_policy.product_lines}
+        unknown = {
+            item.product_line_id for item in release_policy.programs
+            if item.product_line_id not in known
+        }
+        if unknown:
+            raise ValueError(f"Release policy references unknown product lines: {sorted(unknown)}")
+
+    @staticmethod
+    def _timestamp(value: str, where: str) -> datetime:
+        try:
+            parsed = datetime.fromisoformat(value)
+        except ValueError as exc:
+            raise ValueError(f"{where} must be ISO-8601: {value}") from exc
+        if parsed.tzinfo is None:
+            raise ValueError(f"{where} must be timezone-aware: {value}")
+        return parsed
+
+    def reserve(
+        self, *, content_id: str, program_id: str, scheduled_at: str,
+        idempotency_key: str,
+    ) -> tuple[ReleaseReservation, bool]:
+        try:
+            program = self.release_policy.program(program_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown release program: {program_id}") from exc
+        if program.status != "active":
+            raise ValueError(
+                f"Release program {program_id} is not active: {program.status}"
+            )
+        key = idempotency_key.strip()
+        if not key:
+            raise ValueError("Release idempotency key must not be empty")
+        product_line = self.repository.content_product_line(content_id)
+        if product_line is None:
+            raise ValueError(f"Unknown canonical content item: {content_id}")
+        if product_line != program.product_line_id:
+            raise ValueError(
+                f"Content belongs to {product_line}, not release program {program.product_line_id}"
+            )
+        now = self._timestamp(self.now(), "Current time")
+        scheduled = self._timestamp(scheduled_at, "Scheduled time")
+        if scheduled <= now:
+            raise ValueError("Release reservation must be in the future")
+        local_date = scheduled.astimezone(ZoneInfo(self.release_policy.timezone)).date()
+        if program.starts_on and local_date < datetime.fromisoformat(program.starts_on).date():
+            raise ValueError(f"Release time is before program {program_id} starts")
+        if program.ends_on and local_date > datetime.fromisoformat(program.ends_on).date():
+            raise ValueError(f"Release time is after program {program_id} ends")
+        normalized = scheduled.astimezone(timezone.utc).isoformat(timespec="seconds")
+        intent_hash = hashlib.sha256(
+            f"{content_id}\0{program_id}\0{normalized}".encode("utf-8")
+        ).hexdigest()
+        candidate = ReleaseReservation(
+            reservation_id=f"release:{uuid.uuid4()}",
+            content_id=content_id,
+            program_id=program_id,
+            scheduled_at=normalized,
+            timezone=self.release_policy.timezone,
+            idempotency_key=key,
+            intent_hash=intent_hash,
+            created_at=now.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        )
+        return self.repository.reserve_release(
+            candidate,
+            max_rolling_7_days=self.release_policy.max_uploads_per_rolling_7_days,
+        )
+
+    def list(self, *, active_only: bool = True) -> tuple[ReleaseReservation, ...]:
+        return self.repository.list_release_reservations(active_only=active_only)
+
+    def cancel(self, reservation_id: str, *, reason: str) -> ReleaseReservation:
+        detail = reason.strip()
+        if not detail:
+            raise ValueError("Cancellation reason must not be empty")
+        cancelled = self._timestamp(self.now(), "Current time")
+        return self.repository.cancel_release_reservation(
+            reservation_id,
+            cancelled_at=cancelled.astimezone(timezone.utc).isoformat(timespec="seconds"),
+            reason=detail,
         )
 
 

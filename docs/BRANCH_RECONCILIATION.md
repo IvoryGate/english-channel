@@ -153,3 +153,38 @@ Those assets remain protected in place. Audio is still blocked by the
 speech-coupled electronic texture, and visual/prompt provenance is not yet
 complete. Their presence does not authorize deletion, bulk commit, upload, or
 publication.
+
+## Remote Branch Archive — 2026-08-24
+
+Repository ownership and write access were confirmed for
+`https://github.com/IvoryGate/english-channel.git`. A dry-run push succeeded and
+left no test ref. All local code branches were then published without force,
+deletion, or history rewriting, in dependency order:
+
+1. Foundation and source records:
+   `agent/bootstrap-voxcpm-workflow`,
+   `feat/audiobook-skill-opt-in-srt`,
+   `feat/episode-audio-mastering`,
+   `feat/youtube-research-topic-selection`,
+   `feat/elr-series-scriptwriting-pipeline`,
+   `codex/youtube-operating-system-foundation`,
+   `codex/shorts-pipeline-pilot`,
+   `codex/classics-autonomous-foundation`, and
+   `codex/classics-persuasion-pilot`.
+2. Product intake records:
+   `codex/elr-dialogue-intake`, `codex/shorts-adapter-intake`,
+   `codex/classics-foundation-intake`, and
+   `codex/persuasion-pilot-intake`.
+3. Unified audit and control-plane chain:
+   `codex/legacy-pipeline-parity`,
+   `codex/channel-control-plane-foundation`,
+   `codex/channel-resource-leases`, `codex/channel-reconciliation`, and
+   `codex/channel-release-reservations`.
+
+Every listed local branch now tracks its same-name `origin/*` ref with no
+ahead/behind delta. Local `main` was not rewritten or pushed: it contains no
+unique commit and remains behind the newer `origin/main`. Generated media,
+logs, temporary prompt files, nested worktrees, and the protected Persuasion
+review assets remain untracked and preserved in place under the documented
+artifact rules. No pull request, merge, cleanup, or remote publication action
+was performed by this archive operation.

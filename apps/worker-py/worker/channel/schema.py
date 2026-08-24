@@ -4,8 +4,10 @@ import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
+from datetime import date, time
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from .types import (
     ChannelPolicy,
@@ -13,6 +15,8 @@ from .types import (
     NormalizedIdentityRecord,
     ProductLinePolicy,
     ResourcePolicy,
+    ReleasePolicy,
+    ReleaseProgramPolicy,
     RemoteInventoryItem,
     SeriesPolicy,
 )
@@ -166,6 +170,78 @@ def parse_resource_policies(payload: dict[str, Any]) -> tuple[ResourcePolicy, ..
 
 def load_resource_policies(path: Path) -> tuple[ResourcePolicy, ...]:
     return parse_resource_policies(read_json_object(path))
+
+
+def parse_release_policy(payload: dict[str, Any]) -> ReleasePolicy:
+    if payload.get("schema") != "youtube-channel-release-policy-v1":
+        raise SchemaError(f"Unsupported release policy schema: {payload.get('schema')!r}")
+    timezone_name = _string(payload, "timezone", "release policy")
+    try:
+        ZoneInfo(timezone_name)
+    except ZoneInfoNotFoundError as exc:
+        raise SchemaError(f"Unknown release policy timezone: {timezone_name}") from exc
+    authority = _object(payload.get("authority"), "authority")
+    default_privacy = _string(authority, "defaultPrivacy", "authority")
+    if default_privacy not in {"private", "unlisted", "public"}:
+        raise SchemaError(f"Unsupported default privacy: {default_privacy}")
+    public_enabled = authority.get("publicSchedulingEnabled")
+    approval_required = authority.get("explicitApprovalRequired")
+    if not isinstance(public_enabled, bool) or not isinstance(approval_required, bool):
+        raise SchemaError("Release authority flags must be booleans")
+    capacity = _object(payload.get("capacity"), "capacity")
+    maximum = capacity.get("maxChannelUploadsPerRolling7Days")
+    reservation_required = capacity.get("reservationRequired")
+    if not isinstance(maximum, int) or isinstance(maximum, bool) or maximum < 1:
+        raise SchemaError("maxChannelUploadsPerRolling7Days must be positive")
+    if reservation_required is not True:
+        raise SchemaError("The shared controller requires reservationRequired=true")
+    raw_programs = _object(payload.get("programs"), "programs")
+    programs: list[ReleaseProgramPolicy] = []
+    for raw_id, raw in raw_programs.items():
+        program_id = validate_identifier(str(raw_id), "program id")
+        item = _object(raw, f"programs.{program_id}")
+        product_line_id = validate_identifier(
+            _string(item, "productLine", f"programs.{program_id}"), "productLine"
+        )
+        status = validate_identifier(
+            _string(item, "status", f"programs.{program_id}"), "program status"
+        )
+        starts_on = str(item["startsOn"]) if item.get("startsOn") else None
+        ends_on = str(item["endsOn"]) if item.get("endsOn") else None
+        try:
+            start_date = date.fromisoformat(starts_on) if starts_on else None
+            end_date = date.fromisoformat(ends_on) if ends_on else None
+        except ValueError as exc:
+            raise SchemaError(f"Program {program_id} has an invalid date window") from exc
+        if start_date and end_date and end_date < start_date:
+            raise SchemaError(f"Program {program_id} ends before it starts")
+        raw_windows = item.get("preferredDailyWindows", [])
+        if not isinstance(raw_windows, list):
+            raise SchemaError(f"Program {program_id} preferredDailyWindows must be a list")
+        windows: list[str] = []
+        for value in raw_windows:
+            if not isinstance(value, str):
+                raise SchemaError(f"Program {program_id} has a non-string daily window")
+            try:
+                parsed = time.fromisoformat(value)
+            except ValueError as exc:
+                raise SchemaError(f"Program {program_id} has an invalid daily window") from exc
+            if parsed.second or parsed.microsecond or parsed.tzinfo:
+                raise SchemaError(f"Program {program_id} daily windows must use HH:MM")
+            windows.append(parsed.strftime("%H:%M"))
+        programs.append(
+            ReleaseProgramPolicy(
+                program_id, product_line_id, status, starts_on, ends_on, tuple(windows)
+            )
+        )
+    return ReleasePolicy(
+        timezone_name, default_privacy, public_enabled, approval_required,
+        maximum, reservation_required, tuple(programs),
+    )
+
+
+def load_release_policy(path: Path) -> ReleasePolicy:
+    return parse_release_policy(read_json_object(path))
 
 
 def parse_youtube_rss(value: bytes) -> tuple[str, tuple[RemoteInventoryItem, ...]]:

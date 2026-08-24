@@ -100,6 +100,7 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py resources status
 & $py scripts/channel.py import-youtube-rss --source <capture.xml> --scope <scope>
 & $py scripts/channel.py reconcile
+& $py scripts/channel.py release status
 ```
 
 Runtime state is stored in the ignored
@@ -109,6 +110,9 @@ importing real Dialogue, Shorts, or Classic Listening ledgers.
 Heavy Dialogue, Shorts, and Classic Listening entry points acquire the same
 SQLite-backed `gpu_heavy` lease and keep the legacy lock file only as a
 transition mirror.
+Channel-wide release slots are local, transactional reservations. Programs
+must be active in `configs/channel/release-policy.json`; a reservation never
+grants YouTube scheduling authority.
 The remote capture commands are read-only imports: they do not call YouTube or
 grant remote mutation authority. The 2026-08-24 formal database reconciles all
 15 items in its public RSS window; it does not cover private, unlisted, or

@@ -17,9 +17,10 @@
 - `apps/worker-py/worker/channel/`: the implemented shared identity foundation,
   versioned SQLite repository, legacy-ledger adapters, collision reporting,
   immutable public-remote inventory imports, read-only reconciliation,
-  exclusive heavy-resource leases, and local-only channel CLI. It does not yet
-  implement shared lifecycle, generalized capacity planning, publication
-  mutations, analytics, experiment, or decision services.
+  exclusive heavy-resource leases, channel release reservations, and a
+  local-only channel CLI. It does not yet implement shared lifecycle,
+  generalized resource capacity planning, publication mutations, analytics,
+  experiment, or decision services.
 - `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
   and release-preflight prototype retained as a migration input.
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
@@ -32,12 +33,12 @@
 - `src/shorts/`: data-driven Remotion 9:16 compositions. Generated audio and
   video remain in ignored `workspace/shorts/`.
 
-The current implementation provides the identity, public-capture
-reconciliation, and first durable resource-lease foundations of the shared
-channel control plane. General resource scheduling, channel-level publication,
-analytics, experiments, decisions, and progressive authority remain future
-slices. Do not infer remote mutation authority or complete Studio visibility
-from the presence of `scripts/channel.py`.
+The current implementation provides identity, public-capture reconciliation,
+the first durable resource lease, and transactional channel release-slot
+reservations. General resource scheduling, remote publication, analytics,
+experiments, decisions, and progressive authority remain future slices. Do not
+infer remote mutation authority or complete Studio visibility from the
+presence of `scripts/channel.py`.
 
 ## Target System
 
@@ -107,6 +108,16 @@ time. The control plane now enforces this with an exclusive SQLite lease,
 `logs/gpu_production.lock` is a conservative compatibility mirror, not the
 source of truth. Queue priority, aging, reservations, and generalized CPU,
 RAM, disk, network, quota, and human-review capacity remain future work.
+
+## Release Capacity Baseline
+
+`configs/channel/release-policy.json` defines one channel timezone, rolling
+seven-day capacity, program status, and date boundaries. Schema-version-4
+`release_reservations` stores local plans with canonical content IDs,
+idempotency keys, normalized UTC times, intent fingerprints, and
+append-preserving cancellation. Exact-time, duplicate-content, and rolling
+capacity conflicts fail inside one immediate transaction. These rows are not
+YouTube schedules and carry no remote authority.
 
 ## Change Rule
 

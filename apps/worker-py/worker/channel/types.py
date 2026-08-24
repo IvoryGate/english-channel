@@ -174,3 +174,44 @@ class ReconciliationReport:
     remote_only_ids: tuple[str, ...]
     local_outside_capture_ids: tuple[str, ...]
     title_disagreements: tuple[dict[str, str], ...]
+
+
+@dataclass(frozen=True)
+class ReleaseProgramPolicy:
+    program_id: str
+    product_line_id: str
+    status: str
+    starts_on: str | None
+    ends_on: str | None
+    preferred_daily_windows: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ReleasePolicy:
+    timezone: str
+    default_privacy: str
+    public_scheduling_enabled: bool
+    explicit_approval_required: bool
+    max_uploads_per_rolling_7_days: int
+    reservation_required: bool
+    programs: tuple[ReleaseProgramPolicy, ...]
+
+    def program(self, program_id: str) -> ReleaseProgramPolicy:
+        for item in self.programs:
+            if item.program_id == program_id:
+                return item
+        raise KeyError(program_id)
+
+
+@dataclass(frozen=True)
+class ReleaseReservation:
+    reservation_id: str
+    content_id: str
+    program_id: str
+    scheduled_at: str
+    timezone: str
+    idempotency_key: str
+    intent_hash: str
+    created_at: str
+    cancelled_at: str | None = None
+    cancellation_reason: str | None = None

@@ -5,9 +5,10 @@
 The shared channel domain gives Dialogue, Shorts, and Classic Listening one
 canonical identity store. It is the first implemented slice of the target
 control plane and now includes immutable public-remote captures, read-only
-reconciliation, and one exclusive heavy-resource lease. It is not yet the
-portfolio planner, general resource scheduler, publication coordinator,
-analytics system, or experiment engine.
+reconciliation, one exclusive heavy-resource lease, and local channel-wide
+release reservations. It is not yet the portfolio planner, general resource
+scheduler, remote publication coordinator, analytics system, or experiment
+engine.
 
 The foundation is deliberately local-only. It reads tracked policy and legacy
 local ledgers, writes `workspace/channel/channel.sqlite`, and has no YouTube,
@@ -65,6 +66,17 @@ $py = ".\.conda-env\python.exe"
   --scope public_rss_recent_max_15_no_private_unlisted
 
 & $py scripts/channel.py reconcile
+
+& $py scripts/channel.py release status
+& $py scripts/channel.py release status --all
+& $py scripts/channel.py release reserve `
+  --content-id content:series_a:episode_020 `
+  --program <active-program-id> `
+  --scheduled-at 2026-08-25T20:30:00+08:00 `
+  --idempotency-key <stable-operation-key>
+& $py scripts/channel.py release cancel `
+  --reservation-id <reservation-id> `
+  --reason <reviewed-reason>
 ```
 
 Global `--policy` and `--database` overrides must appear before the subcommand.
@@ -85,6 +97,20 @@ returns 1 while a remote-only item or title disagreement exists. Its JSON
 always reports `completeRemoteInventory: false` and
 `remoteMutationAuthority: false` because an RSS window cannot prove Studio
 completeness or authorize account writes.
+
+Release commands read `configs/channel/release-policy.json`; use the global
+`--release-policy` override only for an isolated rehearsal. `reserve` requires
+an existing canonical content item, an `active` program for the same product
+line, a timezone-aware future timestamp inside the program date window, and a
+stable idempotency key. The repository rejects a second active slot for the
+same content, an exact-time collision, and any schedule that would exceed the
+rolling seven-day channel capacity. An identical retry returns the original
+reservation. Reusing its key for different intent fails closed.
+
+`cancel` records time and reason on the existing row; it never deletes release
+history. All release command responses report
+`publicSchedulingAuthority: false` and `remoteMutationAuthority: false`.
+Local reservation is planning evidence, not approval or a YouTube schedule.
 
 `resources status` reads the authoritative lease table. `--all` includes
 released and recovered history. Product controllers acquire leases through the
@@ -134,6 +160,8 @@ The versioned migrations own:
 - resource coordination: append-preserving `resource_leases` with one partial
   unique active lease per resource.
 - remote evidence: immutable `remote_captures` and `remote_inventory_items`.
+- release planning: idempotent, append-preserving `release_reservations` with
+  partial unique active-content and active-time indexes.
 
 Legacy lifecycle and publication statuses are retained as source facts. They
 are not silently promoted into one current lifecycle, because the three
@@ -161,9 +189,8 @@ remain the recovery source.
 2. Add audited collision resolution plus shared lifecycle events.
 3. Extend the initial heavy-GPU lease into CPU, RAM, disk, network, quota, and
    human-review capacity with priority aging and reservations.
-4. Add channel release reservations and authority policy.
-5. Add provider-based private publication and immutable analytics snapshots.
-6. Add experiments, retrospectives, evidence-linked decisions, and portfolio
+4. Add provider-based private publication and immutable analytics snapshots.
+5. Add experiments, retrospectives, evidence-linked decisions, and portfolio
    feedback.
 
 The reviewed 2026-08-24 runtime import and its evidence limits are recorded in

@@ -4,6 +4,7 @@ import json
 import sqlite3
 import uuid
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Iterator
 
@@ -16,6 +17,7 @@ from .types import (
     InventorySummary,
     NormalizedIdentityRecord,
     ReconciliationReport,
+    ReleaseReservation,
     RemoteInventoryCapture,
     ResourceLease,
 )
@@ -828,3 +830,141 @@ class SqliteChannelRepository:
                 local_outside_capture_ids=tuple(sorted(local.keys() - remote.keys())),
                 title_disagreements=disagreements,
             )
+
+    @staticmethod
+    def _reservation(row: sqlite3.Row) -> ReleaseReservation:
+        return ReleaseReservation(
+            reservation_id=str(row["reservation_id"]),
+            content_id=str(row["content_id"]),
+            program_id=str(row["program_id"]),
+            scheduled_at=str(row["scheduled_at"]),
+            timezone=str(row["timezone"]),
+            idempotency_key=str(row["idempotency_key"]),
+            intent_hash=str(row["intent_hash"]),
+            created_at=str(row["created_at"]),
+            cancelled_at=str(row["cancelled_at"]) if row["cancelled_at"] else None,
+            cancellation_reason=(
+                str(row["cancellation_reason"]) if row["cancellation_reason"] else None
+            ),
+        )
+
+    def content_product_line(self, content_id: str) -> str | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT product_line_id FROM content_items WHERE content_id = ?", (content_id,)
+            ).fetchone()
+            return str(row["product_line_id"]) if row else None
+
+    def reserve_release(
+        self, candidate: ReleaseReservation, *, max_rolling_7_days: int
+    ) -> tuple[ReleaseReservation, bool]:
+        with self._connect() as connection:
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                repeated = connection.execute(
+                    "SELECT * FROM release_reservations WHERE idempotency_key = ?",
+                    (candidate.idempotency_key,),
+                ).fetchone()
+                if repeated:
+                    if repeated["intent_hash"] != candidate.intent_hash:
+                        raise RepositoryError(
+                            "Release idempotency key is already bound to different intent"
+                        )
+                    connection.rollback()
+                    return self._reservation(repeated), False
+                active_content = connection.execute(
+                    """
+                    SELECT reservation_id FROM release_reservations
+                    WHERE content_id = ? AND cancelled_at IS NULL
+                    """,
+                    (candidate.content_id,),
+                ).fetchone()
+                if active_content:
+                    raise RepositoryError(
+                        f"Content already has active reservation {active_content['reservation_id']}"
+                    )
+                active_time = connection.execute(
+                    """
+                    SELECT reservation_id FROM release_reservations
+                    WHERE scheduled_at = ? AND cancelled_at IS NULL
+                    """,
+                    (candidate.scheduled_at,),
+                ).fetchone()
+                if active_time:
+                    raise RepositoryError(
+                        f"Release time is already reserved by {active_time['reservation_id']}"
+                    )
+                rows = connection.execute(
+                    "SELECT scheduled_at FROM release_reservations WHERE cancelled_at IS NULL"
+                ).fetchall()
+                schedule = sorted(
+                    [datetime.fromisoformat(str(row["scheduled_at"])) for row in rows]
+                    + [datetime.fromisoformat(candidate.scheduled_at)]
+                )
+                for index, start in enumerate(schedule):
+                    end = start + timedelta(days=7)
+                    count = sum(start <= value < end for value in schedule[index:])
+                    if count > max_rolling_7_days:
+                        raise RepositoryError(
+                            "Release reservation exceeds rolling seven-day channel capacity"
+                        )
+                connection.execute(
+                    """
+                    INSERT INTO release_reservations(
+                        reservation_id, content_id, program_id, scheduled_at,
+                        timezone, idempotency_key, intent_hash, created_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        candidate.reservation_id, candidate.content_id,
+                        candidate.program_id, candidate.scheduled_at, candidate.timezone,
+                        candidate.idempotency_key, candidate.intent_hash,
+                        candidate.created_at,
+                    ),
+                )
+                connection.commit()
+                return candidate, True
+            except BaseException:
+                connection.rollback()
+                raise
+
+    def list_release_reservations(
+        self, *, active_only: bool = True
+    ) -> tuple[ReleaseReservation, ...]:
+        where = "WHERE cancelled_at IS NULL" if active_only else ""
+        with self._connect() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM release_reservations {where} ORDER BY scheduled_at, reservation_id"
+            ).fetchall()
+            return tuple(self._reservation(row) for row in rows)
+
+    def cancel_release_reservation(
+        self, reservation_id: str, *, cancelled_at: str, reason: str
+    ) -> ReleaseReservation:
+        with self._connect() as connection:
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                row = connection.execute(
+                    "SELECT * FROM release_reservations WHERE reservation_id = ?",
+                    (reservation_id,),
+                ).fetchone()
+                if not row:
+                    raise RepositoryError(f"Unknown release reservation: {reservation_id}")
+                if row["cancelled_at"] is None:
+                    connection.execute(
+                        """
+                        UPDATE release_reservations
+                        SET cancelled_at = ?, cancellation_reason = ?
+                        WHERE reservation_id = ?
+                        """,
+                        (cancelled_at, reason, reservation_id),
+                    )
+                    row = connection.execute(
+                        "SELECT * FROM release_reservations WHERE reservation_id = ?",
+                        (reservation_id,),
+                    ).fetchone()
+                connection.commit()
+                return self._reservation(row)
+            except BaseException:
+                connection.rollback()
+                raise
