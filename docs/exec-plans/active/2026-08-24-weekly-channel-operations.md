@@ -28,7 +28,7 @@ community copy, measurement tasks, and explicit remote-write gates.
 
 Excluded:
 
-- Uploading, scheduling, editing, or publishing on YouTube.
+- Uploading or scheduling content outside the owner-approved weekly plan.
 - Claiming current Studio analytics when only the 2026-08-17 signed-in baseline
   and 2026-08-24 public capture are available.
 - Publicly releasing Classic Listening before narrator acceptance.
@@ -50,6 +50,10 @@ Excluded:
   and First Steps 020 for 20:00 on August 24, with real YouTube IDs. The owner
   also authorized future in-plan scheduling without per-item confirmation once
   all release checks pass; exceptions and failed gates still stop execution.
+  The remaining six Shorts and Daily Talk/Polished English 020 have now passed
+  Studio checks and are scheduled through Sunday with their real YouTube IDs,
+  playlists, subtitles, end screens, and Related Video assignments reconciled
+  to the weekly control plane.
 
 ## Plan
 
@@ -60,7 +64,8 @@ Excluded:
 4. Import canonical unpublished candidate identities.
 5. Recover Shorts 005/006 as packaged candidates, move them into the daily
    cadence, and produce 007-011 through Sunday. Completed: all seven daily
-   Shorts now pass package QC; Related Video remains the remote gate.
+   Shorts pass package QC; Short 005 is published and 006-011 are scheduled
+   with verified Related Video assignments and passing Studio checks.
 6. Generate the narrator recovery pack and lock the owner-selected Voice F.
 7. Write the weekly brief, run repository gates, commit, push, and archive this
    plan if no local planning work remains.
