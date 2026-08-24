@@ -7,9 +7,14 @@ from pathlib import Path
 from typing import Any
 
 from .repo import PolicyMismatchError, RepositoryError, SqliteChannelRepository
-from .schema import SchemaError, load_channel_policy, load_resource_policies
-from .service import ChannelIdentityService
-from .types import CollisionRecord, ImportSummary, InventorySummary
+from .schema import (
+    SchemaError,
+    load_channel_policy,
+    load_release_policy,
+    load_resource_policies,
+)
+from .service import ChannelIdentityService, ReleaseReservationService
+from .types import CollisionRecord, ImportSummary, InventorySummary, ReleaseReservation
 
 
 def _json_default(value: object) -> str:
@@ -72,6 +77,21 @@ def collision_payload(value: CollisionRecord) -> dict[str, object | None]:
     }
 
 
+def reservation_payload(value: ReleaseReservation) -> dict[str, object | None]:
+    return {
+        "reservationId": value.reservation_id,
+        "contentId": value.content_id,
+        "programId": value.program_id,
+        "scheduledAt": value.scheduled_at,
+        "timezone": value.timezone,
+        "idempotencyKey": value.idempotency_key,
+        "intentHash": value.intent_hash,
+        "createdAt": value.created_at,
+        "cancelledAt": value.cancelled_at,
+        "cancellationReason": value.cancellation_reason,
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Unified local YouTube channel identity controller (no remote mutations)."
@@ -79,6 +99,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--policy", type=Path)
     parser.add_argument("--database", type=Path)
+    parser.add_argument("--release-policy", type=Path)
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("init", help="Apply SQLite migrations and seed tracked channel policy.")
     subparsers.add_parser("status", help="Show local database and collision status.")
@@ -99,6 +120,18 @@ def build_parser() -> argparse.ArgumentParser:
     resources = subparsers.add_parser("resources", help="Inspect shared local resource leases.")
     resources.add_argument("action", choices=("status",))
     resources.add_argument("--all", action="store_true", help="Include released lease history.")
+    release = subparsers.add_parser("release", help="Manage local channel release reservations.")
+    release_actions = release.add_subparsers(dest="release_action", required=True)
+    release_status = release_actions.add_parser("status", help="List release reservations.")
+    release_status.add_argument("--all", action="store_true", help="Include cancelled history.")
+    reserve = release_actions.add_parser("reserve", help="Reserve one local channel release slot.")
+    reserve.add_argument("--content-id", required=True)
+    reserve.add_argument("--program", required=True)
+    reserve.add_argument("--scheduled-at", required=True)
+    reserve.add_argument("--idempotency-key", required=True)
+    cancel = release_actions.add_parser("cancel", help="Cancel a reservation without deleting it.")
+    cancel.add_argument("--reservation-id", required=True)
+    cancel.add_argument("--reason", required=True)
     return parser
 
 
@@ -111,6 +144,54 @@ def main(argv: list[str] | None = None) -> int:
         policy = load_channel_policy(policy_path)
         repository = SqliteChannelRepository(database_path)
         service = ChannelIdentityService(policy, repository)
+        if args.command == "release":
+            service.initialize()
+            release_path = (
+                args.release_policy
+                or repo_root / "configs" / "channel" / "release-policy.json"
+            ).resolve()
+            release_service = ReleaseReservationService(
+                policy, load_release_policy(release_path), repository
+            )
+            if args.release_action == "status":
+                reservations = release_service.list(active_only=not args.all)
+                _print(
+                    {
+                        "database": str(database_path),
+                        "activeOnly": not args.all,
+                        "reservations": [reservation_payload(item) for item in reservations],
+                        "publicSchedulingAuthority": False,
+                        "remoteMutationAuthority": False,
+                    }
+                )
+                return 0
+            if args.release_action == "reserve":
+                reservation, inserted = release_service.reserve(
+                    content_id=args.content_id,
+                    program_id=args.program,
+                    scheduled_at=args.scheduled_at,
+                    idempotency_key=args.idempotency_key,
+                )
+                _print(
+                    {
+                        "inserted": inserted,
+                        "reservation": reservation_payload(reservation),
+                        "publicSchedulingAuthority": False,
+                        "remoteMutationAuthority": False,
+                    }
+                )
+                return 0
+            reservation = release_service.cancel(
+                args.reservation_id, reason=args.reason
+            )
+            _print(
+                {
+                    "reservation": reservation_payload(reservation),
+                    "publicSchedulingAuthority": False,
+                    "remoteMutationAuthority": False,
+                }
+            )
+            return 0
         if args.command == "resources":
             service.initialize()
             load_resource_policies(repo_root / "configs" / "channel" / "resources.json")

@@ -41,8 +41,18 @@ Excluded:
 - Branch: `codex/channel-release-reservations`.
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: plan accepted; implementation pending.
+- State: completed and archived on 2026-08-24.
 - Authority: local planning only; no remote mutation authority.
+
+## Results
+
+- Schema version 4 stores append-preserving release reservations.
+- Canonical content, program status/product line/date window, timezone-aware
+  future time, exact-slot uniqueness, active-content uniqueness, idempotency,
+  and rolling seven-day capacity all fail closed.
+- Cancellation retains the original row and reviewed reason.
+- The formal runtime database migrated successfully and `release status`
+  reports no active reservations and no remote scheduling authority.
 
 ## Plan
 
@@ -57,15 +67,20 @@ Excluded:
 
 ## Validation
 
-- Migration is repeatable and preserves earlier schema data.
-- An unknown content ID or mismatched product line fails closed.
-- A blocked or out-of-window program cannot reserve a slot.
-- Repeating an identical idempotency key returns the same reservation; reuse
-  with different intent fails.
-- No active content item can hold two slots.
-- No rolling seven-day window can exceed configured channel capacity.
+- Migration is repeatable and preserved the formal reconciliation database
+  while advancing it from schema version 3 to 4.
+- Unknown identity, product-line mismatch, blocked program, date-window,
+  timezone, exact-slot, active-content, and rolling-capacity paths fail closed.
+- Identical idempotency retries return the original reservation; key reuse with
+  different intent fails.
 - Cancellation retains history and permits a reviewed replacement.
-- Focused tests, isolated CLI smoke, `npm run lint`, and `npm test` pass.
+- CLI fixture exercised `reserve`, `status`, and `cancel`; every response
+  denied public scheduling and remote mutation authority.
+- Formal runtime smoke: `release status` completed with schema version 4 and no
+  active reservations.
+- Focused channel tests: 22 passed.
+- `npm run lint`: passed.
+- `npm test`: passed, including 134 Python tests.
 
 ## Risks And Decisions
 
@@ -85,3 +100,7 @@ Excluded:
 - Every required policy and idempotency path is tested.
 - Operator docs state that local reservation grants no YouTube authority.
 - Full repository gates pass and no required work remains in this slice.
+
+All archive criteria are satisfied. Activating a tracked release program and
+executing a real reservation remain operator policy decisions, not unfinished
+implementation in this slice.

@@ -92,7 +92,10 @@ Product adapters retained behind the control plane:
   and reconciles all 15 items in an immutable public RSS window with no
   collisions or disagreements. The boundary still excludes private, unlisted,
   playlist, and potentially older public inventory. Shared lifecycle and
-  generalized scheduling remain.
+  generalized resource scheduling remain. Channel-level release slots are now
+  transactional local reservations with canonical identity, idempotency,
+  program gates, and rolling capacity enforcement; they grant no YouTube
+  scheduling authority.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

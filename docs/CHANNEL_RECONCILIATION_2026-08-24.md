@@ -3,7 +3,9 @@
 ## Outcome
 
 The reviewed local control-plane database at
-`H:/english-channel/workspace/channel/channel.sqlite` is on schema version 3.
+`H:/english-channel/workspace/channel/channel.sqlite` is on schema version 4;
+the remote reconciliation tables were introduced in version 3 and the later
+release-reservation migration does not change the captured evidence.
 Every item in the immutable public YouTube RSS capture resolves to one local
 canonical publication:
 
