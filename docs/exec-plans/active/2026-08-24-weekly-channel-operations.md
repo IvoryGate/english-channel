@@ -53,7 +53,8 @@ Excluded:
 3. Add and validate the Dialogue program policy.
 4. Import canonical unpublished candidate identities.
 5. Recover Shorts 005/006 as packaged candidates, move them into the daily
-   cadence, and produce 007-011 through Sunday.
+   cadence, and produce 007-011 through Sunday. Completed: all seven daily
+   Shorts now pass package QC; Related Video remains the remote gate.
 6. Generate the Nora/Riley/Mia blind narrator pack behind the GPU lease.
 7. Write the weekly brief, run repository gates, commit, push, and archive this
    plan if no local planning work remains.

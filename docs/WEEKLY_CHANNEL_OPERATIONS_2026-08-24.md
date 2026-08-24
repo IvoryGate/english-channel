@@ -37,16 +37,16 @@ does not cover private or unlisted inventory.
 
 | Local slot | Content | Readiness |
 | --- | --- | --- |
-| Mon 24 Aug, 13:30 | Short 005 | package passes; related video pending |
-| Mon 24 Aug, 15:00 | First Steps 020 | verified catch-up package |
+| Mon 24 Aug, 17:00 | Short 005 | package passes; related video pending |
+| Mon 24 Aug, 20:00 | First Steps 020 | verified catch-up package |
 | Tue 25 Aug, 12:30 | Short 006 | package passes; related video pending |
 | Wed 26 Aug, 12:30 | Short 007 | package passes; related video pending |
-| Thu 27 Aug, 12:30 | Short 008 | production required |
+| Thu 27 Aug, 12:30 | Short 008 | package passes; related video pending |
 | Thu 27 Aug, 20:00 | Daily Talk 020 | verified package |
-| Fri 28 Aug, 12:30 | Short 009 | production required |
-| Sat 29 Aug, 12:30 | Short 010 | production required |
+| Fri 28 Aug, 12:30 | Short 009 | package passes; related video pending |
+| Sat 29 Aug, 12:30 | Short 010 | package passes; related video pending |
 | Sat 29 Aug, 20:00 | Polished English 020 | verified package |
-| Sun 30 Aug, 12:30 | Short 011 | production required |
+| Sun 30 Aug, 12:30 | Short 011 | package passes; related video pending |
 
 The three 021 packages remain the following week's buffer at the same weekday
 and time. Local reservations do not schedule YouTube and grant no remote write
@@ -59,9 +59,10 @@ authority.
    and C remained female but had obvious electronic artifacts. Run a new female
    synthesis pass; Classic Listening remains blocked until one candidate is
    explicitly accepted.
-2. Produce Shorts 007-011 for the daily 12:30 cadence. Scale to a second 18:00
-   Short only after seven QC-passed items are ready, rolling QC is at least
-   95%, and the identity store has no unresolved collision.
+2. Shorts 007-011 are complete and pass their package gates for the daily 12:30
+   cadence. Scale to a second 18:00 Short only after seven ready items are
+   present in the scheduled buffer, rolling QC is at least 95%, and the
+   identity store has no unresolved collision.
 3. The first 25-35 minute First Steps Deep Practice pilot now has a production
    brief in `configs/channel/deep-practice-pilot-series-b-2026-09.json`; script
    production is queued for the 2026-09-08 slot. Standard 10-15 minute episodes

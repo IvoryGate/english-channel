@@ -1,6 +1,6 @@
 {
   "schema": "elr-shorts-publication-ledger-v1",
-  "updatedAt": "2026-08-24T04:32:25Z",
+  "updatedAt": "2026-08-24T08:05:55Z",
   "entries": [
     {
       "shortId": "elr-s-005",
@@ -23,6 +23,38 @@
       "title": "Can You Catch the Polite Refusal?",
       "contentKey": "6287eb54255bd8172d4344520004bedc55f9ee3be2122a5061b792567d7e3672",
       "videoSha256": "070732bb2fe8277aeeeb69fdad1b50517bad20ed6033f7280427f153901a3760",
+      "status": "packaged",
+      "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-008",
+      "title": "The Coffee Shop Order That Sounds Natural",
+      "contentKey": "2dfe92707eab98bf08f7678b78f7d65bd70da6fbd72832ceaf85b612354393f0",
+      "videoSha256": "e31e08c68ce8c30c9fcae8de3fc630cf38d81ee16791f2a591515d541cc9a157",
+      "status": "packaged",
+      "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-009",
+      "title": "What Does “I'm Good” Mean Here?",
+      "contentKey": "7becdeff4ad78c9ee215cb8e739f32736d043eb25c3e0f967db8fafd51fc0922",
+      "videoSha256": "de5240ee01ae7a288bc945705ae0a7f719f6c09c5fa26d9de884f162c3326b15",
+      "status": "packaged",
+      "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-010",
+      "title": "Elizabeth Bennet Heard an Unexpected Name",
+      "contentKey": "11e30e87a12414f0809165772af5466643fe7e77e9c4b426d388d6828e5a0316",
+      "videoSha256": "05fe2d991f3cd1adf57795fbc76cb9bde4eccdc3ad0d2e684f6ce720c0e79c9a",
+      "status": "packaged",
+      "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-011",
+      "title": "Why Did Everyone Stop Talking?",
+      "contentKey": "9346baf49f2dccc01570112823957ad76633a20d4961d7aad6bf331fafe6b20f",
+      "videoSha256": "61cb0b1bd22d8c48828f1abccd31173a98485261e1556ec6021dc8fef74ac679",
       "status": "packaged",
       "youtubeId": null
     }

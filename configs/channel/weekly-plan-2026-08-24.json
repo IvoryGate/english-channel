@@ -22,16 +22,16 @@
     "studioRefreshStatus": "codex_home_persisted_to_d_drive_restart_required"
   },
   "publicationSlots": [
-    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-24T13:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
-    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-24T15:00:00+08:00", "remoteAction": "authorized_pending_browser_restart"},
+    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-24T17:00:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
+    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-24T20:00:00+08:00", "remoteAction": "authorized_pending_browser_restart"},
     {"contentId": "content:shorts_main:elr-s-006", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-25T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
     {"contentId": "content:shorts_main:elr-s-007", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-26T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
-    {"contentId": "content:shorts_main:elr-s-008", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-27T12:30:00+08:00", "remoteAction": "authorized_pending_production"},
+    {"contentId": "content:shorts_main:elr-s-008", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-27T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
     {"contentId": "content:series_a:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-27T20:00:00+08:00", "remoteAction": "authorized_pending_browser_restart"},
-    {"contentId": "content:shorts_main:elr-s-009", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-28T12:30:00+08:00", "remoteAction": "authorized_pending_production"},
-    {"contentId": "content:shorts_main:elr-s-010", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-29T12:30:00+08:00", "remoteAction": "authorized_pending_production"},
+    {"contentId": "content:shorts_main:elr-s-009", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-28T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
+    {"contentId": "content:shorts_main:elr-s-010", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-29T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
     {"contentId": "content:series_c:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-29T20:00:00+08:00", "remoteAction": "authorized_pending_browser_restart"},
-    {"contentId": "content:shorts_main:elr-s-011", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-30T12:30:00+08:00", "remoteAction": "authorized_pending_production"}
+    {"contentId": "content:shorts_main:elr-s-011", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-30T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"}
   ],
   "nextWeekInventory": [
     "content:series_b:episode_021",
@@ -40,7 +40,7 @@
   ],
   "productionTasks": [
     {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "output": "female voice without gender drift or electronic texture"},
-    {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "output": "five QC-passed private packages"},
+    {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "status": "completed", "output": "five QC-passed private packages"},
     {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
   ],
   "communityPosts": [

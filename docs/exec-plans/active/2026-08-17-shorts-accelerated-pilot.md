@@ -50,9 +50,10 @@ the channel identity remain out of scope.
   onward; video screenshots are retained only as the initial baseline.
 - `elr-s-005` and `elr-s-006` were recovered in the protected Shorts worktree
   and are packaged with unique content hashes, dedicated covers, and passing
-  visual/audio QC. Their catch-up slots are 2026-08-24 at 13:30 and 2026-08-25
+  visual/audio QC. Their catch-up slots are 2026-08-24 at 17:00 and 2026-08-25
   at 12:30; Related Video remains a remote scheduling gate.
-- Shorts 007-011 are the immediate daily production queue through Sunday. The
+- Shorts 007-011 are complete and pass package QC for the daily run through
+  Sunday. The
   second daily 18:00 slot remains gated by seven ready items, at least 95% QC,
   and zero unresolved identity collisions.
 - `elr-s-007` now has a generated editorial restaurant scene, 13 rendered voice
