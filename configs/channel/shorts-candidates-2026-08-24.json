@@ -17,6 +17,14 @@
       "videoSha256": "03f724ca7b4ea2cbafec68f7d0670f79f5c44bf3f4b9f02a189a1741ddffe0fa",
       "status": "packaged",
       "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-007",
+      "title": "Can You Catch the Polite Refusal?",
+      "contentKey": "6287eb54255bd8172d4344520004bedc55f9ee3be2122a5061b792567d7e3672",
+      "videoSha256": "070732bb2fe8277aeeeb69fdad1b50517bad20ed6033f7280427f153901a3760",
+      "status": "packaged",
+      "youtubeId": null
     }
   ]
 }

@@ -9,13 +9,28 @@
   },
   "weeklyGrid": [
     {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "voice_acceptance_required"},
+    {"surface": "shorts", "day": "monday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "tuesday", "time": "12:30", "status": "active"},
     {"surface": "series_b", "day": "tuesday", "time": "20:00", "status": "active"},
     {"surface": "shorts", "day": "wednesday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "thursday", "time": "12:30", "status": "active"},
     {"surface": "series_a", "day": "thursday", "time": "20:00", "status": "active"},
     {"surface": "shorts", "day": "friday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "saturday", "time": "12:30", "status": "active"},
     {"surface": "series_c", "day": "saturday", "time": "20:00", "status": "active"},
     {"surface": "shorts", "day": "sunday", "time": "12:30", "status": "active"}
   ],
+  "shortsCadence": {
+    "launchUploadsPerWeek": 7,
+    "launchWindow": "12:30",
+    "scaleUploadsPerWeek": 14,
+    "scaleWindow": "18:00",
+    "scaleConditions": {
+      "readyInventoryAtLeast": 7,
+      "rollingQcPassRateAtLeast": 0.95,
+      "unresolvedIdentityCollisions": 0
+    }
+  },
   "dialogueFormat": {
     "standardDurationMinutes": [10, 15],
     "deepPracticeDurationMinutes": [25, 35],
@@ -47,7 +62,7 @@
     "Daily Talk: Thursdays at 8:00 PM (UTC+8)",
     "Polished English: Saturdays at 8:00 PM (UTC+8)",
     "Classic Listening: Mondays at 8:00 AM (UTC+8), after voice approval",
-    "New Shorts: Wednesdays, Fridays, and Sundays at 12:30 PM (UTC+8)"
+    "New Shorts: every day at 12:30 PM (UTC+8)"
   ],
   "measurement": {
     "northStar": "qualified_watch_hours_per_week",

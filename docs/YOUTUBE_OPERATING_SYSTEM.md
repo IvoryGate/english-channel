@@ -301,7 +301,7 @@ each specialized adapter, adds a fixed schedule footer to new packages, and
 keeps Community as a retention layer rather than an independent content
 pipeline. The initial four-week grid is Classic Listening Monday morning,
 First Steps Tuesday evening, Daily Talk Thursday evening, Polished English
-Saturday evening, and Shorts Wednesday/Friday/Sunday midday. Classic Listening
+Saturday evening, and Shorts every day at 12:30. Classic Listening
 occupies its slot only after narrator acceptance.
 
 Dialogue uses two duration classes. Standard episodes remain 10-15 minutes;

@@ -61,7 +61,7 @@ def test_steady_state_requests_channel_owned_release_capacity() -> None:
     assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 18
     assert channel_policy["authority"]["publicSchedulingEnabled"] is False
     assert program["status"] == "active"
-    assert program["requestedUploadsPerWeek"] == 3
+    assert program["requestedUploadsPerWeek"] == 7
     assert program["preferredDailyWindows"] == ["12:30"]
 
 

@@ -14,12 +14,15 @@
     "shorts-steady-state-2026-08": {
       "productLine": "shorts",
       "status": "active",
-      "requestedUploadsPerWeek": 3,
+      "requestedUploadsPerWeek": 7,
       "startsOn": "2026-08-24",
       "endsOn": "2026-09-20",
       "preferredDailyWindows": ["12:30"],
       "minimumReadyInventory": 2,
-      "decisionWindowDays": 28
+      "decisionWindowDays": 28,
+      "scaleTargetUploadsPerWeek": 14,
+      "scalePreferredDailyWindows": ["12:30", "18:00"],
+      "scaleReadyInventoryRequired": 7
     },
     "dialogue-weekly-2026-08-24": {
       "productLine": "dialogue",

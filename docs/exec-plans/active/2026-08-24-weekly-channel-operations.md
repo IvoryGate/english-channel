@@ -16,7 +16,8 @@ community copy, measurement tasks, and explicit remote-write gates.
 - Add a time-bounded active Dialogue validation program to channel policy.
 - Register the six unpublished candidates in the canonical local identity
   store with real artifact fingerprints.
-- Reserve three 020 Dialogue slots plus two ready Shorts slots for this week.
+- Reserve three 020 Dialogue slots plus the ready Shorts slots, then build a
+  daily Shorts run through Sunday.
 - Register the existing Nora, Riley, and Mia female references and render one
   comparable blind narrator acceptance pack.
 - Add the fixed description footer, Community rituals, standard/deep Dialogue
@@ -37,18 +38,22 @@ Excluded:
 - Branch: `codex/weekly-ops-2026-08-24`.
 - Owner: Codex primary agent.
 - State: implementation in progress; public evidence refreshed, programming
-  and candidate configs added, five slots reserved, and the complete three-
-  candidate narrator blind-review pack rendered.
-- Authority: local planning and reservation only.
+  and candidate configs added, six active slots reserved, and the complete three-
+  candidate narrator blind-review pack rendered. The user rejected all three:
+  A gender-drifted male, while female candidates B and C retained electronic
+  artifacts, so Classic moved into narrator recovery.
+- Authority: the user approved the catch-up release and fixed future schedule;
+  remote execution remains gated only by browser restart and content QC.
 
 ## Plan
 
 1. Verify all six candidate packages and fingerprints.
-2. Shift 020 releases to August 25/27/29 and 021 to September 1/3/5.
+2. Catch up First Steps 020 on August 24, keep the other 020 releases on August
+   27/29, and keep 021 as the following week's buffer.
 3. Add and validate the Dialogue program policy.
 4. Import canonical unpublished candidate identities.
-5. Recover Shorts 005/006 as packaged candidates and reserve this week's five
-   slots transactionally.
+5. Recover Shorts 005/006 as packaged candidates, move them into the daily
+   cadence, and produce 007-011 through Sunday.
 6. Generate the Nora/Riley/Mia blind narrator pack behind the GPU lease.
 7. Write the weekly brief, run repository gates, commit, push, and archive this
    plan if no local planning work remains.

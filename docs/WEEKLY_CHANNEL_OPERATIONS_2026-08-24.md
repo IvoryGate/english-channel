@@ -7,13 +7,11 @@ pipelines. The next four weeks use a stable Asia/Shanghai schedule:
 
 | Slot | Program | Role |
 | --- | --- | --- |
+| Every day 12:30 | Short | discovery, testing, and long-form routing |
 | Monday 08:00 | Classic Listening | long-session depth; voice-gated |
 | Tuesday 20:00 | First Steps | acquisition |
-| Wednesday 12:30 | Short | discovery and long-form routing |
 | Thursday 20:00 | Daily Talk | satisfaction and habit |
-| Friday 12:30 | Short | discovery and creative testing |
 | Saturday 20:00 | Polished English | authority and conversion |
-| Sunday 12:30 | Short | discovery and next-week preview |
 
 Community rituals run alongside this grid: Monday Choice, Wednesday Reply
 Challenge, Friday Phrase Clinic, and Sunday Reading Club. Each post asks one
@@ -39,11 +37,16 @@ does not cover private or unlisted inventory.
 
 | Local slot | Content | Readiness |
 | --- | --- | --- |
-| Tue 25 Aug, 20:00 | First Steps 020 | verified package |
-| Wed 26 Aug, 12:30 | Short 005 | package passes; related video pending |
+| Mon 24 Aug, 13:30 | Short 005 | package passes; related video pending |
+| Mon 24 Aug, 15:00 | First Steps 020 | verified catch-up package |
+| Tue 25 Aug, 12:30 | Short 006 | package passes; related video pending |
+| Wed 26 Aug, 12:30 | Short 007 | package passes; related video pending |
+| Thu 27 Aug, 12:30 | Short 008 | production required |
 | Thu 27 Aug, 20:00 | Daily Talk 020 | verified package |
-| Fri 28 Aug, 12:30 | Short 006 | package passes; related video pending |
+| Fri 28 Aug, 12:30 | Short 009 | production required |
+| Sat 29 Aug, 12:30 | Short 010 | production required |
 | Sat 29 Aug, 20:00 | Polished English 020 | verified package |
+| Sun 30 Aug, 12:30 | Short 011 | production required |
 
 The three 021 packages remain the following week's buffer at the same weekday
 and time. Local reservations do not schedule YouTube and grant no remote write
@@ -51,12 +54,14 @@ authority.
 
 ## Production Queue
 
-1. The tracked Nora/Riley/Mia blind narrator pack has been rendered across all
-   six audio acceptance cases. Review `voice-a.wav`, `voice-b.wav`, and
-   `voice-c.wav` under the ignored audition `review/` directory; Classic
-   Listening remains blocked until one candidate is explicitly accepted.
-2. Restore a three-Short ready buffer by producing 007-009 after the narrator
-   GPU job releases the shared heavy-resource lease.
+1. Recover the Classic narrator first. The blind pack was rejected: candidate
+   A drifted to a male voice despite having little electronic texture, while B
+   and C remained female but had obvious electronic artifacts. Run a new female
+   synthesis pass; Classic Listening remains blocked until one candidate is
+   explicitly accepted.
+2. Produce Shorts 007-011 for the daily 12:30 cadence. Scale to a second 18:00
+   Short only after seven QC-passed items are ready, rolling QC is at least
+   95%, and the identity store has no unresolved collision.
 3. The first 25-35 minute First Steps Deep Practice pilot now has a production
    brief in `configs/channel/deep-practice-pilot-series-b-2026-09.json`; script
    production is queued for the 2026-09-08 slot. Standard 10-15 minute episodes
@@ -73,8 +78,9 @@ learning highlights, and one engagement question. The fixed schedule appears
 before hashtags so a new viewer can understand when and why to return.
 
 Classic Listening and Shorts must adopt the same schedule disclosure in their
-next package revision. Every Short must name or attach its related long-form
-video before remote scheduling.
+next package revision. The public footer now says Shorts run every day at
+12:30. Every Short must name or attach its related long-form video before
+remote scheduling.
 
 ## Stop Conditions
 
