@@ -1,0 +1,52 @@
+{
+  "schema": "classic-listening-narrator-audition-v1",
+  "auditionId": "persuasion-female-voice-recovery-2026-08",
+  "bookSlug": "persuasion",
+  "casesRef": "configs/classics/audio-acceptance.json",
+  "outputRoot": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08",
+  "modelId": "pretrained_models/VoxCPM2",
+  "device": "cuda",
+  "sampleRate": 48000,
+  "silenceBetweenCasesSec": 0.6,
+  "candidates": [
+    {
+      "id": "riley-smooth",
+      "blindCode": "voice-d",
+      "sourceProfileId": "elr-series-b-riley",
+      "referencePath": "assets/voices/series_b/riley_reference_clean.wav",
+      "referenceSha256": "9330f8278c50fae1a7142953b73cbec3bd89f7fafe61d76ecb24681985b4b189",
+      "promptText": "Today, I want to show you exactly how to use just 15 minutes a day to practice your English, alone, at home, anywhere you are.",
+      "cfgValue": 1.55,
+      "inferenceTimesteps": 32,
+      "normalize": false,
+      "denoise": false,
+      "provenanceStatus": "existing_channel_host_reference_parameter_recovery"
+    },
+    {
+      "id": "riley-balanced",
+      "blindCode": "voice-e",
+      "sourceProfileId": "elr-series-b-riley",
+      "referencePath": "assets/voices/series_b/riley_reference_clean.wav",
+      "referenceSha256": "9330f8278c50fae1a7142953b73cbec3bd89f7fafe61d76ecb24681985b4b189",
+      "promptText": "Today, I want to show you exactly how to use just 15 minutes a day to practice your English, alone, at home, anywhere you are.",
+      "cfgValue": 1.75,
+      "inferenceTimesteps": 24,
+      "normalize": false,
+      "denoise": false,
+      "provenanceStatus": "existing_channel_host_reference_parameter_recovery"
+    },
+    {
+      "id": "mia-smooth",
+      "blindCode": "voice-f",
+      "sourceProfileId": "elr-series-c-mia",
+      "referencePath": "workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+      "referenceSha256": "b6ec5f21090399e24c371fbac8f211a602c40a70dde45bdfd13cef631b19f803",
+      "promptText": "Being because it is no business of mine to look gruff and fight battles, Emily endeavoured to correct the superstitious weakness of Annette, though she could not entirely subdue her own, to which the latter only replied.",
+      "cfgValue": 1.65,
+      "inferenceTimesteps": 32,
+      "normalize": false,
+      "denoise": false,
+      "provenanceStatus": "existing_channel_host_reference_parameter_recovery"
+    }
+  ]
+}

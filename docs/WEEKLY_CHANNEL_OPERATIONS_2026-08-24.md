@@ -57,8 +57,12 @@ authority.
 1. Recover the Classic narrator first. The blind pack was rejected: candidate
    A drifted to a male voice despite having little electronic texture, while B
    and C remained female but had obvious electronic artifacts. Run a new female
-   synthesis pass; Classic Listening remains blocked until one candidate is
-   explicitly accepted.
+   synthesis pass from `configs/classics/narrator-audition-recovery.json` with
+   higher inference steps and lower guidance; Classic Listening remains blocked
+   until one candidate is explicitly accepted. The D/E/F recovery pack is now
+   rendered. E has the lowest mean 8 kHz high-band ratio (`0.033050`), followed
+   by D (`0.036172`) and F (`0.067554`); use that only to prioritize listening,
+   not as automatic voice approval.
 2. Shorts 007-011 are complete and pass their package gates for the daily 12:30
    cadence. Scale to a second 18:00 Short only after seven ready items are
    present in the scheduled buffer, rolling QC is at least 95%, and the

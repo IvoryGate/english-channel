@@ -41,7 +41,9 @@ Excluded:
   and candidate configs added, six active slots reserved, and the complete three-
   candidate narrator blind-review pack rendered. The user rejected all three:
   A gender-drifted male, while female candidates B and C retained electronic
-  artifacts, so Classic moved into narrator recovery.
+  artifacts, so Classic moved into the tracked D/E/F narrator recovery pass.
+  That pass is rendered and awaiting blind review; E has the lowest high-band
+  texture proxy, but no narrator has been approved automatically.
 - Authority: the user approved the catch-up release and fixed future schedule;
   remote execution remains gated only by browser restart and content QC.
 

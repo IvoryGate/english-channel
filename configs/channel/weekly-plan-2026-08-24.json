@@ -39,7 +39,7 @@
     "content:series_c:episode_021"
   ],
   "productionTasks": [
-    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "output": "female voice without gender drift or electronic texture"},
+    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "awaiting_blind_review", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review"},
     {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "status": "completed", "output": "five QC-passed private packages"},
     {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
   ],
