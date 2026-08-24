@@ -87,7 +87,7 @@ Product adapters retained behind the control plane:
   has an implemented local identity foundation at `721969f`: tracked policy,
   versioned SQLite migrations, three legacy-ledger adapters, provenance
   retention, and fail-closed collision reports. The initial `gpu_heavy` lease
-  adds heartbeats and safe stale-owner recovery. Real runtime import review,
+  at `71cbb14` adds heartbeats and safe stale-owner recovery. Real runtime import review,
   shared lifecycle, and generalized scheduling still remain.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.

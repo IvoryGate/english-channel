@@ -36,25 +36,37 @@ Excluded:
 - Branch: `codex/channel-resource-leases`.
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: implementation, compatibility bridge, focused tests, and operator
-  documentation complete; full repository gates and archival remain.
+- State: completed locally at `71cbb14`. Implementation, compatibility bridge,
+  focused tests, operator documentation, isolated smoke, and full repository
+  gates pass.
 - Authority: local resource coordination only.
 
 ## Validation
 
-- Two owners cannot hold `gpu_heavy` concurrently.
-- Heartbeat extends a live lease.
-- Expiry alone cannot evict a live PID.
-- An expired lease with a confirmed dead owner is recovered with an audit
-  reason.
-- Nested same-process and live-parent subprocess entry remains safe.
-- Dialogue, Shorts, and Classics continue using their accepted public entry
-  points without GPU/model execution in tests.
-- Isolated resource status smoke, lint, and full tests pass.
+- Focused resource/adapter suite: 34 passed.
+- Exclusive ownership: a second owner is rejected with the active lease
+  identity.
+- Heartbeat: renewal extends expiry and explicit release closes the active
+  lease.
+- Safe recovery: expiry alone cannot evict a live PID; an expired lease with a
+  confirmed dead owner is closed with `expired_owner_dead` and replaced in one
+  transaction.
+- Compatibility: nested same-process acquisition retains the outer SQLite
+  lease; the legacy lock file mirrors acquisition and disappears on release.
+  Live-parent inheritance remains in the compatibility boundary.
+- Product coverage: Shorts and Classics adapter tests pass through their
+  accepted entry points without executing a real GPU/model workload. Dialogue
+  uses the same preserved `gpu_production_lock` API.
+- Isolated `init` and `resources status`: schema version 2, no active leases,
+  and `remoteMutationAuthority: false`.
+- `npm run lint`: passed, including encoding, TypeScript, Remotion,
+  architecture, docs, and Python compilation checks.
+- `npm test`: all Node suites and 125 Python tests passed outside the sandbox.
 
 ## Completion Criteria
 
 - The database is authoritative for accepted heavy entry points.
 - Compatibility lock state cannot permit work rejected by the database.
 - Code, tests, docs, and validation are committed together and this plan is
-  archived.
+  archived. Generalized capacity scheduling remains in the parent unification
+  plan rather than this completed exclusive-GPU slice.
