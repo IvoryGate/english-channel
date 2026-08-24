@@ -45,6 +45,35 @@ def _youtube_timestamp(seconds: float) -> str:
     return f"{hours}:{minutes:02d}:{secs:02d}" if hours else f"{minutes}:{secs:02d}"
 
 
+def _chapter_audio_source(
+    paths: ClassicPaths, chapter: int, source_name: str
+) -> tuple[Path, Path]:
+    """Resolve canonical production audio or an isolated preview audio set."""
+    if source_name == "production":
+        return paths.segment_audio_dir(chapter), paths.raw_audio(chapter)
+    return (
+        paths.audio_dir(chapter) / "previews" / source_name / "segments",
+        paths.audio_dir(chapter) / "previews" / f"{source_name}.wav",
+    )
+
+
+def _voice_variant_metadata(config: BookConfig, source_name: str) -> dict[str, Any]:
+    """Describe the selected voice without inventing parameters for legacy previews."""
+    metadata: dict[str, Any] = {"name": source_name}
+    if source_name != "production":
+        metadata["parametersSource"] = "preview-generation-trace"
+        return metadata
+    metadata.update(
+        {
+            "profileId": str(config.voice["profileId"]),
+            "referenceSha256": str(config.voice["referenceSha256"]),
+            "cfgValue": float(config.voice["cfgValue"]),
+            "inferenceTimesteps": int(config.voice["inferenceTimesteps"]),
+        }
+    )
+    return metadata
+
+
 def _compose_final(repo_root: Path, inputs: list[Path], output: Path) -> None:
     if len(inputs) != 3:
         raise V2ProofError("Final V2 composition requires intro, body, and outro")
@@ -279,10 +308,9 @@ def build_v2_chapter(
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest = read_json(paths.segments(chapter))
     selected_ids = [str(segment["id"]) for segment in manifest["segments"]]
-    segment_dir = paths.audio_dir(chapter) / "previews" / preview_name / "segments"
-    raw_audio = paths.audio_dir(chapter) / "previews" / f"{preview_name}.wav"
+    segment_dir, raw_audio = _chapter_audio_source(paths, chapter, preview_name)
     if not raw_audio.is_file():
-        raise V2ProofError(f"Full B-variant chapter audio is missing: {raw_audio}")
+        raise V2ProofError(f"Selected chapter audio is missing: {raw_audio}")
     scene_manifest = read_json(scene_manifest_path)
     scene_rows = scene_manifest.get("scenes")
     if not isinstance(scene_rows, list) or len(scene_rows) < 2:
@@ -295,7 +323,7 @@ def build_v2_chapter(
     audio_qc_path = output_dir / "audio-qc.json"
     atomic_write_json(audio_qc_path, audio_qc)
     if audio_qc["missing"] or audio_qc["extra"]:
-        raise V2ProofError("B-variant audio set is incomplete or contains orphan files")
+        raise V2ProofError("Selected audio set is incomplete or contains orphan files")
 
     silence = float(config.render["interSegmentSilenceSec"])
     alignment = align_segment_files(
@@ -363,7 +391,7 @@ def build_v2_chapter(
         "schema": "classic-listening-verification-v2",
         "verifiedAt": datetime.now(timezone.utc).isoformat(),
         "chapter": chapter,
-        "voiceVariant": {"name": preview_name, "cfgValue": 1.9, "inferenceTimesteps": 16},
+        "voiceVariant": _voice_variant_metadata(config, preview_name),
         "audioQcStatus": audio_qc["status"],
         "audioQcWarnings": audio_qc["warnings"],
         "audioTextureMetrics": audio_texture_metrics(master_path),

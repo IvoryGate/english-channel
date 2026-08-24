@@ -20,6 +20,12 @@ def test_tts_input_contains_source_text_only() -> None:
     assert tts_text(segment) == "Vanity was the beginning and the end."
 
 
+def test_tts_input_converts_parentheses_to_pauses_without_dropping_words() -> None:
+    segment = {"spokenText": "a father (having met disappointment), continued"}
+
+    assert tts_text(segment) == "a father , having met disappointment, , continued"
+
+
 def test_persuasion_manifest_routes_every_segment_to_one_voice() -> None:
     repo = Path(__file__).resolve().parents[3]
     manifest_path = (
@@ -30,5 +36,5 @@ def test_persuasion_manifest_routes_every_segment_to_one_voice() -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["voiceMode"] == "single"
     assert {segment["voiceProfile"] for segment in manifest["segments"]} == {
-        "classic-listening-riley-narrator"
+        "classic-listening-mia-narrator"
     }

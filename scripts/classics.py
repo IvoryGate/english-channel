@@ -351,7 +351,9 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--book", required=True)
     status.add_argument("--json", action="store_true")
     status.set_defaults(func=command_status)
-    preview = subparsers.add_parser("preview-voice", help="Render a small Riley approval sample before a chapter run.")
+    preview = subparsers.add_parser(
+        "preview-voice", help="Render a small narrator approval sample before a chapter run."
+    )
     preview.add_argument("--book", required=True)
     preview.add_argument("--chapter", required=True, type=int)
     preview.add_argument("--segments", default="008,009,010,011,012")
@@ -367,7 +369,7 @@ def build_parser() -> argparse.ArgumentParser:
     preview.set_defaults(func=command_preview_voice)
     variants = subparsers.add_parser(
         "preview-voice-variants",
-        help="Render isolated Riley parameter variants with one shared model load.",
+        help="Render isolated narrator parameter variants with one shared model load.",
     )
     variants.add_argument("--book", required=True)
     variants.add_argument("--chapter", required=True, type=int)
@@ -421,7 +423,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     v2_chapter.add_argument("--book", required=True)
     v2_chapter.add_argument("--chapter", required=True, type=int)
-    v2_chapter.add_argument("--preview-name", required=True)
+    v2_chapter.add_argument(
+        "--preview-name",
+        required=True,
+        help="Audio source name; use 'production' for the canonical chapter audio.",
+    )
     v2_chapter.add_argument("--scene-manifest", required=True)
     v2_chapter.add_argument("--transition-sec", type=float, default=1.5)
     v2_chapter.add_argument("--model", default="base")

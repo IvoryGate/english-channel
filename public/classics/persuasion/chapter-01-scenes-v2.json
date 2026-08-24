@@ -1,0 +1,103 @@
+{
+  "schema": "classic-listening-scene-manifest-v2",
+  "book": "Persuasion",
+  "chapter": 1,
+  "generator": "OpenAI built-in ImageGen",
+  "taxonomy": "historical-scene",
+  "audience": "primarily women aged 55 and over",
+  "styleReferences": [
+    "public/classics/persuasion/chapter-01-cover-bg-v2.png",
+    "public/classics/persuasion/v2-proof/chapter-01-scene-01-sir-walter-reading.png"
+  ],
+  "sharedDirection": "Text-free cinematic Regency realism with a refined painterly finish, warm honey-gold daylight, welcoming period interiors, natural anatomy, no modern objects, no watermark, no readable writing, and a calm central-lower area for no more than two subtitle lines.",
+  "scenes": [
+    {
+      "id": "scene-01",
+      "startSegmentId": "001",
+      "endSegmentId": "004",
+      "beat": "Sir Walter finds comfort in the Baronetage.",
+      "prompt": "Sir Walter Elliot sits beside a sunlit window at Kellynch Hall, absorbed in a large leather-bound baronetage; warm cream, honey and muted blue palette, flowers and polished wood, restrained subtitle-safe composition.",
+      "path": "public/classics/persuasion/v2-proof/chapter-01-scene-01-sir-walter-reading.png"
+    },
+    {
+      "id": "scene-02",
+      "startSegmentId": "005",
+      "endSegmentId": "008",
+      "beat": "The family register and genealogy are read aloud.",
+      "prompt": "Warm close view of an antique genealogy and family register with decorative but illegible marks; Sir Walter in pleased profile beyond the book, bright Regency daylight and subtitle-safe lower middle.",
+      "path": "public/classics/persuasion/v2-proof/chapter-01-scene-02-family-page.png"
+    },
+    {
+      "id": "scene-03",
+      "startSegmentId": "009",
+      "endSegmentId": "022",
+      "beat": "Sir Walter adds family notes and luxuriates in rank and appearance.",
+      "prompt": "Sir Walter at a refined Regency writing desk adding family notes with a quill to a large old volume, proud and slightly comic without caricature, warm window light and tasteful period objects.",
+      "path": "public/classics/persuasion/v2-proof/chapter-01-scene-03-margin-notes.png"
+    },
+    {
+      "id": "scene-04",
+      "startSegmentId": "023",
+      "endSegmentId": "040",
+      "beat": "Lady Elliot's character and the daughters' loss are remembered.",
+      "prompt": "Kellynch Hall circa 1800 in warm late-afternoon light; Lady Elliot sits tenderly with her three young daughters while Sir Walter stands slightly apart, preoccupied with rank and appearance; bright dignified family memory, historically accurate and not melodramatic.",
+      "path": "public/classics/persuasion/chapter-01-scene-04-lady-elliot-memory.png"
+    },
+    {
+      "id": "scene-05",
+      "startSegmentId": "041",
+      "endSegmentId": "054",
+      "beat": "Anne is overlooked by her father and sister but valued by Lady Russell.",
+      "prompt": "Anne in her established dusty-blue dress stands quietly by a bright Kellynch window with a closed book; Lady Russell turns toward her with warmth while Sir Walter and Elizabeth converse together in the background and barely notice Anne.",
+      "path": "public/classics/persuasion/chapter-01-scene-05-anne-overlooked.png"
+    },
+    {
+      "id": "scene-06",
+      "startSegmentId": "055",
+      "endSegmentId": "073",
+      "beat": "Elizabeth's confidence gives way to anxiety about age and marriage.",
+      "prompt": "Elizabeth Elliot, handsome and poised at twenty-nine, closes the large family book with averted eyes and restrained disappointment in a luminous Kellynch drawing room; Sir Walter remains serenely self-satisfied near a mirror.",
+      "path": "public/classics/persuasion/chapter-01-scene-06-elizabeth-family-book.png"
+    },
+    {
+      "id": "scene-07",
+      "startSegmentId": "074",
+      "endSegmentId": "093",
+      "beat": "Mr Elliot repeatedly disappoints the family's expectations and departs.",
+      "prompt": "Elegant London townhouse entrance in spring circa 1801; a younger Elizabeth watches as well-dressed Mr Elliot departs toward a waiting horse carriage without looking back, while Sir Walter stands affronted beside her; warm wistful afternoon.",
+      "path": "public/classics/persuasion/chapter-01-scene-07-mr-elliot-departs.png"
+    },
+    {
+      "id": "scene-08",
+      "startSegmentId": "094",
+      "endSegmentId": "105",
+      "beat": "Elizabeth nurses her resentment in the sameness of Kellynch life.",
+      "prompt": "Elizabeth wears a restrained black mourning ribbon and sits alone beside the closed family book in Kellynch Hall, looking away with controlled resentment; grand warm room, static elegant life, gently melancholy but never dark.",
+      "path": "public/classics/persuasion/chapter-01-scene-08-elizabeth-black-ribbon.png"
+    },
+    {
+      "id": "scene-09",
+      "startSegmentId": "106",
+      "endSegmentId": "114",
+      "beat": "Sir Walter retreats into the Baronetage as debts accumulate.",
+      "prompt": "Sir Walter proudly reads the Baronetage in his bright library while sealed bills and account papers lie ignored at the desk edge; Elizabeth stands nearby, newly aware and worried; subtle Austen irony and no readable marks.",
+      "path": "public/classics/persuasion/chapter-01-scene-09-debts-ignored.png"
+    },
+    {
+      "id": "scene-10",
+      "startSegmentId": "115",
+      "endSegmentId": "124",
+      "beat": "Father and daughter discuss retrenchment while protecting every luxury.",
+      "prompt": "Sir Walter and Elizabeth seriously discuss retrenchment in a gracious Kellynch morning room surrounded by upholstery, flowers and comforts; she gestures toward a tiny insignificant saving and he recoils from meaningful sacrifice; warm, lightly comic realism.",
+      "path": "public/classics/persuasion/chapter-01-scene-10-retrenchment.png"
+    },
+    {
+      "id": "scene-11",
+      "startSegmentId": "125",
+      "endSegmentId": "131",
+      "beat": "Lady Russell and Mr Shepherd are called to advise the family.",
+      "prompt": "In Kellynch Hall's sunlit library, Sir Walter and Elizabeth receive practical advice from dignified Lady Russell and country solicitor Mr Shepherd around a polished table with a blank estate plan; thoughtful, warm and anticipatory conclusion.",
+      "path": "public/classics/persuasion/chapter-01-scene-11-advisers.png"
+    }
+  ]
+}

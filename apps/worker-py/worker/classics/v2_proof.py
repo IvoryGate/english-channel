@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from datetime import datetime, timezone
@@ -102,13 +103,44 @@ def _master_audio(repo_root: Path, config: BookConfig, source: Path, output: Pat
     target_lufs = float(config.mastering.get("integratedLufs", -16.0))
     target_peak = float(config.mastering.get("truePeakDb", -1.5))
     target_lra = float(config.mastering.get("loudnessRange", 11.0))
+    analysis = _run(
+        [
+            "ffmpeg", "-hide_banner", "-nostats", "-i", str(source),
+            "-af", f"loudnorm=I={target_lufs}:TP={target_peak}:LRA={target_lra}:print_format=json",
+            "-f", "null", os.devnull,
+        ],
+        cwd=repo_root,
+    )
+    start = analysis.stderr.rfind("{")
+    end = analysis.stderr.rfind("}")
+    if start < 0 or end <= start:
+        raise V2ProofError("FFmpeg loudnorm analysis did not return JSON measurements")
+    try:
+        measured = json.loads(analysis.stderr[start : end + 1])
+    except json.JSONDecodeError as exc:
+        raise V2ProofError("FFmpeg loudnorm analysis returned invalid JSON") from exc
+    second_pass = _loudnorm_second_pass_filter(target_lufs, target_peak, target_lra, measured)
     _run(
         [
             "ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(source),
-            "-af", f"loudnorm=I={target_lufs}:TP={target_peak}:LRA={target_lra}",
+            "-af", second_pass,
             "-ar", "48000", "-ac", "1", "-c:a", "pcm_s24le", str(output),
         ],
         cwd=repo_root,
+    )
+
+
+def _loudnorm_second_pass_filter(
+    target_lufs: float, target_peak: float, target_lra: float, measured: dict[str, Any]
+) -> str:
+    required = ("input_i", "input_tp", "input_lra", "input_thresh", "target_offset")
+    if any(key not in measured for key in required):
+        raise V2ProofError("FFmpeg loudnorm measurements are incomplete")
+    return (
+        f"loudnorm=I={target_lufs}:TP={target_peak}:LRA={target_lra}:"
+        f"measured_I={measured['input_i']}:measured_TP={measured['input_tp']}:"
+        f"measured_LRA={measured['input_lra']}:measured_thresh={measured['input_thresh']}:"
+        f"offset={measured['target_offset']}:linear=true:print_format=summary"
     )
 
 

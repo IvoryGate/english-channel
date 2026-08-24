@@ -101,8 +101,10 @@ def _resample(audio: np.ndarray, source_rate: int, target_rate: int) -> np.ndarr
 
 def tts_text(segment: dict[str, Any]) -> str:
     # VoxCPM treats parenthetical style descriptions as words to speak. Style
-    # is carried by the Riley reference audio; synthesis input stays source-only.
-    return str(segment["spokenText"])
+    # is carried by the narrator reference audio; synthesis input stays
+    # source-only. Literal parentheses can also terminate generation early, so
+    # preserve every source word while converting the marks to spoken pauses.
+    return str(segment["spokenText"]).replace("(", ", ").replace(")", ", ")
 
 
 def render_audio(

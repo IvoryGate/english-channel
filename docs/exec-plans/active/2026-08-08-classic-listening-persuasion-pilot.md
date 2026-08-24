@@ -14,10 +14,10 @@ Included:
 - Add a tracked, book-agnostic Classic Listening production configuration contract.
 - Extract exactly 24 chapters while excluding the title page, contents, and Project Gutenberg license.
 - Preserve source text, normalized spoken text, segment manifests, voice/reference provenance, render settings, and artifact fingerprints.
-- Use single-voice semantic segmentation: narration and quoted dialogue remain separate performance units, but every segment is rendered by the same Riley-based Classic Listening narrator.
+- Use single-voice semantic segmentation: narration and quoted dialogue remain separate performance units, but every production segment is rendered by the approved Mia-based Classic Listening narrator.
 - Add one public controller with `ingest`, `preflight`, `render-audio`, `qc`, `package`, `status`, and `resume` commands.
 - Persist run state, heartbeat, current phase, chapter state, input fingerprints, failures, and retry details.
-- Render chapter 1 with resumable per-segment VoxCPM2 audio using the Series B female Riley reference and a separately approved Classic Listening narrator preview.
+- Render chapter 1 with resumable per-segment VoxCPM2 audio using the approved Mia reference and Voice F acceptance evidence.
 - Run structural, acoustic, and ASR-assisted QC; require explicit acceptance or repair for content anomalies.
 - Produce a publication master, subtitles, YouTube metadata, a native 2K thumbnail in the established `Pride and Prejudice` cinematic-classic style, a separate no-text video background, Classic Listening-specific 2K intro/outro clips containing the existing ELR avatar, and a verified 2560x1440 MP4.
 - Stage the upload package under an `.incomplete` directory and promote it atomically only after verification.
@@ -68,11 +68,11 @@ Existing capabilities to reuse:
 
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: source code is protected at `8d548d0` and the production adapter is
-  integrated locally at `dd9cdce` on the accepted Classic Listening foundation.
-  The chapter 1 V2 review package exists, but chapters 2-3 and all publication
-  remain blocked until a clean narrator/provider passes the tracked acceptance
-  policy.
+- State: Voice F (Mia) passed the tracked owner acceptance gate on 2026-08-24.
+  The clean chapter 1 production run and formal V2 upload package now pass the
+  automated audio, ASR, subtitle, visual, native-2K, loudness, true-peak, and
+  black-frame gates. Publication remains blocked on final listening review and
+  an approved release slot. Chapters 2-24 remain outside this pilot.
 - Intake branch: `codex/persuasion-pilot-intake`.
 - Protected source: `codex/classics-persuasion-pilot`; its 33 media files are
   retained untracked and fingerprinted in
@@ -110,6 +110,17 @@ Existing capabilities to reuse:
 - A follow-up investigation found that the audible artifact is speech-coupled high-frequency texture rather than removable stationary hum. A native 48 kHz Riley candidate was prepared, but VoxCPM2 resamples reference input to its 16 kHz encoder rate, so the planned reference-rate A/B was stopped before producing or promoting any comparison artifact. Further release work is blocked on a clean TTS provider/model passing blind listening review, not on additional denoise or reference upsampling.
 - The reusable product, publishing, experiment, analytics, and retrospective contract is now defined in `docs/classics/AUTONOMOUS_OPERATING_MODEL.md`; implementation is tracked separately in `docs/exec-plans/active/2026-08-17-classic-listening-autonomous-operations.md`.
 
+### Narrator Recovery And Fresh Production — 2026-08-24
+
+- The channel owner selected blind candidate Voice F, identified after selection as Mia. The tracked production profile is `classic-listening-mia-narrator`, using `mia_reference_clean.wav` at SHA-256 `b6ec5f21090399e24c371fbac8f211a602c40a70dde45bdfd13cef631b19f803`, `cfgValue: 1.65`, and 32 inference steps. This approval supersedes Riley for all new `Persuasion` production; Riley artifacts remain historical evidence only.
+- Fresh ingestion from the registered Gutenberg EPUB again produced exactly 24 chapters / 83,527 words. Chapter 1 now contains 131 single-voice segments at the current 30-word cap, with 100% normalized ordered source coverage. Preflight passed the source, voice reference, inventory, manifest, acceptance, and local-model gates.
+- The multi-scene V2 builder now accepts canonical production audio with `--preview-name production`. Verification records the current profile ID, reference hash, guidance, and inference steps instead of hard-coded legacy Riley-preview parameters; isolated historical previews retain their own generation trace.
+- Chapter-specific Mia intro/outro speech and fresh chapter 1 body narration rendered successfully with resume-safe segment artifacts; no legacy Riley chapter WAV was reused.
+- Independent EBU R128 verification found that a single-pass loudness filter missed the intended program target. V2 mastering now uses measured two-pass loudnorm; the `Persuasion` processing target reserves a 0.3 dB true-peak safety margin at -1.8 dBTP so the formal ceiling of -1.5 dBTP is not crossed after encoding.
+- The fresh Mia chapter contains 131/131 segment WAVs and a 866.44-second mastered body. Structural QC is `PASS` with zero warnings and zero compose drift. Full-chapter Whisper QC checks all 131 segments at mean similarity 0.987 with no remaining review IDs. Parenthetical punctuation is converted to TTS pauses without changing source words; segment 038 and 050 truncations were repaired, `Kellynch` uses the tracked `Kellinch` spoken form, and a one-word tail was rebalanced across segments 062-063 while preserving 100% ordered display-text coverage.
+- The final package contains 252 word-aligned subtitle cues and 11 remapped story scenes with 1.5-second crossfades. The H.264/AAC program is 887.552 seconds at native 2560x1440 with 48 kHz stereo audio. Independent EBU R128 analysis measures -16.5 LUFS and -1.7 dBFS true peak; a full-program scan found no black interval lasting one second or longer.
+- The review package is staged at `exports/youtube/persuasion/chapter-01-v2` with video, 2K thumbnail, SRT, title, description, tags, checklist, verification, and fingerprints. It is `EXPORTED_FOR_REVIEW`, not uploaded or published.
+
 ## Audited Input
 
 - Title: `Persuasion`.
@@ -136,9 +147,9 @@ Existing capabilities to reuse:
    - `spokenText`: TTS-safe text with traceable pronunciation substitutions.
    Every substitution must be recorded; silent rewriting is forbidden.
 6. Concatenated segment `displayText` must cover 100% of normalized chapter source in order. No dropped or invented prose is allowed.
-7. This production is single-voice. Every narration and dialogue segment uses the Series B female Riley reference at `assets/voices/series_b/riley_reference_clean.wav` (SHA-256 `9330f8278c50fae1a7142953b73cbec3bd89f7fafe61d76ecb24681985b4b189`). Optional character labels support traceability and subtle delivery cues only; they never route to a different voice. The old alternating-speaker fallback is forbidden.
-8. Add a dedicated `classic-listening-riley-narrator` profile that reuses Riley's timbre but replaces the Series B teaching prompt with restrained, mature, reflective literary delivery. Dialogue may receive light differential expression, but no character impersonation or voice change.
-9. The Riley reference requires a provenance/license record and a user-approved Classic Listening preview before chapter rendering. Prior use in Series B does not replace the audiobook approval record.
+7. This production is single-voice. Every new narration and dialogue segment uses the approved Mia reference at `workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav` (SHA-256 `b6ec5f21090399e24c371fbac8f211a602c40a70dde45bdfd13cef631b19f803`). Optional character labels support traceability and subtle delivery cues only; they never route to a different voice. The old alternating-speaker fallback is forbidden.
+8. The production profile is `classic-listening-mia-narrator`, with smooth, intimate, restrained Regency delivery and the same timbre throughout. Dialogue may receive light differential expression, but no character impersonation or voice change.
+9. The Mia reference and profile require a tracked owner-approved blind preview before chapter rendering. Voice F acceptance on 2026-08-24 satisfies this gate; prior Riley previews do not.
 10. Infrastructure failures and missing files may retry automatically. Content anomalies, ASR mismatches, and voice-quality issues enter a review queue and are not silently overwritten.
 11. GPU rendering is serial and protected by the existing production lock. Source preparation, metadata, and approved visual generation may run in parallel.
 12. Formal audio targets are 48 kHz mono, `-16 LUFS` integrated, and no higher than `-1.5 dBTP`, with before/after measurements persisted. Pilot results may tighten denoise settings but may not weaken traceability.
@@ -252,9 +263,9 @@ The later rollout must support chapter ranges without changing semantics:
 
 ### Milestone 5: Narrator profile and chapter 1 audio pilot
 
-- Define `classic-listening-riley-narrator` using the Series B Riley clean reference, with restrained, mature, reflective Regency delivery and one consistent timbre across narration and dialogue.
-- Record the Riley reference path/hash/provenance and confirm it is usable for this production.
-- Generate the voice-gate preview and pause for approval.
+- Define `classic-listening-mia-narrator` using the approved Mia clean reference, with restrained, mature, reflective Regency delivery and one consistent timbre across narration and dialogue.
+- Record the Mia reference path/hash/provenance and Voice F owner acceptance evidence.
+- Preserve the rejected Riley material as historical evidence; never route it into new production.
 - Render chapter 1 segments to partial files and atomically promote each successful WAV.
 - Compose the raw chapter only when every expected segment exists, fingerprints match, and no orphan segment files remain.
 - Persist the exact model, device, reference, controls, settings, segment durations, and input hashes.
@@ -301,14 +312,25 @@ Repository gates:
 - `npm test`
 - Focused `apps/worker-py/tests/test_classics_*.py` suite.
 
+Validation result on 2026-08-24:
+
+- Classic-focused Python: 42 passed; full Python suite: 146 passed.
+- Encoding, docs index, architecture, Remotion/TypeScript lint, Python compile,
+  and `npm run lint`: passed.
+- Tooling and web workspace tests passed. API and shared-types tests passed when
+  run through the same Node test runner with a session-only `os.userInfo` shim;
+  the stock `tsx --test` launcher is blocked in this restricted Windows session
+  by Node 23 reporting `uv_os_get_passwd ENOMEM` despite 18 GB free memory. No
+  test assertion failed, and the temporary shim was removed after validation.
+
 Pilot functional gates:
 
 - Source SHA-256 matches the registered Gutenberg EPUB.
 - EPUB metadata is English `Persuasion` by Jane Austen.
 - Inventory contains exactly 24 chapters and excludes the Gutenberg license.
 - Chapter 1 segment display text has 100% ordered normalized-source coverage.
-- Every segment resolves to the single `classic-listening-riley-narrator` profile; no multi-voice routing is present.
-- Riley-based Classic Listening voice preview has explicit approval and reference provenance/hash is recorded.
+- Every production segment resolves to the single `classic-listening-mia-narrator` profile; no multi-voice routing is present.
+- Mia Voice F acceptance evidence is recorded, and its reference provenance/hash matches the rendered artifacts.
 - Every expected segment WAV exists exactly once; no orphan files are present.
 - Run and artifact fingerprints match current source, manifest, reference, model, and settings.
 - Strict QC has no unresolved flags or records an explicitly approved exception.

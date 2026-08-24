@@ -35,6 +35,9 @@
     "globalControl": "one consistent female audiobook narrator, same Mia timbre throughout, smooth intimate Regency literary delivery, restrained emotion, clear sentence shape, no character voice imitation",
     "narrationCue": "calm reflective literary narration",
     "dialogueCue": "light natural dialogue, same narrator timbre",
+    "pronunciationLexicon": {
+      "Kellynch": "Kellinch"
+    },
     "cfgValue": 1.65,
     "inferenceTimesteps": 32,
     "normalize": false,
@@ -60,7 +63,7 @@
   },
   "mastering": {
     "integratedLufs": -16.0,
-    "truePeakDb": -1.5,
+    "truePeakDb": -1.8,
     "loudnessRange": 11.0
   },
   "branding": {
