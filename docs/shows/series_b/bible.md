@@ -72,4 +72,4 @@ workspace/shows/series_b/
 
 Character bibles: [`workspace/characters/series_b_sam/`](../../workspace/characters/series_b_sam/identity.md), [`series_b_riley/`](../../workspace/characters/series_b_riley/identity.md)
 
-Visual anchors (thumbnail/image gen): [`workspace/characters/registry.json`](../../workspace/characters/registry.json)
+Visual anchors (thumbnail/image gen): [`configs/shows/host-visuals.json`](../../../configs/shows/host-visuals.json)

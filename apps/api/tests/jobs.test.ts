@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildServer } from "../src/index.js";
+import { createTestProviders } from "./test-providers.js";
 
 test("POST /jobs creates queued job", async () => {
-  const app = buildServer();
+  const app = buildServer(createTestProviders());
   const response = await app.inject({
     method: "POST",
     url: "/jobs",

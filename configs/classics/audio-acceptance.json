@@ -1,0 +1,41 @@
+{
+  "schema": "classic-listening-audio-acceptance-v1",
+  "thresholds": {
+    "minimumAsrSimilarity": 0.98,
+    "maximumTruePeakDbtp": -1.5,
+    "maximumClippedSamples": 0,
+    "requiredBlindReviewers": 1
+  },
+  "cases": [
+    {
+      "id": "narration-01",
+      "dimension": "narration",
+      "text": "The morning light rested gently across the quiet room, and the house began to stir."
+    },
+    {
+      "id": "dialogue-01",
+      "dimension": "dialogue",
+      "text": "I remember it clearly, she said. We may still choose differently."
+    },
+    {
+      "id": "short-01",
+      "dimension": "fragile_short_line",
+      "text": "Yes, certainly."
+    },
+    {
+      "id": "long-01",
+      "dimension": "long_sentence",
+      "text": "Although the letter had arrived before breakfast, she waited until the visitors had departed and the last carriage had turned beyond the gate before she unfolded it."
+    },
+    {
+      "id": "names-dates-01",
+      "dimension": "names_and_dates",
+      "text": "Mrs. Eleanor Wentworth wrote to Captain Frederick Hale on the twenty-third of September, eighteen seventeen."
+    },
+    {
+      "id": "sibilants-01",
+      "dimension": "sibilants",
+      "text": "Soft sea winds crossed the terrace as Susan set six silver spoons beside the glasses."
+    }
+  ]
+}

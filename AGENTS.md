@@ -6,11 +6,13 @@ This repository is agent-first. Human maintainers define goals and constraints; 
 
 1. `README.md` for startup commands.
 2. `docs/ARCHITECTURE.md` for system boundaries.
-3. `docs/PLANS.md` for active execution plans.
-4. `docs/QUALITY_SCORE.md` for release gates.
-5. `docs/GIT_WORKFLOW.md` for trunk-based branch, PR, merge, and archive rules.
-6. `docs/LOCAL_RUNTIME.md` for project-local Python env and model paths.
-7. `docs/ENCODING.md` for UTF-8 and LF file rules.
+3. `docs/YOUTUBE_OPERATING_SYSTEM.md` for the channel product, data, resource, experiment, and autonomy contract.
+4. `docs/BRANCH_RECONCILIATION.md` before touching legacy branches or worktrees.
+5. `docs/PLANS.md` for active execution plans.
+6. `docs/QUALITY_SCORE.md` for release gates.
+7. `docs/GIT_WORKFLOW.md` for trunk-based branch, PR, merge, and archive rules.
+8. `docs/LOCAL_RUNTIME.md` for project-local Python env and model paths.
+9. `docs/ENCODING.md` for UTF-8 and LF file rules.
 
 ## System Of Record
 

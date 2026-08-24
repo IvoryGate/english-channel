@@ -1,0 +1,12 @@
+{
+  "schema": "youtube-channel-resources-v1",
+  "resources": [
+    {
+      "id": "gpu_heavy",
+      "capacity": 1,
+      "leaseTtlSec": 120,
+      "heartbeatIntervalSec": 30,
+      "recovery": "expired_and_owner_dead"
+    }
+  ]
+}

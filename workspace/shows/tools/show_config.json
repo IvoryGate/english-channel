@@ -1,0 +1,98 @@
+{
+  "schema": "elr-show-config-v1",
+  "shows": {
+    "series_a": {
+      "showId": "series_a",
+      "showProfile": "series_a",
+      "publicName": "Daily Talk",
+      "levelBand": "B1-B2",
+      "hosts": ["Ethan", "Nora"],
+      "hostLinePattern": "^(Ethan|Nora):",
+      "wordCountRange": [1800, 2400],
+      "renderSettings": {
+        "cfgValue": 2.35,
+        "inferenceTimesteps": 10,
+        "interTurnSilenceSec": 0.28
+      },
+      "characterProfiles": {
+        "Ethan": "Ethan, warm clear male podcast host, consistent manner",
+        "Nora": "Nora, warm clear female podcast host, consistent manner"
+      },
+      "deliveryCues": {
+        "Ethan": "Ethan, warm clear male podcast host, consistent manner",
+        "Nora": "Nora, warm clear female podcast host, consistent manner"
+      },
+      "thumbnail": {
+        "barColor": "#E9A319",
+        "label": "DAILY TALK · English Conversations",
+        "accentColor": "#E9A319",
+        "subtitlePrimaryColor": "#FFFFFF",
+        "subtitleSecondaryColor": "#B8B8B8",
+        "subtitleOutlineColor": "#000000",
+        "waveBarColor": "#EA580C"
+      }
+    },
+    "series_b": {
+      "showId": "series_b",
+      "showProfile": "series_b",
+      "publicName": "First Steps",
+      "levelBand": "A2-B1",
+      "hosts": ["Riley", "Sam"],
+      "hostLinePattern": "^(Riley|Sam):",
+      "wordCountRange": [1400, 1900],
+      "renderSettings": {
+        "cfgValue": 2.15,
+        "inferenceTimesteps": 10,
+        "interTurnSilenceSec": 0.3
+      },
+      "characterProfiles": {
+        "Riley": "Riley, clear simple female teacher, consistent manner",
+        "Sam": "Sam, curious warm male co-learner, consistent manner"
+      },
+      "deliveryCues": {
+        "Riley": "Riley, clear simple female teacher, consistent manner",
+        "Sam": "Sam, curious warm male co-learner, consistent manner"
+      },
+      "thumbnail": {
+        "barColor": "#2A9D8F",
+        "label": "FIRST STEPS · Easy English",
+        "accentColor": "#2A9D8F",
+        "subtitlePrimaryColor": "#FFFFFF",
+        "subtitleSecondaryColor": "#B8B8B8",
+        "subtitleOutlineColor": "#000000",
+        "waveBarColor": "#14B8A6"
+      }
+    },
+    "series_c": {
+      "showId": "series_c",
+      "showProfile": "series_c",
+      "publicName": "Polished English",
+      "levelBand": "B2-C1",
+      "hosts": ["Leo", "Mia"],
+      "hostLinePattern": "^(Leo|Mia):",
+      "wordCountRange": [2000, 2800],
+      "renderSettings": {
+        "cfgValue": 2.35,
+        "inferenceTimesteps": 10,
+        "interTurnSilenceSec": 0.28
+      },
+      "characterProfiles": {
+        "Leo": "Leo, warm clear male podcast host, consistent manner",
+        "Mia": "Mia, warm clear female podcast host, consistent manner"
+      },
+      "deliveryCues": {
+        "Leo": "Leo, warm clear male podcast host, consistent manner",
+        "Mia": "Mia, warm clear female podcast host, consistent manner"
+      },
+      "thumbnail": {
+        "barColor": "#5C4B7A",
+        "label": "POLISHED ENGLISH · Real Talk",
+        "accentColor": "#5C4B7A",
+        "subtitlePrimaryColor": "#FFFFFF",
+        "subtitleSecondaryColor": "#B8B8B8",
+        "subtitleOutlineColor": "#000000",
+        "waveBarColor": "#E11D48"
+      }
+    }
+  }
+}

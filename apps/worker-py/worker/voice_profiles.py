@@ -77,8 +77,8 @@ ELR_SERIES_A_ETHAN = VoiceProfile(
         "There's something really beautiful about knowing that people from different places, "
         "different lives, and different stories are all meeting here through English."
     ),
-    prompt_wav_path="assets/voices/series_a/nora_reference_clean.wav",
-    reference_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    prompt_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
     cfg_value=2.35,
     inference_timesteps=10,
     normalize=False,
@@ -94,8 +94,8 @@ ELR_SERIES_A_NORA = VoiceProfile(
         "every time you share your thoughts with us, it makes this space feel more real, "
         "more alive, and more special."
     ),
-    prompt_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
-    reference_wav_path="assets/voices/series_a/ethan_reference_clean.wav",
+    prompt_wav_path="assets/voices/series_a/nora_reference_clean.wav",
+    reference_wav_path="assets/voices/series_a/nora_reference_clean.wav",
     cfg_value=2.35,
     inference_timesteps=10,
     normalize=False,
@@ -122,6 +122,26 @@ ELR_SERIES_B_RILEY = VoiceProfile(
     id="elr-series-b-riley",
     display_name="ELR Series B — Riley",
     description="Female teacher host for ELR Series B (A2-B1).",
+    prompt_text=(
+        "Today, I want to show you exactly how to use just 15 minutes a day "
+        "to practice your English, alone, at home, anywhere you are."
+    ),
+    prompt_wav_path="assets/voices/series_b/riley_reference_clean.wav",
+    reference_wav_path="assets/voices/series_b/riley_reference_clean.wav",
+    cfg_value=2.35,
+    inference_timesteps=10,
+    normalize=False,
+    denoise=False,
+)
+
+CLASSIC_LISTENING_RILEY_NARRATOR = VoiceProfile(
+    id="classic-listening-riley-narrator",
+    display_name="Classic Listening — Riley Narrator",
+    description=(
+        "The established ELR Series B Riley timbre adapted for long-form public-domain "
+        "literature: one poised female narrator, reflective and intimate, with restrained "
+        "Regency-era emotion and no character-voice imitation."
+    ),
     prompt_text=(
         "Today, I want to show you exactly how to use just 15 minutes a day "
         "to practice your English, alone, at home, anywhere you are."
@@ -176,6 +196,7 @@ VOICE_PROFILES = {
     ELR_SERIES_A_NORA.id: ELR_SERIES_A_NORA,
     ELR_SERIES_B_SAM.id: ELR_SERIES_B_SAM,
     ELR_SERIES_B_RILEY.id: ELR_SERIES_B_RILEY,
+    CLASSIC_LISTENING_RILEY_NARRATOR.id: CLASSIC_LISTENING_RILEY_NARRATOR,
     ELR_SERIES_C_LEO.id: ELR_SERIES_C_LEO,
     ELR_SERIES_C_MIA.id: ELR_SERIES_C_MIA,
 }

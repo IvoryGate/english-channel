@@ -26,6 +26,9 @@ Before presenting a draft, verify:
 | `TOO_SHORT` | Script is below target length | Add practice beats or examples |
 | `TOO_LONG` | Script is above target length | Remove repeated explanations |
 | `MISSING_CTA` | No final listener action | Add one practice/comment/subscribe action |
+| `FROZEN_COLD_OPEN` | The inherited show greeting remains in the opening | Start from a specific learner situation, then introduce the show |
+| `GREETING_FIRST_OPEN` | A generic welcome comes before the situation | Put the moment of friction or task in the first two turns |
+| `EXCESSIVE_EXACT_REPETITION` | A full learner phrase appears five or more times verbatim | Keep deliberate practice, but change context or trim the duplicate turns |
 | `POLISHED_STRUCTURE` | A polished_english draft is missing a core show block | Add the missing teaching plan, structure map, micro-pocket, recycle, or word tour marker |
 | `MISSING_DELIVERY` | A polished_english draft has no delivery/emotion guidance | Add section-level delivery notes or render-handoff emotion/delivery fields |
 | `MISSING_HOST_INTRO` | A polished_english formal draft hooks but never introduces the hosts | Add a brief Leo/Mia intro after the hook, then return to the topic |
@@ -33,8 +36,10 @@ Before presenting a draft, verify:
 ## Manual Review Questions
 
 - Would a learner immediately understand why this episode matters?
+- Do the first two spoken turns begin in a real situation rather than a generic welcome?
 - Can the listener repeat useful phrases without reading?
 - Does the dialogue sound like two people talking, not a textbook?
+- Does each act introduce a new decision, objection, scene, or consequence instead of another explanation of the same point?
 - Are examples culturally general and safe for a broad English-learning audience?
 - Could the script later be segmented into one-speaker TTS turns without rewriting?
 

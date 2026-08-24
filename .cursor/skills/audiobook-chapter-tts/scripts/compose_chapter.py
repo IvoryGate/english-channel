@@ -25,6 +25,8 @@ def compose(workspace: Path, inter_segment_silence_sec: float = DEFAULT_INTER_SE
     manifest_file = manifest_path(workspace)
     manifest = ensure_segment_defaults(load_json(manifest_file))
     global_control = str(manifest["globalControl"])
+    pace_cue = str(manifest["paceCue"]) if "paceCue" in manifest else None
+    character_profiles = dict(manifest.get("characterProfiles") or {})
     waves = []
     outputs = []
     sample_rate: int | None = None
@@ -38,7 +40,12 @@ def compose(workspace: Path, inter_segment_silence_sec: float = DEFAULT_INTER_SE
             sample_rate = sr
         if sr != sample_rate:
             raise ValueError(f"Sample-rate mismatch: {segment_path} has {sr}, expected {sample_rate}")
-        request = compose_control(segment, global_control)
+        request = compose_control(
+            segment,
+            global_control,
+            pace_cue=pace_cue,
+            character_profiles=character_profiles,
+        )
         outputs.append(
             {
                 "id": segment["id"],

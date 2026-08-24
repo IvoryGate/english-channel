@@ -1,0 +1,48 @@
+{
+  "schema": "youtube-channel-control-plane-v1",
+  "channel": {
+    "id": "english_listening_room",
+    "publicName": "English Listening Room"
+  },
+  "productLines": [
+    {
+      "id": "dialogue",
+      "name": "Dialogue Long Form"
+    },
+    {
+      "id": "shorts",
+      "name": "Shorts"
+    },
+    {
+      "id": "classic_listening",
+      "name": "Classic Listening"
+    }
+  ],
+  "series": [
+    {
+      "id": "series_a",
+      "productLineId": "dialogue",
+      "name": "Daily Talk"
+    },
+    {
+      "id": "series_b",
+      "productLineId": "dialogue",
+      "name": "First Steps"
+    },
+    {
+      "id": "series_c",
+      "productLineId": "dialogue",
+      "name": "Polished English"
+    },
+    {
+      "id": "shorts_main",
+      "productLineId": "shorts",
+      "name": "English Listening Room Shorts"
+    },
+    {
+      "id": "classic_listening",
+      "productLineId": "classic_listening",
+      "name": "Classic Listening"
+    }
+  ]
+}

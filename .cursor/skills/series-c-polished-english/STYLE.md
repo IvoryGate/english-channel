@@ -4,7 +4,7 @@ Human-feel dialogue rules, thesis-first hooks, and narrative engine for Leo & Mi
 
 Reference: [`competitor_script_analysis.md`](../../../docs/shows/competitor_script_analysis.md) + [`docs/shows/series_c/bible.md`](../../../docs/shows/series_c/bible.md) + character identity files.
 
-## C.1 Frozen cold-open chassis (use verbatim every episode)
+## C.1 Situation-first opening (choose; never use verbatim every episode)
 
 ```
 [Music sting]
@@ -15,6 +15,9 @@ Leo:  And I'm Leo. And this is the English Listening Room. [+ thesis-first hook 
 ```
 
 Rules:
+- Start with the exact work or social tension before the welcome. Brand the show once between 30 and 75 seconds.
+- A thesis is useful only when it is anchored in a scene, message, or spoken line within the first 20 seconds.
+- Do not promise the Word Tour or introduce the CEFR level until the viewer understands why this conversation matters.
 - **Mia intros first** (listener voice), **Leo second** (facilitator) — Mia leads with story/feeling, Leo tightens.
 - Wait — per character dynamics, Leo is the facilitator who tightens phrases; Mia is the listener voice. Class pattern is teacher-first; J&May is teacher-first. For C, the "lead" is the listener-voice (Mia) because the show is daily-talk not classroom. So **Mia first**, **Leo second**.
 - Dual intro lives inside the welcome sentence, fused with hook.
@@ -93,11 +96,11 @@ Do **not** rely on `emotion` alone to carry surprise, warmth, or urgency.
 
 ## C.6 Title formula
 
-`[Concrete situation] + [outcome or paradox] | Polished English Podcast B2-C1`
+`[Concrete situation] + [outcome or paradox] | B2–C1 English`
 
 Examples:
-- `When busy keeps you small — the English of doing less better | Polished English Podcast B2-C1`
-- `The email you rewrote four times — softening claims at work | Polished English Podcast B2-C1`
+- `Your English feedback sounds cold? Use this work script | B2–C1`
+- `The email you rewrote four times — soften it without hiding the point | B2–C1`
 
 ## C.7 Forbidden anti-patterns
 

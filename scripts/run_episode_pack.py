@@ -1,4 +1,4 @@
-"""Stable launcher for pack_episode.py — same pattern as run_episode_render.py / monitor_book_chapters.
+"""Stable launcher for pack_episode.py — same pattern as other production monitors.
 
 Run in your own terminal (not Cursor agent shell):
 
@@ -18,6 +18,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
 PACK_SCRIPT = REPO_ROOT / "workspace" / "shows" / "tools" / "pack_episode.py"
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from gpu_production_lock import GpuProductionLock  # noqa: E402
 
 
 def main() -> int:
@@ -32,6 +34,7 @@ def main() -> int:
     parser.add_argument("--skip-master", action="store_true")
     parser.add_argument("--skip-export", action="store_true")
     parser.add_argument("--qc-no-asr", action="store_true")
+    parser.add_argument("--compose-encoder", default="libx264")
     parser.add_argument("--python", default=str(DEFAULT_PYTHON))
     args, _unknown = parser.parse_known_args()
 
@@ -63,10 +66,13 @@ def main() -> int:
         cmd.append("--skip-export")
     if args.qc_no_asr:
         cmd.append("--qc-no-asr")
+    cmd.extend(["--compose-encoder", args.compose_encoder])
 
     print(f"log={log_path}", flush=True)
     print(f"cmd={' '.join(cmd)}", flush=True)
-    proc = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    label = f"pack_{args.show}_{args.episode}"
+    with GpuProductionLock(label):
+        proc = subprocess.run(cmd, cwd=str(REPO_ROOT))
     return int(proc.returncode)
 
 

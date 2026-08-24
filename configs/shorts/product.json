@@ -1,0 +1,73 @@
+{
+  "schema": "elr-shorts-product-v1",
+  "channel": "English Listening Room",
+  "audience": {
+    "cefr": ["A2", "B1"],
+    "primaryAge": "25-44",
+    "devicePriority": "mobile"
+  },
+  "promise": "One useful English moment in 35 to 55 seconds.",
+  "pilotSize": 12,
+  "formatAllocation": {
+    "micro_story": 4,
+    "listen_choose": 3,
+    "dialogue": 3,
+    "classic_cliffhanger": 2
+  },
+  "quality": {
+    "durationMinSec": 36,
+    "durationTargetMaxSec": 55,
+    "durationHardMaxSec": 59,
+    "durationVariantCutoffSec": 50,
+    "titleTargetMaxChars": 55,
+    "titleHardMaxChars": 100,
+    "captionMaxLines": 2,
+    "captionMaxCharsPerLine": 28,
+    "hookMaxSec": 1.5,
+    "maxSilentOpeningSec": 0.25,
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "audioSampleRate": 48000,
+    "loudnessTargetLufs": -14.0,
+    "truePeakMaxDb": -1.5,
+    "mainsHumWarningDb": 8.0,
+    "mainsHumHardMaxDb": 12.0
+  },
+  "visual": {
+    "backgroundRequired": true,
+    "backgroundStrategy": "generated_editorial_scene",
+    "thumbnailRequired": true,
+    "thumbnailStrategy": "dedicated_editorial_cover",
+    "brandLogo": "branding/english_listening_room_avatar_v2.png",
+    "artDirection": "warm mature editorial illustration with calm caption space",
+    "audienceSignal": "welcoming to adult women 25-44 without excluding other learners",
+    "internalIdsVisible": false
+  },
+  "cta": {
+    "enabled": true,
+    "startBeforeEndSec": 3.5,
+    "defaultCopy": "Subscribe for your next listening story.",
+    "maxChars": 52
+  },
+  "publishing": {
+    "releasePolicyRef": "configs/channel/release-policy.json",
+    "releaseProgramId": "shorts-accelerated-pilot-2026-08",
+    "defaultPrivacy": "private",
+    "requireRelatedVideo": true,
+    "publicPublishingEnabled": false
+  },
+  "experiments": {
+    "minimumEntriesPerVariant": 3,
+    "minimumEngagedViewsPerVariant": 200,
+    "winnerRelativeLift": 0.1,
+    "secondaryGuardrailDrop": 0.1,
+    "decisionAgeDays": 7,
+    "allocation": {"proven": 0.7, "adjacent": 0.2, "explore": 0.1}
+  },
+  "metrics": {
+    "primary": ["engaged_view_rate", "average_percentage_viewed"],
+    "business": ["subscribers_per_1000_engaged", "long_form_views_per_1000_engaged"],
+    "secondary": ["interactions_per_1000_engaged", "views"]
+  }
+}

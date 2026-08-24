@@ -1,0 +1,33 @@
+{
+  "schema": "classic-listening-catalog-book-v1",
+  "book": {
+    "slug": "persuasion",
+    "title": "Persuasion",
+    "author": "Jane Austen",
+    "language": "en",
+    "firstPublishedYear": 1818,
+    "authorDeathYear": 1817
+  },
+  "rights": {
+    "status": "verified_public_domain",
+    "approvedTerritories": ["US", "GB"],
+    "reviewedAt": "2026-08-17",
+    "evidence": [
+      {
+        "kind": "source_declaration",
+        "territory": "US",
+        "url": "https://www.gutenberg.org/ebooks/105",
+        "note": "Project Gutenberg identifies ebook 105 as public domain in the USA."
+      },
+      {
+        "kind": "term_rule",
+        "territory": "GB",
+        "url": "https://www.gov.uk/copyright/how-long-copyright-lasts",
+        "note": "UK guidance gives the usual literary-work term as 70 years after the author's death."
+      }
+    ]
+  },
+  "source": {
+    "url": "https://www.gutenberg.org/ebooks/105"
+  }
+}
