@@ -33,7 +33,7 @@ the channel identity remain out of scope.
 
 ## Status
 
-- **State:** historical pilot state requires reconciliation before continuation
+- **State:** public history reconciled; steady three-per-week recovery activated
 - **Owner:** Codex
 - **Branch:** source preserved at `codex/shorts-pipeline-pilot`; intake occurs on
   `codex/shorts-adapter-intake`.
@@ -48,9 +48,10 @@ the channel identity remain out of scope.
   20:30 with Related Video verified after reopening the saved item.
 - Dedicated 9:16 discovery covers are now a production gate from `elr-s-005`
   onward; video screenshots are retained only as the initial baseline.
-- `elr-s-005` and `elr-s-006` are packaged with unique content hashes,
-  dedicated covers, passing visual/audio QC, and reserved release slots on
-  2026-08-20 at 08:00 and 20:30 respectively; Studio upload remains pending.
+- `elr-s-005` and `elr-s-006` were recovered in the protected Shorts worktree
+  and are packaged with unique content hashes, dedicated covers, and passing
+  visual/audio QC. Their local slots are 2026-08-26 and 2026-08-28 at 12:30;
+  Related Video remains a remote scheduling gate.
 - YouTube API OAuth is absent; the signed-in English Listening Room Studio
   session is the verified upload fallback.
 

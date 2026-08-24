@@ -48,7 +48,7 @@ def test_pilot_contract_has_controlled_format_mix_and_balanced_experiments() -> 
     assert duration_counts == {"short": 6, "long": 6}
 
 
-def test_accelerated_pilot_requests_channel_owned_release_capacity() -> None:
+def test_steady_state_requests_channel_owned_release_capacity() -> None:
     product, _ = contracts()
     publishing = product["publishing"]
     channel_policy = read_json(CHANNEL_RELEASE_POLICY_PATH)
@@ -60,9 +60,9 @@ def test_accelerated_pilot_requests_channel_owned_release_capacity() -> None:
     assert channel_policy["timezone"] == "Asia/Shanghai"
     assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 18
     assert channel_policy["authority"]["publicSchedulingEnabled"] is False
-    assert program["status"] == "reconciliation_required"
-    assert program["requestedUploadsPerWeek"] == 14
-    assert program["preferredDailyWindows"] == ["08:00", "20:30"]
+    assert program["status"] == "active"
+    assert program["requestedUploadsPerWeek"] == 3
+    assert program["preferredDailyWindows"] == ["12:30"]
 
 
 def test_duplicate_content_is_rejected() -> None:
@@ -281,7 +281,7 @@ def test_analytics_review_scales_a_consistent_winner(tmp_path: Path) -> None:
     assert review["nextPlan"]["defaultWinningVariants"]["hook"] == "question"
     assert review["nextPlan"]["releaseRequest"] == {
         "policyRef": "configs/channel/release-policy.json",
-        "programId": "shorts-accelerated-pilot-2026-08",
+        "programId": "shorts-steady-state-2026-08",
     }
     assert json_path.is_file()
     assert "winner: question" in markdown_path.read_text(encoding="utf-8")

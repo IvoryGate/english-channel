@@ -130,6 +130,19 @@ def command_audio_metrics(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_audition_narrators(args: argparse.Namespace) -> int:
+    from worker.classics.narrator_audition import run_narrator_audition
+
+    report = run_narrator_audition(
+        args.runtime_root,
+        args.config,
+        force=args.force,
+        dry_run=args.dry_run,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
 def command_build_v2_proof(args: argparse.Namespace) -> int:
     from worker.classics.v2_proof import build_v2_proof
 
@@ -372,6 +385,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     metrics.add_argument("--file", action="append", required=True)
     metrics.set_defaults(func=command_audio_metrics)
+    audition = subparsers.add_parser(
+        "audition-narrators",
+        help="Render the tracked three-candidate blind narrator acceptance pack.",
+    )
+    audition.add_argument(
+        "--config",
+        type=Path,
+        default=REPO / "configs" / "classics" / "narrator-audition.json",
+    )
+    audition.add_argument(
+        "--runtime-root",
+        type=Path,
+        default=REPO,
+        help="Project root containing ignored voice, model, and output assets.",
+    )
+    audition.add_argument("--force", action="store_true")
+    audition.add_argument("--dry-run", action="store_true")
+    audition.set_defaults(func=command_audition_narrators)
     proof = subparsers.add_parser(
         "build-v2-proof",
         help="Build a word-aligned, multi-scene review proof without replacing chapter exports.",
@@ -470,6 +501,7 @@ def main() -> int:
         heavy_commands = {
             "preview-voice",
             "preview-voice-variants",
+            "audition-narrators",
             "build-v2-proof",
             "build-v2-chapter",
             "recompose-v2-final",

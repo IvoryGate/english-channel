@@ -98,7 +98,7 @@ of guessing from a silent terminal. The state record contains the exact log.
 Subtitles use **`--scripted-only`** (audiobook timing from WAV duration + script — no 134× Whisper).  
 Shortcut: `scripts\run_series_b_ep001_pack.ps1` (add `--skip-master` if master already exists).
 
-9. **YouTube copy** — `title`, description body, tags, `coverText` layers in `youtube.json` + `youtube_description.txt`.
+9. **YouTube copy** — `title`, description body, tags, `coverText` layers in `youtube.json` + `youtube_description.txt`. Regeneration appends the fixed channel schedule from `configs/channel/programming.json`; do not hand-edit different release promises into individual episodes.
 10. **Prompts** — `render_episode_thumbnail.py --print-prompts` (native **16:9 / 2560×1440**, comic style, exact baked cover typography).
 11. **Image gen** — generate a complete thumbnail cover with the specified text baked into the composition, plus a separate subtitle-friendly video background with **no text**.
 12. **Compose thumbnail** — `--from-baked-scene` / `--video-bg-from` preserves the native 16:9 baked cover. `--from-image` is legacy-only for a pre-existing 3:2 cover.

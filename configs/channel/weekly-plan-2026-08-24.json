@@ -1,0 +1,41 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-08-24",
+  "evidence": {
+    "publicChannelObservedAt": "2026-08-24T04:32:25Z",
+    "publicSubscribers": 92,
+    "publicVideoCount": 121,
+    "publicLifetimeViews": 5331,
+    "publicChannelCapture": "workspace/channel/raw/youtube-public-channel-20260824T043223Z.html",
+    "publicChannelCaptureSha256": "f15dd759f064675f46109f7ec132073ca0edb0c61e07192f5d1a1634e48a3904",
+    "publicRssCapture": "workspace/channel/raw/youtube-public-rss-20260824T043223Z.xml",
+    "publicRssCaptureSha256": "59453fe6220fe285b4ead35c8cf15e71c420fb430573ee36f5da38ae82bc75d5",
+    "analyticsBaselineAsOf": "2026-08-17",
+    "analyticsBaselineSubscribers": 78,
+    "studioRefreshStatus": "blocked_by_migrated_codex_link_permissions"
+  },
+  "publicationSlots": [
+    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-25T20:00:00+08:00", "remoteAction": "not_authorized"},
+    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-26T12:30:00+08:00", "remoteAction": "not_authorized", "remainingGate": "related_video"},
+    {"contentId": "content:series_a:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-27T20:00:00+08:00", "remoteAction": "not_authorized"},
+    {"contentId": "content:shorts_main:elr-s-006", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-28T12:30:00+08:00", "remoteAction": "not_authorized", "remainingGate": "related_video"},
+    {"contentId": "content:series_c:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-29T20:00:00+08:00", "remoteAction": "not_authorized"}
+  ],
+  "nextWeekInventory": [
+    "content:series_b:episode_021",
+    "content:series_a:episode_021",
+    "content:series_c:episode_021"
+  ],
+  "productionTasks": [
+    {"id": "classic-narrator-audition", "productLine": "classic_listening", "priority": 1, "resource": "gpu_heavy", "output": "three-candidate blind listening pack"},
+    {"id": "shorts-007-009-ready-buffer", "productLine": "shorts", "priority": 2, "resource": "gpu_heavy", "output": "three QC-passed private packages"},
+    {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
+  ],
+  "communityPosts": [
+    {"day": "monday", "ritual": "Monday Choice", "copy": "Which real English moment should we practice next: joining a conversation, disagreeing politely, or asking a follow-up question?"},
+    {"day": "wednesday", "ritual": "Reply Challenge", "copy": "Someone says: ‘I’m not sure that will work.’ What would you say next without sounding defensive?"},
+    {"day": "friday", "ritual": "Phrase Clinic", "copy": "Which sounds more natural when you need time: ‘Let me think for a second’ or ‘Wait, I think now’?"},
+    {"day": "sunday", "ritual": "Reading Club", "copy": "For Classic Listening, what matters most to you: a warm voice, very clear pronunciation, or stronger emotion?"}
+  ]
+}

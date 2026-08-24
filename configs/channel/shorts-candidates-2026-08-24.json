@@ -1,0 +1,22 @@
+{
+  "schema": "elr-shorts-publication-ledger-v1",
+  "updatedAt": "2026-08-24T04:32:25Z",
+  "entries": [
+    {
+      "shortId": "elr-s-005",
+      "title": "Did He Say Fifteen or Fifty?",
+      "contentKey": "9923db36e9a3febde84031b92c749ef461521674b1500efb128f3e3eb693cde3",
+      "videoSha256": "5d0a50f3de797c464d13a1b772a9d91d4e0b9c0e30302a70c8184b335fcf7cea",
+      "status": "packaged",
+      "youtubeId": null
+    },
+    {
+      "shortId": "elr-s-006",
+      "title": "The Word That Changes This Airport Sentence",
+      "contentKey": "f7f3ad0e4c944fa57bf879337ab872fc1c2319bde84287d903082cdbe4d4beff",
+      "videoSha256": "03f724ca7b4ea2cbafec68f7d0670f79f5c44bf3f4b9f02a189a1741ddffe0fa",
+      "status": "packaged",
+      "youtubeId": null
+    }
+  ]
+}

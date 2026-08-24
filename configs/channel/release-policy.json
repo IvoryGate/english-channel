@@ -11,15 +11,25 @@
     "reservationRequired": true
   },
   "programs": {
-    "shorts-accelerated-pilot-2026-08": {
+    "shorts-steady-state-2026-08": {
       "productLine": "shorts",
-      "status": "reconciliation_required",
-      "requestedUploadsPerWeek": 14,
-      "startsOn": "2026-08-18",
-      "endsOn": "2026-08-31",
-      "preferredDailyWindows": ["08:00", "20:30"],
+      "status": "active",
+      "requestedUploadsPerWeek": 3,
+      "startsOn": "2026-08-24",
+      "endsOn": "2026-09-20",
+      "preferredDailyWindows": ["12:30"],
       "minimumReadyInventory": 2,
-      "decisionWindowDays": 14
+      "decisionWindowDays": 28
+    },
+    "dialogue-weekly-2026-08-24": {
+      "productLine": "dialogue",
+      "status": "active",
+      "requestedUploadsPerWeek": 3,
+      "startsOn": "2026-08-24",
+      "endsOn": "2026-09-20",
+      "preferredDailyWindows": ["20:00"],
+      "minimumReadyInventory": 3,
+      "decisionWindowDays": 28
     },
     "classic-listening-baseline": {
       "productLine": "classic_listening",

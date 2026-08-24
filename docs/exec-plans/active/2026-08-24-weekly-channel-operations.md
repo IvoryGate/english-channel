@@ -2,9 +2,10 @@
 
 ## Goal
 
-Turn the reviewed channel baseline and completed episode bank into an auditable
-operating plan for 2026-08-24 through 2026-08-30, with local release
-reservations, measurement tasks, and explicit remote-write gates.
+Turn the refreshed channel baseline and completed multi-format inventory into
+an auditable four-week programming system, beginning with executable work for
+2026-08-24 through 2026-08-30, local release reservations, narrator audition,
+community copy, measurement tasks, and explicit remote-write gates.
 
 ## Scope
 
@@ -15,8 +16,13 @@ reservations, measurement tasks, and explicit remote-write gates.
 - Add a time-bounded active Dialogue validation program to channel policy.
 - Register the six unpublished candidates in the canonical local identity
   store with real artifact fingerprints.
-- Reserve the three 020 release slots for this week and define the measurement
-  and review cadence.
+- Reserve three 020 Dialogue slots plus two ready Shorts slots for this week.
+- Register the existing Nora, Riley, and Mia female references and render one
+  comparable blind narrator acceptance pack.
+- Add the fixed description footer, Community rituals, standard/deep Dialogue
+  format contract, and four-week measurement cadence.
+- Start the first First Steps Deep Practice pilot with a testable production
+  brief and a fixed target slot.
 - Produce one durable weekly operating brief.
 
 Excluded:
@@ -24,23 +30,27 @@ Excluded:
 - Uploading, scheduling, editing, or publishing on YouTube.
 - Claiming current Studio analytics when only the 2026-08-17 signed-in baseline
   and 2026-08-24 public capture are available.
-- Producing episode 022 or activating the blocked Shorts/Classics programs.
+- Publicly releasing Classic Listening before narrator acceptance.
 
 ## Status
 
 - Branch: `codex/weekly-ops-2026-08-24`.
 - Owner: Codex primary agent.
-- State: planning and evidence checks in progress.
+- State: implementation in progress; public evidence refreshed, programming
+  and candidate configs added, five slots reserved, and the complete three-
+  candidate narrator blind-review pack rendered.
 - Authority: local planning and reservation only.
 
 ## Plan
 
 1. Verify all six candidate packages and fingerprints.
-2. Shift 020 releases to August 25/27/30 and 021 to September 1/3/6.
+2. Shift 020 releases to August 25/27/29 and 021 to September 1/3/5.
 3. Add and validate the Dialogue program policy.
 4. Import canonical unpublished candidate identities.
-5. Reserve this week's three slots transactionally.
-6. Write the weekly brief, run repository gates, commit, push, and archive this
+5. Recover Shorts 005/006 as packaged candidates and reserve this week's five
+   slots transactionally.
+6. Generate the Nora/Riley/Mia blind narrator pack behind the GPU lease.
+7. Write the weekly brief, run repository gates, commit, push, and archive this
    plan if no local planning work remains.
 
 ## Validation
@@ -56,15 +66,17 @@ Excluded:
 
 - The August 18/20/23 plan was not executed according to the public capture;
   publishing 021 first would break canonical sequence and invalidate the test.
-- The 2026-08-17 Studio baseline is useful but stale. Monday's first operating
-  task is an immutable analytics refresh; decisions remain provisional until
-  it lands.
+- The public page now shows 92 subscribers, 121 videos, and 5,331 lifetime
+  views. The 2026-08-17 Studio baseline remains useful for detailed analytics
+  but its 78-subscriber value is historical. Browser-based Studio refresh is
+  blocked by migrated `.codex` link permissions and remains explicitly
+  missing rather than zero.
 - Publication remains behind explicit approval and a future private-upload
   provider even after a local reservation succeeds.
 
 ## Archive Criteria
 
 - The tracked weekly plan, program policy, local candidate identities, and
-  three reservations agree.
+  five reservations agree.
 - The weekly brief names owners, gates, metrics, and stop conditions.
 - Validation passes and the branch is pushed for audit.

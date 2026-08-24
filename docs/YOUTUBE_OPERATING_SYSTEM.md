@@ -295,6 +295,20 @@ outside an approved policy window.
 
 ## Operating Cadence
 
+The first channel-wide programming contract is tracked in
+`configs/channel/programming.json`. It assigns one recurring public role to
+each specialized adapter, adds a fixed schedule footer to new packages, and
+keeps Community as a retention layer rather than an independent content
+pipeline. The initial four-week grid is Classic Listening Monday morning,
+First Steps Tuesday evening, Daily Talk Thursday evening, Polished English
+Saturday evening, and Shorts Wednesday/Friday/Sunday midday. Classic Listening
+occupies its slot only after narrator acceptance.
+
+Dialogue uses two duration classes. Standard episodes remain 10-15 minutes;
+one 25-35 minute Deep Practice episode rotates across the three series each
+week. A Deep Practice episode must add scenario breadth, guided practice, and a
+natural-speed replay. Duration alone is not a production goal.
+
 ### Daily
 
 - reconcile running jobs, resource leases, uploads, platform processing, and

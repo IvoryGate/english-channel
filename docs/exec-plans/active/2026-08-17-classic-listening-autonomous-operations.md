@@ -64,7 +64,12 @@ Runtime-only surfaces:
   experiment, and retrospective services remain unimplemented.
 - Branch: the channel unification plan owns subsequent shared control-plane
   slices after the Persuasion adapter intake.
-- Current blocker: the approved Riley/VoxCPM2 path has a speech-coupled electronic artifact. VoxCPM2 encodes references at 16 kHz, so a 48 kHz Riley reference does not address the model limit.
+- Current blocker: the approved Riley/VoxCPM2 path has a speech-coupled
+  electronic artifact. The existing Nora, Riley, and Mia female host references
+  are registered in `configs/classics/narrator-audition.json`. All 18 case
+  renders and three blind review WAVs now exist in the ignored runtime audition
+  directory. Explicit listening approval is still required; no candidate is
+  approved yet.
 
 ## Plan
 

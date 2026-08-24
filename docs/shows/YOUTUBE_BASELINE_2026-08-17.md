@@ -18,7 +18,7 @@ and 021 are produced but not yet published.
 
 | Metric | Value | Change versus prior 28 days |
 | --- | ---: | ---: |
-| Subscribers, current | 78 | — |
+| Subscribers at 2026-08-17 capture | 78 | — |
 | Views | 2,618 | +87% |
 | Watch time | 93.9 hours | +57% |
 | Subscribers gained | 58 | +263% |

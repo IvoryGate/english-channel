@@ -1,0 +1,63 @@
+{
+  "schema": "youtube-channel-programming-v1",
+  "timezone": "Asia/Shanghai",
+  "channelPromise": "Understand real English and know what to say next.",
+  "rollout": {
+    "startsOn": "2026-08-24",
+    "fixedScheduleReviewAfter": "2026-09-20",
+    "doNotChangePublishTimesBeforeReview": true
+  },
+  "weeklyGrid": [
+    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "voice_acceptance_required"},
+    {"surface": "series_b", "day": "tuesday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "wednesday", "time": "12:30", "status": "active"},
+    {"surface": "series_a", "day": "thursday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "friday", "time": "12:30", "status": "active"},
+    {"surface": "series_c", "day": "saturday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "sunday", "time": "12:30", "status": "active"}
+  ],
+  "dialogueFormat": {
+    "standardDurationMinutes": [10, 15],
+    "deepPracticeDurationMinutes": [25, 35],
+    "deepPracticeEpisodesPerWeek": 1,
+    "rotation": ["series_b", "series_a", "series_c"],
+    "requiredDeepPracticeBeats": [
+      "cold_open_tension",
+      "useful_line",
+      "three_scenario_dialogues",
+      "breakdown",
+      "guided_repetition",
+      "natural_speed_replay",
+      "viewer_challenge"
+    ]
+  },
+  "community": {
+    "postsPerWeek": 4,
+    "rituals": [
+      {"day": "monday", "name": "Monday Choice", "purpose": "topic_vote"},
+      {"day": "wednesday", "name": "Reply Challenge", "purpose": "response_practice"},
+      {"day": "friday", "name": "Phrase Clinic", "purpose": "language_choice"},
+      {"day": "sunday", "name": "Reading Club", "purpose": "retention_and_feedback"}
+    ],
+    "maximumQuestionsPerPost": 1,
+    "replyWindowHours": 24
+  },
+  "descriptionFooter": [
+    "First Steps: Tuesdays at 8:00 PM (UTC+8)",
+    "Daily Talk: Thursdays at 8:00 PM (UTC+8)",
+    "Polished English: Saturdays at 8:00 PM (UTC+8)",
+    "Classic Listening: Mondays at 8:00 AM (UTC+8), after voice approval",
+    "New Shorts: Wednesdays, Fridays, and Sundays at 12:30 PM (UTC+8)"
+  ],
+  "measurement": {
+    "northStar": "qualified_watch_hours_per_week",
+    "reviewWindows": ["T+24h", "T+7d", "T+28d"],
+    "portfolioMetrics": [
+      "returning_viewers",
+      "watch_minutes_per_1000_impressions",
+      "subscribers_per_1000_views",
+      "playlist_continuation",
+      "production_cost_per_watch_hour"
+    ]
+  }
+}

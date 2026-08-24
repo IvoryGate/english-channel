@@ -30,6 +30,9 @@ with:
   and collision workflow.
 - [`docs/CHANNEL_RECONCILIATION_2026-08-24.md`](docs/CHANNEL_RECONCILIATION_2026-08-24.md)
   for the reviewed 15-item public inventory baseline and its explicit limits.
+- [`docs/WEEKLY_CHANNEL_OPERATIONS_2026-08-24.md`](docs/WEEKLY_CHANNEL_OPERATIONS_2026-08-24.md)
+  for the current fixed programming grid, ready inventory, production queue,
+  community rhythm, and stop conditions.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for current and target system
   boundaries.
 - [`docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md`](docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md)
