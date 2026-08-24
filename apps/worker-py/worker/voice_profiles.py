@@ -154,6 +154,27 @@ CLASSIC_LISTENING_RILEY_NARRATOR = VoiceProfile(
     denoise=False,
 )
 
+CLASSIC_LISTENING_MIA_NARRATOR = VoiceProfile(
+    id="classic-listening-mia-narrator",
+    display_name="Classic Listening — Mia Narrator",
+    description=(
+        "The established ELR Series C Mia timbre adapted for long-form public-domain "
+        "literature: one poised female narrator with a smooth, intimate delivery, "
+        "restrained Regency-era emotion, and no character-voice imitation."
+    ),
+    prompt_text=(
+        "Being because it is no business of mine to look gruff and fight battles, Emily "
+        "endeavoured to correct the superstitious weakness of Annette, though she could "
+        "not entirely subdue her own, to which the latter only replied"
+    ),
+    prompt_wav_path="workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    reference_wav_path="workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    cfg_value=1.65,
+    inference_timesteps=32,
+    normalize=False,
+    denoise=False,
+)
+
 ELR_SERIES_C_LEO = VoiceProfile(
     id="elr-series-c-leo",
     display_name="ELR Series C — Leo",
@@ -197,6 +218,7 @@ VOICE_PROFILES = {
     ELR_SERIES_B_SAM.id: ELR_SERIES_B_SAM,
     ELR_SERIES_B_RILEY.id: ELR_SERIES_B_RILEY,
     CLASSIC_LISTENING_RILEY_NARRATOR.id: CLASSIC_LISTENING_RILEY_NARRATOR,
+    CLASSIC_LISTENING_MIA_NARRATOR.id: CLASSIC_LISTENING_MIA_NARRATOR,
     ELR_SERIES_C_LEO.id: ELR_SERIES_C_LEO,
     ELR_SERIES_C_MIA.id: ELR_SERIES_C_MIA,
 }

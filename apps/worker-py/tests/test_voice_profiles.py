@@ -1,4 +1,5 @@
 from worker.voice_profiles import (
+    CLASSIC_LISTENING_MIA_NARRATOR,
     CLASSIC_LISTENING_RILEY_NARRATOR,
     ELR_SERIES_A_ETHAN,
     ELR_SERIES_A_NORA,
@@ -37,5 +38,16 @@ def test_resolves_classic_listening_riley_as_blocked_single_narrator_profile() -
     assert profile.id == CLASSIC_LISTENING_RILEY_NARRATOR.id
     assert profile.prompt_wav_path == "assets/voices/series_b/riley_reference_clean.wav"
     assert "one poised female narrator" in profile.description
+    assert profile.normalize is False
+    assert profile.denoise is False
+
+
+def test_resolves_approved_classic_listening_mia_profile() -> None:
+    profile = resolve_voice_profile("classic-listening-mia-narrator")
+
+    assert profile.id == CLASSIC_LISTENING_MIA_NARRATOR.id
+    assert profile.reference_wav_path == "workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav"
+    assert profile.cfg_value == 1.65
+    assert profile.inference_timesteps == 32
     assert profile.normalize is False
     assert profile.denoise is False

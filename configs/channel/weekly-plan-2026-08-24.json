@@ -6,6 +6,7 @@
     "approvedBy": "channel_owner",
     "approvedOn": "2026-08-24",
     "scope": "upload_and_schedule_listed_weekly_plan_items",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
     "controlPlaneRemoteMutationAuthority": false
   },
   "evidence": {
@@ -19,11 +20,11 @@
     "publicRssCaptureSha256": "59453fe6220fe285b4ead35c8cf15e71c420fb430573ee36f5da38ae82bc75d5",
     "analyticsBaselineAsOf": "2026-08-17",
     "analyticsBaselineSubscribers": 78,
-    "studioRefreshStatus": "codex_home_persisted_to_d_drive_restart_required"
+    "studioRefreshStatus": "connected_signed_in_channel_verified"
   },
   "publicationSlots": [
-    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-24T17:00:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
-    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-24T20:00:00+08:00", "remoteAction": "authorized_pending_browser_restart"},
+    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-24T17:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "sSbdl4ASLhE", "shareUrl": "https://youtube.com/shorts/sSbdl4ASLhE", "relatedVideoId": "eSQE456Xd8M", "checks": "pass"},
+    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-24T20:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "7tajNPGSM3w", "shareUrl": "https://youtu.be/7tajNPGSM3w", "playlistId": "PLV6UzOzdXS_w", "subtitles": "uploaded", "endScreen": "configured", "checks": "pass"},
     {"contentId": "content:shorts_main:elr-s-006", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-25T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
     {"contentId": "content:shorts_main:elr-s-007", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-26T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
     {"contentId": "content:shorts_main:elr-s-008", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-27T12:30:00+08:00", "remoteAction": "authorized_pending_browser_restart", "remainingGate": "related_video"},
@@ -39,7 +40,7 @@
     "content:series_c:episode_021"
   ],
   "productionTasks": [
-    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "awaiting_blind_review", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review"},
+    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "approved_voice_f", "selectedCandidate": "mia-smooth", "selectedProfile": "classic-listening-mia-narrator", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review/voice-f.wav"},
     {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "status": "completed", "output": "five QC-passed private packages"},
     {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
   ],

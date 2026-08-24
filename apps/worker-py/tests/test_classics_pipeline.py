@@ -85,17 +85,17 @@ def test_loads_persuasion_config() -> None:
     repo = Path(__file__).resolve().parents[3]
     config = load_book_config(repo, "persuasion")
     assert config.chapter_count == 24
-    assert config.voice["profileId"] == "classic-listening-riley-narrator"
+    assert config.voice["profileId"] == "classic-listening-mia-narrator"
     assert config.voice["mode"] == "single"
-    assert config.voice["acceptanceStatus"] == "blocked_electronic_texture"
+    assert config.voice["acceptanceStatus"] == "approved"
+    assert config.voice["approvalEvidence"]["blindCode"] == "voice-f"
     assert config.release["programId"] == "classic-listening-baseline"
     assert config.branding["primaryAudience"] == "women aged 55 and over"
-    assert config.branding["introVoicePath"].endswith("classic-listening-intro-voice-v4.wav")
-    assert config.branding["outroVoicePath"].endswith("classic-listening-outro-voice-v5b.wav")
+    assert config.branding["introVoicePath"].endswith("classic-listening-intro-voice-v6-mia.wav")
+    assert config.branding["outroVoicePath"].endswith("classic-listening-outro-voice-v6-mia.wav")
     assert config.branding["introSpokenText"].startswith("Welcome to Classic Listening")
 
-    with pytest.raises(ConfigError, match="blocked_electronic_texture"):
-        require_approved_voice(config)
+    require_approved_voice(config)
 
 
 def test_classics_branding_uses_voice_and_contains_no_emoji() -> None:

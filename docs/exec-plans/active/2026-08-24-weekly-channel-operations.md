@@ -42,10 +42,14 @@ Excluded:
   candidate narrator blind-review pack rendered. The user rejected all three:
   A gender-drifted male, while female candidates B and C retained electronic
   artifacts, so Classic moved into the tracked D/E/F narrator recovery pass.
-  That pass is rendered and awaiting blind review; E has the lowest high-band
-  texture proxy, but no narrator has been approved automatically.
+  That pass is rendered, and the channel owner selected blind Voice F. The
+  revealed candidate is `mia-smooth`; its Mia reference and 1.65/32 generation
+  settings are now the approved Classic Listening narrator profile.
 - Authority: the user approved the catch-up release and fixed future schedule;
-  remote execution remains gated only by browser restart and content QC.
+  the signed-in Studio session is verified. Short 005 is scheduled for 17:00
+  and First Steps 020 for 20:00 on August 24, with real YouTube IDs. The owner
+  also authorized future in-plan scheduling without per-item confirmation once
+  all release checks pass; exceptions and failed gates still stop execution.
 
 ## Plan
 
@@ -57,7 +61,7 @@ Excluded:
 5. Recover Shorts 005/006 as packaged candidates, move them into the daily
    cadence, and produce 007-011 through Sunday. Completed: all seven daily
    Shorts now pass package QC; Related Video remains the remote gate.
-6. Generate the Nora/Riley/Mia blind narrator pack behind the GPU lease.
+6. Generate the narrator recovery pack and lock the owner-selected Voice F.
 7. Write the weekly brief, run repository gates, commit, push, and archive this
    plan if no local planning work remains.
 
@@ -67,7 +71,7 @@ Excluded:
 - The shared release controller accepts the three 020 reservations without
   spacing, identity, program, or rolling-capacity conflict.
 - Every candidate source and MP4 fingerprint is retained.
-- No YouTube mutation occurs.
+- Every YouTube mutation is reconciled to a real video ID and local ledger.
 - Encoding, docs, focused tests, lint, and full tests pass as appropriate.
 
 ## Risks And Decisions
@@ -76,9 +80,8 @@ Excluded:
   publishing 021 first would break canonical sequence and invalidate the test.
 - The public page now shows 92 subscribers, 121 videos, and 5,331 lifetime
   views. The 2026-08-17 Studio baseline remains useful for detailed analytics
-  but its 78-subscriber value is historical. Browser-based Studio refresh is
-  blocked by migrated `.codex` link permissions and remains explicitly
-  missing rather than zero.
+  but its 78-subscriber value is historical. The signed-in Studio dashboard
+  independently confirms 92 subscribers after the D-drive migration restart.
 - Publication remains behind explicit approval and a future private-upload
   provider even after a local reservation succeeds.
 
