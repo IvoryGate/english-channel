@@ -67,8 +67,9 @@ Run one principal book at a time until the release process holds a three-chapter
 All cadence values in this section are product requests. Channel capacity,
 reservations, privacy, and scheduling authority are owned by
 `configs/channel/release-policy.json`; the Classic Listening request is
-registered as `classic-listening-baseline` and is currently blocked on audio
-acceptance.
+registered as the active `classic-listening-baseline` program. The channel
+owner accepted the Mia baseline and the first release slot on 2026-08-24; the
+documented release and platform gates still control every transition.
 
 The initial operating cadence is two chapter episodes per week with at least three verified episodes held in reserve. The cadence may change only from observed production capacity and audience behavior.
 

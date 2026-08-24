@@ -68,11 +68,14 @@ Existing capabilities to reuse:
 
 - Owner: Codex primary agent.
 - Last updated: 2026-08-24.
-- State: Voice F (Mia) passed the tracked owner acceptance gate on 2026-08-24.
-  The clean chapter 1 production run and formal V2 upload package now pass the
-  automated audio, ASR, subtitle, visual, native-2K, loudness, true-peak, and
-  black-frame gates. Publication remains blocked on final listening review and
-  an approved release slot. Chapters 2-24 remain outside this pilot.
+- State: completed on 2026-08-24. Voice F (Mia) passed the tracked owner
+  acceptance gate, and the owner accepted the final chapter baseline with
+  temporary tolerance of the remaining electronic texture. The clean chapter
+  1 production run and formal V2 upload package pass the automated audio, ASR,
+  subtitle, visual, native-2K, loudness, true-peak, and black-frame gates.
+  YouTube processing, copyright, and Community Guidelines checks also passed;
+  video `EkAVjpGf1_Q` is scheduled for 2026-08-31 at 08:00 UTC+8. Chapters
+  2-24 remain in the separate rollout scope.
 - Intake branch: `codex/persuasion-pilot-intake`.
 - Protected source: `codex/classics-persuasion-pilot`; its 33 media files are
   retained untracked and fingerprinted in
@@ -120,6 +123,13 @@ Existing capabilities to reuse:
 - The fresh Mia chapter contains 131/131 segment WAVs and a 866.44-second mastered body. Structural QC is `PASS` with zero warnings and zero compose drift. Full-chapter Whisper QC checks all 131 segments at mean similarity 0.987 with no remaining review IDs. Parenthetical punctuation is converted to TTS pauses without changing source words; segment 038 and 050 truncations were repaired, `Kellynch` uses the tracked `Kellinch` spoken form, and a one-word tail was rebalanced across segments 062-063 while preserving 100% ordered display-text coverage.
 - The final package contains 252 word-aligned subtitle cues and 11 remapped story scenes with 1.5-second crossfades. The H.264/AAC program is 887.552 seconds at native 2560x1440 with 48 kHz stereo audio. Independent EBU R128 analysis measures -16.5 LUFS and -1.7 dBFS true peak; a full-program scan found no black interval lasting one second or longer.
 - The review package is staged at `exports/youtube/persuasion/chapter-01-v2` with video, 2K thumbnail, SRT, title, description, tags, checklist, verification, and fingerprints. It is `EXPORTED_FOR_REVIEW`, not uploaded or published.
+- The channel owner approved that package as the operating baseline on
+  2026-08-24. It was uploaded privately as YouTube video `EkAVjpGf1_Q`, placed
+  in the new `Persuasion | Jane Austen Full Audiobook & English Listening`
+  playlist, configured with the English SRT, AI-content disclosure, Education
+  category, and a video/playlist/subscribe end screen. Both Studio platform
+  checks reported no issues, and the video is scheduled for the fixed Classic
+  Listening slot on 2026-08-31 at 08:00 UTC+8.
 
 ## Audited Input
 

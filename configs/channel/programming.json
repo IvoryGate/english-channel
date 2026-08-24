@@ -8,7 +8,7 @@
     "doNotChangePublishTimesBeforeReview": true
   },
   "weeklyGrid": [
-    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "voice_acceptance_required"},
+    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
     {"surface": "shorts", "day": "monday", "time": "12:30", "status": "active"},
     {"surface": "shorts", "day": "tuesday", "time": "12:30", "status": "active"},
     {"surface": "series_b", "day": "tuesday", "time": "20:00", "status": "active"},
@@ -61,7 +61,7 @@
     "First Steps: Tuesdays at 8:00 PM (UTC+8)",
     "Daily Talk: Thursdays at 8:00 PM (UTC+8)",
     "Polished English: Saturdays at 8:00 PM (UTC+8)",
-    "Classic Listening: Mondays at 8:00 AM (UTC+8), after voice approval",
+    "Classic Listening: Mondays at 8:00 AM (UTC+8)",
     "New Shorts: every day at 12:30 PM (UTC+8)"
   ],
   "measurement": {

@@ -2,7 +2,7 @@
   "schema": "classic-listening-series-v1",
   "series": {
     "slug": "classic-listening",
-    "authorityLevel": 0,
+    "authorityLevel": 2,
     "publicationTerritories": ["US", "GB"],
     "primaryAudience": "women aged 55 and over"
   },

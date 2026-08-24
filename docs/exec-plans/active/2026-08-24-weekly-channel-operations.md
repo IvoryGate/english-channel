@@ -53,7 +53,11 @@ Excluded:
   The remaining six Shorts and Daily Talk/Polished English 020 have now passed
   Studio checks and are scheduled through Sunday with their real YouTube IDs,
   playlists, subtitles, end screens, and Related Video assignments reconciled
-  to the weekly control plane.
+  to the weekly control plane. The owner accepted the Mia chapter baseline,
+  including temporary tolerance of the residual electronic texture, and
+  `Persuasion` chapter 1 passed both Studio checks and is scheduled for the
+  fixed Classic Listening slot on 2026-08-31 at 08:00 UTC+8 as
+  `EkAVjpGf1_Q`.
 
 ## Plan
 
@@ -87,8 +91,9 @@ Excluded:
   views. The 2026-08-17 Studio baseline remains useful for detailed analytics
   but its 78-subscriber value is historical. The signed-in Studio dashboard
   independently confirms 92 subscribers after the D-drive migration restart.
-- Publication remains behind explicit approval and a future private-upload
-  provider even after a local reservation succeeds.
+- Public scheduling is authorized after all release and platform gates pass;
+  exceptions still stop execution. The current Studio path remains manual
+  browser control until a credentialed publication provider is implemented.
 
 ## Archive Criteria
 

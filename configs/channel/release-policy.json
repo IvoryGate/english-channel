@@ -36,9 +36,9 @@
     },
     "classic-listening-baseline": {
       "productLine": "classic_listening",
-      "status": "blocked_audio_acceptance",
+      "status": "active",
       "requestedUploadsPerWeek": 2,
-      "preferredDailyWindows": [],
+      "preferredDailyWindows": ["08:00"],
       "minimumReadyInventory": 3,
       "decisionWindowDays": 28
     }
