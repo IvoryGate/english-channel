@@ -83,8 +83,11 @@ Product adapters retained behind the control plane:
   Channel release capacity is tracked outside product configs, and all accepted
   heavy entry points share the repository GPU mutex. Legacy research,
   mastering, and audiobook parity is complete at `298cfa4`, with all 87 source
-  paths classified. Phase 1 intake is therefore complete locally; the next
-  implementation slice is shared identity and durable channel state.
+  paths classified. Phase 1 intake is therefore complete locally. Phase 2 now
+  has an implemented local identity foundation: tracked policy, versioned
+  SQLite migrations, three legacy-ledger adapters, provenance retention, and
+  fail-closed collision reports. Real runtime import review and the shared
+  lifecycle still remain before identity migration is complete.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

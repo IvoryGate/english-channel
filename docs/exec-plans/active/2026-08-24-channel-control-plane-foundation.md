@@ -7,6 +7,15 @@ system: one canonical channel identity model and one versioned SQLite source of
 truth that can safely absorb the Dialogue, Shorts, and Classic Listening local
 ledgers.
 
+## Status
+
+- Branch: `codex/channel-control-plane-foundation`.
+- Owner: Codex primary agent.
+- Last updated: 2026-08-24.
+- State: implementation and focused tests complete; documentation, isolated CLI
+  smoke test, full repository gates, and completion archival remain.
+- Authority: local state only; no remote mutations are implemented or granted.
+
 ## Scope
 
 Included:

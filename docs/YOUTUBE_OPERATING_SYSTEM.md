@@ -323,12 +323,21 @@ outside an approved policy window.
 ## Canonical Command Surface
 
 The target routine interface is one channel controller; product controllers
-remain adapter/debug surfaces:
+remain adapter/debug surfaces. The identity-foundation commands marked below
+are implemented; the remaining commands describe later slices:
 
 ```powershell
 $py = ".\.conda-env\python.exe"
 
 & $py scripts/channel.py inventory
+& $py scripts/channel.py init
+& $py scripts/channel.py status
+& $py scripts/channel.py collisions
+& $py scripts/channel.py import-dialogue --source <ledger.json>
+& $py scripts/channel.py import-shorts --source <ledger.json>
+& $py scripts/channel.py import-classics --source <operations-directory>
+
+# Target commands not implemented by the identity foundation:
 & $py scripts/channel.py reconcile
 & $py scripts/channel.py plan --horizon 28d
 & $py scripts/channel.py resources status
@@ -340,11 +349,13 @@ $py = ".\.conda-env\python.exe"
 & $py scripts/channel.py experiments review
 & $py scripts/channel.py retrospective weekly
 & $py scripts/channel.py retrospective 28d
-& $py scripts/channel.py status
 ```
 
-Until this surface is implemented and migrated, existing product commands are
-not interchangeable and their local ledgers are not channel truth.
+Until real legacy imports and collision review are complete, existing product
+commands are not interchangeable and their local ledgers remain migration
+inputs rather than channel truth. See
+[`CHANNEL_CONTROL_PLANE.md`](CHANNEL_CONTROL_PLANE.md) for the implemented
+boundary.
 
 ## Million-Subscriber Roadmap
 

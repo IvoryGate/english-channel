@@ -14,6 +14,10 @@
 - `.cursor/skills/`, `docs/shows/`, `scripts/`, and
   `workspace/shows/tools/`: Dialogue / English Listening Room research, script,
   brand, resumable production, QC, packaging, and local operations workflows.
+- `apps/worker-py/worker/channel/`: the implemented shared identity foundation,
+  versioned SQLite repository, legacy-ledger adapters, collision reporting, and
+  local-only channel CLI. It does not yet implement shared lifecycle, resource,
+  publication, analytics, experiment, or decision services.
 - `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
   and release-preflight prototype retained as a migration input.
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
@@ -26,11 +30,11 @@
 - `src/shorts/`: data-driven Remotion 9:16 compositions. Generated audio and
   video remain in ignored `workspace/shorts/`.
 
-The current implementation does not yet provide the shared channel control
-plane. The unfinished Persuasion production implementation, later analytics,
-and shared experiment work remain on branches and worktrees catalogued in
-[`BRANCH_RECONCILIATION.md`](BRANCH_RECONCILIATION.md). Do not infer that an
-unmerged capability is available from trunk.
+The current implementation provides only the identity and durable-state
+foundation of the shared channel control plane. Resource scheduling,
+channel-level publication, analytics, experiments, decisions, and progressive
+authority remain future slices. Do not infer remote mutation authority from
+the presence of `scripts/channel.py`.
 
 ## Target System
 
@@ -87,6 +91,8 @@ types -> schema -> repo -> service -> transport
 
 During migration, legacy JSON ledgers are inputs, not competing permanent
 sources of truth. Import must report collisions and preserve provenance.
+The implemented migration contract and operator commands are documented in
+[`CHANNEL_CONTROL_PLANE.md`](CHANNEL_CONTROL_PLANE.md).
 
 ## Resource Safety Baseline
 

@@ -25,6 +25,8 @@ with:
   branch, worktree, capability, and intake inventory.
 - [`docs/LEGACY_PIPELINE_PARITY.md`](docs/LEGACY_PIPELINE_PARITY.md) for the
   path-by-path evidence behind superseding the three older feature branches.
+- [`docs/CHANNEL_CONTROL_PLANE.md`](docs/CHANNEL_CONTROL_PLANE.md) for the
+  implemented canonical identity store, legacy import, and collision workflow.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for current and target system
   boundaries.
 - [`docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md`](docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md)
@@ -78,6 +80,26 @@ evaluates YouTube Analytics experiments:
 
 See [`docs/shorts/README.md`](docs/shorts/README.md) for production, private
 upload, analytics, review, recovery, and autonomy gates.
+
+## Unified Channel Identity
+
+The first shared control-plane slice provides tracked channel/product/series
+IDs, versioned SQLite migrations, and read-only adapters for all three legacy
+ledger shapes. It records rather than hides cross-pipeline identity collisions
+and grants no remote account authority:
+
+```powershell
+$py = ".\.conda-env\python.exe"
+& $py scripts/channel.py init
+& $py scripts/channel.py status
+& $py scripts/channel.py inventory
+& $py scripts/channel.py collisions
+```
+
+Runtime state is stored in the ignored
+`workspace/channel/channel.sqlite`. See
+[`docs/CHANNEL_CONTROL_PLANE.md`](docs/CHANNEL_CONTROL_PLANE.md) before
+importing real Dialogue, Shorts, or Classic Listening ledgers.
 
 ## Local VoxCPM2 Setup On Windows
 
