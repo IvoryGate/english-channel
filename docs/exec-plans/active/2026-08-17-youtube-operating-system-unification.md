@@ -81,9 +81,10 @@ Product adapters retained behind the control plane:
   foundation at `9f4a7a3`, and the protected Persuasion production adapter at
   `dd9cdce`; all pass full gates but are not trunk until reviewed and merged.
   Channel release capacity is tracked outside product configs, and all accepted
-  heavy entry points share the repository GPU mutex. The next intake is
-  selective parity review of the legacy research, mastering, and audiobook
-  branches before shared identity/database work begins.
+  heavy entry points share the repository GPU mutex. Legacy research,
+  mastering, and audiobook parity is complete at `298cfa4`, with all 87 source
+  paths classified. Phase 1 intake is therefore complete locally; the next
+  implementation slice is shared identity and durable channel state.
 - Safety hold: no branch or worktree may be deleted until its disposition is
   recorded and unique commits plus uncommitted files are preserved.
 - Publication hold: this plan grants no new YouTube write authority.

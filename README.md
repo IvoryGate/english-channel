@@ -23,6 +23,8 @@ with:
   target product and operating model.
 - [`docs/BRANCH_RECONCILIATION.md`](docs/BRANCH_RECONCILIATION.md) for the
   branch, worktree, capability, and intake inventory.
+- [`docs/LEGACY_PIPELINE_PARITY.md`](docs/LEGACY_PIPELINE_PARITY.md) for the
+  path-by-path evidence behind superseding the three older feature branches.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for current and target system
   boundaries.
 - [`docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md`](docs/exec-plans/active/2026-08-17-youtube-operating-system-unification.md)

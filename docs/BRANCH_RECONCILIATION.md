@@ -47,9 +47,9 @@ Branch divergence counts below are relative to `origin/main` and have the form
 | `codex/shorts-pipeline-pilot` (`fb25a62`) | source branch/worktree preserved; absorbed locally by `codex/shorts-adapter-intake` at `8e39d68` | complete Shorts adapter, vertical render, QC, ledger, private upload, analytics, experiments, accelerated-pilot evidence | absorbed locally; PR pending | intake preserves newer ELR code, centralizes channel release capacity, requires external-state reconciliation, and passes focused plus full gates |
 | `codex/classics-autonomous-foundation` (`741b999`) | source branch/worktree preserved; absorbed locally by `codex/classics-foundation-intake` at `9f4a7a3` | rights and policy schemas, append-only lifecycle, authority gates, audio-provider boundary | absorbed locally; PR pending | intake binds cadence to shared channel policy, retains authority level 0 and the audio blocker, and passes focused plus full gates |
 | `codex/classics-persuasion-pilot` (`8d548d0`) | source code checkpointed; worktree retains only 33 untracked media files | EPUB ingestion, segmentation, audio/QC, aligned subtitles, packaging, Remotion visuals, tests, plans, generated pilot assets | production adapter absorbed locally at `dd9cdce`; media preserved | semantic intake retains foundation lifecycle/authority, binds release and audio status to shared policy, uses the shared GPU lock, fingerprints all 33 media files, and passes focused plus full gates |
-| `feat/youtube-research-topic-selection` (`379ac46`) | clean branch; `7 / 4`; all 43 changed paths also exist on later ELR branch, 19 with identical blobs | corpus collection, trend scoring, browser research, competitor analysis | supersede after parity audit | compare 24 differing paths and port only tests or behavior absent from maintained ELR code |
-| `feat/episode-audio-mastering` (`7615554`) | clean branch; `7 / 1`; three changed paths also exist but differ on ELR | mastering acceptance documentation and a focused test | supersede after selective port | compare test and mastering contract; port missing assertions/docs, not the whole stale branch |
-| `feat/audiobook-skill-opt-in-srt` (`9dce05c`) | clean branch; `7 / 5`; all 41 changed paths also exist on later ELR branch, 16 identical | audiobook segmentation, subtitles, media, packaging, and operator guidance | supersede after parity audit | compare 25 differing paths against maintained audiobook tooling; retain only unique behavior and tests |
+| `feat/youtube-research-topic-selection` (`379ac46`) | clean source; all 43 paths classified in `LEGACY_PIPELINE_PARITY.md` | corpus collection, trend scoring, read-only browser research, competitor analysis | superseded locally at `298cfa4` | 19 identical, 2 evolved, 8 ported/recreated, 13 unsafe account scripts and 1 historical plan intentionally not ported |
+| `feat/episode-audio-mastering` (`7615554`) | clean source; all 3 paths classified | mastering acceptance documentation and a focused test | superseded locally at `298cfa4` | test and durable contract ported; completed historical active plan omitted |
+| `feat/audiobook-skill-opt-in-srt` (`9dce05c`) | clean source; all 41 paths classified | audiobook segmentation, subtitles, media, packaging, and operator guidance | superseded locally at `298cfa4` | 16 identical, 16 evolved, 7 ported, obsolete unlocked monitor and historical plan omitted |
 | `agent/bootstrap-voxcpm-workflow` (`2a22230`) | `7 / 0`; same commit as stale local main | original monorepo/runtime bootstrap | retire candidate | retain through history; delete branch only after local main is current and cleanup is authorized |
 
 ## Capability Matrix
@@ -117,7 +117,8 @@ branch/worktree, not current trunk.
    locally with source checkpoint `8d548d0` and adapter intake `dd9cdce`; media
    remains protected by its SHA-256 inventory.
 6. Audit research, mastering, and audiobook legacy branches against the
-   resulting trunk; port only unique behavior/tests.
+   resulting trunk; port only unique behavior/tests. Completed locally at
+   `298cfa4`; all 87 paths have recorded dispositions and full gates pass.
 7. Introduce the shared channel identity/data contracts and migrate ledgers.
 8. Introduce shared resource, publication, analytics, experiment, and decision
    services one vertical slice at a time.

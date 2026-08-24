@@ -30,8 +30,8 @@ Not included:
 - Owner: Codex primary agent.
 - Branch: `codex/legacy-pipeline-parity` from `64415a6`.
 - Last updated: 2026-08-24.
-- State: all 87 source paths classified; missing tests and referenced contracts
-  ported; full repository gates pending.
+- State: completed locally at `298cfa4`; all 87 source paths classified and
+  full gates pass.
 - Publication hold: no remote YouTube mutation is authorized.
 
 ## Plan
@@ -49,6 +49,19 @@ Not included:
 - Any port includes code, tests, and docs together.
 - No runtime artifact, credential, media, or source-branch mutation occurs.
 - Full repository gates pass.
+
+Completed on 2026-08-24:
+
+- Source classification: 43 research, 3 mastering, and 41 audiobook paths.
+- Focused restored regression suite: 24 passed.
+- Full Python suite: 112 passed; all Node workspace suites passed.
+- Encoding, TypeScript workspace and root Remotion checks, architecture, docs,
+  and Python compile gates passed.
+- Read-only browser CLI help passed without opening a browser.
+- The tracked host registry is byte-identical to the protected root-workspace
+  source (`SHA-256 60cee8e05c2ef6a7952d32414ef1baa8dcc16d307e7ef998906f90fe6560404c`).
+- No legacy branch, root-workspace source, account session, remote channel,
+  runtime media, or credential was modified.
 
 ## Archive Criteria
 
