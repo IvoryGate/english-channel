@@ -142,7 +142,7 @@
       "prompt": "Which word means later than planned?",
       "answer": "Delayed.",
       "relatedShow": "series_a",
-      "relatedVideoId": null,
+      "relatedVideoId": "zBuLsQhUpvg",
       "visualBrief": "Calm airport departure-lounge illustration with a woman checking a delayed flight board and holding a small carry-on.",
       "backgroundImage": "shorts/elr-s-006/story-background-v1.png",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
@@ -171,7 +171,7 @@
       "prompt": "Did Sam accept the invitation?",
       "answer": "No. I'd love to, but... is a polite refusal here.",
       "relatedShow": "series_a",
-      "relatedVideoId": null,
+      "relatedVideoId": "nbuvxKJ1RqE",
       "visualBrief": "Friendly dinner invitation between two adult friends in a warm restaurant, one responding politely and apologetically.",
       "experimentAssignments": {"hook": "question", "duration": "long", "format": "dialogue"}
     },
@@ -196,7 +196,7 @@
       "prompt": "Which version would you use?",
       "answer": "Could I have a coffee, please?",
       "relatedShow": "series_a",
-      "relatedVideoId": null,
+      "relatedVideoId": "nbuvxKJ1RqE",
       "visualBrief": "Welcoming neighborhood coffee shop where an adult woman practices a polite order with a supportive barista.",
       "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
     },
@@ -221,7 +221,7 @@
       "prompt": "Did Riley want more cake?",
       "answer": "No. I'm good politely refused it.",
       "relatedShow": "series_c",
-      "relatedVideoId": null,
+      "relatedVideoId": "UkYmqP2BaTc",
       "visualBrief": "Relaxed home gathering where one friend offers another slice of cake and the other politely declines with a smile.",
       "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
     },
@@ -244,7 +244,7 @@
       "prompt": "What made Elizabeth look up?",
       "answer": "She heard Darcy's name.",
       "relatedShow": "classic_pride_prejudice",
-      "relatedVideoId": null,
+      "relatedVideoId": "keaTZWIjAjY",
       "visualBrief": "Refined Regency parlor illustration of Elizabeth Bennet looking up sharply after hearing an unexpected name.",
       "experimentAssignments": {"hook": "statement", "duration": "long"}
     },
@@ -266,7 +266,7 @@
       "prompt": "What happened after they read the letter?",
       "answer": "Someone knocked at the door.",
       "relatedShow": "classic_persuasion",
-      "relatedVideoId": null,
+      "relatedVideoId": "x06HvRJTM3c",
       "visualBrief": "Atmospheric Regency room with an unsigned letter on a table and the shadow of a visitor beyond the door.",
       "experimentAssignments": {"hook": "question", "duration": "short"}
     },

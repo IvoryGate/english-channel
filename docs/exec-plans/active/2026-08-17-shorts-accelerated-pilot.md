@@ -32,7 +32,7 @@ the channel identity remain out of scope.
 - **State:** active
 - **Owner:** Codex
 - **Branch:** `codex/shorts-pipeline-pilot`
-- **Last update:** 2026-08-17
+- **Last update:** 2026-08-24
 - `elr-s-001` is scheduled for 2026-08-18 20:30.
 - `elr-s-002` is scheduled for 2026-08-18 08:00.
 - `elr-s-003` passed local and Studio checks and is scheduled for 2026-08-19
@@ -41,9 +41,13 @@ the channel identity remain out of scope.
   20:30 with Related Video verified after reopening the saved item.
 - Dedicated 9:16 discovery covers are now a production gate from `elr-s-005`
   onward; video screenshots are retained only as the initial baseline.
-- `elr-s-005` and `elr-s-006` are packaged with unique content hashes,
-  dedicated covers, passing visual/audio QC, and reserved release slots on
-  2026-08-20 at 08:00 and 20:30 respectively; Studio upload remains pending.
+- `elr-s-005` passed local and Studio gates, retained its Related Video, and
+  published on 2026-08-24 at 17:00 (`sSbdl4ASLhE`).
+- `elr-s-006` through `elr-s-011` passed local and Studio copyright/community
+  checks, retained explicit Related Video assignments, and are scheduled daily
+  at 12:30 Asia/Shanghai from 2026-08-25 through 2026-08-30.
+- `elr-s-011` uses the published Pride and Prejudice Chapter 01 as the current
+  Classic Listening bridge because a Persuasion episode is not yet public.
 - YouTube API OAuth is absent; the signed-in English Listening Room Studio
   session is the verified upload fallback.
 
