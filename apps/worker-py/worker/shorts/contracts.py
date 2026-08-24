@@ -315,6 +315,8 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "publication": {"status": "planned", "privacy": "private"},
         "renderSettings": {
             "interTurnSilenceSec": 0.12,
+            "durationMinSec": product["quality"]["durationMinSec"],
+            "durationHardMaxSec": product["quality"]["durationHardMaxSec"],
             "durationVariantCutoffSec": product["quality"]["durationVariantCutoffSec"],
             "loudnessTargetLufs": product["quality"]["loudnessTargetLufs"],
             "truePeakMaxDb": product["quality"]["truePeakMaxDb"],

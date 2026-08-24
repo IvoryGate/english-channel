@@ -113,12 +113,23 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
 
 def _tempo_factor_for_variant(raw_duration: float, manifest: dict[str, Any]) -> float:
     planned = float(manifest["durationPlannedSec"])
-    cutoff = float(manifest.get("renderSettings", {}).get("durationVariantCutoffSec", 50.0))
+    settings = manifest.get("renderSettings", {})
+    minimum = float(settings.get("durationMinSec", 36.0))
+    hard_maximum = float(settings.get("durationHardMaxSec", 59.0))
+    cutoff = float(settings.get("durationVariantCutoffSec", 50.0))
+    boundary_margin = 0.1
     planned_is_short = planned <= cutoff
     raw_is_short = raw_duration <= cutoff
-    if planned_is_short == raw_is_short:
+    target = raw_duration
+    if planned_is_short != raw_is_short:
+        target = planned
+    elif raw_duration < minimum:
+        target = minimum + boundary_margin
+    elif raw_duration > hard_maximum:
+        target = hard_maximum - boundary_margin
+    if target == raw_duration:
         return 1.0
-    factor = raw_duration / planned
+    factor = raw_duration / target
     if not 0.5 <= factor <= 2.0:
         raise ValueError(f"Required tempo factor {factor:.3f} is outside ffmpeg's safe range")
     return factor

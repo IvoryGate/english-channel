@@ -196,13 +196,16 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
     assert prompt["pauseAfterSec"] == 2.25
 
 
-def test_audio_pacing_only_corrects_a_crossed_duration_variant() -> None:
+def test_audio_pacing_corrects_safety_bounds_and_crossed_duration_variant() -> None:
     product, portfolio = contracts()
     short_manifest = build_manifest(portfolio["entries"][4], product, portfolio["cycleId"])
     long_manifest = build_manifest(portfolio["entries"][5], product, portfolio["cycleId"])
 
+    assert _tempo_factor_for_variant(33.79, short_manifest) == pytest.approx(33.79 / 36.1)
     assert _tempo_factor_for_variant(49.2, short_manifest) == 1.0
+    assert _tempo_factor_for_variant(33.0, long_manifest) == pytest.approx(33.0 / 54.0)
     assert _tempo_factor_for_variant(47.9, long_manifest) == pytest.approx(47.9 / 54.0)
+    assert _tempo_factor_for_variant(60.5, long_manifest) == pytest.approx(60.5 / 58.9)
 
 
 def test_audio_qc_rejects_stationary_sixty_hertz_hum(tmp_path: Path) -> None:

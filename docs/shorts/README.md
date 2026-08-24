@@ -110,10 +110,11 @@ $env:ELR_SHORTS_DEVICE = "cuda"
 The renderer uses the owning repository's global GPU lock, so a scheduled Short
 cannot overlap a long-form VoxCPM or Whisper production job.
 
-Measured delivery is preserved unless it crosses the pre-registered short/long
-duration boundary. In that case only, mastering applies a bounded tempo
-correction toward the planned duration and scales the caption timeline by the
-same factor, so an experiment item cannot silently enter the wrong variant.
+Measured delivery is preserved unless it falls outside the 36-59 second safety
+range or crosses the pre-registered short/long duration boundary. Mastering
+then applies a bounded tempo correction toward the nearest valid target and
+scales the caption timeline by the same factor, so an item cannot silently fail
+the duration gate or enter the wrong experiment variant.
 
 ### 3. Render 9:16 video
 
