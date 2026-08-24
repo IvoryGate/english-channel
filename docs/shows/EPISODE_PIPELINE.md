@@ -2,7 +2,7 @@
 
 Durable workflow for Series A/B/C: topic selection → scriptwriting → validation → approval → visual generation → render → QC → master → pack → export.
 
-Companion: [`ELR_YOUTUBE_PUBLISH.md`](ELR_YOUTUBE_PUBLISH.md), [`AUDIO_MASTERING.md`](AUDIO_MASTER.md), [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md), [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
+Companion: [`ELR_YOUTUBE_PUBLISH.md`](ELR_YOUTUBE_PUBLISH.md), [`AUDIO_MASTERING.md`](AUDIO_MASTERING.md), [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md), [`VISUAL_IDENTITY.md`](VISUAL_IDENTITY.md).
 
 ## Episode directory structure
 
@@ -151,7 +151,7 @@ The validator checks: title, description, exactly two hosts, balanced turns, CTA
 | Script draft + validation | series skill + `validate_podcast_script.py` | (audiobook: source text QC) |
 | Thumbnail + video bg | `render_episode_thumbnail.py` (now step 0 in pack) | `cover_pipeline.py` |
 | Render turns + raw concat + QC | `render_episode.py` | `render_chapter.py` |
-| Stable GPU launch | `scripts/elr.py produce` (preflight + serial retry/resume) | `monitor_book_chapters.py` |
+| Stable GPU launch | `scripts/elr.py produce` (preflight + serial retry/resume) | `scripts/classics.py produce --book <slug> --chapters <range>` for registered Classic Listening books |
 | Production status | `scripts/elr.py status` | monitor status |
 | QC report file | `check_episode.py --write-report` | `check_chapter.py --write-report` |
 | Master | `master_episode_audio.py` | (audiobook: peak boost only) |

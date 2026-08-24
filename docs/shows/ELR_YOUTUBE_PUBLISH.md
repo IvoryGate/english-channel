@@ -76,7 +76,7 @@ workspace/shows/series_x/episode_XXX/
 3. **Script** — draft with dialogue-podcast-scriptwriting (or polished-english for C); validate profile.
 4. **Manifest** — `prepare_episode_manifest.py` → turns for TTS.
 5. **Render audio** — one series at a time, **audiobook-parity launch**:
-   - Prefer `scripts/run_episode_render.py --manifest ...` (Python subprocess + log, same shape as `monitor_book_chapters.py`).
+   - Prefer `scripts/run_episode_render.py --manifest ...` (Python subprocess + durable progress log).
    - Do **not** nest long CUDA jobs inside Cursor/PowerShell `Start-Process -Wait` / Tee chains on 8GB GPUs.
    - Load VoxCPM **once** per job (`render_episode.py`); use `--skip-existing` to resume a full episode. Avoid reloading the model every few turns.
    - Selective fixups: `run_episode_render.py --manifest ... --segments p003` (overwrites those WAVs).

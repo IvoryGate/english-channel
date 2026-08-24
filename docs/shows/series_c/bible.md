@@ -71,4 +71,4 @@ Legacy path `workspace/polished_english/` redirects here via README stub.
 
 Character bibles: [`workspace/characters/series_c_leo/`](../../workspace/characters/series_c_leo/identity.md), [`series_c_mia/`](../../workspace/characters/series_c_mia/identity.md)
 
-Visual anchors (thumbnail/image gen): [`workspace/characters/registry.json`](../../workspace/characters/registry.json)
+Visual anchors (thumbnail/image gen): [`configs/shows/host-visuals.json`](../../../configs/shows/host-visuals.json)

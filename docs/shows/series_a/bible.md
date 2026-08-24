@@ -76,4 +76,4 @@ workspace/shows/series_a/
 
 Character bibles: [`workspace/characters/series_a_ethan/`](../../workspace/characters/series_a_ethan/identity.md), [`series_a_nora/`](../../workspace/characters/series_a_nora/identity.md)
 
-Visual anchors (thumbnail/image gen): [`workspace/characters/registry.json`](../../workspace/characters/registry.json)
+Visual anchors (thumbnail/image gen): [`configs/shows/host-visuals.json`](../../../configs/shows/host-visuals.json)

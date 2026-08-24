@@ -66,7 +66,7 @@ The video background (`video_bg.jpg`) is the **no-text scene** (`video_bg_source
 
 Keep `blur-fill-composite` only for archival 3:2 covers. New native 16:9 baked covers preserve the finished composition directly.
 
-Host visual anchors live in [`workspace/characters/registry.json`](../../workspace/characters/registry.json). **Faces and age bands are fixed per host**; scene, outfits, and actions change per episode via `youtube.json`.
+Host visual anchors live in [`configs/shows/host-visuals.json`](../../configs/shows/host-visuals.json). **Faces and age bands are fixed per host**; scene, outfits, and actions change per episode via `youtube.json`.
 
 ## Shared layout
 
@@ -155,7 +155,7 @@ Homogeneous covers do not attract viewers. The frozen layout + frozen host faces
 
 ### Locked per series (never vary)
 
-- Host face / hair / age band — [`workspace/characters/registry.json`](../../workspace/characters/registry.json)
+- Host face / hair / age band — [`configs/shows/host-visuals.json`](../../configs/shows/host-visuals.json)
 - Layout — this doc + `VISUAL_IDENTITY.md`
 - accent / wave bar / subtitle colors — `workspace/shows/tools/show_config.json`
 - Fonts — `assets/fonts/` (Inter for A/B, Manrope for C, Caveat for handwritten prefix)

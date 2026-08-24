@@ -1,0 +1,97 @@
+{
+  "schema": "elr-host-visual-registry-v1",
+  "layout": {
+    "femaleHostSide": "left",
+    "maleHostSide": "right",
+    "deskLayout": "symmetrical podcast table, each host with a black condenser microphone on a desk stand",
+    "artStyle": "2D comic / hand-drawn podcast illustration, bold clean outlines, flat cel-shaded color, warm soft lighting, friendly educational cartoon aesthetic — explicitly NOT photorealistic, NOT live-action, NOT 3D CGI, NOT semi-realistic skin texture, NOT photographic faces"
+  },
+  "hosts": {
+    "series_a_nora": {
+      "hostId": "series_a_nora",
+      "name": "Nora",
+      "showId": "series_a",
+      "gender": "female",
+      "ageBand": "late 20s",
+      "role": "female co-host",
+      "visualAnchor": "young woman, late 20s, warm brown hair in a loose low bun, soft expressive eyes, light natural makeup, friendly open smile",
+      "defaultWardrobe": "cream knit sweater or soft cardigan in warm neutral tones",
+      "palette": "warm amber and cream accents"
+    },
+    "series_a_ethan": {
+      "hostId": "series_a_ethan",
+      "name": "Ethan",
+      "showId": "series_a",
+      "gender": "male",
+      "ageBand": "late 20s",
+      "role": "male co-host",
+      "visualAnchor": "young man, late 20s, short dark wavy hair, calm attentive eyes, light stubble optional, approachable peer energy",
+      "defaultWardrobe": "light brown jacket over white t-shirt or casual open collar shirt",
+      "palette": "warm amber and tan accents"
+    },
+    "series_b_riley": {
+      "hostId": "series_b_riley",
+      "name": "Riley",
+      "showId": "series_b",
+      "gender": "female",
+      "ageBand": "mid 20s",
+      "role": "female teacher coach",
+      "visualAnchor": "young woman, mid 20s, shoulder-length auburn hair, bright encouraging eyes, approachable teacher energy, same age band as co-host",
+      "defaultWardrobe": "teal cardigan or soft blouse with simple jewelry",
+      "palette": "teal and warm wood accents"
+    },
+    "series_b_sam": {
+      "hostId": "series_b_sam",
+      "name": "Sam",
+      "showId": "series_b",
+      "gender": "male",
+      "ageBand": "mid 20s",
+      "role": "male co-learner friend",
+      "visualAnchor": "young man, mid 20s, short tousled dark blond hair, curious friendly face, peer learner energy, clearly similar age to Riley",
+      "defaultWardrobe": "casual hoodie or denim jacket in muted blue-gray tones",
+      "palette": "teal and soft blue-gray accents"
+    },
+    "series_c_mia": {
+      "hostId": "series_c_mia",
+      "name": "Mia",
+      "showId": "series_c",
+      "gender": "female",
+      "ageBand": "early 30s",
+      "role": "female co-host",
+      "visualAnchor": "woman, early 30s, sleek black bob haircut, confident warm eyes, polished but approachable professional energy",
+      "defaultWardrobe": "elegant blouse or tailored knit top in deep plum or neutral tones",
+      "palette": "deep plum and soft gray accents"
+    },
+    "series_c_leo": {
+      "hostId": "series_c_leo",
+      "name": "Leo",
+      "showId": "series_c",
+      "gender": "male",
+      "ageBand": "early 30s",
+      "role": "male co-host",
+      "visualAnchor": "man, early 30s, neat dark hair with subtle side part, thoughtful confident expression, polished peer energy, same age band as Mia",
+      "defaultWardrobe": "smart casual blazer over plain tee or open collar shirt",
+      "palette": "deep plum and charcoal accents"
+    }
+  },
+  "shows": {
+    "series_a": {
+      "femaleHost": "series_a_nora",
+      "maleHost": "series_a_ethan",
+      "levelBadge": "B1-B2",
+      "sceneMood": "cozy cafe or warm living-room podcast nook, amber wood tones, plants and soft window light"
+    },
+    "series_b": {
+      "femaleHost": "series_b_riley",
+      "maleHost": "series_b_sam",
+      "levelBadge": "A2-B1",
+      "sceneMood": "friendly home study or kitchen table podcast setup, teal accents, notebook and mug props"
+    },
+    "series_c": {
+      "femaleHost": "series_c_mia",
+      "maleHost": "series_c_leo",
+      "levelBadge": "B2-C1",
+      "sceneMood": "minimal modern studio or quiet lounge, plum accents, clean professional atmosphere"
+    }
+  }
+}

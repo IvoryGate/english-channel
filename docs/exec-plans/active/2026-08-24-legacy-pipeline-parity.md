@@ -30,7 +30,8 @@ Not included:
 - Owner: Codex primary agent.
 - Branch: `codex/legacy-pipeline-parity` from `64415a6`.
 - Last updated: 2026-08-24.
-- State: plan created; branch/path parity inventory pending.
+- State: all 87 source paths classified; missing tests and referenced contracts
+  ported; full repository gates pending.
 - Publication hold: no remote YouTube mutation is authorized.
 
 ## Plan

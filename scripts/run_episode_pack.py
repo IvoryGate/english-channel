@@ -1,4 +1,4 @@
-"""Stable launcher for pack_episode.py — same pattern as run_episode_render.py / monitor_book_chapters.
+"""Stable launcher for pack_episode.py — same pattern as other production monitors.
 
 Run in your own terminal (not Cursor agent shell):
 

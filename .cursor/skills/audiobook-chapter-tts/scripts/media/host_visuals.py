@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-REGISTRY_PATH = Path(__file__).resolve().parents[5] / "workspace" / "characters" / "registry.json"
+REGISTRY_PATH = Path(__file__).resolve().parents[5] / "configs" / "shows" / "host-visuals.json"
 
 
 @dataclass(frozen=True)

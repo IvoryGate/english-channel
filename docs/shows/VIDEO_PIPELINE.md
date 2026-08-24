@@ -40,7 +40,7 @@ The packaging step runs after compose and reads the compose report. For branded 
 
 **Recommended:** generate a **scene without text**, then overlay hook typography in code (keeps hosts consistent, text crisp).
 
-1. Print prompts (includes fixed host visual anchors from `workspace/characters/registry.json`):
+1. Print prompts (includes fixed host visual anchors from `configs/shows/host-visuals.json`):
 
 ```powershell
 & $py workspace/shows/tools/render_episode_thumbnail.py `
@@ -154,7 +154,7 @@ Manifest turns must match the spoken reference text for meaningful `referenceCov
 | --- | --- |
 | `.cursor/skills/audiobook-chapter-tts/scripts/media/host_visuals.py` | Fixed host visual anchors + scene prompts |
 | `.cursor/skills/audiobook-chapter-tts/scripts/media/thumbnail_overlay.py` | Class-style layered text on scene |
-| `workspace/characters/registry.json` | Six-host visual registry |
+| `configs/shows/host-visuals.json` | Six-host visual registry |
 | `.cursor/skills/audiobook-chapter-tts/scripts/media/turn_alignment.py` | Split words by manifest turn |
 | `.cursor/skills/audiobook-chapter-tts/scripts/media/thumbnail_compositor.py` | `--dev-pil` fallback only |
 | `.cursor/skills/audiobook-chapter-tts/scripts/media/align_media_words.py` | faster-whisper word align |

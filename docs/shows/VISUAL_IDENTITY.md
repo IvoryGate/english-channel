@@ -83,7 +83,7 @@ Homogeneous covers don't attract viewers. The frozen layout + frozen host faces 
 
 | Field | Source |
 | --- | --- |
-| Host face / hair / age band | [`workspace/characters/registry.json`](../../workspace/characters/registry.json) |
+| Host face / hair / age band | [`configs/shows/host-visuals.json`](../../configs/shows/host-visuals.json) |
 | Layout | this doc + `thumbnail_templates.md` |
 | accent / wave bar / subtitle colors | `workspace/shows/tools/show_config.json` |
 | Fonts | `assets/fonts/` + this doc |
@@ -101,7 +101,7 @@ Pick a different one each episode; do not exhaust the list in consecutive weeks.
 
 ## Host visual anchors (locked)
 
-Six distinct host identities, fixed in [`workspace/characters/registry.json`](../../workspace/characters/registry.json). Faces and age bands never change; outfits and scene vary per episode via `youtube.json`.
+Six distinct host identities, fixed in [`configs/shows/host-visuals.json`](../../configs/shows/host-visuals.json). Faces and age bands never change; outfits and scene vary per episode via `youtube.json`.
 
 | Series | Female (left) | Male (right) |
 | --- | --- | --- |
@@ -125,7 +125,7 @@ Art style (all series): 2D comic / hand-drawn podcast illustration, bold clean o
 | Layout details + host visual policy | [`thumbnail_templates.md`](thumbnail_templates.md) | references this doc |
 | Color config (read by renderer) | [`workspace/shows/tools/show_config.json`](../../workspace/shows/tools/show_config.json) | must match this doc's palette table |
 | Color code defaults | [`.cursor/skills/audiobook-chapter-tts/scripts/media/thumbnail_tokens.py`](../../.cursor/skills/audiobook-chapter-tts/scripts/media/thumbnail_tokens.py) | fallback when config missing |
-| Host visual anchors | [`workspace/characters/registry.json`](../../workspace/characters/registry.json) | faces/hair/age locked |
+| Host visual anchors | [`configs/shows/host-visuals.json`](../../configs/shows/host-visuals.json) | faces/hair/age locked |
 | Pipeline + commands | [`EPISODE_PIPELINE.md`](EPISODE_PIPELINE.md) + [`VIDEO_PIPELINE.md`](VIDEO_PIPELINE.md) | render → pack flow |
 | Font files | [`assets/fonts/`](../../assets/fonts/) + `LICENSE.txt` | OFL licensed |
 

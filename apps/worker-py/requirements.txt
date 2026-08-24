@@ -6,4 +6,5 @@ modelscope>=1.25.0
 pytest>=8.3.0
 google-api-python-client>=2.179.0
 google-auth-oauthlib>=1.2.2
+playwright>=1.61.0
 triton-windows==3.3.1.post21; platform_system == "Windows"
