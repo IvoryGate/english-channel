@@ -8,7 +8,7 @@
       "levelBand": "B1-B2",
       "hosts": ["Ethan", "Nora"],
       "hostLinePattern": "^(Ethan|Nora):",
-      "wordCountRange": [1800, 2400],
+      "wordCountRange": [1800, 3000],
       "renderSettings": {
         "cfgValue": 2.35,
         "inferenceTimesteps": 10,
@@ -39,7 +39,7 @@
       "levelBand": "A2-B1",
       "hosts": ["Riley", "Sam"],
       "hostLinePattern": "^(Riley|Sam):",
-      "wordCountRange": [1400, 1900],
+      "wordCountRange": [1400, 2800],
       "renderSettings": {
         "cfgValue": 2.15,
         "inferenceTimesteps": 10,
@@ -70,7 +70,7 @@
       "levelBand": "B2-C1",
       "hosts": ["Leo", "Mia"],
       "hostLinePattern": "^(Leo|Mia):",
-      "wordCountRange": [2000, 2800],
+      "wordCountRange": [2000, 3200],
       "renderSettings": {
         "cfgValue": 2.35,
         "inferenceTimesteps": 10,

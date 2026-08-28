@@ -13,6 +13,9 @@ import numpy as np
 from .workspace import atomic_write_json, ensure_workspace
 
 
+MAX_BATCH_TURNS = 20
+
+
 def _runtime_root(repo_root: Path) -> Path:
     configured = os.environ.get("ELR_SHORTS_RUNTIME_ROOT")
     if configured:
@@ -30,6 +33,23 @@ def _required_runtime_file(runtime_root: Path, relative: str, env_name: str) -> 
     if not path.is_file():
         raise FileNotFoundError(f"Missing Shorts voice reference: {path}. Set {env_name} to override it.")
     return path
+
+
+def _production_env(repo_root: Path) -> dict[str, str]:
+    configured = os.environ.get("ELR_RUNTIME_TEMP")
+    runtime_temp = (
+        Path(configured).resolve()
+        if configured
+        else (_runtime_root(repo_root) / "workspace" / "runtime" / "tmp").resolve()
+    )
+    runtime_temp.mkdir(parents=True, exist_ok=True)
+    return {
+        **os.environ,
+        "TEMP": str(runtime_temp),
+        "TMP": str(runtime_temp),
+        "KMP_DUPLICATE_LIB_OK": "TRUE",
+        "PYTHONUNBUFFERED": "1",
+    }
 
 
 def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
@@ -218,6 +238,47 @@ def _sync_timing(
     }
 
 
+def _render_manifest(
+    repo_root: Path,
+    manifest_path: Path,
+    *,
+    device: str,
+    force: bool,
+    segment_ids: list[str] | None = None,
+) -> None:
+    command = [
+        sys.executable,
+        str(repo_root / "workspace" / "shows" / "tools" / "render_episode.py"),
+        "--manifest",
+        str(manifest_path),
+        "--device",
+        device,
+        "--skip-existing",
+        "--no-self-check",
+        "--no-compose",
+    ]
+    if segment_ids:
+        command.extend(["--segments", ",".join(segment_ids)])
+    if force:
+        command.append("--force")
+    subprocess.run(command, cwd=repo_root, env=_production_env(repo_root), check=True)
+
+
+def _finish_audio(
+    workspace: Path,
+    manifest_path: Path,
+    manifest: dict[str, Any],
+    audio_manifest: dict[str, Any],
+) -> Path:
+    raw_path = workspace / "audio" / f"000_{manifest['shortId']}.raw.wav"
+    master_path = workspace / "audio" / "master.wav"
+    _compose_audio(workspace, audio_manifest, raw_path)
+    _master_audio(raw_path, master_path, manifest)
+    _sync_timing(workspace, manifest, audio_manifest, master_path)
+    atomic_write_json(manifest_path, manifest)
+    return master_path
+
+
 def render_audio(
     repo_root: Path,
     manifest_path: Path,
@@ -229,19 +290,6 @@ def render_audio(
     audio_manifest = build_audio_manifest(repo_root, manifest)
     audio_manifest_path = workspace / "audio_manifest.json"
     atomic_write_json(audio_manifest_path, audio_manifest)
-    command = [
-        sys.executable,
-        str(repo_root / "workspace" / "shows" / "tools" / "render_episode.py"),
-        "--manifest",
-        str(audio_manifest_path),
-        "--device",
-        str(audio_manifest["renderSettings"]["device"]),
-        "--skip-existing",
-        "--no-self-check",
-        "--no-compose",
-    ]
-    if force:
-        command.append("--force")
     try:
         import gpu_production_lock
     except ImportError as exc:
@@ -249,11 +297,91 @@ def render_audio(
     runtime_root = _runtime_root(repo_root)
     gpu_production_lock.LOCK_PATH = runtime_root / "logs" / "gpu_production.lock"
     with gpu_production_lock.GpuProductionLock(f"shorts:{manifest['shortId']}"):
-        subprocess.run(command, cwd=repo_root, check=True)
-    raw_path = workspace / "audio" / f"000_{manifest['shortId']}.raw.wav"
-    master_path = workspace / "audio" / "master.wav"
-    _compose_audio(workspace, audio_manifest, raw_path)
-    _master_audio(raw_path, master_path, manifest)
-    _sync_timing(workspace, manifest, audio_manifest, master_path)
-    atomic_write_json(manifest_path, manifest)
-    return master_path
+        _render_manifest(
+            repo_root,
+            audio_manifest_path,
+            device=str(audio_manifest["renderSettings"]["device"]),
+            force=force,
+        )
+    return _finish_audio(workspace, manifest_path, manifest, audio_manifest)
+
+
+def render_audio_batch(
+    repo_root: Path,
+    items: list[tuple[Path, dict[str, Any]]],
+    *,
+    force: bool = False,
+) -> tuple[Path, ...]:
+    if not items:
+        raise ValueError("Shorts audio batch must contain at least one item")
+    batch_workspace = repo_root / "workspace" / "shorts" / "_audio_batch"
+    batch_turns_dir = batch_workspace / "audio" / "turns"
+    batch_turns_dir.mkdir(parents=True, exist_ok=True)
+    prepared: list[tuple[Path, Path, dict[str, Any], dict[str, Any]]] = []
+    combined_turns: list[dict[str, Any]] = []
+    copies: list[tuple[Path, Path]] = []
+    first_audio_manifest: dict[str, Any] | None = None
+    order = 0
+    for manifest_path, manifest in items:
+        workspace = ensure_workspace(repo_root, str(manifest["shortId"]))
+        audio_manifest = build_audio_manifest(repo_root, manifest)
+        atomic_write_json(workspace / "audio_manifest.json", audio_manifest)
+        prepared.append((workspace, manifest_path, manifest, audio_manifest))
+        if first_audio_manifest is None:
+            first_audio_manifest = audio_manifest
+        for turn in audio_manifest["turns"]:
+            order += 1
+            batch_id = f"b{order:04d}"
+            batch_filename = f"{manifest['shortId']}_{turn['filename']}"
+            combined_turn = dict(turn)
+            combined_turn.update({"id": batch_id, "order": order, "filename": batch_filename})
+            combined_turns.append(combined_turn)
+            source = workspace / "audio" / "turns" / str(turn["filename"])
+            batch_output = batch_turns_dir / batch_filename
+            if source.is_file() and not force and not batch_output.is_file():
+                shutil.copy2(source, batch_output)
+            copies.append((batch_output, source))
+    assert first_audio_manifest is not None
+    batch_manifest = {
+        "schema": "elr-short-audio-batch-manifest-v1",
+        "episodeId": "shorts_audio_batch",
+        "showId": "series_b",
+        "hosts": first_audio_manifest["hosts"],
+        "renderSettings": {
+            **first_audio_manifest["renderSettings"],
+            "renderReport": "short_audio_batch_render_report.json",
+        },
+        "turns": combined_turns,
+    }
+    batch_manifest_path = batch_workspace / "audio_manifest.json"
+    atomic_write_json(batch_manifest_path, batch_manifest)
+    pending = [
+        str(turn["id"])
+        for turn in combined_turns
+        if force or not (batch_turns_dir / str(turn["filename"])).is_file()
+    ]
+    try:
+        import gpu_production_lock
+    except ImportError as exc:
+        raise RuntimeError("The shared ELR GPU production lock is unavailable") from exc
+    runtime_root = _runtime_root(repo_root)
+    gpu_production_lock.LOCK_PATH = runtime_root / "logs" / "gpu_production.lock"
+    with gpu_production_lock.GpuProductionLock(f"shorts-batch:{len(items)}"):
+        for start in range(0, len(pending), MAX_BATCH_TURNS):
+            _render_manifest(
+                repo_root,
+                batch_manifest_path,
+                device=str(first_audio_manifest["renderSettings"]["device"]),
+                force=force,
+                segment_ids=pending[start : start + MAX_BATCH_TURNS],
+            )
+    for batch_output, destination in copies:
+        if not batch_output.is_file():
+            raise FileNotFoundError(f"Shorts batch turn is missing after render: {batch_output}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(batch_output, destination)
+    outputs = [
+        _finish_audio(workspace, manifest_path, manifest, audio_manifest)
+        for workspace, manifest_path, manifest, audio_manifest in prepared
+    ]
+    return tuple(outputs)

@@ -1,0 +1,11 @@
+{
+  "schema": "elr-publication-ledger-v1",
+  "publications": [
+    {"showId": "series_b", "episodeId": 20, "title": "You Know “Get” — Use It in Real Conversations | A2-B1", "playlistId": "PLV6UzOzdXS_w", "mp4Sha256": "6da65acacc5af80fe3858df9fb6f3bbeb482cb9fbe7f6de8784b049a3fc34367", "status": "approved"},
+    {"showId": "series_a", "episodeId": 20, "title": "You Disagree at Work — Say It Without Starting a Fight | B1-B2", "playlistId": "PLUALyXHUPuM0", "mp4Sha256": "fdae01b6c9fdd0b6ca79781cfdfdae57fe30fb602755c6e7fc0209857d954764", "status": "approved"},
+    {"showId": "series_c", "episodeId": 20, "title": "They Ask for Your Opinion Now — Sound Careful, Not Weak | B2-C1", "playlistId": "PLeDOm-qygJM4", "mp4Sha256": "b5a1f28c50713e6533cf3fd02549a31f760cd76b87370f1660e6b15b8d7f540f", "status": "approved"},
+    {"showId": "series_b", "episodeId": 21, "title": "The First Answer Is Easy — Keep the Conversation Going | A2-B1", "playlistId": "PLV6UzOzdXS_w", "mp4Sha256": "bf62112ba9a0bc31296e339e2025b1f9d0721488babf293ad806bf84e93e2eb0", "status": "approved"},
+    {"showId": "series_a", "episodeId": 21, "title": "Your English Habit Lasted Five Days — Build One That Survives | B1-B2", "playlistId": "PLUALyXHUPuM0", "mp4Sha256": "558cf3a0a2f8d72d86fe2bcfbe70156cb7fe7145f72f890596afe14fd4537b75", "status": "approved"},
+    {"showId": "series_c", "episodeId": 21, "title": "Everyone Laughs and You Miss the Joke — Recover Without Pretending | B2-C1", "playlistId": "PLeDOm-qygJM4", "mp4Sha256": "50677287950c64baa28e5d22dd3a36e4165fac6c836c82648521677d8cb54613", "status": "approved"}
+  ]
+}

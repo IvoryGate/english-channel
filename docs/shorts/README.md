@@ -99,6 +99,18 @@ timings.
 & $py scripts/shorts.py render-audio --short elr-s-001
 ```
 
+For a production week, batch the selected IDs. The controller keeps at most 20
+turns per VoxCPM process, resumes completed turn WAVs, and holds the shared GPU
+lease for the batch. This reduces repeated model loads without crossing the
+tested 8 GB VRAM ceiling.
+
+```powershell
+& $py scripts/shorts.py render-audio-batch --short elr-s-012 elr-s-013 elr-s-014
+& $py scripts/shorts.py render-audio-batch --all `
+  --product configs/shorts/product-weekly-scale.json `
+  --portfolio configs/shorts/weekly-2026-08-31.json
+```
+
 For an isolated Git worktree, the controller automatically looks for model and
 voice assets in the owning repository. Override only when necessary:
 
@@ -159,12 +171,14 @@ $env:YOUTUBE_CLIENT_SECRETS = "C:\secure\youtube-client.json"
 & $py scripts/shorts.py youtube-auth
 ```
 
-The refresh token defaults to the ignored
-`workspace/shorts/ops/youtube_token.json`. A scheduled run can refresh it
+The shared refresh token defaults to the ignored
+`workspace/channel/youtube/youtube_token.json`. A scheduled run can refresh it
 without opening a browser. Never commit either credential file.
 
-If OAuth has not been provisioned yet, an authenticated Codex in-app browser
-may use YouTube Studio as the operational fallback. Before uploading, verify
+The channel-wide API-first procedure is documented in
+[`../YOUTUBE_AUTOMATION.md`](../YOUTUBE_AUTOMATION.md). If OAuth or a supported
+API operation fails, an authenticated Codex in-app browser may use YouTube
+Studio as the operational fallback. Before uploading, verify
 that Studio is signed in to `English Listening Room`, search the Shorts table
 by title, and compare the local content key so an existing draft or scheduled
 upload is never duplicated. Upload privately, set audience and metadata, set

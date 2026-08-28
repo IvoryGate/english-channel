@@ -5,6 +5,12 @@
 - Python environment: `.conda-env/`
 - Model weights: `pretrained_models/VoxCPM2/`
 - Generated audio: `artifacts/`
+- Production temporary files: `workspace/runtime/tmp/`
+
+The ELR controller forces child-process `TEMP` and `TMP` into the ignored
+project workspace so model loading and media work do not consume a nearly full
+Windows system drive. Override with `ELR_RUNTIME_TEMP` only when the selected
+drive has enough free space.
 
 ## One-Command Setup
 

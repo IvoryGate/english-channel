@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import csv
 import json
+import shutil
+import sys
+import types
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +12,8 @@ import pytest
 import soundfile as sf
 
 from worker.shorts.analytics import ingest_snapshot
-from worker.shorts.audio import _tempo_factor_for_variant, build_audio_manifest
+import worker.shorts.audio as shorts_audio
+from worker.shorts.audio import _tempo_factor_for_variant, build_audio_manifest, render_audio_batch
 from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
 from worker.shorts.ledger import load_ledger, record_publication
 from worker.shorts.qc import check_audio, check_thumbnail
@@ -48,7 +52,18 @@ def test_pilot_contract_has_controlled_format_mix_and_balanced_experiments() -> 
     assert duration_counts == {"short": 6, "long": 6}
 
 
-def test_accelerated_pilot_requests_channel_owned_release_capacity() -> None:
+def test_manifest_appends_configured_description_footer() -> None:
+    product, portfolio = contracts()
+    configured = json.loads(json.dumps(product))
+    configured["descriptionFooter"] = "New Shorts every day. Comment your answer and join the next practice."
+
+    manifest = build_manifest(portfolio["entries"][0], configured, portfolio["cycleId"])
+
+    assert manifest["description"].endswith(configured["descriptionFooter"])
+    assert "\n\nNew Shorts every day." in manifest["description"]
+
+
+def test_steady_state_requests_channel_owned_release_capacity() -> None:
     product, _ = contracts()
     publishing = product["publishing"]
     channel_policy = read_json(CHANNEL_RELEASE_POLICY_PATH)
@@ -60,9 +75,9 @@ def test_accelerated_pilot_requests_channel_owned_release_capacity() -> None:
     assert channel_policy["timezone"] == "Asia/Shanghai"
     assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 18
     assert channel_policy["authority"]["publicSchedulingEnabled"] is False
-    assert program["status"] == "reconciliation_required"
-    assert program["requestedUploadsPerWeek"] == 14
-    assert program["preferredDailyWindows"] == ["08:00", "20:30"]
+    assert program["status"] == "active"
+    assert program["requestedUploadsPerWeek"] == 7
+    assert program["preferredDailyWindows"] == ["12:30"]
 
 
 def test_duplicate_content_is_rejected() -> None:
@@ -191,6 +206,71 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
     assert prompt["pauseAfterSec"] == 2.25
 
 
+def test_audio_batch_limits_each_model_load_to_twenty_turns(tmp_path: Path, monkeypatch) -> None:
+    product, portfolio = contracts()
+    model = tmp_path / "pretrained_models" / "VoxCPM2"
+    model.mkdir(parents=True)
+    voice_dir = tmp_path / "assets" / "voices" / "series_b"
+    voice_dir.mkdir(parents=True)
+    (voice_dir / "riley_reference_clean.wav").write_bytes(b"riley")
+    (voice_dir / "sam_reference_clean.wav").write_bytes(b"sam")
+    monkeypatch.setenv("ELR_SHORTS_RUNTIME_ROOT", str(tmp_path))
+    items = []
+    for entry in portfolio["entries"][:3]:
+        manifest = build_manifest(entry, product, portfolio["cycleId"])
+        path = tmp_path / "workspace" / "shorts" / manifest["shortId"] / "manifest.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps(manifest), encoding="utf-8")
+        items.append((path, manifest))
+    calls: list[list[str]] = []
+
+    def fake_render(
+        _repo_root: Path,
+        manifest_path: Path,
+        *,
+        device: str,
+        force: bool,
+        segment_ids: list[str] | None = None,
+    ) -> None:
+        assert device == "cuda"
+        assert force is False
+        calls.append(list(segment_ids or []))
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        selected = set(segment_ids or [])
+        for turn in manifest["turns"]:
+            if str(turn["id"]) not in selected:
+                continue
+            output = manifest_path.parent / "audio" / "turns" / str(turn["filename"])
+            output.parent.mkdir(parents=True, exist_ok=True)
+            sf.write(output, np.zeros(2400, dtype=np.float32), 48000)
+
+    class FakeLock:
+        def __init__(self, _label: str) -> None:
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_exc: object) -> None:
+            return None
+
+    fake_lock_module = types.SimpleNamespace(LOCK_PATH=None, GpuProductionLock=FakeLock)
+    monkeypatch.setitem(sys.modules, "gpu_production_lock", fake_lock_module)
+    monkeypatch.setattr(shorts_audio, "_render_manifest", fake_render)
+    monkeypatch.setattr(
+        shorts_audio,
+        "_master_audio",
+        lambda raw_path, master_path, _manifest: shutil.copy2(raw_path, master_path),
+    )
+
+    outputs = render_audio_batch(tmp_path, items)
+
+    assert len(outputs) == 3
+    assert all(path.is_file() for path in outputs)
+    assert len(calls) >= 2
+    assert max(len(call) for call in calls) <= 20
+
+
 def test_audio_pacing_only_corrects_a_crossed_duration_variant() -> None:
     product, portfolio = contracts()
     short_manifest = build_manifest(portfolio["entries"][4], product, portfolio["cycleId"])
@@ -281,7 +361,7 @@ def test_analytics_review_scales_a_consistent_winner(tmp_path: Path) -> None:
     assert review["nextPlan"]["defaultWinningVariants"]["hook"] == "question"
     assert review["nextPlan"]["releaseRequest"] == {
         "policyRef": "configs/channel/release-policy.json",
-        "programId": "shorts-accelerated-pilot-2026-08",
+        "programId": "shorts-steady-state-2026-08",
     }
     assert json_path.is_file()
     assert "winner: question" in markdown_path.read_text(encoding="utf-8")

@@ -2,6 +2,8 @@
 
 Use this standard for every new or substantially revised A/B/C episode. It supplements the series bibles and supersedes any instruction to use a cold open or teaching loop verbatim.
 
+For 20–40 minute episodes, also follow `docs/shows/LONG_FORM_SCRIPT_METHOD.md`. Its human spine and anti-AI gates are required, not optional inspiration.
+
 ## The viewer contract
 
 Each episode must answer all four questions within its first 20 seconds:
@@ -68,3 +70,5 @@ Before human approval, the writer must state:
 - the one checkable learner outcome;
 - the title's situation-first hook;
 - what differs from the prior episode in the same series.
+
+The validator's empty-confirmation warning must be zero for every newly written script. Legacy packaged episodes may retain a warning only when changing the draft would invalidate already rendered audio/video; record that exception in the weekly plan.

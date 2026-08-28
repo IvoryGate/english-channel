@@ -109,6 +109,15 @@ def parse_book_config(payload: dict[str, Any], path: Path) -> BookConfig:
         raise ConfigError("The pilot supports voice.mode=single only")
     for key in ("profileId", "referencePath", "referenceSha256", "globalControl", "acceptanceStatus"):
         _string(voice, key)
+    pronunciation_lexicon = voice.get("pronunciationLexicon", {})
+    if not isinstance(pronunciation_lexicon, dict) or not all(
+        isinstance(source, str)
+        and source.strip()
+        and isinstance(spoken, str)
+        and spoken.strip()
+        for source, spoken in pronunciation_lexicon.items()
+    ):
+        raise ConfigError("voice.pronunciationLexicon must map non-empty source text to spoken text")
     if voice["acceptanceStatus"] not in {"approved", "blocked_electronic_texture", "review_required"}:
         raise ConfigError("voice.acceptanceStatus is invalid")
     for key in ("seriesPolicyRef", "programId"):

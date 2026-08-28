@@ -9,9 +9,33 @@ sys.path.insert(0, str(TOOLS.resolve()))
 from prepare_episode_youtube_packaging import (  # noqa: E402
     _ViewerChapterLabelBuilder,
     _parse_teaching_plan_threads,
+    _programming_footer,
+    assemble_description,
     auto_derive_markers_from_draft,
     resolve_video_intro_offset,
 )
+
+
+def test_programming_footer_is_added_to_description(tmp_path: Path) -> None:
+    config = tmp_path / "configs" / "channel" / "programming.json"
+    config.parent.mkdir(parents=True)
+    config.write_text(
+        '{"schema":"youtube-channel-programming-v1","descriptionFooter":["First Steps: Tuesdays"]}',
+        encoding="utf-8",
+    )
+
+    lines = _programming_footer(tmp_path)
+    description = assemble_description(
+        youtube={"description": "Practice one useful line."},
+        markers=[],
+        show_name="First Steps",
+        level_band="A2-B1",
+        schedule_lines=lines,
+    )
+
+    assert lines == ["First Steps: Tuesdays"]
+    assert "📅 New episodes on a fixed schedule:" in description
+    assert "First Steps: Tuesdays" in description
 
 
 def test_parse_teaching_plan_threads_series_a_style() -> None:

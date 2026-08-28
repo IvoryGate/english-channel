@@ -120,7 +120,12 @@ class ClassicOperationsService:
         if to_state not in ALLOWED_TRANSITIONS[current]:
             raise OperationPolicyError(f"Transition {current} -> {to_state.value} is not allowed")
         required_authority = REQUIRED_AUTHORITY.get(to_state, AuthorityLevel.PACKAGE_ONLY)
-        if self.policy.authority < required_authority:
+        explicitly_approved_publication = (
+            to_state is LifecycleState.PUBLISHED
+            and self.policy.authority >= AuthorityLevel.SCHEDULE
+            and evidence.get("explicitOwnerApproval") is True
+        )
+        if self.policy.authority < required_authority and not explicitly_approved_publication:
             raise OperationPolicyError(
                 f"Authority level {self.policy.authority.value} cannot enter {to_state.value}; "
                 f"level {required_authority.value} is required"

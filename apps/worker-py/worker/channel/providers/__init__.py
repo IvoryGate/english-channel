@@ -2,5 +2,6 @@
 
 from .legacy import LegacyLedgerProvider
 from .process import pid_alive
+from .youtube import YouTubeApiProvider
 
-__all__ = ["LegacyLedgerProvider", "pid_alive"]
+__all__ = ["LegacyLedgerProvider", "YouTubeApiProvider", "pid_alive"]

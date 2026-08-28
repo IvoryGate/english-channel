@@ -1,0 +1,54 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-08-24",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedOn": "2026-08-24",
+    "scope": "upload_and_schedule_listed_weekly_plan_items",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
+    "controlPlaneRemoteMutationAuthority": false
+  },
+  "evidence": {
+    "publicChannelObservedAt": "2026-08-24T04:32:25Z",
+    "publicSubscribers": 92,
+    "publicVideoCount": 121,
+    "publicLifetimeViews": 5331,
+    "publicChannelCapture": "workspace/channel/raw/youtube-public-channel-20260824T043223Z.html",
+    "publicChannelCaptureSha256": "f15dd759f064675f46109f7ec132073ca0edb0c61e07192f5d1a1634e48a3904",
+    "publicRssCapture": "workspace/channel/raw/youtube-public-rss-20260824T043223Z.xml",
+    "publicRssCaptureSha256": "59453fe6220fe285b4ead35c8cf15e71c420fb430573ee36f5da38ae82bc75d5",
+    "analyticsBaselineAsOf": "2026-08-17",
+    "analyticsBaselineSubscribers": 78,
+    "studioRefreshStatus": "connected_signed_in_channel_verified"
+  },
+  "publicationSlots": [
+    {"contentId": "content:shorts_main:elr-s-005", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-24T17:00:00+08:00", "publishedAt": "2026-08-24T17:00:00+08:00", "remoteAction": "published", "youtubeVideoId": "sSbdl4ASLhE", "shareUrl": "https://youtube.com/shorts/sSbdl4ASLhE", "relatedVideoId": "eSQE456Xd8M", "checks": "pass"},
+    {"contentId": "content:series_b:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-24T20:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "7tajNPGSM3w", "shareUrl": "https://youtu.be/7tajNPGSM3w", "playlistId": "PLV6UzOzdXS_w", "subtitles": "uploaded", "endScreen": "configured", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-006", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-25T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "MysKgp3h4t0", "shareUrl": "https://youtube.com/shorts/MysKgp3h4t0", "relatedVideoId": "zBuLsQhUpvg", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-007", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-26T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "Hyn7mOh2FFw", "shareUrl": "https://youtube.com/shorts/Hyn7mOh2FFw", "relatedVideoId": "nbuvxKJ1RqE", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-008", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-27T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "FB2ZKgGJbNM", "shareUrl": "https://youtube.com/shorts/FB2ZKgGJbNM", "relatedVideoId": "nbuvxKJ1RqE", "checks": "pass"},
+    {"contentId": "content:series_a:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-27T20:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "_KLsi1aJ5Rs", "shareUrl": "https://youtu.be/_KLsi1aJ5Rs", "playlistId": "PLUALyXHUPuM0", "subtitles": "uploaded", "endScreen": "configured", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-009", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-28T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "l9SW9N4QmCY", "shareUrl": "https://youtube.com/shorts/l9SW9N4QmCY", "relatedVideoId": "UkYmqP2BaTc", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-010", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-29T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "CwfdHM-7H3s", "shareUrl": "https://youtube.com/shorts/CwfdHM-7H3s", "relatedVideoId": "keaTZWIjAjY", "checks": "pass"},
+    {"contentId": "content:series_c:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-29T20:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "5Nq83h143ro", "shareUrl": "https://youtu.be/5Nq83h143ro", "playlistId": "PLeDOm-qygJM4", "subtitles": "uploaded", "endScreen": "configured", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-011", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-30T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "166Ex-ueieU", "shareUrl": "https://youtube.com/shorts/166Ex-ueieU", "relatedVideoId": "x06HvRJTM3c", "relatedVideoFallback": "classic_pride_prejudice_until_persuasion_is_public", "checks": "pass"},
+    {"contentId": "content:classic_listening:persuasion_chapter_001", "programId": "classic-listening-baseline", "scheduledAt": "2026-08-24T22:40:10+08:00", "publishedAt": "2026-08-24T22:40:10+08:00", "remoteAction": "published", "youtubeVideoId": "EkAVjpGf1_Q", "shareUrl": "https://youtu.be/EkAVjpGf1_Q", "playlist": "Persuasion | Jane Austen Full Audiobook & English Listening", "subtitles": "uploaded", "endScreen": "configured", "platformChecks": "pass", "scheduleOverride": "owner_requested_same_day_launch"}
+  ],
+  "nextWeekInventory": [
+    "content:series_b:episode_021",
+    "content:series_a:episode_021",
+    "content:series_c:episode_021"
+  ],
+  "productionTasks": [
+    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "chapter_001_published", "selectedCandidate": "mia-smooth", "selectedProfile": "classic-listening-mia-narrator", "youtubeVideoId": "EkAVjpGf1_Q", "publishedAt": "2026-08-24T22:40:10+08:00", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review/voice-f.wav"},
+    {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "status": "completed", "output": "five QC-passed private packages"},
+    {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
+  ],
+  "communityPosts": [
+    {"day": "monday", "ritual": "Monday Choice", "copy": "Which real English moment should we practice next: joining a conversation, disagreeing politely, or asking a follow-up question?"},
+    {"day": "wednesday", "ritual": "Reply Challenge", "copy": "Someone says: ‘I’m not sure that will work.’ What would you say next without sounding defensive?"},
+    {"day": "friday", "ritual": "Phrase Clinic", "copy": "Which sounds more natural when you need time: ‘Let me think for a second’ or ‘Wait, I think now’?"},
+    {"day": "sunday", "ritual": "Reading Club", "copy": "For Classic Listening, what matters most to you: a warm voice, very clear pronunciation, or stronger emotion?"}
+  ]
+}

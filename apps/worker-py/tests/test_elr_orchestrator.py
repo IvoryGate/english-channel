@@ -33,6 +33,18 @@ def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Pa
     assert "--force" not in cmd
 
 
+def test_production_env_moves_child_temp_into_workspace(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(elr, "REPO", tmp_path)
+    monkeypatch.delenv("ELR_RUNTIME_TEMP", raising=False)
+
+    env = elr.production_env()
+
+    expected = tmp_path / "workspace" / "runtime" / "tmp"
+    assert Path(env["TEMP"]) == expected
+    assert Path(env["TMP"]) == expected
+    assert expected.is_dir()
+
+
 def test_monitor_command_can_skip_external_export(tmp_path: Path) -> None:
     context = build_context(tmp_path, "series_b", 20, tmp_path / "youtube")
     cmd = monitor_command(

@@ -43,6 +43,21 @@ def _word_count(value: str) -> int:
     return len(re.findall(r"\b[A-Za-z]+(?:[’'-][A-Za-z]+)*\b", value))
 
 
+def _apply_pronunciation_lexicon(
+    value: str, lexicon: dict[str, Any]
+) -> tuple[str, list[dict[str, Any]]]:
+    spoken = value
+    substitutions: list[dict[str, Any]] = []
+    for source, replacement in lexicon.items():
+        pattern = rf"\b{re.escape(str(source))}\b"
+        spoken, count = re.subn(pattern, str(replacement), spoken, flags=re.IGNORECASE)
+        if count:
+            substitutions.append(
+                {"source": str(source), "spoken": str(replacement), "occurrences": count}
+            )
+    return spoken, substitutions
+
+
 def _split_long_unit(value: str, max_words: int) -> list[str]:
     if max_words < 8 or _word_count(value) <= max_words:
         return [value]
@@ -118,11 +133,15 @@ def build_segment_manifest(config: BookConfig, chapter_number: int, source_text:
         raise ValueError("Segment display text does not preserve normalized source coverage")
 
     profile_id = str(config.voice["profileId"])
+    pronunciation_lexicon = dict(config.voice.get("pronunciationLexicon", {}))
     short_threshold = int(config.render.get("shortSegmentWordThreshold", 12))
     segments: list[dict[str, Any]] = []
     for index, text in enumerate(units, start=1):
         kind = _kind(text)
         words = _word_count(text)
+        spoken_text, pronunciation_substitutions = _apply_pronunciation_lexicon(
+            text, pronunciation_lexicon
+        )
         segments.append(
             {
                 "id": f"{index:03d}",
@@ -135,8 +154,8 @@ def build_segment_manifest(config: BookConfig, chapter_number: int, source_text:
                     config.voice["dialogueCue"] if kind == "dialogue" else config.voice["narrationCue"]
                 ),
                 "displayText": text,
-                "spokenText": text,
-                "pronunciationSubstitutions": [],
+                "spokenText": spoken_text,
+                "pronunciationSubstitutions": pronunciation_substitutions,
                 "wordCount": words,
                 "shortSegment": words <= short_threshold,
             }

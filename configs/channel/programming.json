@@ -1,0 +1,91 @@
+{
+  "schema": "youtube-channel-programming-v1",
+  "timezone": "Asia/Shanghai",
+  "channelPromise": "Understand real English and know what to say next.",
+  "rollout": {
+    "startsOn": "2026-08-24",
+    "scaleStartsOn": "2026-08-31",
+    "fixedScheduleReviewAfter": "2026-09-20",
+    "doNotChangePublishTimesBeforeReview": true
+  },
+  "weeklyGrid": [
+    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
+    {"surface": "shorts", "day": "monday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "tuesday", "time": "12:30", "status": "active"},
+    {"surface": "series_b", "day": "tuesday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "wednesday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "thursday", "time": "12:30", "status": "active"},
+    {"surface": "series_a", "day": "thursday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "friday", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "saturday", "time": "12:30", "status": "active"},
+    {"surface": "series_c", "day": "saturday", "time": "20:00", "status": "active"},
+    {"surface": "shorts", "day": "sunday", "time": "12:30", "status": "active"}
+  ],
+  "scaleGrid": [
+    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
+    {"surface": "series_b", "day": "monday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_a", "day": "tuesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_c", "day": "wednesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "classic_listening", "day": "thursday", "time": "08:00", "status": "active"},
+    {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "series_a", "day": "friday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "series_c", "day": "saturday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "18:00", "status": "active"}
+  ],
+  "shortsCadence": {
+    "launchUploadsPerWeek": 7,
+    "launchWindow": "12:30",
+    "scaleUploadsPerWeek": 14,
+    "scaleWindow": "18:00",
+    "scaleConditions": {
+      "readyInventoryAtLeast": 7,
+      "rollingQcPassRateAtLeast": 0.95,
+      "unresolvedIdentityCollisions": 0
+    }
+  },
+  "dialogueFormat": {
+    "standardDurationMinutes": [10, 15],
+    "deepPracticeDurationMinutes": [25, 35],
+    "deepPracticeEpisodesPerWeek": 3,
+    "rotation": ["series_b", "series_a", "series_c"],
+    "requiredDeepPracticeBeats": [
+      "cold_open_tension",
+      "useful_line",
+      "three_scenario_dialogues",
+      "breakdown",
+      "guided_repetition",
+      "natural_speed_replay",
+      "viewer_challenge"
+    ]
+  },
+  "community": {
+    "postsPerWeek": 4,
+    "rituals": [
+      {"day": "monday", "name": "Monday Choice", "purpose": "topic_vote"},
+      {"day": "wednesday", "name": "Reply Challenge", "purpose": "response_practice"},
+      {"day": "friday", "name": "Phrase Clinic", "purpose": "language_choice"},
+      {"day": "sunday", "name": "Reading Club", "purpose": "retention_and_feedback"}
+    ],
+    "maximumQuestionsPerPost": 1,
+    "replyWindowHours": 24
+  },
+  "descriptionFooter": [
+    "First Steps: Mondays and Thursdays at 8:00 PM (UTC+8)",
+    "Daily Talk: Tuesdays and Fridays at 8:00 PM (UTC+8)",
+    "Polished English: Wednesdays and Saturdays at 8:00 PM (UTC+8)",
+    "Classic Listening: Mondays and Thursdays at 8:00 AM (UTC+8)",
+    "New Shorts: every day at 12:30 PM and 6:00 PM (UTC+8)"
+  ],
+  "measurement": {
+    "northStar": "qualified_watch_hours_per_week",
+    "reviewWindows": ["T+24h", "T+7d", "T+28d"],
+    "portfolioMetrics": [
+      "returning_viewers",
+      "watch_minutes_per_1000_impressions",
+      "subscribers_per_1000_views",
+      "playlist_continuation",
+      "production_cost_per_watch_hour"
+    ]
+  }
+}

@@ -12,7 +12,7 @@ from worker.classics.io import sha256_file
 from worker.classics.paths import ClassicPaths
 from worker.classics.preflight import preflight_chapter
 from worker.classics.run_state import RunStateStore
-from worker.classics.segment import normalize_coverage_text
+from worker.classics.segment import build_segment_manifest, normalize_coverage_text
 
 
 def _write_epub(path: Path) -> None:
@@ -85,17 +85,33 @@ def test_loads_persuasion_config() -> None:
     repo = Path(__file__).resolve().parents[3]
     config = load_book_config(repo, "persuasion")
     assert config.chapter_count == 24
-    assert config.voice["profileId"] == "classic-listening-riley-narrator"
+    assert config.voice["profileId"] == "classic-listening-mia-narrator"
     assert config.voice["mode"] == "single"
-    assert config.voice["acceptanceStatus"] == "blocked_electronic_texture"
+    assert config.voice["acceptanceStatus"] == "approved"
+    assert config.voice["approvalEvidence"]["blindCode"] == "voice-f"
+    assert config.voice["pronunciationLexicon"] == {"Kellynch": "Kellinch"}
     assert config.release["programId"] == "classic-listening-baseline"
     assert config.branding["primaryAudience"] == "women aged 55 and over"
-    assert config.branding["introVoicePath"].endswith("classic-listening-intro-voice-v4.wav")
-    assert config.branding["outroVoicePath"].endswith("classic-listening-outro-voice-v5b.wav")
+    assert config.branding["introVoicePath"].endswith("classic-listening-intro-voice-v6-mia.wav")
+    assert config.branding["outroVoicePath"].endswith("classic-listening-outro-voice-v6-mia.wav")
     assert config.branding["introSpokenText"].startswith("Welcome to Classic Listening")
 
-    with pytest.raises(ConfigError, match="blocked_electronic_texture"):
-        require_approved_voice(config)
+    require_approved_voice(config)
+
+
+def test_pronunciation_lexicon_preserves_display_text_and_records_substitution(tmp_path: Path) -> None:
+    payload = _payload("fixture.epub", "0" * 64)
+    payload["voice"]["pronunciationLexicon"] = {"Kellynch": "Kellinch"}  # type: ignore[index]
+    config = parse_book_config(payload, tmp_path / "fixture.json")
+
+    manifest = build_segment_manifest(config, 1, "Kellynch Hall was quiet.")
+
+    segment = manifest["segments"][0]
+    assert segment["displayText"] == "Kellynch Hall was quiet."
+    assert segment["spokenText"] == "Kellinch Hall was quiet."
+    assert segment["pronunciationSubstitutions"] == [
+        {"source": "Kellynch", "spoken": "Kellinch", "occurrences": 1}
+    ]
 
 
 def test_classics_branding_uses_voice_and_contains_no_emoji() -> None:

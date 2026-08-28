@@ -1,0 +1,59 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-08-31",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedOn": "2026-08-28",
+    "scope": "produce_upload_and_schedule_all_listed_weekly_plan_items",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
+    "controlPlaneRemoteMutationAuthority": false
+  },
+  "portfolio": {
+    "longFormCount": 8,
+    "shortsCount": 14,
+    "totalCount": 22,
+    "method": "docs/shows/LONG_FORM_SCRIPT_METHOD.md"
+  },
+  "publicationSlots": [
+    {"contentId": "content:classic_listening:persuasion_chapter_002", "scheduledAt": "2026-08-31T08:00:00+08:00", "youtubeId": "tdTlhg49vTk", "remoteAction": "uploaded_private_processing", "checks": "local_pass_remote_processing"},
+    {"contentId": "content:shorts_main:elr-s-012", "scheduledAt": "2026-08-31T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-013", "scheduledAt": "2026-08-31T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_021", "scheduledAt": "2026-08-31T20:00:00+08:00", "youtubeId": "ezuZR_Xc8MA", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
+
+    {"contentId": "content:shorts_main:elr-s-014", "scheduledAt": "2026-09-01T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-015", "scheduledAt": "2026-09-01T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_021", "scheduledAt": "2026-09-01T20:00:00+08:00", "youtubeId": "CNPtSlf1iWQ", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
+
+    {"contentId": "content:shorts_main:elr-s-016", "scheduledAt": "2026-09-02T12:30:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-017", "scheduledAt": "2026-09-02T18:00:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_021", "scheduledAt": "2026-09-02T20:00:00+08:00", "youtubeId": "mmQQlSnLVx8", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
+
+    {"contentId": "content:classic_listening:persuasion_chapter_003", "scheduledAt": "2026-09-03T08:00:00+08:00", "youtubeId": "uJ32Ef1v3QE", "remoteAction": "uploaded_private_processing", "checks": "local_pass_remote_processing"},
+    {"contentId": "content:shorts_main:elr-s-018", "scheduledAt": "2026-09-03T12:30:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-019", "scheduledAt": "2026-09-03T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_022", "scheduledAt": "2026-09-03T20:00:00+08:00", "format": "deep_practice", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-020", "scheduledAt": "2026-09-04T12:30:00+08:00", "cluster": "easy_to_follow", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-021", "scheduledAt": "2026-09-04T18:00:00+08:00", "cluster": "easy_to_follow", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_022", "scheduledAt": "2026-09-04T20:00:00+08:00", "format": "deep_practice", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-022", "scheduledAt": "2026-09-05T12:30:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-023", "scheduledAt": "2026-09-05T18:00:00+08:00", "cluster": "easy_to_follow", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_022", "scheduledAt": "2026-09-05T20:00:00+08:00", "format": "deep_practice", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-024", "scheduledAt": "2026-09-06T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-025", "scheduledAt": "2026-09-06T18:00:00+08:00", "cluster": "weekly_challenge", "remoteAction": "planned", "checks": "pending"}
+  ],
+  "longFormBriefs": [
+    {"contentId": "content:series_b:episode_022", "workingTitle": "They Speak Too Fast — Stay in the Conversation | A2-B1 Deep Practice", "centralDevice": "Could you say that last part again?", "status": "script_queued"},
+    {"contentId": "content:series_a:episode_022", "workingTitle": "Your Story Has Details—but No Point | B1-B2 Deep Practice", "centralDevice": "setup, turn, landing", "status": "script_queued"},
+    {"contentId": "content:series_c:episode_022", "workingTitle": "You Sound Fluent—So Why Do People Stop Listening? | B2-C1", "centralDevice": "make a point, then hand the conversation back", "status": "script_queued"}
+  ],
+  "communityPosts": [
+    {"scheduledAt": "2026-08-31T10:00:00+08:00", "ritual": "Monday Choice", "copy": "When fast English gets away from you, which feels hardest: asking again, catching the key word, or answering quickly?"},
+    {"scheduledAt": "2026-09-02T10:00:00+08:00", "ritual": "Reply Challenge", "copy": "A friend finishes a long story and says, ‘Anyway…’ What question would help them reach the point?"},
+    {"scheduledAt": "2026-09-04T10:00:00+08:00", "ritual": "Phrase Clinic", "copy": "Which handoff sounds warmer: ‘What do you think?’ or ‘Has that ever happened to you?’"},
+    {"scheduledAt": "2026-09-06T10:00:00+08:00", "ritual": "Reading Club", "copy": "After three chapters of Persuasion, whose situation do you understand best: Anne’s, Sir Walter’s, or Lady Russell’s?"}
+  ]
+}

@@ -12,7 +12,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "apps" / "worker-py"))
 
 from worker.shorts.analytics import ingest_snapshot  # noqa: E402
-from worker.shorts.audio import render_audio  # noqa: E402
+from worker.shorts.audio import render_audio, render_audio_batch  # noqa: E402
 from worker.shorts.contracts import ContractError, load_and_validate  # noqa: E402
 from worker.shorts.ledger import load_ledger, record_publication  # noqa: E402
 from worker.shorts.packaging import package_short  # noqa: E402
@@ -106,6 +106,21 @@ def command_render_audio(args: argparse.Namespace) -> int:
     manifest_path, manifest = find_manifest(REPO, args.short)
     output = render_audio(REPO, manifest_path, manifest, force=args.force)
     print(output)
+    return 0
+
+
+def command_render_audio_batch(args: argparse.Namespace) -> int:
+    short_ids = args.short
+    if args.all:
+        _product, portfolio = load_contracts(args)
+        short_ids = [str(entry["shortId"]) for entry in portfolio["entries"]]
+    items = []
+    for short_id in short_ids:
+        manifest_path, manifest = find_manifest(REPO, short_id)
+        items.append((manifest_path, manifest))
+    outputs = render_audio_batch(REPO, items, force=args.force)
+    for output in outputs:
+        print(output)
     return 0
 
 
@@ -247,6 +262,17 @@ def build_parser() -> argparse.ArgumentParser:
     render_audio_parser.add_argument("--short", required=True)
     render_audio_parser.add_argument("--force", action="store_true")
     render_audio_parser.set_defaults(func=command_render_audio)
+
+    render_audio_batch_parser = subparsers.add_parser(
+        "render-audio-batch",
+        help="Render several Shorts in GPU-safe chunks while reusing each model load",
+    )
+    add_contract_args(render_audio_batch_parser)
+    batch_selection = render_audio_batch_parser.add_mutually_exclusive_group(required=True)
+    batch_selection.add_argument("--short", nargs="+")
+    batch_selection.add_argument("--all", action="store_true")
+    render_audio_batch_parser.add_argument("--force", action="store_true")
+    render_audio_batch_parser.set_defaults(func=command_render_audio_batch)
 
     render_thumbnail_parser = subparsers.add_parser(
         "render-thumbnail", help="Render a dedicated 9:16 Shorts discovery cover"

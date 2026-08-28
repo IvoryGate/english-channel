@@ -469,12 +469,26 @@ def _default_hashtags(tags: list[str]) -> str:
     return " ".join(out)
 
 
+def _programming_footer(repo_root: Path = REPO) -> list[str]:
+    path = repo_root / "configs" / "channel" / "programming.json"
+    if not path.is_file():
+        return []
+    payload = load_json(path)
+    if payload.get("schema") != "youtube-channel-programming-v1":
+        raise ValueError(f"Unsupported channel programming schema: {payload.get('schema')!r}")
+    lines = payload.get("descriptionFooter")
+    if not isinstance(lines, list) or not all(isinstance(line, str) and line.strip() for line in lines):
+        raise ValueError("Channel programming descriptionFooter must be a non-empty string list")
+    return [line.strip() for line in lines]
+
+
 def assemble_description(
     *,
     youtube: dict[str, Any],
     markers: list[dict[str, Any]],
     show_name: str,
     level_band: str,
+    schedule_lines: list[str] | None = None,
 ) -> str:
     timestamps_block = _format_timestamps_block(markers)
     blocks: list[str] = []
@@ -505,6 +519,9 @@ def assemble_description(
             "New episodes every week."
         )
     blocks.append(cta)
+
+    if schedule_lines:
+        blocks.append("📅 New episodes on a fixed schedule:\n" + "\n".join(schedule_lines))
 
     hashtags = str(youtube.get("hashtags") or "").strip()
     if not hashtags:
@@ -558,6 +575,7 @@ def prepare_episode_youtube_packaging(
         markers=resolved,
         show_name=show_name,
         level_band=level_band,
+        schedule_lines=_programming_footer(),
     )
     title = str(youtube.get("title") or youtube.get("hookText") or "").strip()
     _enforce_title_limit(title)

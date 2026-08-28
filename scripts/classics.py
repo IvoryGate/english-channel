@@ -130,6 +130,19 @@ def command_audio_metrics(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_audition_narrators(args: argparse.Namespace) -> int:
+    from worker.classics.narrator_audition import run_narrator_audition
+
+    report = run_narrator_audition(
+        args.runtime_root,
+        args.config,
+        force=args.force,
+        dry_run=args.dry_run,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
 def command_build_v2_proof(args: argparse.Namespace) -> int:
     from worker.classics.v2_proof import build_v2_proof
 
@@ -338,7 +351,9 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--book", required=True)
     status.add_argument("--json", action="store_true")
     status.set_defaults(func=command_status)
-    preview = subparsers.add_parser("preview-voice", help="Render a small Riley approval sample before a chapter run.")
+    preview = subparsers.add_parser(
+        "preview-voice", help="Render a small narrator approval sample before a chapter run."
+    )
     preview.add_argument("--book", required=True)
     preview.add_argument("--chapter", required=True, type=int)
     preview.add_argument("--segments", default="008,009,010,011,012")
@@ -354,7 +369,7 @@ def build_parser() -> argparse.ArgumentParser:
     preview.set_defaults(func=command_preview_voice)
     variants = subparsers.add_parser(
         "preview-voice-variants",
-        help="Render isolated Riley parameter variants with one shared model load.",
+        help="Render isolated narrator parameter variants with one shared model load.",
     )
     variants.add_argument("--book", required=True)
     variants.add_argument("--chapter", required=True, type=int)
@@ -372,6 +387,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     metrics.add_argument("--file", action="append", required=True)
     metrics.set_defaults(func=command_audio_metrics)
+    audition = subparsers.add_parser(
+        "audition-narrators",
+        help="Render the tracked three-candidate blind narrator acceptance pack.",
+    )
+    audition.add_argument(
+        "--config",
+        type=Path,
+        default=REPO / "configs" / "classics" / "narrator-audition.json",
+    )
+    audition.add_argument(
+        "--runtime-root",
+        type=Path,
+        default=REPO,
+        help="Project root containing ignored voice, model, and output assets.",
+    )
+    audition.add_argument("--force", action="store_true")
+    audition.add_argument("--dry-run", action="store_true")
+    audition.set_defaults(func=command_audition_narrators)
     proof = subparsers.add_parser(
         "build-v2-proof",
         help="Build a word-aligned, multi-scene review proof without replacing chapter exports.",
@@ -390,7 +423,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     v2_chapter.add_argument("--book", required=True)
     v2_chapter.add_argument("--chapter", required=True, type=int)
-    v2_chapter.add_argument("--preview-name", required=True)
+    v2_chapter.add_argument(
+        "--preview-name",
+        required=True,
+        help="Audio source name; use 'production' for the canonical chapter audio.",
+    )
     v2_chapter.add_argument("--scene-manifest", required=True)
     v2_chapter.add_argument("--transition-sec", type=float, default=1.5)
     v2_chapter.add_argument("--model", default="base")
@@ -470,6 +507,7 @@ def main() -> int:
         heavy_commands = {
             "preview-voice",
             "preview-voice-variants",
+            "audition-narrators",
             "build-v2-proof",
             "build-v2-chapter",
             "recompose-v2-final",

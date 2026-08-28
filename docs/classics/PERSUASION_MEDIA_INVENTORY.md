@@ -64,3 +64,17 @@ This manifest records the untracked review media retained in the protected
    external artifact store is the correct home.
 4. The protected source worktree is the recovery source until that intake is
    complete. This manifest is evidence, not a replacement for the files.
+
+## Current Mia Pilot Adoption — 2026-08-24
+
+- The 11 chapter 1 scene PNGs listed above were copied byte-for-byte into the
+  current operating-system worktree and visually sampled across the complete
+  Mia V2 program. Their recorded hashes remain unchanged; they are local runtime
+  inputs and are not approved for Git storage.
+- The small scene manifest is promoted as tracked production data after its
+  segment ranges were remapped to the current 131-segment manifest. Its current
+  SHA-256 is
+  `fde4033edf41932761a09a2cf7cfc9786f8e89999a1444d0b189099b883bb47f9`.
+- This adoption does not change the blocked status of historical Riley audio.
+  New Mia audio and final exports remain ignored runtime artifacts with hashes
+  recorded in the V2 verification package.
