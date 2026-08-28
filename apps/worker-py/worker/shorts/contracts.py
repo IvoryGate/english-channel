@@ -68,6 +68,11 @@ def content_key(entry: dict[str, Any]) -> str:
 def validate_product(product: dict[str, Any]) -> None:
     if product.get("schema") != PRODUCT_SCHEMA:
         raise ContractError(f"product.schema must be {PRODUCT_SCHEMA}")
+    description_footer = product.get("descriptionFooter")
+    if description_footer is not None and (
+        not isinstance(description_footer, str) or not description_footer.strip()
+    ):
+        raise ContractError("product.descriptionFooter must be a non-empty string when provided")
     allocation = product.get("formatAllocation")
     if not isinstance(allocation, dict) or set(allocation) != VALID_FORMATS:
         raise ContractError(f"product.formatAllocation must define exactly {sorted(VALID_FORMATS)}")
@@ -284,6 +289,13 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
             }
         )
         cursor += turn_duration
+    description = (
+        f"Practice {entry['cefr']} English listening in under one minute. "
+        f"Answer: {entry['answer']}"
+    )
+    description_footer = str(product.get("descriptionFooter") or "").strip()
+    if description_footer:
+        description = f"{description}\n\n{description_footer}"
     return {
         "schema": MANIFEST_SCHEMA,
         "shortId": entry["shortId"],
@@ -298,10 +310,7 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "height": int(product["quality"]["height"]),
         "title": entry["title"],
         "thumbnailHeadline": entry["thumbnailHeadline"],
-        "description": (
-            f"Practice {entry['cefr']} English listening in under one minute. "
-            f"Answer: {entry['answer']}"
-        ),
+        "description": description,
         "hookStyle": entry["hookStyle"],
         "hook": entry["hook"],
         "hookEndSec": body_start,

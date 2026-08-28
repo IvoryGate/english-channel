@@ -40,6 +40,20 @@ CHAPTER_COPY = {
 }
 
 
+def channel_description_footer(repo_root: Path) -> str:
+    programming_path = repo_root / "configs" / "channel" / "programming.json"
+    try:
+        programming = json.loads(programming_path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        raise ChapterPackageError(f"Channel programming config is unavailable: {programming_path}") from exc
+    rows = programming.get("descriptionFooter")
+    if not isinstance(rows, list) or not rows or any(
+        not isinstance(row, str) or not row.strip() for row in rows
+    ):
+        raise ChapterPackageError("Channel programming descriptionFooter must contain non-empty strings")
+    return "📅 New episodes on a fixed schedule:\n" + "\n".join(row.strip() for row in rows)
+
+
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(command, cwd=cwd, text=True, capture_output=True, encoding="utf-8", errors="replace")
     if result.returncode != 0:
@@ -221,6 +235,7 @@ def write_youtube_package(repo_root: Path, config: BookConfig, chapter: int) -> 
         {"time": _youtube_timestamp(outro_start), "label": "Continue the story"},
     ]
     timestamp_text = "\n".join(f"{item['time']} {item['label']}" for item in timestamps)
+    schedule_footer = channel_description_footer(repo_root)
     description = f"""Settle in for Chapter {chapter} of Jane Austen's Persuasion, warmly narrated in clear English by the English Listening Room.
 
 {copy['summary']}
@@ -237,6 +252,8 @@ Source text: Project Gutenberg eBook 105
 The source text is public domain in the USA. Viewers outside the USA should check the laws of their country before downloading or redistributing the text.
 
 Subscribe to the English Listening Room and continue the story with the next chapter.
+
+{schedule_footer}
 
 #JaneAusten #Persuasion #Audiobook #ClassicLiterature #EnglishListening"""
     tags = [

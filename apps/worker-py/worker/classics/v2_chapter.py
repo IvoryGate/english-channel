@@ -11,7 +11,7 @@ import soundfile as sf
 
 from .aligned_subtitles import align_segment_files
 from .audio_metrics import audio_texture_metrics
-from .chapter_package import CHAPTER_COPY
+from .chapter_package import CHAPTER_COPY, channel_description_footer
 from .config import BookConfig
 from .io import atomic_write_json, atomic_write_text, read_json, sha256_file
 from .paths import ClassicPaths
@@ -220,6 +220,7 @@ def _write_youtube_package(
         {"time": _youtube_timestamp(outro_start), "label": "Continue the story"},
     ]
     timestamp_text = "\n".join(f"{item['time']} {item['label']}" for item in timestamps)
+    schedule_footer = channel_description_footer(repo_root)
     description = f"""Settle in for Chapter {chapter} of Jane Austen's Persuasion, warmly narrated in clear English by the English Listening Room.
 
 {copy['summary']}
@@ -236,6 +237,8 @@ Source text: Project Gutenberg eBook 105
 The source text is public domain in the USA. Viewers outside the USA should check the laws of their country before downloading or redistributing the text.
 
 Subscribe to the English Listening Room and continue the story with the next chapter.
+
+{schedule_footer}
 
 #JaneAusten #Persuasion #Audiobook #ClassicLiterature #EnglishListening"""
     tags = [

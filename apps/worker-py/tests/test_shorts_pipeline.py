@@ -48,6 +48,17 @@ def test_pilot_contract_has_controlled_format_mix_and_balanced_experiments() -> 
     assert duration_counts == {"short": 6, "long": 6}
 
 
+def test_manifest_appends_configured_description_footer() -> None:
+    product, portfolio = contracts()
+    configured = json.loads(json.dumps(product))
+    configured["descriptionFooter"] = "New Shorts every day. Comment your answer and join the next practice."
+
+    manifest = build_manifest(portfolio["entries"][0], configured, portfolio["cycleId"])
+
+    assert manifest["description"].endswith(configured["descriptionFooter"])
+    assert "\n\nNew Shorts every day." in manifest["description"]
+
+
 def test_steady_state_requests_channel_owned_release_capacity() -> None:
     product, _ = contracts()
     publishing = product["publishing"]

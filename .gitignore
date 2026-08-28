@@ -24,6 +24,7 @@ assets/*
 assets/branding/*
 !assets/branding/video/
 !assets/branding/video/*.mp4
+public/classics/*/branding/*.wav
 reference/
 workspace/*
 !workspace/shows/
