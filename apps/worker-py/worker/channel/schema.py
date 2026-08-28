@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
-from datetime import date, time
+from datetime import date, datetime, time
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -19,6 +19,7 @@ from .types import (
     ReleaseProgramPolicy,
     RemoteInventoryItem,
     SeriesPolicy,
+    YouTubeReleaseSpec,
 )
 
 
@@ -32,6 +33,9 @@ class SchemaError(ValueError):
     pass
 
 
+YOUTUBE_RELEASE_MANIFEST_SCHEMA = "youtube-release-manifest-v1"
+
+
 def _object(value: Any, where: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise SchemaError(f"{where} must be an object")
@@ -43,6 +47,121 @@ def _string(value: dict[str, Any], key: str, where: str) -> str:
     if not isinstance(item, str) or not item.strip():
         raise SchemaError(f"{where}.{key} must be a non-empty string")
     return item.strip()
+
+
+def _release_text(item: dict[str, Any], key: str, where: str, repo_root: Path) -> str:
+    direct = item.get(key)
+    file_value = item.get(f"{key}File")
+    if direct is not None and file_value is not None:
+        raise SchemaError(f"{where} must not set both {key} and {key}File")
+    if isinstance(direct, str) and direct.strip():
+        return direct.strip()
+    if isinstance(file_value, str) and file_value.strip():
+        path = Path(file_value)
+        resolved = path.resolve() if path.is_absolute() else (repo_root / path).resolve()
+        if not resolved.is_file():
+            raise SchemaError(f"{where}.{key}File does not exist: {resolved}")
+        value = resolved.read_text(encoding="utf-8").strip()
+        if value:
+            return value
+    raise SchemaError(f"{where} requires {key} or {key}File")
+
+
+def _release_metadata(
+    item: dict[str, Any], where: str, repo_root: Path
+) -> dict[str, Any]:
+    value = item.get("metadataFile")
+    if value is None:
+        return dict(item)
+    if not isinstance(value, str) or not value.strip():
+        raise SchemaError(f"{where}.metadataFile must be a non-empty path")
+    path = Path(value)
+    resolved = path.resolve() if path.is_absolute() else (repo_root / path).resolve()
+    if not resolved.is_file():
+        raise SchemaError(f"{where}.metadataFile does not exist: {resolved}")
+    metadata = _object(json.loads(resolved.read_text(encoding="utf-8")), str(resolved))
+    effective = dict(metadata)
+    effective.update(item)
+    for key in ("title", "description"):
+        if item.get(f"{key}File") is not None:
+            effective.pop(key, None)
+    return effective
+
+
+def _release_path(
+    item: dict[str, Any], key: str, where: str, repo_root: Path, *, required: bool
+) -> Path | None:
+    value = item.get(key)
+    if value is None and not required:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise SchemaError(f"{where}.{key} must be a non-empty path")
+    path = Path(value)
+    return path.resolve() if path.is_absolute() else (repo_root / path).resolve()
+
+
+def load_youtube_release_manifest(path: Path, repo_root: Path) -> tuple[YouTubeReleaseSpec, ...]:
+    payload = _object(json.loads(path.read_text(encoding="utf-8")), str(path))
+    if payload.get("schema") != YOUTUBE_RELEASE_MANIFEST_SCHEMA:
+        raise SchemaError(
+            f"Unsupported YouTube release manifest schema: {payload.get('schema')!r}"
+        )
+    items = payload.get("items")
+    if not isinstance(items, list) or not items:
+        raise SchemaError("YouTube release manifest items must be a non-empty list")
+    specs: list[YouTubeReleaseSpec] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(items):
+        where = f"items[{index}]"
+        item = _object(raw, where)
+        effective = _release_metadata(item, where, repo_root)
+        content_id = _string(item, "contentId", where)
+        if content_id in seen:
+            raise SchemaError(f"Duplicate YouTube release contentId: {content_id}")
+        seen.add(content_id)
+        scheduled_at = _string(item, "scheduledAt", where)
+        try:
+            scheduled = datetime.fromisoformat(scheduled_at)
+        except ValueError as exc:
+            raise SchemaError(f"{where}.scheduledAt must be ISO-8601") from exc
+        if scheduled.tzinfo is None:
+            raise SchemaError(f"{where}.scheduledAt must be timezone-aware")
+        title = _release_text(effective, "title", where, repo_root)
+        description = _release_text(effective, "description", where, repo_root)
+        if len(title) > 100:
+            raise SchemaError(f"{where}.title exceeds YouTube's 100-character limit")
+        if len(description) > 5000:
+            raise SchemaError(f"{where}.description exceeds YouTube's 5000-character limit")
+        tags = effective.get("tags", [])
+        if not isinstance(tags, list) or any(not isinstance(tag, str) or not tag.strip() for tag in tags):
+            raise SchemaError(f"{where}.tags must be a list of non-empty strings")
+        specs.append(
+            YouTubeReleaseSpec(
+                content_id=content_id,
+                video_path=_release_path(item, "video", where, repo_root, required=True),
+                thumbnail_path=_release_path(item, "thumbnail", where, repo_root, required=False),
+                captions_path=_release_path(item, "captions", where, repo_root, required=False),
+                title=title,
+                description=description,
+                scheduled_at=scheduled.isoformat(timespec="seconds"),
+                tags=tuple(tag.strip() for tag in tags),
+                playlist_id=(str(item["playlistId"]).strip() if item.get("playlistId") else None),
+                related_video_id=(
+                    str(item["relatedVideoId"]).strip() if item.get("relatedVideoId") else None
+                ),
+                category_id=str(effective.get("categoryId", "27")),
+                language=str(effective.get("language", "en")),
+                made_for_kids=bool(effective.get("madeForKids", False)),
+                contains_synthetic_media=bool(effective.get("containsSyntheticMedia", True)),
+                notify_subscribers=bool(effective.get("notifySubscribers", False)),
+                qc_status=str(item.get("qcStatus", "pending")),
+                youtube_video_id=(
+                    str(item["youtubeVideoId"]).strip() if item.get("youtubeVideoId") else None
+                ),
+                assets_already_set=bool(item.get("assetsAlreadySet", False)),
+            )
+        )
+    return tuple(specs)
 
 
 def validate_identifier(value: str, where: str) -> str:

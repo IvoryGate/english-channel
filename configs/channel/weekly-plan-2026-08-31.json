@@ -16,20 +16,20 @@
     "method": "docs/shows/LONG_FORM_SCRIPT_METHOD.md"
   },
   "publicationSlots": [
-    {"contentId": "content:classic_listening:persuasion_chapter_002", "scheduledAt": "2026-08-31T08:00:00+08:00", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:classic_listening:persuasion_chapter_002", "scheduledAt": "2026-08-31T08:00:00+08:00", "youtubeId": "tdTlhg49vTk", "remoteAction": "uploaded_private_processing", "checks": "local_pass_remote_processing"},
     {"contentId": "content:shorts_main:elr-s-012", "scheduledAt": "2026-08-31T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-013", "scheduledAt": "2026-08-31T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_b:episode_021", "scheduledAt": "2026-08-31T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_021", "scheduledAt": "2026-08-31T20:00:00+08:00", "youtubeId": "ezuZR_Xc8MA", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
 
     {"contentId": "content:shorts_main:elr-s-014", "scheduledAt": "2026-09-01T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-015", "scheduledAt": "2026-09-01T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_a:episode_021", "scheduledAt": "2026-09-01T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_021", "scheduledAt": "2026-09-01T20:00:00+08:00", "youtubeId": "CNPtSlf1iWQ", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
 
     {"contentId": "content:shorts_main:elr-s-016", "scheduledAt": "2026-09-02T12:30:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-017", "scheduledAt": "2026-09-02T18:00:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_c:episode_021", "scheduledAt": "2026-09-02T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_021", "scheduledAt": "2026-09-02T20:00:00+08:00", "youtubeId": "mmQQlSnLVx8", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
 
-    {"contentId": "content:classic_listening:persuasion_chapter_003", "scheduledAt": "2026-09-03T08:00:00+08:00", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:classic_listening:persuasion_chapter_003", "scheduledAt": "2026-09-03T08:00:00+08:00", "youtubeId": "uJ32Ef1v3QE", "remoteAction": "uploaded_private_processing", "checks": "local_pass_remote_processing"},
     {"contentId": "content:shorts_main:elr-s-018", "scheduledAt": "2026-09-03T12:30:00+08:00", "cluster": "story_with_a_point", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-019", "scheduledAt": "2026-09-03T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:series_b:episode_022", "scheduledAt": "2026-09-03T20:00:00+08:00", "format": "deep_practice", "remoteAction": "planned", "checks": "pending"},

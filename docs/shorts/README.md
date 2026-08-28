@@ -159,12 +159,14 @@ $env:YOUTUBE_CLIENT_SECRETS = "C:\secure\youtube-client.json"
 & $py scripts/shorts.py youtube-auth
 ```
 
-The refresh token defaults to the ignored
-`workspace/shorts/ops/youtube_token.json`. A scheduled run can refresh it
+The shared refresh token defaults to the ignored
+`workspace/channel/youtube/youtube_token.json`. A scheduled run can refresh it
 without opening a browser. Never commit either credential file.
 
-If OAuth has not been provisioned yet, an authenticated Codex in-app browser
-may use YouTube Studio as the operational fallback. Before uploading, verify
+The channel-wide API-first procedure is documented in
+[`../YOUTUBE_AUTOMATION.md`](../YOUTUBE_AUTOMATION.md). If OAuth or a supported
+API operation fails, an authenticated Codex in-app browser may use YouTube
+Studio as the operational fallback. Before uploading, verify
 that Studio is signed in to `English Listening Room`, search the Shorts table
 by title, and compare the local content key so an existing draft or scheduled
 upload is never duplicated. Upload privately, set audience and metadata, set

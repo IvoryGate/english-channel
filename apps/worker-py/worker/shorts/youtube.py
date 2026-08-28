@@ -1,20 +1,14 @@
 from __future__ import annotations
 
-import os
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
+from worker.channel.providers.youtube import authorize, credentials
+
 from .analytics import ANALYTICS_SCHEMA
 from .ledger import load_ledger, record_publication
 from .workspace import atomic_write_json, operation_root, read_json
-
-
-SCOPES = [
-    "https://www.googleapis.com/auth/youtube.upload",
-    "https://www.googleapis.com/auth/youtube.readonly",
-    "https://www.googleapis.com/auth/yt-analytics.readonly",
-]
 
 
 def _google_modules() -> tuple[Any, Any, Any, Any, Any]:
@@ -29,42 +23,6 @@ def _google_modules() -> tuple[Any, Any, Any, Any, Any]:
             "YouTube integration dependencies are missing. Install apps/worker-py/requirements.txt."
         ) from exc
     return Request, Credentials, InstalledAppFlow, build, MediaFileUpload
-
-
-def credential_paths(repo_root: Path) -> tuple[Path, Path]:
-    client_value = os.environ.get("YOUTUBE_CLIENT_SECRETS")
-    if not client_value:
-        raise RuntimeError("Set YOUTUBE_CLIENT_SECRETS to the Google OAuth desktop client JSON path.")
-    client_path = Path(client_value).resolve()
-    token_value = os.environ.get("YOUTUBE_TOKEN_PATH")
-    token_path = Path(token_value).resolve() if token_value else operation_root(repo_root) / "youtube_token.json"
-    if not client_path.is_file():
-        raise FileNotFoundError(f"YouTube OAuth client file does not exist: {client_path}")
-    return client_path, token_path
-
-
-def authorize(repo_root: Path) -> Path:
-    _request, _credentials, installed_flow, _build, _media = _google_modules()
-    client_path, token_path = credential_paths(repo_root)
-    flow = installed_flow.from_client_secrets_file(str(client_path), SCOPES)
-    credentials = flow.run_local_server(port=0, access_type="offline", prompt="consent")
-    token_path.parent.mkdir(parents=True, exist_ok=True)
-    token_path.write_text(credentials.to_json() + "\n", encoding="utf-8", newline="\n")
-    return token_path
-
-
-def credentials(repo_root: Path) -> Any:
-    request, credentials_type, _flow, _build, _media = _google_modules()
-    _client_path, token_path = credential_paths(repo_root)
-    if not token_path.is_file():
-        raise RuntimeError(f"YouTube token is missing: {token_path}. Run shorts.py youtube-auth once.")
-    credentials_value = credentials_type.from_authorized_user_file(str(token_path), SCOPES)
-    if credentials_value.expired and credentials_value.refresh_token:
-        credentials_value.refresh(request())
-        token_path.write_text(credentials_value.to_json() + "\n", encoding="utf-8", newline="\n")
-    if not credentials_value.valid:
-        raise RuntimeError("YouTube OAuth token is invalid. Run shorts.py youtube-auth again.")
-    return credentials_value
 
 
 def upload_private(

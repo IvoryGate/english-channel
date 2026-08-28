@@ -197,8 +197,12 @@ def test_release_commands_reserve_report_and_cancel_without_remote_authority(
         encoding="utf-8",
         newline="\n",
     )
+    cli_release_payload = release_payload()
+    cli_program = cli_release_payload["programs"]["dialogue_active"]
+    cli_program["startsOn"] = "2099-08-24"
+    cli_program["endsOn"] = "2099-08-31"
     release_path.write_text(
-        json.dumps(release_payload()), encoding="utf-8", newline="\n"
+        json.dumps(cli_release_payload), encoding="utf-8", newline="\n"
     )
 
     common = [
@@ -213,7 +217,7 @@ def test_release_commands_reserve_report_and_cancel_without_remote_authority(
             "release", "reserve",
             "--content-id", "content:series_a:episode_002",
             "--program", "dialogue_active",
-            "--scheduled-at", "2026-08-26T20:30:00+08:00",
+            "--scheduled-at", "2099-08-26T20:30:00+08:00",
             "--idempotency-key", "cli-reserve",
         ]
     )

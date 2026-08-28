@@ -4,11 +4,11 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import uuid
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 from zoneinfo import ZoneInfo
 
 from .providers import LegacyLedgerProvider, pid_alive
-from .repo import SqliteChannelRepository
+from .repo import SqliteChannelRepository, YouTubeReleaseJournal
 from .schema import (
     normalize_classics_ledgers,
     normalize_dialogue_ledger,
@@ -26,6 +26,8 @@ from .types import (
     RemoteInventoryCapture,
     ResourceLease,
     ResourcePolicy,
+    YouTubeReleaseResult,
+    YouTubeReleaseSpec,
 )
 
 
@@ -217,6 +219,215 @@ class ReleaseReservationService:
             reservation_id,
             cancelled_at=cancelled.astimezone(timezone.utc).isoformat(timespec="seconds"),
             reason=detail,
+        )
+
+
+class YouTubeReleaseService:
+    def __init__(
+        self,
+        provider: Any,
+        journal: YouTubeReleaseJournal,
+        *,
+        expected_channel_id: str,
+        now: Callable[[], str] = utc_now,
+    ) -> None:
+        self.provider = provider
+        self.journal = journal
+        self.expected_channel_id = expected_channel_id
+        self.now = now
+
+    @staticmethod
+    def _fingerprint(path: Path) -> str:
+        digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+                digest.update(chunk)
+        return digest.hexdigest()
+
+    def preflight(self, spec: YouTubeReleaseSpec) -> str:
+        if spec.qc_status != "pass":
+            raise ValueError(f"Release QC has not passed for {spec.content_id}: {spec.qc_status}")
+        for label, path in (
+            ("video", spec.video_path),
+            ("thumbnail", spec.thumbnail_path),
+            ("captions", spec.captions_path),
+        ):
+            if path is not None and not path.is_file():
+                raise FileNotFoundError(f"YouTube {label} artifact is missing: {path}")
+        scheduled = datetime.fromisoformat(spec.scheduled_at)
+        if scheduled.tzinfo is None:
+            raise ValueError(f"Scheduled time must be timezone-aware: {spec.scheduled_at}")
+        if scheduled <= datetime.fromisoformat(self.now()):
+            raise ValueError(f"Scheduled time is not in the future: {spec.scheduled_at}")
+        return self._fingerprint(spec.video_path)
+
+    def _assert_channel(self) -> None:
+        actual = self.provider.channel_id()
+        if actual != self.expected_channel_id:
+            raise PermissionError(
+                f"OAuth channel mismatch: expected {self.expected_channel_id}, got {actual}"
+            )
+
+    def adopt(self, spec: YouTubeReleaseSpec, video_id: str) -> YouTubeReleaseResult:
+        fingerprint = self.preflight(spec)
+        self._assert_channel()
+        remote = self.provider.fetch(video_id)
+        if remote.title != spec.title:
+            raise ValueError(
+                f"Remote title mismatch for {spec.content_id}: {remote.title!r} != {spec.title!r}"
+            )
+        self.journal.record(
+            spec.content_id,
+            videoFingerprint=fingerprint,
+            youtubeVideoId=video_id,
+            state="adopted_private",
+            updatedAt=self.now(),
+        )
+        return YouTubeReleaseResult(
+            content_id=spec.content_id,
+            video_id=video_id,
+            state="adopted_private",
+            scheduled_at=remote.publish_at,
+            uploaded=False,
+            thumbnail_set=False,
+            captions_set=False,
+        )
+
+    def sync(
+        self,
+        spec: YouTubeReleaseSpec,
+        *,
+        apply_upload: bool,
+        apply_schedule: bool,
+    ) -> YouTubeReleaseResult:
+        fingerprint = self.preflight(spec)
+        existing = self.journal.entry(spec.content_id) or {}
+        if existing.get("videoFingerprint") not in {None, fingerprint}:
+            raise ValueError(f"Video fingerprint changed for {spec.content_id}")
+        video_id = existing.get("youtubeVideoId")
+        if not video_id and spec.youtube_video_id:
+            self._assert_channel()
+            adopted = self.provider.fetch(spec.youtube_video_id)
+            if adopted.title != spec.title:
+                raise ValueError(
+                    f"Remote title mismatch for {spec.content_id}: "
+                    f"{adopted.title!r} != {spec.title!r}"
+                )
+            video_id = spec.youtube_video_id
+            existing.update(
+                {
+                    "videoFingerprint": fingerprint,
+                    "youtubeVideoId": video_id,
+                    "state": "adopted_private",
+                    "thumbnailSet": spec.assets_already_set and spec.thumbnail_path is not None,
+                    "captionsSet": spec.assets_already_set and spec.captions_path is not None,
+                }
+            )
+            existing["updatedAt"] = self.now()
+            self.journal.record(spec.content_id, **existing)
+        if not video_id and not apply_upload:
+            return YouTubeReleaseResult(
+                content_id=spec.content_id,
+                video_id=None,
+                state="ready_to_upload",
+                scheduled_at=None,
+                uploaded=False,
+                thumbnail_set=False,
+                captions_set=False,
+            )
+        self._assert_channel()
+        uploaded = False
+        if not video_id:
+            video_id = self.provider.upload_private(spec)
+            uploaded = True
+            self.journal.record(
+                spec.content_id,
+                videoFingerprint=fingerprint,
+                youtubeVideoId=video_id,
+                state="uploaded_private",
+                uploadedAt=self.now(),
+                updatedAt=self.now(),
+            )
+        remote = self.provider.fetch(str(video_id))
+        if remote.title != spec.title:
+            raise ValueError(
+                f"Remote title mismatch for {spec.content_id}: {remote.title!r} != {spec.title!r}"
+            )
+        if remote.failure_reason or remote.rejection_reason:
+            raise RuntimeError(
+                f"YouTube rejected {spec.content_id}: "
+                f"{remote.failure_reason or remote.rejection_reason}"
+            )
+        thumbnail_set = bool(existing.get("thumbnailSet"))
+        captions_set = bool(existing.get("captionsSet"))
+        playlist_set = bool(existing.get("playlistItemId"))
+        if apply_upload and spec.thumbnail_path is not None and not thumbnail_set:
+            self.provider.set_thumbnail(str(video_id), spec.thumbnail_path)
+            thumbnail_set = True
+        if apply_upload and spec.captions_path is not None and not captions_set:
+            caption_id = self.provider.upsert_captions(
+                str(video_id), spec.captions_path, language=spec.language
+            )
+            captions_set = True
+            existing["captionId"] = caption_id
+        if apply_upload and spec.playlist_id and not playlist_set:
+            existing["playlistItemId"] = self.provider.add_to_playlist(
+                str(video_id), spec.playlist_id
+            )
+            playlist_set = True
+        state = "uploaded_private"
+        detail = None
+        scheduled_at = remote.publish_at
+        if apply_schedule:
+            if remote.upload_status != "processed" or remote.processing_status != "succeeded":
+                state = "awaiting_processing"
+                detail = (
+                    f"uploadStatus={remote.upload_status}; "
+                    f"processingStatus={remote.processing_status}"
+                )
+            else:
+                scheduled_utc = datetime.fromisoformat(spec.scheduled_at).astimezone(timezone.utc)
+                normalized = scheduled_utc.isoformat(timespec="seconds").replace("+00:00", "Z")
+                already_scheduled = False
+                if remote.publish_at:
+                    remote_time = datetime.fromisoformat(remote.publish_at.replace("Z", "+00:00"))
+                    already_scheduled = remote_time == scheduled_utc
+                if not already_scheduled:
+                    self.provider.schedule(str(video_id), normalized, spec)
+                verified = remote if already_scheduled else self.provider.fetch(str(video_id))
+                if verified.privacy_status != "private" or verified.publish_at is None:
+                    raise RuntimeError(f"YouTube schedule did not persist for {spec.content_id}")
+                state = "scheduled"
+                scheduled_at = verified.publish_at
+        if spec.related_video_id:
+            detail = (
+                (detail + "; " if detail else "")
+                + "Studio fallback required for the Shorts Related Video field"
+            )
+        journal_changes = dict(existing)
+        journal_changes.update(
+            {
+                "videoFingerprint": fingerprint,
+                "youtubeVideoId": str(video_id),
+                "state": state,
+                "scheduledAt": scheduled_at,
+                "thumbnailSet": thumbnail_set,
+                "captionsSet": captions_set,
+                "playlistSet": playlist_set,
+                "relatedVideoId": spec.related_video_id,
+                "updatedAt": self.now(),
+            }
+        )
+        self.journal.record(spec.content_id, **journal_changes)
+        return YouTubeReleaseResult(
+            content_id=spec.content_id,
+            video_id=str(video_id),
+            state=state,
+            scheduled_at=scheduled_at,
+            uploaded=uploaded,
+            thumbnail_set=thumbnail_set,
+            captions_set=captions_set,
+            detail=detail,
         )
 
 

@@ -55,6 +55,23 @@ class RunLogger:
         self.write(f"[{utc_now()}] {message}")
 
 
+def production_env() -> dict[str, str]:
+    configured = os.environ.get("ELR_RUNTIME_TEMP")
+    runtime_temp = (
+        Path(configured).resolve()
+        if configured
+        else (REPO / "workspace" / "runtime" / "tmp").resolve()
+    )
+    runtime_temp.mkdir(parents=True, exist_ok=True)
+    return {
+        **os.environ,
+        "TEMP": str(runtime_temp),
+        "TMP": str(runtime_temp),
+        "KMP_DUPLICATE_LIB_OK": "TRUE",
+        "PYTHONUNBUFFERED": "1",
+    }
+
+
 def run_streamed(
     cmd: list[str],
     *,
@@ -62,11 +79,10 @@ def run_streamed(
     heartbeat: Callable[[str], Any] | None = None,
 ) -> int:
     logger.write("  command: " + subprocess.list2cmdline(cmd))
-    env = {**os.environ, "KMP_DUPLICATE_LIB_OK": "TRUE", "PYTHONUNBUFFERED": "1"}
     process = subprocess.Popen(
         cmd,
         cwd=str(REPO),
-        env=env,
+        env=production_env(),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -417,7 +433,7 @@ def _detach(args: argparse.Namespace) -> int:
         stdout=stdout,
         stderr=subprocess.STDOUT if stdout is not None else None,
         creationflags=creationflags,
-        env={**os.environ, "PYTHONUNBUFFERED": "1", "KMP_DUPLICATE_LIB_OK": "TRUE"},
+        env=production_env(),
     )
     # Update only launch facts. If the child already changed STARTING to
     # RUNNING, RunStateStore.update preserves that newer status.

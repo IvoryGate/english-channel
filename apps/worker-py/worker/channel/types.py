@@ -215,3 +215,49 @@ class ReleaseReservation:
     created_at: str
     cancelled_at: str | None = None
     cancellation_reason: str | None = None
+
+
+@dataclass(frozen=True)
+class YouTubeReleaseSpec:
+    content_id: str
+    video_path: Path
+    title: str
+    description: str
+    scheduled_at: str
+    thumbnail_path: Path | None = None
+    captions_path: Path | None = None
+    tags: tuple[str, ...] = ()
+    playlist_id: str | None = None
+    related_video_id: str | None = None
+    category_id: str = "27"
+    language: str = "en"
+    made_for_kids: bool = False
+    contains_synthetic_media: bool = True
+    notify_subscribers: bool = False
+    qc_status: str = "pending"
+    youtube_video_id: str | None = None
+    assets_already_set: bool = False
+
+
+@dataclass(frozen=True)
+class YouTubeRemoteVideo:
+    video_id: str
+    title: str
+    privacy_status: str
+    publish_at: str | None
+    upload_status: str
+    processing_status: str | None
+    failure_reason: str | None = None
+    rejection_reason: str | None = None
+
+
+@dataclass(frozen=True)
+class YouTubeReleaseResult:
+    content_id: str
+    video_id: str | None
+    state: str
+    scheduled_at: str | None
+    uploaded: bool
+    thumbnail_set: bool
+    captions_set: bool
+    detail: str | None = None

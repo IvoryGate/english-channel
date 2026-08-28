@@ -22,11 +22,13 @@ Excluded: copying or redistributing competitor/TED transcripts; changing already
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-08-28 18:45 Asia/Shanghai.
+- Last updated: 2026-08-28 23:55 Asia/Shanghai.
 - Research, the long-form method, the 22-slot weekly plan, three episode-022 scripts, all long-form cover scenes, and fourteen Shorts manifests/thumbnails are complete.
 - `Persuasion` chapters 2 and 3 are fully rendered, packaged, and independently checked: chapter 2 has 105 narration segments and chapter 3 has 155; both report `PASS` with zero warnings.
-- Dialogue episode 022 production is running serially through the shared GPU lease. Series A is first, followed by Series B and Series C.
-- Upload and exact remote scheduling remain pending. No repository OAuth client/token is present, and the current Codex tool surface has no working Browser Plugin connection; this is a remote-control blocker, not a local production blocker.
+- Dialogue episode 022 production is running serially through the shared GPU lease. Series A is fully rendered, verified, and exported to `H:\Youtube\DailyTalk\episode22`. Series B resumed from its first completed turn in a stable ten-turn GPU batch after moving production temp files to H and recovering C-drive headroom; Series C remains queued behind it.
+- The repaired Browser Plugin connection is attached to the signed-in Studio session. Five release-ready long videos have titles, descriptions, thumbnails, audience settings, and manually uploaded English subtitles. Dialogue 021 is verified private; the two `Persuasion` chapters are saved and remain in Studio's post-upload processing queue. Assigned IDs: Daily Talk 021 `CNPtSlf1iWQ`, First Steps 021 `ezuZR_Xc8MA`, Polished English 021 `mmQQlSnLVx8`, `Persuasion` chapter 2 `tdTlhg49vTk`, and chapter 3 `uJ32Ef1v3QE`.
+- The shared API-first release controller now owns private upload, metadata, thumbnail, captions, playlist, processing-state checks, scheduling, verification, identity collision protection, and retry state. The five real Studio uploads plus completed Daily Talk 022 are encoded in `configs/channel/youtube-release-2026-08-31.json`; all six pass the local preflight. Studio is now a fallback for failures and unsupported fields, not the routine path.
+- The owner has already authorized the listed times without per-item confirmation. Exact remote scheduling remains pending on OAuth desktop credentials, YouTube processing, and passing local packages—not another publication confirmation.
 
 ## Research evidence
 
@@ -53,7 +55,7 @@ The Classics line remains a coherent serial release and contributes two narrativ
 5. Produce audiobook chapters 2–3 and Dialogue 022 media with serialized GPU access.
 6. Produce Shorts 012–025 and bind each to the best available related long video.
 7. Run script, audio, video, subtitle, thumbnail, metadata, identity, and schedule checks.
-8. Upload private, perform Studio checks, then schedule exact approved times.
+8. Upload private and schedule exact approved times through the API controller; use Studio only for unsupported fields, visible policy checks, or API failure.
 9. Reconcile every YouTube video ID and final state into the weekly control plane.
 
 ## Validation

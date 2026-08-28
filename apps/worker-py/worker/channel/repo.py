@@ -6,7 +6,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Iterator
+from typing import Any, Iterator
 
 from .schema import canonical_content_id, canonical_json, payload_sha256
 from .types import (
@@ -149,6 +149,7 @@ class SqliteChannelRepository:
             except BaseException:
                 connection.rollback()
                 raise
+
 
     @staticmethod
     def _normalized_payload(record: NormalizedIdentityRecord) -> dict[str, object | None]:
@@ -968,3 +969,65 @@ class SqliteChannelRepository:
             except BaseException:
                 connection.rollback()
                 raise
+
+
+class YouTubeReleaseJournal:
+    """Crash-safe runtime journal for upload sessions and remote IDs.
+
+    This file is operational resume state, not the canonical publication ledger.
+    Canonical IDs still flow through the shared channel reconciliation path.
+    """
+
+    SCHEMA = "youtube-release-journal-v1"
+
+    def __init__(self, path: Path) -> None:
+        self.path = path.resolve()
+
+    def load(self) -> dict[str, Any]:
+        if not self.path.is_file():
+            return {"schema": self.SCHEMA, "entries": {}}
+        payload = json.loads(self.path.read_text(encoding="utf-8"))
+        if payload.get("schema") != self.SCHEMA or not isinstance(payload.get("entries"), dict):
+            raise RepositoryError(f"Invalid YouTube release journal: {self.path}")
+        return payload
+
+    def entry(self, content_id: str) -> dict[str, Any] | None:
+        value = self.load()["entries"].get(content_id)
+        return dict(value) if isinstance(value, dict) else None
+
+    def record(self, content_id: str, **changes: Any) -> dict[str, Any]:
+        payload = self.load()
+        entries = payload["entries"]
+        existing = dict(entries.get(content_id, {}))
+        incoming_fingerprint = changes.get("videoFingerprint")
+        existing_fingerprint = existing.get("videoFingerprint")
+        if incoming_fingerprint and existing_fingerprint and incoming_fingerprint != existing_fingerprint:
+            raise RepositoryError(
+                f"YouTube release content changed after upload began: {content_id}"
+            )
+        incoming_video_id = changes.get("youtubeVideoId")
+        if incoming_video_id:
+            collision = next(
+                (
+                    key for key, item in entries.items()
+                    if key != content_id
+                    and isinstance(item, dict)
+                    and item.get("youtubeVideoId") == incoming_video_id
+                ),
+                None,
+            )
+            if collision:
+                raise RepositoryError(
+                    f"YouTube video ID {incoming_video_id} is already assigned to {collision}"
+                )
+        existing.update(changes)
+        entries[content_id] = existing
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.path.with_suffix(self.path.suffix + ".tmp")
+        temporary.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        temporary.replace(self.path)
+        return dict(existing)

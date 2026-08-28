@@ -121,6 +121,17 @@ grant remote mutation authority. The 2026-08-24 formal database reconciles all
 15 items in its public RSS window; it does not cover private, unlisted, or
 older public inventory outside that window.
 
+Authorized weekly releases use the idempotent API-first controller:
+
+```powershell
+$py = ".\.conda-env\python.exe"
+& $py scripts/youtube.py --manifest configs/channel/youtube-release-2026-08-31.json preflight
+& $py scripts/youtube.py --manifest configs/channel/youtube-release-2026-08-31.json sync --apply-upload --apply-schedule
+```
+
+See [`docs/YOUTUBE_AUTOMATION.md`](docs/YOUTUBE_AUTOMATION.md) for OAuth,
+retries, the crash-recovery journal, and the narrow Studio fallback boundary.
+
 ## Local VoxCPM2 Setup On Windows
 
 Your preferred local model is `openbmb/VoxCPM2`.
