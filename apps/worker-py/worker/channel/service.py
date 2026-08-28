@@ -335,9 +335,21 @@ class YouTubeReleaseService:
                 thumbnail_set=False,
                 captions_set=False,
             )
+        if not video_id and existing.get("state") == "upload_in_progress":
+            raise RuntimeError(
+                f"Upload outcome is uncertain for {spec.content_id}; inspect recent private "
+                "uploads and use adopt before retrying so a duplicate cannot be created"
+            )
         self._assert_channel()
         uploaded = False
         if not video_id:
+            self.journal.record(
+                spec.content_id,
+                videoFingerprint=fingerprint,
+                state="upload_in_progress",
+                uploadStartedAt=self.now(),
+                updatedAt=self.now(),
+            )
             video_id = self.provider.upload_private(spec)
             uploaded = True
             self.journal.record(

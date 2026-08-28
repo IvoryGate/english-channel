@@ -63,6 +63,11 @@ class FakeYouTubeProvider:
         )
 
 
+class FailingUploadProvider(FakeYouTubeProvider):
+    def upload_private(self, spec) -> str:
+        raise RuntimeError("connection lost after upload request")
+
+
 def release_manifest(tmp_path: Path) -> Path:
     video = tmp_path / "video.mp4"
     thumbnail = tmp_path / "thumbnail.png"
@@ -221,6 +226,25 @@ def test_sync_waits_for_processing_before_scheduling(tmp_path: Path) -> None:
 
     assert result.state == "awaiting_processing"
     assert provider.schedules == 0
+
+
+def test_uncertain_upload_blocks_duplicate_retry(tmp_path: Path) -> None:
+    spec = load_youtube_release_manifest(release_manifest(tmp_path), tmp_path)[0]
+    journal = YouTubeReleaseJournal(tmp_path / "journal.json")
+    provider = FailingUploadProvider()
+    service = YouTubeReleaseService(
+        provider,
+        journal,
+        expected_channel_id=CHANNEL_ID,
+        now=lambda: NOW,
+    )
+
+    with pytest.raises(RuntimeError, match="connection lost"):
+        service.sync(spec, apply_upload=True, apply_schedule=False)
+    with pytest.raises(RuntimeError, match="outcome is uncertain"):
+        service.sync(spec, apply_upload=True, apply_schedule=False)
+
+    assert journal.entry(spec.content_id)["state"] == "upload_in_progress"
 
 
 def test_journal_blocks_content_changes_and_remote_id_collisions(tmp_path: Path) -> None:

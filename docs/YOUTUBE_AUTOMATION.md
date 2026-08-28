@@ -7,9 +7,12 @@ video ID immediately, adds the thumbnail, English captions and playlist, waits
 for YouTube processing, then applies and verifies `status.publishAt`.
 
 The ignored crash-recovery journal is
-`workspace/channel/youtube/release-journal.json`. A retry reuses its video ID and
-will not upload the same content again. A changed media fingerprint or reused
-YouTube ID is a blocking collision.
+`workspace/channel/youtube/release-journal.json`. Once a video ID is recorded,
+a retry reuses it and will not upload the same content again. If a process dies
+after starting an upload but before recording the returned ID, the next write
+is blocked as uncertain; inspect recent private uploads and use `adopt` instead
+of risking a duplicate. A changed media fingerprint or reused YouTube ID is a
+blocking collision.
 
 ## One-time OAuth setup
 
@@ -79,4 +82,3 @@ publication time are API operations. Use Studio only when:
 
 Any Studio fallback must preserve the manifest content ID and record the real
 video ID back into the manifest/journal before another automated retry.
-

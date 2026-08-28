@@ -13,4 +13,9 @@ from worker.channel.youtube_transport import main  # noqa: E402
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(["--repo-root", str(REPO), *sys.argv[1:]]))
+    try:
+        code = main(["--repo-root", str(REPO), *sys.argv[1:]])
+    except (FileNotFoundError, OSError, PermissionError, RuntimeError, ValueError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        code = 1
+    raise SystemExit(code)

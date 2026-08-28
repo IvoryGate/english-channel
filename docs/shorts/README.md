@@ -99,6 +99,18 @@ timings.
 & $py scripts/shorts.py render-audio --short elr-s-001
 ```
 
+For a production week, batch the selected IDs. The controller keeps at most 20
+turns per VoxCPM process, resumes completed turn WAVs, and holds the shared GPU
+lease for the batch. This reduces repeated model loads without crossing the
+tested 8 GB VRAM ceiling.
+
+```powershell
+& $py scripts/shorts.py render-audio-batch --short elr-s-012 elr-s-013 elr-s-014
+& $py scripts/shorts.py render-audio-batch --all `
+  --product configs/shorts/product-weekly-scale.json `
+  --portfolio configs/shorts/weekly-2026-08-31.json
+```
+
 For an isolated Git worktree, the controller automatically looks for model and
 voice assets in the owning repository. Override only when necessary:
 
