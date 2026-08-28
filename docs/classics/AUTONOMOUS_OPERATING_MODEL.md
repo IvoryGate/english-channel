@@ -70,6 +70,8 @@ reservations, privacy, and scheduling authority are owned by
 registered as the active `classic-listening-baseline` program. The channel
 owner accepted the Mia baseline and the first release slot on 2026-08-24; the
 documented release and platform gates still control every transition.
+An explicitly owner-approved immediate publication may be recorded at schedule
+authority without granting autonomous publication authority to future items.
 
 The initial operating cadence is two chapter episodes per week with at least three verified episodes held in reserve. The cadence may change only from observed production capacity and audience behavior.
 

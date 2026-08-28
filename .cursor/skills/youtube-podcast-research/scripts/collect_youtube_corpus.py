@@ -182,7 +182,9 @@ def download_transcript(
         writeautomaticsub=True,
         subtitleslangs=[language],
         subtitlesformat="vtt/best",
-        skip_download=False,
+        # Captions are the research artifact.  Do not download the source
+        # video/audio while asking yt-dlp to write subtitle sidecars.
+        skip_download=True,
     )
     try:
         with yt_dlp.YoutubeDL(opts) as ydl:

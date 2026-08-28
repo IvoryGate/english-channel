@@ -16,6 +16,18 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SHOW_CONFIG_PATH = Path(__file__).resolve().parent / "show_config.json"
 VOICE_PROFILES_PATH = REPO_ROOT / "workspace" / "dialogue_podcast_research" / "voices" / "voice_profiles.json"
 
+
+def voice_profiles_path() -> Path:
+    if VOICE_PROFILES_PATH.exists():
+        return VOICE_PROFILES_PATH
+    # A Git worktree intentionally excludes the shared generated research workspace.
+    # Resolve the primary checkout without copying audio/model assets into every branch.
+    if REPO_ROOT.parent.name == ".worktrees":
+        shared = REPO_ROOT.parent.parent / "workspace" / "dialogue_podcast_research" / "voices" / "voice_profiles.json"
+        if shared.exists():
+            return shared
+    return VOICE_PROFILES_PATH
+
 DELIVERY_RE = re.compile(r"^\[Delivery:\s*(.+?)\]\s*$")
 SECTION_RE = re.compile(r"^\[(.+?)\]\s*$")
 MARKDOWN_SECTION_RE = re.compile(r"^#{1,6}\s+(.+?)\s*$")
@@ -183,7 +195,7 @@ def main() -> int:
     show_id = infer_show_id(draft_path, args.show)
     config = load_json(SHOW_CONFIG_PATH)
     show = config["shows"][show_id]
-    voices = load_json(VOICE_PROFILES_PATH)["profiles"]
+    voices = load_json(voice_profiles_path())["profiles"]
     text = draft_path.read_text(encoding="utf-8")
     meta = parse_metadata(text.splitlines())
     turns = parse_turns(text, show)

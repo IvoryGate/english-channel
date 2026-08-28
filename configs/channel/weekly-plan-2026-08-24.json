@@ -32,10 +32,8 @@
     {"contentId": "content:shorts_main:elr-s-009", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-28T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "l9SW9N4QmCY", "shareUrl": "https://youtube.com/shorts/l9SW9N4QmCY", "relatedVideoId": "UkYmqP2BaTc", "checks": "pass"},
     {"contentId": "content:shorts_main:elr-s-010", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-29T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "CwfdHM-7H3s", "shareUrl": "https://youtube.com/shorts/CwfdHM-7H3s", "relatedVideoId": "keaTZWIjAjY", "checks": "pass"},
     {"contentId": "content:series_c:episode_020", "programId": "dialogue-weekly-2026-08-24", "scheduledAt": "2026-08-29T20:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "5Nq83h143ro", "shareUrl": "https://youtu.be/5Nq83h143ro", "playlistId": "PLeDOm-qygJM4", "subtitles": "uploaded", "endScreen": "configured", "checks": "pass"},
-    {"contentId": "content:shorts_main:elr-s-011", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-30T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "166Ex-ueieU", "shareUrl": "https://youtube.com/shorts/166Ex-ueieU", "relatedVideoId": "x06HvRJTM3c", "relatedVideoFallback": "classic_pride_prejudice_until_persuasion_is_public", "checks": "pass"}
-  ],
-  "scheduledBeyondWeek": [
-    {"contentId": "content:classic_listening:persuasion_chapter_001", "programId": "classic-listening-baseline", "scheduledAt": "2026-08-31T08:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "EkAVjpGf1_Q", "shareUrl": "https://youtu.be/EkAVjpGf1_Q", "playlist": "Persuasion | Jane Austen Full Audiobook & English Listening", "subtitles": "uploaded", "endScreen": "configured", "platformChecks": "pass"}
+    {"contentId": "content:shorts_main:elr-s-011", "programId": "shorts-steady-state-2026-08", "scheduledAt": "2026-08-30T12:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "166Ex-ueieU", "shareUrl": "https://youtube.com/shorts/166Ex-ueieU", "relatedVideoId": "x06HvRJTM3c", "relatedVideoFallback": "classic_pride_prejudice_until_persuasion_is_public", "checks": "pass"},
+    {"contentId": "content:classic_listening:persuasion_chapter_001", "programId": "classic-listening-baseline", "scheduledAt": "2026-08-24T22:40:10+08:00", "publishedAt": "2026-08-24T22:40:10+08:00", "remoteAction": "published", "youtubeVideoId": "EkAVjpGf1_Q", "shareUrl": "https://youtu.be/EkAVjpGf1_Q", "playlist": "Persuasion | Jane Austen Full Audiobook & English Listening", "subtitles": "uploaded", "endScreen": "configured", "platformChecks": "pass", "scheduleOverride": "owner_requested_same_day_launch"}
   ],
   "nextWeekInventory": [
     "content:series_b:episode_021",
@@ -43,7 +41,7 @@
     "content:series_c:episode_021"
   ],
   "productionTasks": [
-    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "chapter_001_scheduled", "selectedCandidate": "mia-smooth", "selectedProfile": "classic-listening-mia-narrator", "youtubeVideoId": "EkAVjpGf1_Q", "scheduledAt": "2026-08-31T08:00:00+08:00", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review/voice-f.wav"},
+    {"id": "classic-female-narrator-recovery", "productLine": "classic_listening", "priority": 2, "resource": "gpu_heavy", "status": "chapter_001_published", "selectedCandidate": "mia-smooth", "selectedProfile": "classic-listening-mia-narrator", "youtubeVideoId": "EkAVjpGf1_Q", "publishedAt": "2026-08-24T22:40:10+08:00", "output": "workspace/classics/persuasion/narrator-auditions/persuasion-female-voice-recovery-2026-08/review/voice-f.wav"},
     {"id": "shorts-007-011-daily-run", "productLine": "shorts", "priority": 1, "resource": "gpu_heavy", "status": "completed", "output": "five QC-passed private packages"},
     {"id": "deep-practice-pilot-series-b", "productLine": "dialogue", "priority": 3, "resource": "cpu_then_gpu_heavy", "targetDurationMinutes": [25, 35], "output": "first long-form Deep Practice pilot"}
   ],

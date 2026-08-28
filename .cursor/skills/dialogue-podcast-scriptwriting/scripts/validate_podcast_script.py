@@ -70,15 +70,27 @@ SERIES_B_REQUIRED_MARKERS = {
 PROFILE_DEFAULTS: dict[str, dict[str, Any]] = {
     "general": {"min_words": 700, "max_words": 1800, "spoken_only": False},
     "polished_english": {"min_words": 1900, "max_words": 2800, "spoken_only": True, "structure": "polished"},
-    "series_a": {"min_words": 1800, "max_words": 2400, "spoken_only": True, "structure": "polished"},
-    "series_b": {"min_words": 1400, "max_words": 1900, "spoken_only": True, "structure": "series_b"},
-    "series_c": {"min_words": 2000, "max_words": 2800, "spoken_only": True, "structure": "polished"},
+    "series_a": {"min_words": 1800, "max_words": 3000, "spoken_only": True, "structure": "polished"},
+    "series_b": {"min_words": 1400, "max_words": 2800, "spoken_only": True, "structure": "series_b"},
+    "series_c": {"min_words": 2000, "max_words": 3200, "spoken_only": True, "structure": "polished"},
 }
 
 FROZEN_COLD_OPEN_PHRASES = (
     "hey, hey, english learners. welcome back to daily talk",
     "welcome back to polished english, where two people talk about real life",
 )
+
+EMPTY_CONFIRMATIONS = {
+    "absolutely",
+    "exactly",
+    "good",
+    "great",
+    "nice",
+    "perfect",
+    "right",
+    "yes",
+    "you got it",
+}
 
 
 def _host_line_match(line: str) -> re.Match[str] | None:
@@ -100,6 +112,7 @@ def validate_script_text(
     spoken_text_parts: list[str] = []
     spoken_turns: list[str] = []
     issues: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
     title_present = any(line.lower().startswith("title:") for line in lines)
     description_present = any(line.lower().startswith("description:") for line in lines)
     cta_present = bool(re.search(r"\b(comment|subscribe|practice|repeat|download|share|follow|save)\b", text, re.I))
@@ -176,6 +189,22 @@ def validate_script_text(
                 }
             )
 
+        empty_confirmation_turns = [
+            turn
+            for turn in spoken_turns
+            if re.sub(r"[^a-z ]", "", turn.lower()).strip() in EMPTY_CONFIRMATIONS
+        ]
+        if empty_confirmation_turns:
+            warnings.append(
+                {
+                    "code": "AI_STYLE_EMPTY_CONFIRMATION",
+                    "message": (
+                        f"Replace {len(empty_confirmation_turns)} empty affirmation turn(s) with disagreement, "
+                        "consequence, memory, or forward motion."
+                    ),
+                }
+            )
+
     structure = profile_config.get("structure")
     if structure == "polished":
         for label, markers in POLISHED_REQUIRED_MARKERS.items():
@@ -193,7 +222,9 @@ def validate_script_text(
             if not _has_any_marker(text_lower, markers):
                 issues.append({"code": "SERIES_B_STRUCTURE", "message": f"Add a `{label}` block or marker."})
 
-    if profile in {"polished_english", "series_a", "series_b", "series_c"} and "speed" in text_lower:
+    if profile in {"polished_english", "series_a", "series_b", "series_c"} and re.search(
+        r"(?:^|\n)\s*(?:[-*]\s*)?(?:\"?speed\"?)\s*[:=]", text, re.I
+    ):
         issues.append({"code": "OLD_SPEED_CONTROL", "message": "Remove old `speed` controls; all series use speed=1.0."})
 
     return {
@@ -202,6 +233,7 @@ def validate_script_text(
         "word_count": total_words,
         "host_turns": dict(host_turns),
         "issues": issues,
+        "warnings": warnings,
     }
 
 
@@ -230,6 +262,8 @@ def main() -> int:
         write_json(Path(args.write_report), result)
     for issue in result["issues"]:
         print(f"{issue['code']}: {issue['message']}")
+    for warning in result["warnings"]:
+        print(f"WARNING {warning['code']}: {warning['message']}")
     print(f"ok={str(result['ok']).lower()} words={result['word_count']} hosts={len(result['host_turns'])} profile={args.profile}")
     return 0 if result["ok"] else 1
 

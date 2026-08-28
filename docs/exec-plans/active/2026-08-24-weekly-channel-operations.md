@@ -55,9 +55,9 @@ Excluded:
   playlists, subtitles, end screens, and Related Video assignments reconciled
   to the weekly control plane. The owner accepted the Mia chapter baseline,
   including temporary tolerance of the residual electronic texture, and
-  `Persuasion` chapter 1 passed both Studio checks and is scheduled for the
-  fixed Classic Listening slot on 2026-08-31 at 08:00 UTC+8 as
-  `EkAVjpGf1_Q`.
+  `Persuasion` chapter 1 passed both Studio checks. The owner then overrode the
+  initial 2026-08-31 reservation and published it immediately on 2026-08-24 as
+  `EkAVjpGf1_Q`; the next Monday slot is free for a newly produced chapter.
 
 ## Plan
 

@@ -73,9 +73,10 @@ Existing capabilities to reuse:
   temporary tolerance of the remaining electronic texture. The clean chapter
   1 production run and formal V2 upload package pass the automated audio, ASR,
   subtitle, visual, native-2K, loudness, true-peak, and black-frame gates.
-  YouTube processing, copyright, and Community Guidelines checks also passed;
-  video `EkAVjpGf1_Q` is scheduled for 2026-08-31 at 08:00 UTC+8. Chapters
-  2-24 remain in the separate rollout scope.
+  YouTube processing, copyright, and Community Guidelines checks also passed.
+  Video `EkAVjpGf1_Q` was published on 2026-08-24 after the owner replaced the
+  initial next-Monday reservation with a same-day launch. Chapters 2-24 remain
+  in the separate rollout scope.
 - Intake branch: `codex/persuasion-pilot-intake`.
 - Protected source: `codex/classics-persuasion-pilot`; its 33 media files are
   retained untracked and fingerprinted in
@@ -128,8 +129,9 @@ Existing capabilities to reuse:
   in the new `Persuasion | Jane Austen Full Audiobook & English Listening`
   playlist, configured with the English SRT, AI-content disclosure, Education
   category, and a video/playlist/subscribe end screen. Both Studio platform
-  checks reported no issues, and the video is scheduled for the fixed Classic
-  Listening slot on 2026-08-31 at 08:00 UTC+8.
+  checks reported no issues. The initial 2026-08-31 schedule was then replaced
+  by an owner-requested same-day publication on 2026-08-24, leaving the next
+  Monday slot available for a newly produced chapter.
 
 ## Audited Input
 

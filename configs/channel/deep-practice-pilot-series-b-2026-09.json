@@ -1,11 +1,11 @@
 {
   "schema": "youtube-deep-practice-brief-v1",
-  "status": "brief_ready",
+  "status": "script_and_manifest_ready",
   "series": "series_b",
   "workingTitle": "They Speak Too Fast — Stay in the Conversation | A2-B1 Deep Practice",
   "viewerJob": "Recover when the first answer is understood but the next sentence arrives too quickly.",
   "targetDurationMinutes": [25, 35],
-  "targetPublishSlot": "2026-09-08T20:00:00+08:00",
+  "targetPublishSlot": "2026-09-03T20:00:00+08:00",
   "successHypothesis": "A guided real-time listening workout will increase qualified watch hours and returning viewers without weakening completion quality.",
   "structure": [
     {"beat": "cold_open_tension", "targetMinutes": 2, "deliverable": "One fast social exchange and a visible comprehension failure."},
@@ -26,9 +26,9 @@
     "guardrails": ["first_30_second_retention", "production_cost_per_watch_hour"]
   },
   "production": {
-    "script": "queued",
-    "audio": "blocked_by_script",
-    "visuals": "blocked_by_script",
+    "script": "passed_editorial_and_validator_gates",
+    "audio": "queued_after_classics_gpu_run",
+    "visuals": "thumbnail_and_video_background_ready",
     "package": "blocked_by_media",
     "releaseReservation": "not_created"
   }

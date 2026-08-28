@@ -189,6 +189,36 @@ def test_package_only_authority_cannot_upload(tmp_path: Path) -> None:
         )
 
 
+def test_schedule_authority_records_explicitly_approved_publication(tmp_path: Path) -> None:
+    service = _service(tmp_path, AuthorityLevel.SCHEDULE)
+    gates = {gate: True for gate in service.policy.required_release_gates}
+    transitions = [
+        (LifecycleState.DISCOVERED, None),
+        (LifecycleState.RIGHTS_VERIFIED, None),
+        (LifecycleState.SOURCE_LOCKED, {"sourceSha256": "f" * 64}),
+        (LifecycleState.PLANNED, None),
+        (LifecycleState.PRODUCING, None),
+        (LifecycleState.READY_TO_UPLOAD, {"gates": gates}),
+        (LifecycleState.UPLOADED_PRIVATE, {"youtubeVideoId": "video-1", "privacyStatus": "private"}),
+        (LifecycleState.PLATFORM_CHECKED, {"processingStatus": "succeeded", "copyrightCheck": "clear"}),
+        (LifecycleState.SCHEDULED, {"scheduledAt": "2026-08-24T20:00:00Z"}),
+    ]
+    for sequence, (state, evidence) in enumerate(transitions, start=1):
+        _transition(service, state, sequence, evidence)
+
+    with pytest.raises(OperationPolicyError, match="Authority level 2"):
+        _transition(service, LifecycleState.PUBLISHED, 10, {"publishedAt": "2026-08-24T20:01:00Z"})
+
+    event = _transition(
+        service,
+        LifecycleState.PUBLISHED,
+        10,
+        {"publishedAt": "2026-08-24T20:01:00Z", "explicitOwnerApproval": True},
+    )
+
+    assert event.to_state is LifecycleState.PUBLISHED
+
+
 def test_ledger_detects_tampered_history(tmp_path: Path) -> None:
     service = _service(tmp_path)
     _transition(service, LifecycleState.DISCOVERED, 1)

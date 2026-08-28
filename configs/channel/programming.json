@@ -4,6 +4,7 @@
   "channelPromise": "Understand real English and know what to say next.",
   "rollout": {
     "startsOn": "2026-08-24",
+    "scaleStartsOn": "2026-08-31",
     "fixedScheduleReviewAfter": "2026-09-20",
     "doNotChangePublishTimesBeforeReview": true
   },
@@ -20,6 +21,18 @@
     {"surface": "series_c", "day": "saturday", "time": "20:00", "status": "active"},
     {"surface": "shorts", "day": "sunday", "time": "12:30", "status": "active"}
   ],
+  "scaleGrid": [
+    {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
+    {"surface": "series_b", "day": "monday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_a", "day": "tuesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_c", "day": "wednesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "classic_listening", "day": "thursday", "time": "08:00", "status": "active"},
+    {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "series_a", "day": "friday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "series_c", "day": "saturday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "12:30", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "18:00", "status": "active"}
+  ],
   "shortsCadence": {
     "launchUploadsPerWeek": 7,
     "launchWindow": "12:30",
@@ -34,7 +47,7 @@
   "dialogueFormat": {
     "standardDurationMinutes": [10, 15],
     "deepPracticeDurationMinutes": [25, 35],
-    "deepPracticeEpisodesPerWeek": 1,
+    "deepPracticeEpisodesPerWeek": 3,
     "rotation": ["series_b", "series_a", "series_c"],
     "requiredDeepPracticeBeats": [
       "cold_open_tension",
@@ -58,11 +71,11 @@
     "replyWindowHours": 24
   },
   "descriptionFooter": [
-    "First Steps: Tuesdays at 8:00 PM (UTC+8)",
-    "Daily Talk: Thursdays at 8:00 PM (UTC+8)",
-    "Polished English: Saturdays at 8:00 PM (UTC+8)",
-    "Classic Listening: Mondays at 8:00 AM (UTC+8)",
-    "New Shorts: every day at 12:30 PM (UTC+8)"
+    "First Steps: Mondays and Thursdays at 8:00 PM (UTC+8)",
+    "Daily Talk: Tuesdays and Fridays at 8:00 PM (UTC+8)",
+    "Polished English: Wednesdays and Saturdays at 8:00 PM (UTC+8)",
+    "Classic Listening: Mondays and Thursdays at 8:00 AM (UTC+8)",
+    "New Shorts: every day at 12:30 PM and 6:00 PM (UTC+8)"
   ],
   "measurement": {
     "northStar": "qualified_watch_hours_per_week",

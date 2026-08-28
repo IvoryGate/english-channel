@@ -1,0 +1,104 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "weekly-2026-08-31",
+  "entries": [
+    {
+      "shortId": "elr-s-012", "title": "You Missed Only the Last Part—Say This", "thumbnailHeadline": "The Last Part Again?", "format": "dialogue", "cefr": "A2", "durationSec": 36,
+      "hookStyle": "statement", "hook": "Do not restart the whole conversation.",
+      "turns": [{"speaker": "riley", "text": "The tour starts at ten, so meet beside the ticket desk and bring the blue card from your email."}, {"speaker": "sam", "text": "I heard the time and place, but I missed the card. I got the first part. Which card should I bring?"}, {"speaker": "riley", "text": "The blue card from your email. Ask for the missing piece, not the whole sentence, without losing the moment."}],
+      "prompt": "What should Sam bring?", "answer": "The blue card from his email.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "Two adults repairing one missed detail in a café.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-013", "title": "Stop Saying Yes When You Missed It", "thumbnailHeadline": "A False Yes Costs More", "format": "micro_story", "cefr": "A2", "durationSec": 51,
+      "hookStyle": "statement", "hook": "Sam understood the coffee—but walked the wrong way.",
+      "turns": [{"speaker": "narrator", "text": "A barista gave Sam his order, then quickly told him to wait at the table by the window."}, {"speaker": "narrator", "text": "Sam understood the order but missed the table. He said yes and walked toward the door."}, {"speaker": "narrator", "text": "The barista called after him. Sam returned and said, I got the order. Could you say where I should wait again?"}, {"speaker": "narrator", "text": "One honest question fixed the moment faster than a confident wrong answer. He kept his place, found the right table, and learned that one precise question is much shorter than repairing a confident mistake after walking away."}],
+      "prompt": "What created the second problem?", "answer": "Sam pretended he understood.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "A café misunderstanding repaired honestly.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "statement", "duration": "long", "format": "micro_story"}
+    },
+    {
+      "shortId": "elr-s-014", "title": "Could You Say That Last Part Again?", "thumbnailHeadline": "Use This Recovery Line", "format": "dialogue", "cefr": "A2", "durationSec": 36,
+      "hookStyle": "question", "hook": "Can one line keep you inside fast English?",
+      "turns": [{"speaker": "sam", "text": "I understood the first half, then the words disappeared."}, {"speaker": "riley", "text": "Say: I got the first part. Could you say that last part again?"}, {"speaker": "sam", "text": "I got the first part. Could you say that last part again?"}, {"speaker": "riley", "text": "Now the speaker knows communication is working and repeats only what you need, while the real conversation keeps moving forward naturally."}],
+      "prompt": "Which part will the speaker repeat now?", "answer": "Only the last, missing part.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "An adult learner asks a clear recovery question.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-015", "title": "Fast English: Find the Broken Link", "thumbnailHeadline": "Which Detail Is Missing?", "format": "listen_choose", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "question", "hook": "You do not need every word. Which detail is missing?",
+      "turns": [{"speaker": "narrator", "text": "Listen: The client call moved to Thursday at two, and Maya needs your notes by eleven tomorrow."}, {"speaker": "narrator", "text": "You caught Thursday at two, but the deadline disappeared. Ask: When does Maya need my notes?"}, {"speaker": "narrator", "text": "The answer is eleven tomorrow. Catch strong words, locate the broken link, and ask one small question."}],
+      "prompt": "A: Thursday at two. B: eleven tomorrow.", "answer": "B. The notes are due at eleven tomorrow.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "A focused café conversation with one missed detail.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "listen_choose"}
+    },
+    {
+      "shortId": "elr-s-016", "title": "Your Story Needs One Turning Point", "thumbnailHeadline": "Find the Turn", "format": "micro_story", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "statement", "hook": "Every detail was true. The story was still boring.",
+      "turns": [{"speaker": "narrator", "text": "Ethan described the bus, the pharmacy, the traffic light, and the restaurant chairs."}, {"speaker": "narrator", "text": "But his friend only wanted to know why he returned wearing a stranger's jacket."}, {"speaker": "narrator", "text": "The story began when Ethan found pink crayons and a plastic dinosaur in the pocket."}, {"speaker": "narrator", "text": "That was the turn: the precise moment an ordinary lunch changed direction."}],
+      "prompt": "Which detail turned the story?", "answer": "The crayons and dinosaur in the pocket.", "relatedShow": "series_a", "relatedVideoId": "_KLsi1aJ5Rs",
+      "visualBrief": "A human story turns during a delayed train journey.", "backgroundImage": "shorts/week-2026-08-31/story-turn-v1.png", "experimentAssignments": {"hook": "statement", "duration": "short", "format": "micro_story"}
+    },
+    {
+      "shortId": "elr-s-017", "title": "Stop Listing Every Detail", "thumbnailHeadline": "Does This Detail Work?", "format": "listen_choose", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "question", "hook": "Which detail belongs in the story?",
+      "turns": [{"speaker": "narrator", "text": "A: The restaurant had two gray chairs. B: Both dark jackets were hanging on the same hook."}, {"speaker": "narrator", "text": "The shared hook causes the mix-up, so it earns a place. The chair color creates furniture, not meaning."}, {"speaker": "narrator", "text": "Keep details that cause the turn, clearly reveal it, or fully pay it off for the person listening now."}],
+      "prompt": "A: chair color. B: shared hook. Choose now.", "answer": "B. The shared hook caused the mistake.", "relatedShow": "series_a", "relatedVideoId": "_KLsi1aJ5Rs",
+      "visualBrief": "An editorial narrative scene with a clear turning detail.", "backgroundImage": "shorts/week-2026-08-31/story-turn-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "listen_choose"}
+    },
+    {
+      "shortId": "elr-s-018", "title": "Can You Tell It in 15 Seconds?", "thumbnailHeadline": "15-Second Story Test", "format": "dialogue", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "question", "hook": "Can the story survive without the timeline?",
+      "turns": [{"speaker": "nora", "text": "Give me the jacket story in fifteen seconds."}, {"speaker": "ethan", "text": "I found crayons in my jacket after lunch. It turned out the jacket belonged to a father waiting outside in mine, while his daughter asked why he had shrunk."}, {"speaker": "nora", "text": "The setup stayed, the crayons turned it, and the daughter landed it. Shorter becomes truly useful when the spine survives."}],
+      "prompt": "What must survive the short version?", "answer": "The setup, turn, and landing.", "relatedShow": "series_a", "relatedVideoId": "_KLsi1aJ5Rs",
+      "visualBrief": "Two adult storytellers find the turning point.", "backgroundImage": "shorts/week-2026-08-31/story-turn-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-019", "title": "Did You Miss the Time or the Place?", "thumbnailHeadline": "Name Your Missing Piece", "format": "listen_choose", "cefr": "A2", "durationSec": 36,
+      "hookStyle": "question", "hook": "Listen once: which detail did you lose?",
+      "turns": [{"speaker": "narrator", "text": "Doors open at nine forty-five, the tour starts at ten, and everyone meets beside the ticket desk."}, {"speaker": "narrator", "text": "Maybe you missed the door time. Ask: What time do the doors open?"}, {"speaker": "narrator", "text": "Your gap may be different. A good recovery question matches exactly what you missed in that moment, not a worksheet answer prepared for everyone else in advance."}],
+      "prompt": "When exactly do the front doors open on Saturday?", "answer": "At nine forty-five.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "A clarification moment in a warm café.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "listen_choose"}
+    },
+    {
+      "shortId": "elr-s-020", "title": "Fluent but Hard to Follow?", "thumbnailHeadline": "Where Is the Point?", "format": "micro_story", "cefr": "B1", "durationSec": 51,
+      "hookStyle": "question", "hook": "Leo sounded fluent. His colleague heard the wrong decision.",
+      "turns": [{"speaker": "narrator", "text": "Leo gave a polished paragraph about context, complexity, progress, and possible consequences."}, {"speaker": "narrator", "text": "His colleague asked, Are you cancelling the launch? Leo only wanted two more testing days."}, {"speaker": "narrator", "text": "Fluency did not protect the idea. It hid it. A listener needs the claim before the qualifications can add useful precision."}, {"speaker": "narrator", "text": "He tried again: Tuesday leaves too little testing time. The payment button failed on three devices, so I recommend Thursday. His colleague finally answered the real decision and added new information that changed the recommendation before the meeting ended."}],
+      "prompt": "What did Leo actually want from them today?", "answer": "Two more days for testing.", "relatedShow": "series_c", "relatedVideoId": "5Nq83h143ro",
+      "visualBrief": "A collaborative meeting where a clear point matters.", "backgroundImage": "shorts/week-2026-08-31/conversation-handoff-v1.png", "experimentAssignments": {"hook": "question", "duration": "long", "format": "micro_story"}
+    },
+    {
+      "shortId": "elr-s-021", "title": "Make One Point—Then Stop", "thumbnailHeadline": "One Claim, One Door", "format": "dialogue", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "statement", "hook": "A useful contribution gives the next person a door.",
+      "turns": [{"speaker": "leo", "text": "My concern is that Tuesday leaves too little testing time. The payment button failed on three devices."}, {"speaker": "mia", "text": "What do you recommend?"}, {"speaker": "leo", "text": "Launch Thursday. Is there a reason Tuesday matters that I have not considered?"}, {"speaker": "mia", "text": "Now I can directly answer the actual decision, not decode a long paragraph before joining the useful discussion."}],
+      "prompt": "Which final sentence clearly handed the floor back?", "answer": "Is there a reason Tuesday matters?", "relatedShow": "series_c", "relatedVideoId": "5Nq83h143ro",
+      "visualBrief": "Two colleagues exchange a concise claim and response.", "backgroundImage": "shorts/week-2026-08-31/conversation-handoff-v1.png", "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-022", "title": "A Story Is Not a Timeline", "thumbnailHeadline": "Order of Meaning", "format": "micro_story", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "statement", "hook": "Memory gives you chronology. A listener needs meaning.",
+      "turns": [{"speaker": "narrator", "text": "A train stopped in a tunnel. For twenty minutes, nobody spoke. Then one passenger opened a bag of oranges."}, {"speaker": "narrator", "text": "The bag moved down the carriage. Strangers talked and helped a child peel the fruit."}, {"speaker": "narrator", "text": "The delay did not become pleasant. They just were not miserable alone anymore. That small human change is the real story worth telling aloud."}],
+      "prompt": "What suddenly changed the carriage?", "answer": "One passenger shared oranges.", "relatedShow": "series_a", "relatedVideoId": "_KLsi1aJ5Rs",
+      "visualBrief": "Strangers connect over oranges on a delayed train.", "backgroundImage": "shorts/week-2026-08-31/story-turn-v1.png", "experimentAssignments": {"hook": "statement", "duration": "short", "format": "micro_story"}
+    },
+    {
+      "shortId": "elr-s-023", "title": "Give the Other Person a Door", "thumbnailHeadline": "Hand It Back", "format": "dialogue", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "question", "hook": "Does your question invite an answer—or applause?",
+      "turns": [{"speaker": "mia", "text": "Compare two endings: That is clearly the sensible approach. Or: That is the risk I see. What am I missing?"}, {"speaker": "leo", "text": "The first asks for silence disguised as agreement. The second allows new information."}, {"speaker": "mia", "text": "A handoff is not polite decoration after your real speech. It is the working part that lets your original idea change through someone else's answer."}],
+      "prompt": "Which ending opens the conversation?", "answer": "What am I missing?", "relatedShow": "series_c", "relatedVideoId": "5Nq83h143ro",
+      "visualBrief": "An open, responsive team conversation.", "backgroundImage": "shorts/week-2026-08-31/conversation-handoff-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "dialogue"}
+    },
+    {
+      "shortId": "elr-s-024", "title": "Which Reply Keeps This Going?", "thumbnailHeadline": "A or B?", "format": "listen_choose", "cefr": "A2", "durationSec": 36,
+      "hookStyle": "question", "hook": "You missed the pickup place. Which reply keeps you inside?",
+      "turns": [{"speaker": "narrator", "text": "A: Yes, thanks. Then walk away and guess. B: I got the first part. Where should I collect it?"}, {"speaker": "narrator", "text": "Choose B. It shows what worked and turns the missing detail into one small answer."}, {"speaker": "narrator", "text": "Honest recovery is a normal part of a successful conversation, not a failure that happens before real conversation begins."}],
+      "prompt": "A: pretend. B: ask precisely. Choose.", "answer": "B. Ask where to collect it.", "relatedShow": "series_b", "relatedVideoId": "7tajNPGSM3w",
+      "visualBrief": "A friendly clarification in a café.", "backgroundImage": "shorts/week-2026-08-31/conversation-recovery-v1.png", "experimentAssignments": {"hook": "question", "duration": "short", "format": "listen_choose"}
+    },
+    {
+      "shortId": "elr-s-025", "title": "Your 7-Day Conversation Challenge", "thumbnailHeadline": "One Human Move a Day", "format": "dialogue", "cefr": "B1", "durationSec": 36,
+      "hookStyle": "statement", "hook": "One week. Three skills. No perfect performance.",
+      "turns": [{"speaker": "riley", "text": "When you miss a detail, ask for only that part."}, {"speaker": "ethan", "text": "When you tell a story, find the moment when something changed."}, {"speaker": "mia", "text": "When you make a point, leave the other person a real way to respond."}, {"speaker": "narrator", "text": "Try one move each day. On Sunday evening, notice which one truly changed a real conversation with another person."}],
+      "prompt": "Which human move will you try first today?", "answer": "Choose recovery, story turn, or handoff.", "relatedShow": "series_c", "relatedVideoId": "5Nq83h143ro",
+      "visualBrief": "A weekly conversation practice montage using the meeting scene.", "backgroundImage": "shorts/week-2026-08-31/conversation-handoff-v1.png", "experimentAssignments": {"hook": "statement", "duration": "short", "format": "dialogue"}
+    }
+  ]
+}
