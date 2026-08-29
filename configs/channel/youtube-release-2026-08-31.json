@@ -99,6 +99,21 @@
       "qcStatus": "pass"
     },
     {
+      "contentId": "content:series_c:episode_022",
+      "video": "H:/Youtube/PolishedEnglish/episode22/episode22.mp4",
+      "thumbnail": "H:/Youtube/PolishedEnglish/episode22/episode22-封面.jpg",
+      "captions": "H:/Youtube/PolishedEnglish/episode22/episode22.srt",
+      "metadataFile": "H:/Youtube/PolishedEnglish/episode22/episode22.youtube.json",
+      "titleFile": "H:/Youtube/PolishedEnglish/episode22/episode22.youtube_title.txt",
+      "descriptionFile": "H:/Youtube/PolishedEnglish/episode22/episode22.youtube_description.txt",
+      "scheduledAt": "2026-09-05T20:00:00+08:00",
+      "playlistId": "PLeDOm-qygJM4",
+      "categoryId": "27",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass"
+    },
+    {
       "contentId": "content:classic_listening:persuasion_chapter_003",
       "video": "workspace/classics/persuasion/chapter_003/video/000_chapter_003.mp4",
       "thumbnail": "workspace/classics/persuasion/chapter_003/video/000_chapter_003.thumbnail.png",
