@@ -3,11 +3,11 @@
   "channel": "English Listening Room",
   "descriptionFooter": "New Shorts every day at 12:30 PM and 6:00 PM (UTC+8). Full English Listening Room episodes arrive Monday through Saturday at 8:00 PM. Comment your answer, subscribe, and join the next practice.",
   "audience": {"cefr": ["A2", "B1", "B2"], "primaryAge": "25-44", "devicePriority": "mobile"},
-  "promise": "One useful English moment in 35 to 55 seconds.",
+  "promise": "One useful English moment in about 30 to 55 seconds.",
   "pilotSize": 14,
   "formatAllocation": {"micro_story": 4, "listen_choose": 4, "dialogue": 6, "classic_cliffhanger": 0},
   "quality": {
-    "durationMinSec": 36,
+    "durationMinSec": 29,
     "durationTargetMaxSec": 55,
     "durationHardMaxSec": 59,
     "durationVariantCutoffSec": 50,

@@ -12,6 +12,10 @@ project workspace so model loading and media work do not consume a nearly full
 Windows system drive. Override with `ELR_RUNTIME_TEMP` only when the selected
 drive has enough free space.
 
+Remotion uses four parallel render workers by default on this production host.
+Set `ELR_REMOTION_CONCURRENCY` before rendering to override it; values are
+clamped to `1..8` so an accidental setting cannot exhaust the shared machine.
+
 ## One-Command Setup
 
 ```powershell
