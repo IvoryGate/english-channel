@@ -1,6 +1,7 @@
 {
   "schema": "youtube-release-manifest-v1",
   "youtubeChannelId": "UC9QpAkVpv8l1ZQ3X4UtU37A",
+  "weeklyPlan": "configs/channel/weekly-plan-2026-08-31.json",
   "items": [
     {
       "contentId": "content:classic_listening:persuasion_chapter_002",

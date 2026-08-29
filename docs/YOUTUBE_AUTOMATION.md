@@ -37,7 +37,9 @@ required audit; the controller does not bypass that restriction.
 
 ## Weekly release workflow
 
-The release manifest is the desired-state input. It may reuse each production
+The release manifest is the desired-state input. Its `weeklyPlan` link is
+validated before any remote operation, so a missing content ID or changed time
+cannot silently drift from the owner-approved calendar. It may reuse each production
 pipeline's `youtube.json` through `metadataFile`, or use explicit `titleFile`
 and `descriptionFile`. An already-created Studio upload can be declared with
 `youtubeVideoId`; `assetsAlreadySet` is allowed only after the thumbnail and
