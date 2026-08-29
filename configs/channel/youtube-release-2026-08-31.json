@@ -69,6 +69,21 @@
       "qcStatus": "pass"
     },
     {
+      "contentId": "content:series_b:episode_022",
+      "video": "H:/Youtube/FirstSteps/episode22/episode22.mp4",
+      "thumbnail": "H:/Youtube/FirstSteps/episode22/episode22-封面.jpg",
+      "captions": "H:/Youtube/FirstSteps/episode22/episode22.srt",
+      "metadataFile": "H:/Youtube/FirstSteps/episode22/episode22.youtube.json",
+      "titleFile": "H:/Youtube/FirstSteps/episode22/episode22.youtube_title.txt",
+      "descriptionFile": "H:/Youtube/FirstSteps/episode22/episode22.youtube_description.txt",
+      "scheduledAt": "2026-09-03T20:00:00+08:00",
+      "playlistId": "PLV6UzOzdXS_w",
+      "categoryId": "27",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass"
+    },
+    {
       "contentId": "content:series_a:episode_022",
       "video": "H:/Youtube/DailyTalk/episode22/episode22.mp4",
       "thumbnail": "H:/Youtube/DailyTalk/episode22/episode22-封面.jpg",
