@@ -45,6 +45,84 @@ def probe_media(path: Path) -> dict[str, Any]:
     return json.loads(result.stdout)
 
 
+def analyze_image_signalstats(path: Path) -> dict[str, float]:
+    """Return one-frame average luma and saturation on FFmpeg's 0-255 scale."""
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise RuntimeError("ffmpeg is required for Shorts visual quality checks")
+    result = subprocess.run(
+        [
+            ffmpeg,
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-i",
+            str(path),
+            "-vf",
+            "scale=64:64,signalstats,metadata=print:file=-",
+            "-frames:v",
+            "1",
+            "-f",
+            "null",
+            os.devnull,
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    output = result.stdout + "\n" + result.stderr
+    values: dict[str, float] = {}
+    for key, output_key in (("YAVG", "averageLuma"), ("SATAVG", "averageSaturation")):
+        match = re.search(rf"lavfi\.signalstats\.{key}=(-?\d+(?:\.\d+)?)", output)
+        if not match:
+            raise ValueError(f"Unable to read {key} from image signal statistics: {path}")
+        values[output_key] = round(float(match.group(1)), 3)
+    return values
+
+
+def check_background(repo_root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    visual = manifest.get("visual") or {}
+    relative_path = visual.get("backgroundImage")
+    path = repo_root / "public" / str(relative_path) if relative_path else None
+    stats: dict[str, float] | None = None
+    policy = visual.get("qualityPolicy") or {}
+    if path is None or not path.is_file():
+        errors.append("BACKGROUND_MISSING")
+    else:
+        try:
+            stats = analyze_image_signalstats(path)
+        except (RuntimeError, ValueError):
+            errors.append("BACKGROUND_SIGNALSTATS_UNREADABLE")
+        if stats is not None:
+            min_luma = float(policy.get("minAverageLuma", 0))
+            min_saturation = float(policy.get("minAverageSaturation", 0))
+            too_dark = stats["averageLuma"] < min_luma
+            too_muted = stats["averageSaturation"] < min_saturation
+            if bool(policy.get("skipPixelGate")):
+                if too_dark or too_muted:
+                    warnings.append("BACKGROUND_PIXEL_GATE_LEGACY_EXCEPTION")
+            else:
+                if too_dark:
+                    errors.append("BACKGROUND_TOO_DARK")
+                if too_muted:
+                    errors.append("BACKGROUND_TOO_DESATURATED")
+    return {
+        "schema": "elr-short-background-qc-v1",
+        "shortId": manifest.get("shortId"),
+        "status": "fail" if errors else "pass",
+        "errors": errors,
+        "warnings": warnings,
+        "path": str(path) if path is not None else None,
+        "signalstats": stats,
+        "policy": policy,
+        "sha256": sha256_file(path) if path is not None and path.is_file() else None,
+    }
+
+
 def audio_max_volume_db(path: Path) -> float | None:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:

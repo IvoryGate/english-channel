@@ -58,11 +58,15 @@ copy; revisions receive a new `shortId`.
 
 ### Visual direction and brand
 
-Every production Short requires a story-specific generated editorial
-background. Pure code gradients and generic technology motifs are not accepted
-production visuals. Art direction is warm, mature, calm, and especially
-welcoming to the channel's core women aged 25-44 without excluding other
-learners.
+Every production Short requires a story-specific generated background. One
+background may appear only once per cycle; renames, crops, and minor variations
+do not satisfy the originality requirement. Pure code gradients and generic
+technology motifs are not accepted production visuals. Art direction is
+bright, high-quality anime illustration with adult characters, expressive
+emotion, lively color, and playful typography, designed first for women aged
+25-44 in the United States without excluding other learners. See
+`docs/shorts/VISUAL_RESEARCH_METHOD.md` for the mandatory high-view reference
+study, brightness/saturation gates, contact-sheet review, and exception rule.
 
 Every upload also requires a dedicated 9:16 discovery cover. It reuses the
 approved story illustration but adds a short editorial headline, format label,

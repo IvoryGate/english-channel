@@ -22,14 +22,17 @@ Excluded: copying or redistributing competitor/TED transcripts; changing already
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-08-29 15:26 Asia/Shanghai.
+- Last updated: 2026-08-30 Asia/Shanghai.
+- State: complete; ready to archive with this branch checkpoint.
 - Research, the long-form method, the 22-slot weekly plan, three episode-022 scripts, all long-form cover scenes, and fourteen Shorts manifests/thumbnails are complete.
 - `Persuasion` chapters 2 and 3 are fully rendered, packaged, and independently checked: chapter 2 has 105 narration segments and chapter 3 has 155; both report `PASS` with zero warnings.
 - All three Dialogue episode 022 packages are fully rendered, checked, and atomically exported: Daily Talk to `H:\Youtube\DailyTalk\episode22`, First Steps to `H:\Youtube\FirstSteps\episode22`, and Polished English to `H:\Youtube\PolishedEnglish\episode22`. The three approved release entries pass the API controller preflight.
 - Shorts 012-025 are fully produced and packaged. All fourteen have synchronized manifests, final audio, 1080x1920 H.264/AAC video, dedicated discovery covers, and passing content/audio/video/thumbnail QC with zero preflight warnings. Representative covers were visually sampled. The batch status reports all fourteen as `packaged`.
-- The repaired Browser Plugin connection is attached to the signed-in Studio session. Five release-ready long videos have titles, descriptions, thumbnails, audience settings, and manually uploaded English subtitles. Dialogue 021 is verified private; the two `Persuasion` chapters are saved and remain in Studio's post-upload processing queue. Assigned IDs: Daily Talk 021 `CNPtSlf1iWQ`, First Steps 021 `ezuZR_Xc8MA`, Polished English 021 `mmQQlSnLVx8`, `Persuasion` chapter 2 `tdTlhg49vTk`, and chapter 3 `uJ32Ef1v3QE`.
-- The shared API-first release controller now owns private upload, metadata, thumbnail, captions, playlist, processing-state checks, scheduling, verification, identity collision protection, retry state, and exact cross-checking against the approved weekly plan. All 22 weekly products are encoded in `configs/channel/youtube-release-2026-08-31.json` with exact approved timestamps, and all 22 pass the local preflight. Studio is now a fallback for failures and unsupported fields, not the routine path.
-- The owner has already authorized the listed times without per-item confirmation. Exact remote scheduling remains pending on OAuth desktop credentials, YouTube processing, and passing local packages—not another publication confirmation.
+- The shared API-first release controller owns private upload, metadata, thumbnail, captions, playlist, processing-state checks, scheduling, verification, identity collision protection, retry state, and exact cross-checking against the approved weekly plan. Studio remains the fallback for failures and unsupported fields.
+- All 22 products have real remote video IDs in `configs/channel/youtube-release-2026-08-31.json`, pass the local release preflight, and were visibly verified in Studio as scheduled at the approved times. The fourteen Shorts occupy the daily 12:30/18:00 grid; Dialogue and Classics occupy their documented long-form slots.
+- Dialogue episode 022 received three new, image-model-generated, text-integrated anime thumbnails and is scheduled for September 3-5 at 20:00. `Persuasion` chapters 1-3 received a coordinated bright illustrated thumbnail set; chapter 1 was replaced in place and chapters 2-3 retained their approved schedules.
+- The owner accepted the already-uploaded Shorts cycle without visual rework but rejected its repeated, dark background strategy for future cycles.
+- The next Shorts cycle is now blocked on a 30-thumbnail high-view visual research capture, unique background art for every item, US women 25-44 audience evidence, automated luma/saturation gates, and phone-size contact-sheet review. The current cycle's exception is exact and cannot carry forward.
 
 ## Research evidence
 
@@ -58,6 +61,9 @@ The Classics line remains a coherent serial release and contributes two narrativ
 7. Run script, audio, video, subtitle, thumbnail, metadata, identity, and schedule checks.
 8. Upload private and schedule exact approved times through the API controller; use Studio only for unsupported fields, visible policy checks, or API failure.
 9. Reconcile every YouTube video ID and final state into the weekly control plane.
+10. Hand off the next-cycle visual research and originality work to
+    `docs/exec-plans/active/2026-08-30-shorts-visual-quality.md`; it does not
+    reopen the already-uploaded current cycle.
 
 ## Validation
 
@@ -78,3 +84,7 @@ The Classics line remains a coherent serial release and contributes two narrativ
 ## Archive criteria
 
 All 22 items have passing local packages, real remote video IDs, verified schedule states, and a reconciled weekly plan; the branch is committed and pushed for audit.
+
+The media, remote-ID, schedule, and reconciliation conditions are satisfied.
+This plan is archived in the same checkpoint that commits and pushes the final
+quality contract and release manifest.
