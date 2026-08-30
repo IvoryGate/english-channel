@@ -1,0 +1,31 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-08-24",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedOn": "2026-08-30",
+    "scope": "produce_upload_schedule_and_track_winner_3x3_shorts",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
+    "controlPlaneRemoteMutationAuthority": true
+  },
+  "experiment": {
+    "id": "shorts-winner-3x3-2026-08-30",
+    "parents": ["elr-s-007", "elr-s-008", "elr-s-009"],
+    "design": "three winning topics by three iteration directions",
+    "directions": ["adjacent_phrase_transfer", "interactive_choice", "social_repair"],
+    "evaluationWindowsHours": [6, 24, 72, 168, 336],
+    "normalization": "compare metrics at equal hours live"
+  },
+  "publicationSlots": [
+    {"contentId": "content:shorts_main:elr-s-026", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-30T19:45:00+08:00", "publishedAt": "2026-08-30T22:00:00+08:00", "remoteAction": "published", "youtubeVideoId": "uEW7EO1pM08", "shareUrl": "https://youtube.com/shorts/uEW7EO1pM08", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-030", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-30T21:45:00+08:00", "publishedAt": "2026-08-30T22:36:00+08:00", "remoteAction": "published", "youtubeVideoId": "w1gPKHGzO0o", "shareUrl": "https://youtube.com/shorts/w1gPKHGzO0o", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-034", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T00:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "tcufrx1Sm64", "shareUrl": "https://youtube.com/shorts/tcufrx1Sm64", "scheduleOverride": "youtube_rejected_same_day_23_45_as_not_future", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-029", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T07:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "OMSzfjEZs3I", "shareUrl": "https://youtube.com/shorts/OMSzfjEZs3I", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-033", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T09:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "i1iAu6JPPMQ", "shareUrl": "https://youtube.com/shorts/i1iAu6JPPMQ", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-028", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T11:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "BB5VUNDflU8", "shareUrl": "https://youtube.com/shorts/BB5VUNDflU8", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-032", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T14:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "nEac_E2zsOI", "shareUrl": "https://youtube.com/shorts/nEac_E2zsOI", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-027", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T16:00:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "s-Bac2jF40U", "shareUrl": "https://youtube.com/shorts/s-Bac2jF40U", "checks": "pass"},
+    {"contentId": "content:shorts_main:elr-s-031", "programId": "shorts-winner-3x3-2026-08-30", "scheduledAt": "2026-08-31T21:30:00+08:00", "remoteAction": "scheduled", "youtubeVideoId": "SWI5wNkViKY", "shareUrl": "https://youtube.com/shorts/SWI5wNkViKY", "checks": "pass"}
+  ]
+}

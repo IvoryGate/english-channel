@@ -36,8 +36,6 @@ def patch_voxcpm_low_memory_load() -> None:
         return
 
     load_file = voxcpm2.load_file
-    get_dtype = voxcpm2.get_dtype
-
     @classmethod
     def from_local_low_memory(
         cls,
@@ -49,25 +47,16 @@ def patch_voxcpm_low_memory_load() -> None:
     ):
         with open(os.path.join(path, "config.json"), "r", encoding="utf-8") as cfg_file:
             config = voxcpm2.VoxCPMConfig.model_validate_json(cfg_file.read())
+        # The upstream checkpoint reserves an 8,192-token KV cache before the
+        # weights are loaded. That is useful for long-form synthesis, but it can
+        # terminate the Windows process outright on an 8 GB GPU (and on a host
+        # with a small page file) before Python can report an OOM. Short-form
+        # renders never need that capacity, so allow the runtime to cap it.
+        max_length_cap = int(os.environ.get("ELR_VOXCPM_MAX_LENGTH", "2048"))
+        if max_length_cap < 256:
+            raise ValueError("ELR_VOXCPM_MAX_LENGTH must be at least 256")
+        config.max_length = min(config.max_length, max_length_cap)
         tokenizer = LlamaTokenizerFast.from_pretrained(path)
-
-        safetensors_path = os.path.join(path, "model.safetensors")
-        pytorch_model_path = os.path.join(path, "pytorch_model.bin")
-        if os.path.exists(safetensors_path) and voxcpm2.SAFETENSORS_AVAILABLE:
-            print(f"Loading model from safetensors: {safetensors_path}", file=sys.stderr)
-            model_state_dict = load_file(safetensors_path, device="cpu")
-        elif os.path.exists(pytorch_model_path):
-            print(f"Loading model from pytorch_model.bin: {pytorch_model_path}", file=sys.stderr)
-            checkpoint = torch.load(
-                pytorch_model_path,
-                map_location="cpu",
-                weights_only=True,
-            )
-            model_state_dict = checkpoint.get("state_dict", checkpoint)
-        else:
-            raise FileNotFoundError(
-                f"Model file not found. Expected either {safetensors_path} or {pytorch_model_path}"
-            )
 
         audiovae_safetensors_path = os.path.join(path, "audiovae.safetensors")
         audiovae_pth_path = os.path.join(path, "audiovae.pth")
@@ -89,19 +78,64 @@ def patch_voxcpm_low_memory_load() -> None:
                 f"AudioVAE checkpoint not found. Expected either {audiovae_safetensors_path} or {audiovae_pth_path}"
             )
 
+        # Build checkpoint-backed modules on PyTorch's meta device. This avoids
+        # allocating an unused 8+ GB float32 parameter set before opening the
+        # 4.27 GB checkpoint. Explicit CUDA KV-cache allocations in the model
+        # constructor remain real; only replaceable parameters/buffers are meta.
+        with torch.device("meta"):
+            model = cls(config, tokenizer, audio_vae, lora_config, device=device)
+
+        safetensors_path = os.path.join(path, "model.safetensors")
+        pytorch_model_path = os.path.join(path, "pytorch_model.bin")
+        if os.path.exists(safetensors_path) and voxcpm2.SAFETENSORS_AVAILABLE:
+            print(f"Loading model from safetensors: {safetensors_path}", file=sys.stderr)
+            # Load straight to the render device. On Windows, mapping another
+            # 4+ GB CPU copy after constructing the module can fail with error
+            # 1455 when the page file is small, even when GPU memory is free.
+            checkpoint_device = model.device if str(model.device).startswith("cuda") else "cpu"
+            model_state_dict = load_file(safetensors_path, device=checkpoint_device)
+        elif os.path.exists(pytorch_model_path):
+            print(f"Loading model from pytorch_model.bin: {pytorch_model_path}", file=sys.stderr)
+            checkpoint = torch.load(
+                pytorch_model_path,
+                map_location="cpu",
+                weights_only=True,
+            )
+            model_state_dict = checkpoint.get("state_dict", checkpoint)
+        else:
+            raise FileNotFoundError(
+                f"Model file not found. Expected either {safetensors_path} or {pytorch_model_path}"
+            )
+
         for key, value in vae_state_dict.items():
             model_state_dict[f"audio_vae.{key}"] = value
         del vae_state_dict
         gc.collect()
-
-        model = cls(config, tokenizer, audio_vae, lora_config, device=device)
-        if not training:
-            lm_dtype = get_dtype(model.config.dtype)
-            model = model.to(lm_dtype)
-        model.audio_vae = model.audio_vae.to(torch.float32)
-        model.load_state_dict(model_state_dict, strict=False)
+        incompatible = model.load_state_dict(model_state_dict, strict=False, assign=True)
         del model_state_dict
         gc.collect()
+        # Rotary caches are intentionally non-persistent and therefore are not
+        # present in the checkpoint. Rebuild them after meta initialization.
+        for language_model in model.modules():
+            rope = getattr(language_model, "rope_emb", None)
+            if rope is not None and any(buffer.is_meta for buffer in rope.buffers()):
+                rope_type = type(rope)
+                language_model.rope_emb = rope_type(language_model.config).to(model.device)
+        unresolved = [name for name, parameter in model.named_parameters() if parameter.is_meta]
+        if unresolved:
+            raise RuntimeError(
+                "Checkpoint did not materialize model parameters: " + ", ".join(unresolved[:8])
+            )
+        if incompatible.unexpected_keys:
+            raise RuntimeError(
+                "Checkpoint contains unexpected model parameters: "
+                + ", ".join(incompatible.unexpected_keys[:8])
+            )
+        unresolved_buffers = [name for name, buffer in model.named_buffers() if buffer.is_meta]
+        if unresolved_buffers:
+            raise RuntimeError(
+                "Checkpoint did not materialize model buffers: " + ", ".join(unresolved_buffers[:8])
+            )
         if training:
             return model
         return model.to(model.device).eval().optimize(disable=not optimize)

@@ -60,10 +60,10 @@ const SpeakerChip: React.FC<{speaker: string; accent: string}> = ({speaker, acce
         borderRadius: 999,
         color: accent,
         fontFamily: 'Inter, Arial, sans-serif',
-        fontSize: 27,
+        fontSize: 31,
         fontWeight: 800,
-        marginBottom: 20,
-        padding: '9px 22px',
+        marginBottom: 14,
+        padding: '11px 25px',
         textTransform: 'capitalize',
       }}
     >
@@ -136,7 +136,7 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
       <AbsoluteFill
         style={{
           background:
-            'linear-gradient(180deg, rgba(45,30,24,0.58) 0%, rgba(45,30,24,0.04) 25%, rgba(45,30,24,0.12) 62%, rgba(45,30,24,0.72) 100%)',
+            'linear-gradient(180deg, rgba(45,30,24,0.42) 0%, rgba(45,30,24,0.02) 25%, rgba(45,30,24,0.06) 68%, rgba(45,30,24,0.52) 100%)',
         }}
       />
 
@@ -145,10 +145,10 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',
-          left: 54,
+          left: 46,
           position: 'absolute',
-          right: 54,
-          top: 58,
+          right: 46,
+          top: 42,
         }}
       >
         <div style={{alignItems: 'center', display: 'flex', gap: 18}}>
@@ -158,9 +158,9 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
               border: '3px solid rgba(255,255,255,0.82)',
               borderRadius: 999,
               boxShadow: '0 8px 24px rgba(42,25,18,0.25)',
-              height: 88,
+              height: 116,
               overflow: 'hidden',
-              width: 88,
+              width: 116,
             }}
           >
             <Img
@@ -169,10 +169,10 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
             />
           </div>
           <div style={{color: '#FFF9F0', textShadow: '0 3px 18px rgba(34,20,14,0.55)'}}>
-            <div style={{fontFamily: 'Georgia, serif', fontSize: 31, fontWeight: 700}}>
+            <div style={{fontFamily: 'Georgia, serif', fontSize: 38, fontWeight: 700}}>
               English Listening Room
             </div>
-            <div style={{fontSize: 20, fontWeight: 650, letterSpacing: 1.4, marginTop: 3}}>
+            <div style={{fontSize: 23, fontWeight: 700, letterSpacing: 1.45, marginTop: 3}}>
               LISTEN • UNDERSTAND • GROW
             </div>
           </div>
@@ -183,9 +183,9 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
             borderRadius: 999,
             boxShadow: '0 6px 20px rgba(42,25,18,0.18)',
             color: palette.accent,
-            fontSize: 24,
+            fontSize: 30,
             fontWeight: 800,
-            padding: '12px 19px',
+            padding: '15px 23px',
           }}
         >
           {props.cefr}
@@ -194,19 +194,18 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
 
       <div
         style={{
-          backgroundColor: 'rgba(255,249,240,0.91)',
-          border: '2px solid rgba(255,255,255,0.7)',
-          borderRadius: 42,
-          boxShadow: '0 26px 70px rgba(43,25,18,0.3)',
+          backgroundColor: 'rgba(255,249,240,0.64)',
+          border: '1.5px solid rgba(255,255,255,0.55)',
+          borderRadius: 28,
+          boxShadow: '0 12px 30px rgba(43,25,18,0.16)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          left: 62,
-          minHeight: hookActive ? 430 : 500,
-          padding: '54px 52px 58px',
+          left: 48,
+          padding: '28px 38px 32px',
           position: 'absolute',
-          right: 62,
-          top: hookActive ? 600 : 690,
+          right: 48,
+          top: hookActive ? 206 : 220,
         }}
       >
         {!hookActive && !promptActive && !answerActive && activeScene ? (
@@ -215,10 +214,10 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
         <div
           style={{
             color: palette.accent,
-            fontSize: 25,
+            fontSize: 30,
             fontWeight: 850,
             letterSpacing: 1.2,
-            marginBottom: 25,
+            marginBottom: 16,
           }}
         >
           {eyebrow} · {formatLabels[props.format]}
@@ -226,10 +225,10 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
         <div
           style={{
             fontFamily: 'Georgia, Times New Roman, serif',
-            fontSize: hookActive || promptActive ? 67 : answerActive ? 59 : 55,
+            fontSize: hookActive || promptActive ? 60 : answerActive ? 54 : 50,
             fontWeight: 700,
             letterSpacing: -1.25,
-            lineHeight: 1.18,
+            lineHeight: 1.14,
             opacity: hookActive ? 1 : entrance,
             transform: hookActive
               ? `scale(${hookScale})`
@@ -239,7 +238,7 @@ export const EnglishListeningRoomShort: React.FC<EnglishListeningRoomShortProps>
           {mainText}
         </div>
         {promptActive ? (
-          <div style={{color: palette.accent, fontSize: 27, fontWeight: 750, marginTop: 34}}>
+          <div style={{color: palette.accent, fontSize: 30, fontWeight: 780, marginTop: 22}}>
             Pause and say your answer aloud.
           </div>
         ) : null}

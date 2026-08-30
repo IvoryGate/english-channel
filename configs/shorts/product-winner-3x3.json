@@ -1,0 +1,90 @@
+{
+  "schema": "elr-shorts-product-v1",
+  "channel": "English Listening Room",
+  "descriptionFooter": "Real-life English for the moments that are easy to misunderstand. Comment your answer, subscribe, and join the next practice.",
+  "audience": {
+    "cefr": ["A2", "B1"],
+    "primaryAge": "25-44",
+    "primaryMarket": "United States",
+    "primaryGender": "women 25-44",
+    "devicePriority": "mobile"
+  },
+  "promise": "Decode one useful real-life English moment in under one minute.",
+  "pilotSize": 9,
+  "formatAllocation": {
+    "micro_story": 0,
+    "listen_choose": 0,
+    "dialogue": 9,
+    "classic_cliffhanger": 0
+  },
+  "quality": {
+    "durationMinSec": 29,
+    "durationTargetMaxSec": 55,
+    "durationHardMaxSec": 59,
+    "durationVariantCutoffSec": 49,
+    "titleTargetMaxChars": 55,
+    "titleHardMaxChars": 100,
+    "captionMaxLines": 2,
+    "captionMaxCharsPerLine": 28,
+    "hookMaxSec": 1.5,
+    "maxSilentOpeningSec": 0.25,
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "audioSampleRate": 48000,
+    "loudnessTargetLufs": -14.0,
+    "truePeakMaxDb": -1.5,
+    "mainsHumWarningDb": 8.0,
+    "mainsHumHardMaxDb": 12.0
+  },
+  "visual": {
+    "backgroundRequired": true,
+    "backgroundStrategy": "generated_editorial_scene",
+    "thumbnailRequired": true,
+    "thumbnailStrategy": "dedicated_editorial_cover",
+    "brandLogo": "branding/english_listening_room_avatar_v2.png",
+    "artDirection": "bright high-quality anime illustration with expressive adult women, lively color, playful flexible typography, and clear mobile-first focal hierarchy",
+    "audienceSignal": "designed first for women 25-44 in the United States without excluding other learners",
+    "maxBackgroundReusePerCycle": 1,
+    "pixelQuality": {
+      "minAverageLuma": 125,
+      "minAverageSaturation": 22
+    },
+    "research": {
+      "required": true,
+      "minReferenceThumbnails": 30,
+      "methodDoc": "docs/shorts/VISUAL_RESEARCH_METHOD.md"
+    },
+    "internalIdsVisible": false
+  },
+  "cta": {
+    "enabled": true,
+    "startBeforeEndSec": 3.5,
+    "defaultCopy": "Subscribe for real-life English.",
+    "maxChars": 52
+  },
+  "publishing": {
+    "releasePolicyRef": "configs/channel/release-policy.json",
+    "releaseProgramId": "shorts-winner-3x3-2026-08-30",
+    "defaultPrivacy": "private",
+    "requireRelatedVideo": true,
+    "publicPublishingEnabled": true
+  },
+  "experiments": {
+    "minimumEntriesPerVariant": 2,
+    "minimumEngagedViewsPerVariant": 200,
+    "winnerRelativeLift": 0.1,
+    "secondaryGuardrailDrop": 0.1,
+    "decisionAgeDays": 7,
+    "allocation": {
+      "proven": 0.34,
+      "adjacent": 0.33,
+      "explore": 0.33
+    }
+  },
+  "metrics": {
+    "primary": ["engaged_view_rate", "average_percentage_viewed"],
+    "business": ["subscribers_per_1000_engaged", "long_form_views_per_1000_engaged"],
+    "secondary": ["interactions_per_1000_engaged", "views"]
+  }
+}
