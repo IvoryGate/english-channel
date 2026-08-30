@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, posix, resolve, win32 } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const defaultRepoRoot = resolve(
@@ -21,10 +21,12 @@ export function resolvePythonCommand({
     return override;
   }
 
-  const localPython =
-    platform === "win32"
-      ? join(repoRoot, ".conda-env", "python.exe")
-      : join(repoRoot, ".conda-env", "bin", "python");
+  const pathApi = platform === "win32" ? win32 : posix;
+  const localPython = pathApi.join(
+    repoRoot,
+    ".conda-env",
+    ...(platform === "win32" ? ["python.exe"] : ["bin", "python"])
+  );
   if (exists(localPython)) {
     return localPython;
   }
@@ -43,7 +45,7 @@ export function resolvePythonTemp({
 
 export function runPython(args = process.argv.slice(2)) {
   const python = resolvePythonCommand();
-  const temp = resolvePythonTemp();
+  const temp = join(resolvePythonTemp(), `run-${process.pid}`);
   mkdirSync(temp, { recursive: true });
   const result = spawnSync(python, args, {
     cwd: defaultRepoRoot,

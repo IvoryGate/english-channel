@@ -38,9 +38,11 @@ gates work on Windows production hosts and Linux CI. Runtime selection is:
 
 The production machine therefore keeps using `.conda-env/python.exe`, while
 GitHub Actions uses the interpreter installed by `actions/setup-python`.
-The runner also sets `TEMP`, `TMP`, and `TMPDIR` to
-`workspace/runtime/tmp/python`, keeping tests, package builds, and model helper
-commands off the system drive. `ELR_RUNTIME_TEMP` remains the explicit override.
+The runner also sets `TEMP`, `TMP`, and `TMPDIR` to an isolated per-command
+subdirectory under `workspace/runtime/tmp/python`, keeping tests, package
+builds, and model helper commands off the system drive while preventing mixed
+permission contexts from sharing a temp directory. `ELR_RUNTIME_TEMP` remains
+the explicit root override.
 
 ## Recover GPU / virtual memory (after crash or long serial render)
 
