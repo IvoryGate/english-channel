@@ -2,12 +2,12 @@
   "schema": "elr-shorts-product-v1",
   "channel": "English Listening Room",
   "descriptionFooter": "New Shorts every day at 12:30 PM and 6:00 PM (UTC+8). Full English Listening Room episodes arrive Monday through Saturday at 8:00 PM. Comment your answer, subscribe, and join the next practice.",
-  "audience": {"cefr": ["A2", "B1", "B2"], "primaryAge": "25-44", "devicePriority": "mobile"},
-  "promise": "One useful English moment in 35 to 55 seconds.",
+  "audience": {"cefr": ["A2", "B1", "B2"], "primaryAge": "25-44", "primaryMarket": "United States", "primaryGender": "women 25-44", "devicePriority": "mobile"},
+  "promise": "One useful English moment in about 30 to 55 seconds.",
   "pilotSize": 14,
   "formatAllocation": {"micro_story": 4, "listen_choose": 4, "dialogue": 6, "classic_cliffhanger": 0},
   "quality": {
-    "durationMinSec": 36,
+    "durationMinSec": 29,
     "durationTargetMaxSec": 55,
     "durationHardMaxSec": 59,
     "durationVariantCutoffSec": 50,
@@ -32,8 +32,23 @@
     "thumbnailRequired": true,
     "thumbnailStrategy": "dedicated_editorial_cover",
     "brandLogo": "branding/english_listening_room_avatar_v2.png",
-    "artDirection": "warm mature editorial illustration with calm caption space",
-    "audienceSignal": "welcoming to adult women 25-44 without excluding other learners",
+    "artDirection": "bright high-quality anime illustration with expressive adult women, lively color, playful flexible typography, and clear mobile-first focal hierarchy",
+    "audienceSignal": "designed first for women 25-44 in the United States without excluding other learners",
+    "maxBackgroundReusePerCycle": 1,
+    "pixelQuality": {"minAverageLuma": 125, "minAverageSaturation": 22},
+    "research": {
+      "required": true,
+      "minReferenceThumbnails": 30,
+      "methodDoc": "docs/shorts/VISUAL_RESEARCH_METHOD.md"
+    },
+    "legacyCycleExceptions": {
+      "weekly-2026-08-31": {
+        "reason": "The owner accepted the already-uploaded weekly Shorts as-is; the next cycle must use the full visual gates.",
+        "maxBackgroundReuse": 6,
+        "skipPixelGate": true,
+        "skipResearchGate": true
+      }
+    },
     "internalIdsVisible": false
   },
   "cta": {"enabled": true, "startBeforeEndSec": 3.5, "defaultCopy": "Subscribe for the full practice.", "maxChars": 52},

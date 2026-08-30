@@ -78,3 +78,17 @@ This manifest records the untracked review media retained in the protected
 - This adoption does not change the blocked status of historical Riley audio.
   New Mia audio and final exports remain ignored runtime artifacts with hashes
   recorded in the V2 verification package.
+
+## Published Thumbnail Replacements — 2026-08-30
+
+These three approved ImageGen outputs are tracked production assets and are not
+part of the protected 33-file inventory above. The artwork and title lettering
+were generated together, compressed to YouTube-compatible JPEGs, visually
+reviewed, and installed in Studio without changing the published or scheduled
+video identities.
+
+| Tracked asset | Bytes | SHA-256 | Remote use |
+| --- | ---: | --- | --- |
+| `public/classics/persuasion/chapter-01-thumbnail-v3-imagegen.jpg` | 555448 | `2ce3516291b6aa86f5f7dea5ddb0b9fda339b0bb1f8283ef12e194a38d2cf572` | public chapter 1, `EkAVjpGf1_Q` |
+| `public/classics/persuasion/chapter-02-thumbnail-v3-imagegen.jpg` | 518758 | `ee2169be46a9d0610d88d24ac94d2786a406becb2999767b0e8eeee52f738fa0` | scheduled chapter 2, `tdTlhg49vTk` |
+| `public/classics/persuasion/chapter-03-thumbnail-v3-imagegen.jpg` | 554325 | `202f561a57a70072ecf16cfacb40381a4e03f81dd9fc1b4fb270f436f41c4f2d` | scheduled chapter 3, `uJ32Ef1v3QE` |

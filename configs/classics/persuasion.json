@@ -97,18 +97,23 @@
     ]
   },
   "visual": {
-    "styleId": "classic-regency-cinematic-v1",
+    "styleId": "classic-regency-storybook-imagegen-v3",
     "referenceCovers": [
       "videos/pride&prejudice/chapter_47/chapter_47-封面.jpg",
       "videos/pride&prejudice/chapter_61/chapter_61-封面.jpg"
     ],
-    "sceneDirection": "bright, warm, emotionally comforting Regency scene for a primarily 55-plus female audience; honey-gold daylight or a well-lit cozy evening, inviting period interiors, flowers, books, tea, and an emotionally specific chapter hook",
-    "typographyDirection": "large high-contrast white serif title, book title, chapter number, FULL AUDIOBOOK, and By Jane Austen",
+    "sceneDirection": "bright, emotionally specific romantic storybook illustration for women in the United States who enjoy Jane Austen adaptations; luminous jewel colors, expressive adult faces, inviting Regency interiors, flowers, books, sea imagery where relevant, and a clear chapter conflict",
+    "typographyDirection": "generate the book title, emotional chapter hook, and chapter number directly inside the thumbnail artwork using elegant flexible high-contrast display lettering that remains readable on a phone",
     "bodyBackgroundDirection": "calmer text-free Regency scene with warm high-key light, furnished lower thirds, and clean central subtitle space",
     "chapterBackgrounds": {
       "1": "public/classics/persuasion/chapter-01-cover-bg-v2.png",
       "2": "public/classics/persuasion/chapter-02-cover-bg-v1.png",
       "3": "public/classics/persuasion/chapter-03-cover-bg-v1.png"
+    },
+    "chapterThumbnails": {
+      "1": "public/classics/persuasion/chapter-01-thumbnail-v3-imagegen.jpg",
+      "2": "public/classics/persuasion/chapter-02-thumbnail-v3-imagegen.jpg",
+      "3": "public/classics/persuasion/chapter-03-thumbnail-v3-imagegen.jpg"
     },
     "width": 2560,
     "height": 1440

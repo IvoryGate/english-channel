@@ -161,6 +161,43 @@ def load_youtube_release_manifest(path: Path, repo_root: Path) -> tuple[YouTubeR
                 assets_already_set=bool(item.get("assetsAlreadySet", False)),
             )
         )
+    plan_value = payload.get("weeklyPlan")
+    if plan_value is not None:
+        if not isinstance(plan_value, str) or not plan_value.strip():
+            raise SchemaError("YouTube release manifest weeklyPlan must be a non-empty path")
+        plan_path = Path(plan_value)
+        resolved_plan = (
+            plan_path.resolve() if plan_path.is_absolute() else (repo_root / plan_path).resolve()
+        )
+        if not resolved_plan.is_file():
+            raise SchemaError(f"YouTube weekly plan does not exist: {resolved_plan}")
+        plan = _object(json.loads(resolved_plan.read_text(encoding="utf-8")), str(resolved_plan))
+        slots = plan.get("publicationSlots")
+        if not isinstance(slots, list):
+            raise SchemaError("YouTube weekly plan publicationSlots must be a list")
+        by_content_id: dict[str, str] = {}
+        for index, raw_slot in enumerate(slots):
+            slot = _object(raw_slot, f"publicationSlots[{index}]")
+            slot_content_id = _string(slot, "contentId", f"publicationSlots[{index}]")
+            if slot_content_id in by_content_id:
+                raise SchemaError(f"Duplicate weekly plan contentId: {slot_content_id}")
+            by_content_id[slot_content_id] = _string(
+                slot, "scheduledAt", f"publicationSlots[{index}]"
+            )
+        for spec in specs:
+            planned = by_content_id.get(spec.content_id)
+            if planned is None:
+                raise SchemaError(f"Release item is absent from weekly plan: {spec.content_id}")
+            try:
+                release_time = datetime.fromisoformat(spec.scheduled_at)
+                planned_time = datetime.fromisoformat(planned)
+            except ValueError as exc:
+                raise SchemaError(f"Weekly plan has invalid scheduledAt for {spec.content_id}") from exc
+            if planned_time.tzinfo is None or release_time != planned_time:
+                raise SchemaError(
+                    f"Release schedule differs from weekly plan for {spec.content_id}: "
+                    f"{spec.scheduled_at} != {planned}"
+                )
     return tuple(specs)
 
 

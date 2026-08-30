@@ -13,8 +13,8 @@
     "brand:preview": "remotion studio src/brand/index.ts",
     "brand:render:intro": "remotion render src/brand/index.ts EnglishListeningRoomIntro workspace/branding/english-listening-room-intro-v1.mp4",
     "shorts:preview": "remotion studio src/shorts/index.ts",
-    "shorts:plan": ".\\.conda-env\\python.exe scripts/shorts.py plan",
-    "classics:ops": ".\\.conda-env\\python.exe scripts/classics.py ops",
+    "shorts:plan": "node packages/tooling/scripts/run-python.mjs scripts/shorts.py plan",
+    "classics:ops": "node packages/tooling/scripts/run-python.mjs scripts/classics.py ops",
     "classics:preview": "remotion studio src/classics/index.ts",
     "classics:render:intro": "remotion render src/classics/index.ts ClassicListeningIntro assets/branding/video/classic-listening-intro.mp4",
     "classics:render:outro": "remotion render src/classics/index.ts ClassicListeningOutro assets/branding/video/classic-listening-outro.mp4",
@@ -27,11 +27,11 @@
     "check:encoding": "node packages/tooling/scripts/check-file-encoding.mjs",
     "check:remotion": "tsc -p tsconfig.json",
     "setup:runtime": "powershell -ExecutionPolicy Bypass -File scripts/setup_project_runtime.ps1 -UseHfMirror",
-    "py:check": ".\\.conda-env\\python.exe apps/worker-py/scripts/check_env.py",
-    "py:download-model": ".\\.conda-env\\python.exe apps/worker-py/scripts/download_voxcpm2.py --local-dir pretrained_models/VoxCPM2",
-    "py:smoke": ".\\.conda-env\\python.exe apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --model-id pretrained_models/VoxCPM2",
-    "lint:py": ".\\.conda-env\\python.exe -m compileall apps/worker-py/worker apps/worker-py/scripts",
-    "test:py": ".\\.conda-env\\python.exe apps/worker-py/scripts/run_tests.py"
+    "py:check": "node packages/tooling/scripts/run-python.mjs apps/worker-py/scripts/check_env.py",
+    "py:download-model": "node packages/tooling/scripts/run-python.mjs apps/worker-py/scripts/download_voxcpm2.py --local-dir pretrained_models/VoxCPM2",
+    "py:smoke": "node packages/tooling/scripts/run-python.mjs apps/worker-py/scripts/smoke_voxcpm2.py --device cuda --model-id pretrained_models/VoxCPM2",
+    "lint:py": "node packages/tooling/scripts/run-python.mjs -m compileall apps/worker-py/worker apps/worker-py/scripts",
+    "test:py": "node packages/tooling/scripts/run-python.mjs apps/worker-py/scripts/run_tests.py"
   },
   "engines": {
     "node": ">=20.0.0"

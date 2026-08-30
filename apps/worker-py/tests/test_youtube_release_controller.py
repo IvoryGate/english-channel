@@ -161,6 +161,30 @@ def test_manifest_rejects_naive_schedule(tmp_path: Path) -> None:
         load_youtube_release_manifest(path, tmp_path)
 
 
+def test_manifest_rejects_schedule_drift_from_weekly_plan(tmp_path: Path) -> None:
+    path = release_manifest(tmp_path)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    plan_path = tmp_path / "weekly.json"
+    plan_path.write_text(
+        json.dumps(
+            {
+                "publicationSlots": [
+                    {
+                        "contentId": payload["items"][0]["contentId"],
+                        "scheduledAt": "2026-09-05T20:00:00+08:00",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    payload["weeklyPlan"] = str(plan_path)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(SchemaError, match="differs from weekly plan"):
+        load_youtube_release_manifest(path, tmp_path)
+
+
 def test_sync_uploads_assets_schedules_and_retries_idempotently(tmp_path: Path) -> None:
     spec = load_youtube_release_manifest(release_manifest(tmp_path), tmp_path)[0]
     provider = FakeYouTubeProvider()

@@ -108,6 +108,31 @@ def validate_product(product: dict[str, Any]) -> None:
     if not isinstance(visual, dict) or visual.get("backgroundStrategy") != "generated_editorial_scene":
         raise ContractError("product.visual must define the generated editorial background strategy")
     _required_string(visual, "brandLogo", "product.visual")
+    max_reuse = visual.get("maxBackgroundReusePerCycle")
+    if not isinstance(max_reuse, int) or max_reuse < 1:
+        raise ContractError("product.visual.maxBackgroundReusePerCycle must be a positive integer")
+    pixel_quality = visual.get("pixelQuality")
+    if not isinstance(pixel_quality, dict):
+        raise ContractError("product.visual.pixelQuality must be an object")
+    for key in ("minAverageLuma", "minAverageSaturation"):
+        value = pixel_quality.get(key)
+        if not isinstance(value, (int, float)) or not 0 <= float(value) <= 255:
+            raise ContractError(f"product.visual.pixelQuality.{key} must be between 0 and 255")
+    research = visual.get("research")
+    if not isinstance(research, dict) or not isinstance(research.get("required"), bool):
+        raise ContractError("product.visual.research.required must be boolean")
+    if research["required"]:
+        minimum = research.get("minReferenceThumbnails")
+        if not isinstance(minimum, int) or minimum < 10:
+            raise ContractError(
+                "product.visual.research.minReferenceThumbnails must be at least 10"
+            )
+        _required_string(research, "methodDoc", "product.visual.research")
+    audience = product.get("audience")
+    if not isinstance(audience, dict):
+        raise ContractError("product.audience must be an object")
+    _required_string(audience, "primaryMarket", "product.audience")
+    _required_string(audience, "primaryGender", "product.audience")
     cta = product.get("cta")
     if not isinstance(cta, dict) or not cta.get("enabled"):
         raise ContractError("product.cta must be enabled")
@@ -217,7 +242,37 @@ def validate_entry(entry: dict[str, Any], product: dict[str, Any], where: str) -
 def validate_portfolio(portfolio: dict[str, Any], product: dict[str, Any]) -> None:
     if portfolio.get("schema") != PORTFOLIO_SCHEMA:
         raise ContractError(f"portfolio.schema must be {PORTFOLIO_SCHEMA}")
-    _required_string(portfolio, "cycleId", "portfolio")
+    cycle_id = _required_string(portfolio, "cycleId", "portfolio")
+    visual = product["visual"]
+    legacy_exceptions = visual.get("legacyCycleExceptions") or {}
+    if not isinstance(legacy_exceptions, dict):
+        raise ContractError("product.visual.legacyCycleExceptions must be an object")
+    exception = legacy_exceptions.get(cycle_id) or {}
+    if exception:
+        if not isinstance(exception, dict):
+            raise ContractError(f"visual exception for {cycle_id} must be an object")
+        _required_string(
+            exception,
+            "reason",
+            f"product.visual.legacyCycleExceptions.{cycle_id}",
+        )
+    research_policy = visual["research"]
+    if research_policy["required"] and not bool(exception.get("skipResearchGate")):
+        evidence = portfolio.get("visualResearch")
+        if not isinstance(evidence, dict):
+            raise ContractError("portfolio.visualResearch is required before visual production")
+        _required_string(evidence, "artifactPath", "portfolio.visualResearch")
+        if evidence.get("targetMarket") != product["audience"]["primaryMarket"]:
+            raise ContractError("portfolio.visualResearch.targetMarket must match product audience")
+        if evidence.get("primaryAudience") != product["audience"]["primaryGender"]:
+            raise ContractError("portfolio.visualResearch.primaryAudience must match product audience")
+        sample_size = evidence.get("sampleSize")
+        if not isinstance(sample_size, int) or sample_size < int(
+            research_policy["minReferenceThumbnails"]
+        ):
+            raise ContractError("portfolio.visualResearch.sampleSize is below the required minimum")
+        if evidence.get("highViewCohort") is not True:
+            raise ContractError("portfolio.visualResearch must document a high-view cohort")
     entries = portfolio.get("entries")
     if not isinstance(entries, list) or len(entries) != int(product["pilotSize"]):
         raise ContractError(f"portfolio.entries must contain exactly {product['pilotSize']} entries")
@@ -225,6 +280,7 @@ def validate_portfolio(portfolio: dict[str, Any], product: dict[str, Any]) -> No
     keys: set[str] = set()
     actual_allocation = {name: 0 for name in VALID_FORMATS}
     experiment_counts: dict[str, dict[str, int]] = {}
+    background_counts: dict[str, int] = {}
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             raise ContractError(f"portfolio.entries[{index}] must be an object")
@@ -238,6 +294,12 @@ def validate_portfolio(portfolio: dict[str, Any], product: dict[str, Any]) -> No
         if key in keys:
             raise ContractError(f"Duplicate content detected at {short_id}")
         keys.add(key)
+        background = entry.get("backgroundImage")
+        if background:
+            normalized_background = str(background).replace("\\", "/").casefold()
+            background_counts[normalized_background] = (
+                background_counts.get(normalized_background, 0) + 1
+            )
         actual_allocation[str(entry["format"])] += 1
         for experiment, variant in dict(entry["experimentAssignments"]).items():
             experiment_counts.setdefault(str(experiment), {}).setdefault(str(variant), 0)
@@ -246,6 +308,17 @@ def validate_portfolio(portfolio: dict[str, Any], product: dict[str, Any]) -> No
         raise ContractError(
             f"Portfolio allocation {actual_allocation} does not match product allocation "
             f"{product['formatAllocation']}"
+        )
+    allowed_reuse = int(
+        exception.get("maxBackgroundReuse", visual["maxBackgroundReusePerCycle"])
+    )
+    reused = {path: count for path, count in background_counts.items() if count > allowed_reuse}
+    if reused:
+        details = ", ".join(
+            f"{path} ({count} uses)" for path, count in sorted(reused.items())
+        )
+        raise ContractError(
+            f"Background reuse exceeds {allowed_reuse} per cycle: {details}"
         )
     minimum = int(product["experiments"]["minimumEntriesPerVariant"])
     for experiment, variants in experiment_counts.items():
@@ -296,6 +369,10 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
     description_footer = str(product.get("descriptionFooter") or "").strip()
     if description_footer:
         description = f"{description}\n\n{description_footer}"
+    visual_policy = product["visual"]
+    legacy_exception = (visual_policy.get("legacyCycleExceptions") or {}).get(
+        cycle_id
+    ) or {}
     return {
         "schema": MANIFEST_SCHEMA,
         "shortId": entry["shortId"],
@@ -326,6 +403,15 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
             "backgroundImage": entry.get("backgroundImage"),
             "brandLogo": product["visual"]["brandLogo"],
             "artDirection": product["visual"]["artDirection"],
+            "audience": {
+                "primaryMarket": product["audience"]["primaryMarket"],
+                "primaryGender": product["audience"]["primaryGender"],
+            },
+            "qualityPolicy": {
+                "minAverageLuma": visual_policy["pixelQuality"]["minAverageLuma"],
+                "minAverageSaturation": visual_policy["pixelQuality"]["minAverageSaturation"],
+                "skipPixelGate": bool(legacy_exception.get("skipPixelGate")),
+            },
         },
         "cta": product["cta"]["defaultCopy"],
         "experimentAssignments": entry["experimentAssignments"],

@@ -3,11 +3,14 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MEDIA_SCRIPTS = REPO_ROOT / ".cursor" / "skills" / "audiobook-chapter-tts" / "scripts"
 sys.path.insert(0, str(MEDIA_SCRIPTS))
 
 from media.compose_media_video import build_ffmpeg_command  # noqa: E402
+import media.compose_media_video as compose_media_video  # noqa: E402
 from media.generate_karaoke_ass import generate_karaoke_ass  # noqa: E402
 from media.generate_media_srt import generate_media_srt  # noqa: E402
 from media.thumbnail_tokens import DEFAULT_TOKENS  # noqa: E402
@@ -87,7 +90,11 @@ def test_merge_uses_clip_durations_not_asr_tail() -> None:
     assert merged["durationSec"] == 2.3
 
 
-def test_build_ffmpeg_command_includes_layers() -> None:
+def test_build_ffmpeg_command_includes_layers(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(compose_media_video, "resolve_ffmpeg", lambda: "ffmpeg")
+    monkeypatch.setattr(compose_media_video, "detect_hw_encoder", lambda: "")
     command = build_ffmpeg_command(
         background_jpg=Path("bg.jpg"),
         audio_wav=Path("audio.wav"),

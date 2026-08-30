@@ -13,10 +13,11 @@ import soundfile as sf
 
 from worker.shorts.analytics import ingest_snapshot
 import worker.shorts.audio as shorts_audio
+import worker.shorts.qc as shorts_qc
 from worker.shorts.audio import _tempo_factor_for_variant, build_audio_manifest, render_audio_batch
 from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
 from worker.shorts.ledger import load_ledger, record_publication
-from worker.shorts.qc import check_audio, check_thumbnail
+from worker.shorts.qc import check_audio, check_background, check_thumbnail
 from worker.shorts.render import build_render_props, build_thumbnail_props
 from worker.shorts.review import build_review, write_review
 from worker.shorts.workspace import bootstrap_portfolio, read_json
@@ -27,6 +28,8 @@ REPO = Path(__file__).resolve().parents[3]
 PRODUCT_PATH = REPO / "configs" / "shorts" / "product.json"
 PORTFOLIO_PATH = REPO / "configs" / "shorts" / "pilot-2026-08.json"
 CHANNEL_RELEASE_POLICY_PATH = REPO / "configs" / "channel" / "release-policy.json"
+WEEKLY_PRODUCT_PATH = REPO / "configs" / "shorts" / "product-weekly-scale.json"
+WEEKLY_PORTFOLIO_PATH = REPO / "configs" / "shorts" / "weekly-2026-08-31.json"
 
 
 def contracts() -> tuple[dict, dict]:
@@ -95,6 +98,65 @@ def test_duplicate_content_is_rejected() -> None:
 
     with pytest.raises(ContractError, match="Duplicate content"):
         validate_portfolio(duplicate, product)
+
+
+def test_uploaded_week_keeps_a_narrow_visual_policy_exception() -> None:
+    product, portfolio = load_and_validate(WEEKLY_PRODUCT_PATH, WEEKLY_PORTFOLIO_PATH)
+    manifest = build_manifest(portfolio["entries"][0], product, portfolio["cycleId"])
+
+    assert manifest["visual"]["qualityPolicy"]["skipPixelGate"] is True
+    assert manifest["visual"]["audience"] == {
+        "primaryMarket": "United States",
+        "primaryGender": "women 25-44",
+    }
+
+
+def test_next_cycle_requires_research_and_unique_backgrounds() -> None:
+    product = read_json(WEEKLY_PRODUCT_PATH)
+    portfolio = read_json(WEEKLY_PORTFOLIO_PATH)
+    portfolio["cycleId"] = "weekly-2026-09-07"
+
+    with pytest.raises(ContractError, match="visualResearch is required"):
+        validate_portfolio(portfolio, product)
+
+    portfolio["visualResearch"] = {
+        "artifactPath": "workspace/shorts/research/2026-09-07.json",
+        "sampleSize": 30,
+        "targetMarket": "United States",
+        "primaryAudience": "women 25-44",
+        "highViewCohort": True,
+    }
+    with pytest.raises(ContractError, match="Background reuse exceeds 1"):
+        validate_portfolio(portfolio, product)
+
+
+def test_background_qc_rejects_dark_desaturated_art(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    background = tmp_path / "public" / "shorts" / "next" / "scene.png"
+    background.parent.mkdir(parents=True)
+    background.write_bytes(b"generated-image")
+    manifest = {
+        "shortId": "elr-s-999",
+        "visual": {
+            "backgroundImage": "shorts/next/scene.png",
+            "qualityPolicy": {
+                "minAverageLuma": 125,
+                "minAverageSaturation": 22,
+                "skipPixelGate": False,
+            },
+        },
+    }
+    monkeypatch.setattr(
+        shorts_qc,
+        "analyze_image_signalstats",
+        lambda _path: {"averageLuma": 90.0, "averageSaturation": 12.0},
+    )
+
+    report = check_background(tmp_path, manifest)
+
+    assert report["status"] == "fail"
+    assert report["errors"] == ["BACKGROUND_TOO_DARK", "BACKGROUND_TOO_DESATURATED"]
 
 
 def test_bootstrap_is_idempotent_and_preserves_publication_state(tmp_path: Path) -> None:
