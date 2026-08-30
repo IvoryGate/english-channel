@@ -173,6 +173,8 @@ def render_short(
         "--codec=h264",
         "--crf=18",
         "--pixel-format=yuv420p",
+        "--concurrency=1",
+        "--x264-preset=ultrafast",
     ]
     browser = _browser_executable()
     if browser is not None:

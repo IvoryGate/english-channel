@@ -14,7 +14,12 @@ import soundfile as sf
 from worker.shorts.analytics import ingest_snapshot
 import worker.shorts.audio as shorts_audio
 import worker.shorts.qc as shorts_qc
-from worker.shorts.audio import _tempo_factor_for_variant, build_audio_manifest, render_audio_batch
+from worker.shorts.audio import (
+    _production_env,
+    _tempo_factor_for_variant,
+    build_audio_manifest,
+    render_audio_batch,
+)
 from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
 from worker.shorts.ledger import load_ledger, record_publication
 from worker.shorts.qc import check_audio, check_background, check_thumbnail
@@ -268,6 +273,19 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
     assert prompt["pauseAfterSec"] == 2.25
 
 
+def test_audio_child_process_caps_short_form_voxcpm_context(tmp_path: Path, monkeypatch) -> None:
+    (tmp_path / "pretrained_models" / "VoxCPM2").mkdir(parents=True)
+    monkeypatch.setenv("ELR_SHORTS_RUNTIME_ROOT", str(tmp_path))
+    monkeypatch.delenv("ELR_VOXCPM_MAX_LENGTH", raising=False)
+
+    default_env = _production_env(tmp_path)
+    assert default_env["ELR_VOXCPM_MAX_LENGTH"] == "2048"
+
+    monkeypatch.setenv("ELR_VOXCPM_MAX_LENGTH", "1024")
+    overridden_env = _production_env(tmp_path)
+    assert overridden_env["ELR_VOXCPM_MAX_LENGTH"] == "1024"
+
+
 def test_audio_batch_limits_each_model_load_to_twenty_turns(tmp_path: Path, monkeypatch) -> None:
     product, portfolio = contracts()
     model = tmp_path / "pretrained_models" / "VoxCPM2"
@@ -340,6 +358,7 @@ def test_audio_pacing_only_corrects_a_crossed_duration_variant() -> None:
 
     assert _tempo_factor_for_variant(49.2, short_manifest) == 1.0
     assert _tempo_factor_for_variant(47.9, long_manifest) == pytest.approx(47.9 / 54.0)
+    assert _tempo_factor_for_variant(61.2, long_manifest) == pytest.approx(61.2 / 55.0)
 
 
 def test_audio_qc_rejects_stationary_sixty_hertz_hum(tmp_path: Path) -> None:

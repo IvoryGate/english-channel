@@ -419,6 +419,8 @@ def build_manifest(entry: dict[str, Any], product: dict[str, Any], cycle_id: str
         "renderSettings": {
             "interTurnSilenceSec": 0.12,
             "durationVariantCutoffSec": product["quality"]["durationVariantCutoffSec"],
+            "durationTargetMaxSec": product["quality"]["durationTargetMaxSec"],
+            "durationHardMaxSec": product["quality"]["durationHardMaxSec"],
             "loudnessTargetLufs": product["quality"]["loudnessTargetLufs"],
             "truePeakMaxDb": product["quality"]["truePeakMaxDb"],
             "audioSampleRate": product["quality"]["audioSampleRate"],

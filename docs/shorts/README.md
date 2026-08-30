@@ -77,10 +77,14 @@ production default.
 
 Each manifest stores a visual brief and the approved background path. The
 renderer combines that image with a restrained pan/zoom, the existing English
-Listening Room avatar, a persistent wordmark, readable editorial caption card,
-and one final CTA: `Subscribe for your next listening story.` Internal Short
-IDs never appear in the viewer-facing composition. Missing imagery, logo, or
-CTA fails preflight rather than falling back to a generic production design.
+Listening Room avatar, a persistent wordmark, a compact translucent caption
+panel in the generated upper safe area, and one final CTA: `Subscribe for your
+next listening story.` The panel has no forced tall minimum: short dialogue
+lines collapse vertically so faces, hands, and story props remain visible.
+Avatar, CEFR, series, and speaker marks are sized for phone viewing rather than
+desktop preview. Internal Short IDs never appear in the viewer-facing
+composition. Missing imagery, logo, or CTA fails preflight rather than falling
+back to a generic production design.
 
 ### 1. Preflight
 
@@ -121,15 +125,17 @@ voice assets in the owning repository. Override only when necessary:
 ```powershell
 $env:ELR_SHORTS_RUNTIME_ROOT = "H:\english-channel"
 $env:ELR_SHORTS_DEVICE = "cuda"
+$env:ELR_VOXCPM_MAX_LENGTH = "1024"
 ```
 
 The renderer uses the owning repository's global GPU lock, so a scheduled Short
 cannot overlap a long-form VoxCPM or Whisper production job.
 
 Measured delivery is preserved unless it crosses the pre-registered short/long
-duration boundary. In that case only, mastering applies a bounded tempo
-correction toward the planned duration and scales the caption timeline by the
-same factor, so an experiment item cannot silently enter the wrong variant.
+duration boundary or exceeds the hard platform limit. Mastering then applies a
+bounded tempo correction toward the planned duration or target maximum and
+scales the caption timeline by the same factor, so an experiment item cannot
+silently enter the wrong variant or ship above the release ceiling.
 
 ### 3. Render 9:16 video
 
@@ -143,6 +149,11 @@ intro or outro. Generated scene, hook, caption pages, question, answer, speaker
 chips, brand treatment, CTA, and progress are driven by the manifest. Audio is
 muxed after visual rendering so generated audio files never need to enter the
 Remotion source tree.
+
+Production renders use one browser worker and the x264 `ultrafast` preset at
+the existing CRF. This trades a larger intermediate file for bounded peak
+memory on the Windows production host; final dimensions, frame rate, pixel
+format, and visual quality gates remain unchanged.
 
 For a silent visual smoke proof only:
 

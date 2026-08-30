@@ -49,6 +49,7 @@ def _production_env(repo_root: Path) -> dict[str, str]:
         "TMP": str(runtime_temp),
         "KMP_DUPLICATE_LIB_OK": "TRUE",
         "PYTHONUNBUFFERED": "1",
+        "ELR_VOXCPM_MAX_LENGTH": os.environ.get("ELR_VOXCPM_MAX_LENGTH", "2048"),
     }
 
 
@@ -133,12 +134,18 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
 
 def _tempo_factor_for_variant(raw_duration: float, manifest: dict[str, Any]) -> float:
     planned = float(manifest["durationPlannedSec"])
-    cutoff = float(manifest.get("renderSettings", {}).get("durationVariantCutoffSec", 50.0))
+    render_settings = manifest.get("renderSettings", {})
+    cutoff = float(render_settings.get("durationVariantCutoffSec", 50.0))
+    hard_max = float(render_settings.get("durationHardMaxSec", 59.0))
+    target_max = float(render_settings.get("durationTargetMaxSec", hard_max))
     planned_is_short = planned <= cutoff
     raw_is_short = raw_duration <= cutoff
-    if planned_is_short == raw_is_short:
+    if raw_duration > hard_max:
+        factor = raw_duration / min(target_max, hard_max)
+    elif planned_is_short == raw_is_short:
         return 1.0
-    factor = raw_duration / planned
+    else:
+        factor = raw_duration / planned
     if not 0.5 <= factor <= 2.0:
         raise ValueError(f"Required tempo factor {factor:.3f} is outside ffmpeg's safe range")
     return factor

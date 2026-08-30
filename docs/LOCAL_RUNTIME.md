@@ -56,6 +56,21 @@ Dry-run (report only): `--dry-run`. Skip killing processes: `--no-kill`.
 
 If free virtual memory stays below ~2 GB, close heavy apps or reboot — the script cannot grow the Windows page file.
 
+Short-form VoxCPM runs cap the checkpoint's 8,192-token context at 2,048 by
+default and initialize checkpoint-backed modules on PyTorch's meta device. The
+cap avoids allocating an unused float32 parameter copy and multi-gigabyte KV
+cache before the 4.27 GB safetensors checkpoint is assigned directly to CUDA.
+Override only for a measured need:
+
+```powershell
+$env:ELR_VOXCPM_MAX_LENGTH = "1024" # validated for current Shorts production
+```
+
+Values below 256 are rejected. This optimization reduces peak committed memory
+but does not replace healthy Windows virtual memory; persistent error 1455
+still requires closing heavy applications, increasing the D-drive page file,
+or rebooting.
+
 
 Set these before starting the API:
 
