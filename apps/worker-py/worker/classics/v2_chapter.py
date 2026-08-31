@@ -11,7 +11,12 @@ import soundfile as sf
 
 from .aligned_subtitles import align_segment_files
 from .audio_metrics import audio_texture_metrics
-from .chapter_package import CHAPTER_COPY, channel_description_footer
+from .chapter_package import (
+    CHAPTER_COPY,
+    _normalized_concat_command,
+    _validate_composed_video,
+    channel_description_footer,
+)
 from .config import BookConfig
 from .io import atomic_write_json, atomic_write_text, read_json, sha256_file
 from .paths import ClassicPaths
@@ -77,29 +82,8 @@ def _voice_variant_metadata(config: BookConfig, source_name: str) -> dict[str, A
 def _compose_final(repo_root: Path, inputs: list[Path], output: Path) -> None:
     if len(inputs) != 3:
         raise V2ProofError("Final V2 composition requires intro, body, and outro")
-    command = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
-    for path in inputs:
-        command.extend(["-i", str(path)])
-    filters: list[str] = []
-    for index in range(3):
-        filters.append(
-            f"[{index}:v]fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v{index}]"
-        )
-        filters.append(
-            f"[{index}:a]aresample=48000,"
-            "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
-            f"asetpts=PTS-STARTPTS[a{index}]"
-        )
-    filters.append("[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[vout][aout]")
-    command.extend(
-        [
-            "-filter_complex", ";".join(filters), "-map", "[vout]", "-map", "[aout]",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2",
-            "-movflags", "+faststart", str(output),
-        ]
-    )
-    _run(command, cwd=repo_root)
+    _run(_normalized_concat_command(inputs, output), cwd=repo_root)
+    _validate_composed_video(repo_root, inputs, output)
 
 
 def recompose_v2_final(repo_root: Path, config: BookConfig, chapter: int) -> dict[str, Any]:
@@ -120,6 +104,9 @@ def recompose_v2_final(repo_root: Path, config: BookConfig, chapter: int) -> dic
     verification["verifiedAt"] = datetime.now(timezone.utc).isoformat()
     verification["videoSha256"] = sha256_file(final_video)
     verification["videoProbe"] = _probe(repo_root, final_video)
+    verification["timelineValidation"] = _validate_composed_video(
+        repo_root, required, final_video
+    )
     verification["status"] = "EXPORTED_FOR_REVIEW"
     verification["compositionMethod"] = "timestamp-reset filter concat with full H.264/AAC re-encode"
     atomic_write_json(verification_path, verification)
@@ -358,7 +345,9 @@ def build_v2_chapter(
     if not intro.is_file() or not outro.is_file():
         raise V2ProofError("Approved chapter intro/outro files are missing")
     final_video = output_dir / f"{base}.mp4"
-    _compose_final(repo_root, [intro, body_video, outro], final_video)
+    final_inputs = [intro, body_video, outro]
+    _compose_final(repo_root, final_inputs, final_video)
+    timeline_validation = _validate_composed_video(repo_root, final_inputs, final_video)
     intro_duration = float(_probe(repo_root, intro)["format"]["duration"])
     shifted_cues = [
         {**cue, "start": float(cue["start"]) + intro_duration, "end": float(cue["end"]) + intro_duration}
@@ -415,6 +404,7 @@ def build_v2_chapter(
         "thumbnailSha256": sha256_file(paths.thumbnail(chapter)),
         "sceneManifestSha256": sha256_file(scene_manifest_path),
         "videoProbe": final_probe,
+        "timelineValidation": timeline_validation,
         "bodyVideo": body_video.relative_to(repo_root).as_posix(),
         "finalVideo": final_video.relative_to(repo_root).as_posix(),
         "bodyCaptions": body_srt.relative_to(repo_root).as_posix(),

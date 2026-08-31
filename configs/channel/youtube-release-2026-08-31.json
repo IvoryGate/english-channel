@@ -5,12 +5,12 @@
   "items": [
     {
       "contentId": "content:classic_listening:persuasion_chapter_002",
-      "video": "workspace/classics/persuasion/chapter_002/video/000_chapter_002.mp4",
+      "video": "exports/youtube/persuasion/chapter-02-recovered/persuasion-chapter-02-recovered.mp4",
       "thumbnail": "public/classics/persuasion/chapter-02-thumbnail-v3-imagegen.jpg",
-      "captions": "workspace/classics/persuasion/chapter_002/subtitles/000_chapter_002.srt",
+      "captions": "exports/youtube/persuasion/chapter-02-recovered/persuasion-chapter-02-recovered.srt",
       "metadataFile": "workspace/classics/persuasion/chapter_002/reports/000_chapter_002.youtube.json",
       "scheduledAt": "2026-08-31T08:00:00+08:00",
-      "youtubeVideoId": "tdTlhg49vTk",
+      "youtubeVideoId": "vGlh8DYpLP4",
       "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,

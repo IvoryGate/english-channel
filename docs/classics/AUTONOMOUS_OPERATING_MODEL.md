@@ -141,6 +141,9 @@ The current VoxCPM2 checkpoint encodes reference audio at 16 kHz and produces ou
 - Keep a complete source segment in one cue when it fits the two-line safe area.
 - Split only at punctuation or semantic boundaries when the source is too long.
 - Burned captions use body time; YouTube captions add the measured intro offset.
+- Exported YouTube captions must be generated from the final-video timeline;
+  publishing is blocked when the first cue does not equal its body cue plus the
+  probed intro duration.
 - Reject negative time, overlap, unreadably short holds, source mismatch, or excessive line length.
 
 ### 5. Visuals
@@ -154,8 +157,15 @@ The current VoxCPM2 checkpoint encodes reference audio at 16 kHz and produces ou
 ### 6. Assembly and package
 
 - Assemble `intro -> body -> outro` on a reset, verified timestamp timeline.
+- Never use stream-copy concat for independently encoded intro, body, and outro
+  assets. Normalize frame rate, pixel/audio formats, and time bases; reset video
+  and audio PTS for every input; then fully re-encode the composed output.
 - Produce native 2560x1440 H.264 video with 48 kHz AAC, a 2560x1440 thumbnail, SRT, title, description, tags, timestamps, experiment variants, and verification report.
-- Scan for black frames, audio/video drift, corrupt timestamps, missing scenes, subtitle clipping, and end-screen conflicts.
+- Scan for black frames, frozen-frame runs, audio/video drift, corrupt or sparse
+  packet timestamps, missing scenes, subtitle clipping, and end-screen conflicts.
+- Block export when audio/video duration drift exceeds 100 ms, the composed
+  duration differs from its three inputs by more than 250 ms, or the video
+  packet timeline contains a gap above 200 ms.
 - Promote an `.incomplete` package atomically only after all checks pass.
 
 ## Quality Gates
@@ -171,6 +181,8 @@ The current VoxCPM2 checkpoint encodes reference audio at 16 kHz and produces ou
 - Subtitle sync sampling and full structural validation pass.
 - All scenes pass content, period, anatomy, text, and watermark review.
 - Final video is native 2K and contains valid continuous audio/video streams.
+- The uploaded private asset exposes an English caption track and sampled
+  beginning/middle/end cues match the audio before publication.
 - Metadata, timestamps, playlist target, and next-chapter destination are valid.
 - Platform copyright/check status is clear before public scheduling.
 

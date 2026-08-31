@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -13,7 +14,7 @@ import soundfile as sf
 
 from .config import BookConfig
 from .io import atomic_write_json, atomic_write_text, read_json, sha256_file
-from .paths import ClassicPaths, chapter_id
+from .paths import ClassicPaths
 from .qc import qc_chapter
 
 
@@ -75,6 +76,44 @@ def _youtube_timestamp(seconds: float) -> str:
     hours, remainder = divmod(total, 3600)
     minutes, secs = divmod(remainder, 60)
     return f"{hours}:{minutes:02d}:{secs:02d}" if hours else f"{minutes}:{secs:02d}"
+
+
+def _parse_srt_timestamp(value: str) -> float:
+    match = re.fullmatch(r"(\d{2}):(\d{2}):(\d{2}),(\d{3})", value)
+    if not match:
+        raise ChapterPackageError(f"Invalid SRT timestamp: {value}")
+    hours, minutes, seconds, milliseconds = (int(part) for part in match.groups())
+    return hours * 3600 + minutes * 60 + seconds + milliseconds / 1000
+
+
+def _shift_srt_timeline(value: str, offset_sec: float) -> str:
+    if offset_sec < 0:
+        raise ChapterPackageError("SRT timeline offset cannot be negative")
+    timeline = re.compile(
+        r"(?m)^(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})$"
+    )
+    matches = list(timeline.finditer(value))
+    if not matches:
+        raise ChapterPackageError("SRT file contains no timestamp rows")
+
+    def shifted(match: re.Match[str]) -> str:
+        start = _timestamp(_parse_srt_timestamp(match.group(1)) + offset_sec, srt=True)
+        end = _timestamp(_parse_srt_timestamp(match.group(2)) + offset_sec, srt=True)
+        return f"{start} --> {end}"
+
+    return timeline.sub(shifted, value)
+
+
+def _write_youtube_captions(paths: ClassicPaths, chapter: int, intro_duration: float) -> Path:
+    source = paths.subtitle_srt(chapter)
+    if not source.is_file():
+        raise ChapterPackageError(f"Body captions are missing: {source}")
+    output = source.with_name(f"{source.stem}.youtube.srt")
+    atomic_write_text(
+        output,
+        _shift_srt_timeline(source.read_text(encoding="utf-8-sig"), intro_duration),
+    )
+    return output
 
 
 def _subtitle_chunks(text: str, duration: float) -> list[tuple[str, float]]:
@@ -190,29 +229,122 @@ def render_body_video(repo_root: Path, config: BookConfig, chapter: int, *, forc
 
 def _probe(repo_root: Path, path: Path) -> dict[str, Any]:
     result = _run(
-        ["ffprobe", "-v", "error", "-show_entries", "format=duration,size", "-show_entries", "stream=codec_name,codec_type,width,height,sample_rate,channels", "-of", "json", str(path)],
+        [
+            "ffprobe", "-v", "error", "-show_entries", "format=duration,size",
+            "-show_entries",
+            "stream=codec_name,codec_type,width,height,sample_rate,channels,duration,time_base,avg_frame_rate,nb_frames",
+            "-of", "json", str(path),
+        ],
         cwd=repo_root,
     )
     return json.loads(result.stdout)
 
 
+def _normalized_concat_command(inputs: list[Path], output: Path) -> list[str]:
+    if len(inputs) != 3:
+        raise ChapterPackageError("Final chapter composition requires intro, body, and outro")
+    command = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
+    for path in inputs:
+        command.extend(["-i", str(path)])
+    filters: list[str] = []
+    for index in range(3):
+        filters.append(
+            f"[{index}:v]fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v{index}]"
+        )
+        filters.append(
+            f"[{index}:a]aresample=48000,"
+            "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
+            f"asetpts=PTS-STARTPTS[a{index}]"
+        )
+    filters.append("[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[vout][aout]")
+    command.extend(
+        [
+            "-filter_complex", ";".join(filters), "-map", "[vout]", "-map", "[aout]",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2",
+            "-movflags", "+faststart", str(output),
+        ]
+    )
+    return command
+
+
+def _video_packet_timeline(repo_root: Path, path: Path) -> dict[str, Any]:
+    result = _run(
+        [
+            "ffprobe", "-v", "error", "-select_streams", "v:0",
+            "-show_entries", "packet=dts_time", "-of", "csv=p=0", str(path),
+        ],
+        cwd=repo_root,
+    )
+    timestamps: list[float] = []
+    for row in result.stdout.splitlines():
+        value = row.split(",", maxsplit=1)[0].strip()
+        try:
+            timestamp = float(value)
+        except ValueError:
+            continue
+        if math.isfinite(timestamp):
+            timestamps.append(timestamp)
+    if len(timestamps) < 2:
+        raise ChapterPackageError(f"Video packet timeline is unavailable: {path}")
+    gaps = [current - previous for previous, current in zip(timestamps, timestamps[1:], strict=False)]
+    positive_gaps = [gap for gap in gaps if gap >= 0]
+    if not positive_gaps:
+        raise ChapterPackageError(f"Video packet timeline is not monotonic: {path}")
+    return {
+        "packetCount": len(timestamps),
+        "firstDtsSec": round(timestamps[0], 6),
+        "lastDtsSec": round(timestamps[-1], 6),
+        "maxPacketGapSec": round(max(positive_gaps), 6),
+    }
+
+
+def _validate_composed_video(
+    repo_root: Path, inputs: list[Path], output: Path
+) -> dict[str, Any]:
+    probe = _probe(repo_root, output)
+    streams = probe.get("streams") or []
+    video = next((row for row in streams if row.get("codec_type") == "video"), None)
+    audio = next((row for row in streams if row.get("codec_type") == "audio"), None)
+    if not video or not audio:
+        raise ChapterPackageError("Final chapter video must contain one video and one audio stream")
+    video_duration = float(video.get("duration") or probe["format"]["duration"])
+    audio_duration = float(audio.get("duration") or probe["format"]["duration"])
+    av_drift = abs(video_duration - audio_duration)
+    if av_drift > 0.1:
+        raise ChapterPackageError(f"Final audio/video duration drift is {av_drift:.3f}s")
+    expected_duration = sum(float(_probe(repo_root, path)["format"]["duration"]) for path in inputs)
+    actual_duration = float(probe["format"]["duration"])
+    duration_drift = abs(expected_duration - actual_duration)
+    if duration_drift > 0.25:
+        raise ChapterPackageError(
+            f"Final duration differs from intro/body/outro by {duration_drift:.3f}s"
+        )
+    timeline = _video_packet_timeline(repo_root, output)
+    if float(timeline["maxPacketGapSec"]) > 0.2:
+        raise ChapterPackageError(
+            f"Final video contains a {timeline['maxPacketGapSec']:.3f}s packet gap"
+        )
+    return {
+        "audioVideoDurationDriftSec": round(av_drift, 6),
+        "inputOutputDurationDriftSec": round(duration_drift, 6),
+        **timeline,
+        "status": "PASS",
+    }
+
+
 def compose_final_video(repo_root: Path, config: BookConfig, chapter: int, *, force: bool = False) -> Path:
     paths = ClassicPaths(repo_root, config.slug)
     output = paths.final_video(chapter)
-    if output.is_file() and not force:
-        return output
     inputs = [paths.intro_video(chapter), paths.body_video(chapter), paths.outro_video(chapter)]
     if not all(path.is_file() for path in inputs):
         raise ChapterPackageError(f"Intro/body/outro inputs are incomplete for chapter {chapter}")
-    list_path = paths.video_dir(chapter) / f".{chapter_id(chapter)}.concat.txt"
-    list_path.write_text("\n".join(f"file '{path.resolve().as_posix()}'" for path in inputs) + "\n", encoding="utf-8")
-    try:
-        _run(
-            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(list_path), "-c", "copy", "-movflags", "+faststart", str(output)],
-            cwd=repo_root,
-        )
-    finally:
-        list_path.unlink(missing_ok=True)
+    if output.is_file() and not force:
+        _validate_composed_video(repo_root, inputs, output)
+        return output
+    output.parent.mkdir(parents=True, exist_ok=True)
+    _run(_normalized_concat_command(inputs, output), cwd=repo_root)
+    _validate_composed_video(repo_root, inputs, output)
     return output
 
 
@@ -225,6 +357,9 @@ def write_youtube_package(repo_root: Path, config: BookConfig, chapter: int) -> 
     duration = float(video_probe["format"]["duration"])
     body_duration = float(_probe(repo_root, paths.body_video(chapter))["format"]["duration"])
     intro_duration = float(_probe(repo_root, paths.intro_video(chapter))["format"]["duration"])
+    inputs = [paths.intro_video(chapter), paths.body_video(chapter), paths.outro_video(chapter)]
+    timeline_validation = _validate_composed_video(repo_root, inputs, paths.final_video(chapter))
+    youtube_captions = _write_youtube_captions(paths, chapter, intro_duration)
     outro_start = intro_duration + body_duration
     title = f"Persuasion Chapter {chapter}: {copy['hook']} | Jane Austen Full Audiobook"
     if len(title) > 100:
@@ -262,7 +397,7 @@ Subscribe to the English Listening Room and continue the story with the next cha
         "public domain audiobook", "British literature", "Regency novel", "English Listening Room", *copy["keywords"],
     ]
     report = {
-        "schema": "classic-listening-youtube-package-v1",
+        "schema": "classic-listening-youtube-package-v2",
         "book": config.title,
         "author": config.author,
         "chapter": chapter,
@@ -277,7 +412,8 @@ Subscribe to the English Listening Room and continue the story with the next cha
         "durationSec": duration,
         "video": paths.final_video(chapter).relative_to(repo_root).as_posix(),
         "thumbnail": paths.thumbnail(chapter).relative_to(repo_root).as_posix(),
-        "captions": paths.subtitle_srt(chapter).relative_to(repo_root).as_posix(),
+        "captions": youtube_captions.relative_to(repo_root).as_posix(),
+        "captionIntroOffsetSec": round(intro_duration, 3),
     }
     atomic_write_json(paths.youtube_report(chapter), report)
 
@@ -285,7 +421,7 @@ Subscribe to the English Listening Room and continue the story with the next cha
     export_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(paths.final_video(chapter), export_dir / f"persuasion-chapter-{chapter:02d}.mp4")
     shutil.copy2(paths.thumbnail(chapter), export_dir / f"persuasion-chapter-{chapter:02d}-thumbnail.png")
-    shutil.copy2(paths.subtitle_srt(chapter), export_dir / f"persuasion-chapter-{chapter:02d}.srt")
+    shutil.copy2(youtube_captions, export_dir / f"persuasion-chapter-{chapter:02d}.srt")
     atomic_write_text(export_dir / "title.txt", title)
     atomic_write_text(export_dir / "description.txt", description)
     atomic_write_text(export_dir / "tags.txt", ", ".join(tags))
@@ -311,7 +447,11 @@ Subscribe to the English Listening Room and continue the story with the next cha
         "sourceSha256": sha256_file(paths.source_text(chapter)),
         "videoSha256": sha256_file(paths.final_video(chapter)),
         "thumbnailSha256": sha256_file(paths.thumbnail(chapter)),
-        "captionsSha256": sha256_file(paths.subtitle_srt(chapter)),
+        "captionsSha256": sha256_file(youtube_captions),
+        "bodyCaptionsSha256": sha256_file(paths.subtitle_srt(chapter)),
+        "captionIntroOffsetSec": round(intro_duration, 3),
+        "compositionMethod": "timestamp-reset filter concat with full H.264/AAC re-encode",
+        "timelineValidation": timeline_validation,
         "videoProbe": video_probe,
         "titleLength": len(title),
         "exportDirectory": export_dir.relative_to(repo_root).as_posix(),

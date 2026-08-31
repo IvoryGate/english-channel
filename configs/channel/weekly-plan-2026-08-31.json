@@ -16,7 +16,7 @@
     "method": "docs/shows/LONG_FORM_SCRIPT_METHOD.md"
   },
   "publicationSlots": [
-    {"contentId": "content:classic_listening:persuasion_chapter_002", "scheduledAt": "2026-08-31T08:00:00+08:00", "youtubeId": "tdTlhg49vTk", "remoteAction": "uploaded_private_processing", "checks": "local_pass_remote_processing"},
+    {"contentId": "content:classic_listening:persuasion_chapter_002", "scheduledAt": "2026-08-31T08:00:00+08:00", "youtubeId": "vGlh8DYpLP4", "replacesYoutubeId": "tdTlhg49vTk", "remoteAction": "published_recovery", "checks": "media_caption_and_platform_pass"},
     {"contentId": "content:shorts_main:elr-s-012", "scheduledAt": "2026-08-31T12:30:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-013", "scheduledAt": "2026-08-31T18:00:00+08:00", "cluster": "conversation_recovery", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:series_b:episode_021", "scheduledAt": "2026-08-31T20:00:00+08:00", "youtubeId": "ezuZR_Xc8MA", "format": "standard", "remoteAction": "uploaded_private", "checks": "local_pass_remote_checks_pending"},
