@@ -76,3 +76,22 @@ workspace/dialogue_podcast_research/youtube_corpus/analysis/youtube_research_rep
 ```
 
 Scriptwriters read aggregate patterns via [`.cursor/skills/dialogue-podcast-scriptwriting/RESEARCH.md`](../../.cursor/skills/dialogue-podcast-scriptwriting/RESEARCH.md); selection records expose per-topic `differentiationAngle`.
+
+## Adjacent long-form reference cohort
+
+The canonical scraper list above remains focused on comparable English
+learning channels. Weekly long-form investigation must also inspect a small
+manual adjacent cohort so the channel learns topic and retention mechanics
+without pretending that all competitors have the same audience:
+
+| Cohort | Examples | Study | Do not import |
+| --- | --- | --- | --- |
+| Slow-English life ideas | Slow English Podcast, Speak English With Class | Simple-language pacing, chapter movement, life-topic packaging | Celebrity imitation, invented quotes, repetitive padding |
+| Evidence-led psychology | Therapy in a Nutshell | Clear distinctions, demonstrations, responsible scope | Clinical advice without primary-source review |
+| Accessible philosophy | Daily Stoic, TED-Ed, current Stoicism channels | One idea, historical context, modern application | Sensational fear, quote laundering, authority theater |
+| Mainstream women-focused self-development | Mel Robbins, A Better You, The Balance Theory | Emotional specificity, lived experience, community questions | Personality copying or abrupt channel rebranding |
+
+Record manual evidence in the dated market report or weekly plan. Require
+publication date, views, runtime, opening promise, structural device, risk, and
+a differentiation angle. The current baseline is
+[`LONG_FORM_MARKET_RESEARCH_2026-09-01.md`](LONG_FORM_MARKET_RESEARCH_2026-09-01.md).

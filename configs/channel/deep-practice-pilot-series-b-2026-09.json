@@ -1,10 +1,14 @@
 {
   "schema": "youtube-deep-practice-brief-v1",
-  "status": "script_and_manifest_ready",
+  "status": "completed_as_standard_deep_runtime_failed",
   "series": "series_b",
   "workingTitle": "They Speak Too Fast — Stay in the Conversation | A2-B1 Deep Practice",
   "viewerJob": "Recover when the first answer is understood but the next sentence arrives too quickly.",
   "targetDurationMinutes": [25, 35],
+  "actualDuration": "00:14:46",
+  "youtubeId": "omDZHS1e4OM",
+  "formatResult": "standard",
+  "deepPracticeContractPass": false,
   "targetPublishSlot": "2026-09-03T20:00:00+08:00",
   "successHypothesis": "A guided real-time listening workout will increase qualified watch hours and returning viewers without weakening completion quality.",
   "structure": [
@@ -23,13 +27,15 @@
     "holdConstant": ["publish_day", "publish_time", "thumbnail_family", "viewer_level"],
     "decisionWindows": ["T+7d", "T+28d"],
     "primaryMetrics": ["qualified_watch_hours", "watch_minutes_per_1000_impressions", "returning_viewers"],
-    "guardrails": ["first_30_second_retention", "production_cost_per_watch_hour"]
+    "guardrails": ["first_30_second_retention", "production_cost_per_watch_hour"],
+    "treatmentValidity": "invalid_duration_below_25_minutes"
   },
   "production": {
     "script": "passed_editorial_and_validator_gates",
-    "audio": "queued_after_classics_gpu_run",
-    "visuals": "thumbnail_and_video_background_ready",
-    "package": "blocked_by_media",
-    "releaseReservation": "not_created"
+    "audio": "complete",
+    "visuals": "complete",
+    "package": "complete",
+    "releaseReservation": "scheduled_2026-09-03T20:00:00+08:00",
+    "classificationNote": "The finished media is a valid standard episode but cannot count as a Deep Practice treatment."
   }
 }

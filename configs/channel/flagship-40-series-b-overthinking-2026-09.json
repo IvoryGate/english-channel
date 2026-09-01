@@ -1,0 +1,101 @@
+{
+  "schema": "youtube-flagship-40-brief-v1",
+  "status": "outline_ready",
+  "series": "series_b",
+  "episode": 24,
+  "contentId": "content:series_b:episode_024",
+  "targetPublishSlot": "2026-09-10T20:00:00+08:00",
+  "audience": {
+    "level": "A2-B1",
+    "primary": "United States women aged 25-44 who use English listening for both practice and emotional utility",
+    "viewerJob": "Slow an overthinking loop long enough to separate the known fact, the added story, and one next action."
+  },
+  "workingTitle": "Stop Overthinking Tonight — A 40-Minute English Listening Reset | A2-B1",
+  "topicPillar": "psychology",
+  "centralDevice": "fact_story_next_step",
+  "languageHandles": [
+    "What do I know for sure?",
+    "What story am I adding?",
+    "What is the next small step?"
+  ],
+  "demandEvidence": {
+    "capturedOn": "2026-09-01",
+    "youtubeStudio": [
+      {"query": "how to stop overthinking", "volume": "high"},
+      {"query": "overthinking motivational video", "volume": "high"}
+    ],
+    "googleTrends": {
+      "geo": "US",
+      "property": "youtube_search",
+      "window": "trailing_90_days",
+      "normalizedAverage": 31,
+      "risingRelatedQuery": "how to stop overthinking in a relationship"
+    },
+    "candidateScore": 84
+  },
+  "hostTension": {
+    "riley": "Wants to analyze the message until the intention is certain.",
+    "sam": "Wants to send an impulsive reply to end the discomfort.",
+    "resolution": "Neither certainty nor impulsiveness is required; both hosts test a smaller next action."
+  },
+  "runtimeContract": {
+    "allowedMinutes": [35, 45],
+    "targetMinutes": [38, 42],
+    "spokenWordTarget": [5200, 6200],
+    "measuredRenderRequired": true,
+    "underMinimumAction": "reclassify_as_extended_and_leave_flagship_slot_unfilled"
+  },
+  "structure": [
+    {"start": "00:00", "end": "03:00", "words": [350, 430], "beat": "The unread message", "change": "cold_open_to_promise", "deliverable": "A specific late-night message and the three-question device before explanation."},
+    {"start": "03:00", "end": "09:00", "words": [760, 900], "beat": "What happened versus what the mind wrote", "change": "story_to_visible_sort", "deliverable": "Hosts sort a real scene into fact and added story, with one reasonable disagreement."},
+    {"start": "09:00", "end": "15:00", "words": [760, 900], "beat": "The reply you should not send yet", "change": "analysis_to_role_play", "deliverable": "Two plausible replies and their consequences; no perfect-answer lecture."},
+    {"start": "15:00", "end": "21:00", "words": [760, 900], "beat": "Overthinking in a friendship", "change": "new_relationship_context", "deliverable": "A changed-condition dialogue in which silence may mean several things."},
+    {"start": "21:00", "end": "27:00", "words": [720, 860], "beat": "Listen, pause, answer", "change": "viewer_participation", "deliverable": "Three guided cases with decreasing support and intentional silence."},
+    {"start": "27:00", "end": "33:00", "words": [760, 900], "beat": "Work and future loops", "change": "relationship_to_work", "deliverable": "The same device under a practical decision where action matters."},
+    {"start": "33:00", "end": "38:00", "words": [620, 760], "beat": "Natural-speed conversation", "change": "supported_to_natural_speed", "deliverable": "One uninterrupted dialogue followed by a short listener check."},
+    {"start": "38:00", "end": "42:00", "words": [480, 610], "beat": "The message is still there", "change": "opening_callback", "deliverable": "Return to the opening, choose one next step, and ask one community question."}
+  ],
+  "editorialSafety": {
+    "scope": "education_and_reflection_not_therapy",
+    "forbiddenPromises": ["cure anxiety", "stop all intrusive thoughts", "replace professional care"],
+    "diagnosticLanguage": "forbidden",
+    "publicFigureVoiceOrFalseAttribution": "forbidden",
+    "sourceNotesRequired": true
+  },
+  "packagingExperiment": {
+    "nativeYouTubeTest": true,
+    "holdConstant": ["video", "publish_time", "description", "audience_level"],
+    "variants": [
+      {"id": "A", "title": "Stop Overthinking Tonight — A 40-Minute English Listening Reset | A2-B1", "thumbnailText": "STOP THE LOOP", "angle": "direct_relief"},
+      {"id": "B", "title": "How to Stop Overthinking — Listen Before You Text Back | Easy English", "thumbnailText": "DON'T TEXT YET", "angle": "specific_relationship_moment"},
+      {"id": "C", "title": "Your Mind Added a Story — 40 Minutes to Slow It Down | English Podcast", "thumbnailText": "FACT OR STORY?", "angle": "curiosity_device"}
+    ],
+    "visualContract": "bright expressive anime-style scene for US women, large flexible playful type generated with the artwork, one focal face and one phone/message cue, no dark generic card overlay"
+  },
+  "derivatives": [
+    {"format": "short", "hook": "What do I know for sure?", "purpose": "device_test"},
+    {"format": "short", "hook": "Don't answer the story your mind invented", "purpose": "relationship_variant"},
+    {"format": "short", "hook": "Fact, story, next step — can you sort these?", "purpose": "interactive_variant"},
+    {"format": "community_poll", "question": "Which loop is hardest to stop: a message, a work mistake, or a future decision?", "purpose": "next_episode_signal"}
+  ],
+  "production": {
+    "researchAndSources": "in_progress",
+    "script": "queued",
+    "scriptLockBy": "2026-09-03T12:00:00+08:00",
+    "audio": "blocked_by_script",
+    "visuals": "blocked_by_script",
+    "captions": "blocked_by_audio",
+    "package": "blocked_by_media",
+    "measuredRuntime": null,
+    "releaseReservation": "planned_after_release_gates"
+  },
+  "success": {
+    "decisionWindows": ["T+24h", "T+7d", "T+28d"],
+    "primaryMetric": "watch_minutes_per_1000_impressions",
+    "targets": {
+      "thumbnailCtrAtLeast": 0.035,
+      "first30SecondRetentionAtLeast": 0.55,
+      "averageViewDurationSecondsAtLeast": 480
+    }
+  }
+}
