@@ -1,0 +1,154 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-09-07",
+  "strategy": "english_is_the_delivery_format_useful_life_ideas_are_the_content_engine",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "scope": "produce_upload_and_schedule_after_all_release_gates_pass",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
+    "controlPlaneRemoteMutationAuthority": false
+  },
+  "portfolio": {
+    "longFormCount": 8,
+    "dialogueCount": 6,
+    "classicListeningCount": 2,
+    "shortsCount": 14,
+    "dialogueTargetMinutes": [104, 140],
+    "topicPillarsRequired": 4,
+    "method": "docs/shows/LONG_FORM_SCRIPT_METHOD.md",
+    "research": "docs/shows/LONG_FORM_MARKET_RESEARCH_2026-09-01.md"
+  },
+  "productionDeadlines": {
+    "standardScriptsLockedBy": "2026-09-02T18:00:00+08:00",
+    "extendedScriptsLockedBy": "2026-09-03T18:00:00+08:00",
+    "flagshipScriptLockedBy": "2026-09-03T12:00:00+08:00",
+    "flagshipAudioAndMeasuredRuntimeBy": "2026-09-05T12:00:00+08:00",
+    "allDialoguePackagesReadyBy": "2026-09-06T12:00:00+08:00",
+    "allUploadsReservedBy": "2026-09-06T18:00:00+08:00"
+  },
+  "formatContracts": {
+    "standard": {
+      "durationMinutes": [10, 15],
+      "spokenWordTarget": [1400, 2100]
+    },
+    "extended": {
+      "durationMinutes": [18, 25],
+      "spokenWordTarget": [2600, 3600]
+    },
+    "flagship_40": {
+      "durationMinutes": [35, 45],
+      "targetMinutes": [38, 42],
+      "spokenWordTarget": [5200, 6200],
+      "measuredMediaDurationRequired": true,
+      "minimumStimulusChanges": 10
+    }
+  },
+  "publicationSlots": [
+    {"contentId": "content:classic_listening:persuasion_chapter_004", "scheduledAt": "2026-09-07T08:00:00+08:00", "format": "classic_listening", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-040", "scheduledAt": "2026-09-07T12:30:00+08:00", "source": "series_b_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-041", "scheduledAt": "2026-09-07T18:00:00+08:00", "source": "series_b_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_023", "scheduledAt": "2026-09-07T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-042", "scheduledAt": "2026-09-08T12:30:00+08:00", "source": "series_a_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-043", "scheduledAt": "2026-09-08T18:00:00+08:00", "source": "series_a_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_023", "scheduledAt": "2026-09-08T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-044", "scheduledAt": "2026-09-09T12:30:00+08:00", "source": "series_c_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-045", "scheduledAt": "2026-09-09T18:00:00+08:00", "source": "series_c_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_023", "scheduledAt": "2026-09-09T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:classic_listening:persuasion_chapter_005", "scheduledAt": "2026-09-10T08:00:00+08:00", "format": "classic_listening", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-046", "scheduledAt": "2026-09-10T12:30:00+08:00", "source": "series_b_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-047", "scheduledAt": "2026-09-10T18:00:00+08:00", "source": "series_b_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_024", "scheduledAt": "2026-09-10T20:00:00+08:00", "format": "flagship_40", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-048", "scheduledAt": "2026-09-11T12:30:00+08:00", "source": "series_a_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-049", "scheduledAt": "2026-09-11T18:00:00+08:00", "source": "series_a_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_024", "scheduledAt": "2026-09-11T20:00:00+08:00", "format": "extended", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-050", "scheduledAt": "2026-09-12T12:30:00+08:00", "source": "series_c_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-051", "scheduledAt": "2026-09-12T18:00:00+08:00", "source": "series_c_episode_024", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_024", "scheduledAt": "2026-09-12T20:00:00+08:00", "format": "extended", "remoteAction": "planned", "checks": "pending"},
+
+    {"contentId": "content:shorts_main:elr-s-052", "scheduledAt": "2026-09-13T12:30:00+08:00", "source": "weekly_topic_poll", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-053", "scheduledAt": "2026-09-13T18:00:00+08:00", "source": "flagship_comment_followup", "remoteAction": "planned", "checks": "pending"}
+  ],
+  "dialogueBriefs": [
+    {
+      "contentId": "content:series_b:episode_023",
+      "format": "standard",
+      "topicPillar": "everyday_life",
+      "workingTitle": "A Bad Morning Is Not a Bad Life — Reset the Next Ten Minutes | A2-B1",
+      "centralIdea": "A day can be redirected by the next small choice, not rescued by forced positivity.",
+      "status": "research_ready"
+    },
+    {
+      "contentId": "content:series_a:episode_023",
+      "format": "standard",
+      "topicPillar": "psychology",
+      "workingTitle": "You Keep Comparing Your Life — Come Back to Your Own Week | B1-B2",
+      "centralIdea": "Replace a global comparison with one local question about this week.",
+      "status": "research_ready"
+    },
+    {
+      "contentId": "content:series_c:episode_023",
+      "format": "standard",
+      "topicPillar": "relationships",
+      "workingTitle": "When Kindness Becomes Avoidance — Say the Difficult Thing | B2-C1",
+      "centralIdea": "Kindness includes clear information when silence transfers the cost to someone else.",
+      "status": "research_ready"
+    },
+    {
+      "contentId": "content:series_b:episode_024",
+      "format": "flagship_40",
+      "topicPillar": "psychology",
+      "workingTitle": "Stop Overthinking Tonight — A 40-Minute English Listening Reset | A2-B1",
+      "centralIdea": "Separate what happened, what the mind added, and the next action small enough to take.",
+      "demandEvidence": ["youtube_studio_high_volume_how_to_stop_overthinking", "google_trends_overthinking_31"],
+      "candidateScore": 84,
+      "status": "outline_queued"
+    },
+    {
+      "contentId": "content:series_a:episode_024",
+      "format": "extended",
+      "topicPillar": "resilience",
+      "workingTitle": "Starting Again Is a Skill — Rebuild After a Broken Routine | B1-B2",
+      "centralIdea": "A restart should be designed for the day after failure, not the day of motivation.",
+      "candidateScore": 74,
+      "status": "research_ready"
+    },
+    {
+      "contentId": "content:series_c:episode_024",
+      "format": "extended",
+      "topicPillar": "philosophy",
+      "workingTitle": "What You Can Control — A Stoic Conversation for a Difficult Day | B2-C1",
+      "centralIdea": "The control distinction is a decision aid, not a command to suppress emotion.",
+      "demandEvidence": ["youtube_studio_medium_volume_stoicism_podcast", "google_trends_stoicism_35"],
+      "candidateScore": 79,
+      "status": "source_review_queued"
+    }
+  ],
+  "flagshipStructure": [
+    {"startMinute": 0, "endMinute": 3, "beat": "cold_open_and_single_idea_promise"},
+    {"startMinute": 3, "endMinute": 9, "beat": "the_message_that_started_the_loop"},
+    {"startMinute": 9, "endMinute": 15, "beat": "fact_story_next_action_framework"},
+    {"startMinute": 15, "endMinute": 21, "beat": "relationship_overthinking_changed_condition"},
+    {"startMinute": 21, "endMinute": 27, "beat": "guided_listening_and_response_practice"},
+    {"startMinute": 27, "endMinute": 33, "beat": "work_and_future_overthinking_changed_condition"},
+    {"startMinute": 33, "endMinute": 38, "beat": "natural_speed_application_and_choice"},
+    {"startMinute": 38, "endMinute": 42, "beat": "opening_callback_and_tonight_action"}
+  ],
+  "releaseGates": {
+    "allDialogue": ["script_quality_pass", "audio_traceability_pass", "caption_sync_pass", "thumbnail_mobile_legibility_pass", "youtube_package_pass"],
+    "extended": ["measured_duration_18_to_25_minutes", "source_notes_complete_when_required"],
+    "flagship_40": ["measured_duration_35_to_45_minutes", "projected_target_38_to_42_minutes", "spoken_words_5200_to_6200_or_measured_equivalent", "stimulus_change_gap_no_more_than_4_minutes", "source_and_safety_review_pass", "three_native_ab_packaging_variants_ready"]
+  },
+  "decisionWindows": ["T+24h", "T+7d", "T+28d"],
+  "flagshipSuccessTargets": {
+    "thumbnailCtrAtLeast": 0.035,
+    "first30SecondRetentionAtLeast": 0.55,
+    "averageViewDurationSecondsAtLeast": 480,
+    "primaryMetric": "watch_minutes_per_1000_impressions"
+  }
+}

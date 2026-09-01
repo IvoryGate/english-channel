@@ -2,6 +2,12 @@
 
 This method converts the August 2026 competitor and TED transcript study into a repeatable writing system. It is a structural method, not a source-text library: competitor and TED wording must never be copied into an ELR script.
 
+The channel is not restricted to episodes about learning English. English is
+the delivery format; a useful life idea is often the content engine. Everyday
+life, relationships, psychology, resilience, and philosophy are valid topics
+when the language is comprehensible, the promise is honest, and the episode
+still gives the viewer a reason to listen, respond, or reflect in English.
+
 ## What the study actually found
 
 Competitor scripts are not uniformly better than ours. Many contain the same repeated affirmations, padded definitions, and artificial host symmetry that we want to remove. Their strongest episodes do four things better: they open inside a specific human moment, let a story run long enough to matter, organize the episode around one memorable device, and return to the opening tension at the end.
@@ -39,18 +45,51 @@ Internal headings may help production, but hosts must not announce an outline or
 - 07:00–11:00: guided practice or live repair;
 - 11:00–14:00: opening-scene callback and one viewer action.
 
-### Deep Practice: 25–35 minutes
+### Extended episode: 18–25 minutes
+
+- 00:00–00:45: concrete human tension;
+- 00:45–02:00: one useful idea, contrast, or line;
+- 02:00–07:00: first complete story or scene;
+- 07:00–12:00: complication or host disagreement;
+- 12:00–17:00: changed-condition application;
+- 17:00–22:00: guided participation or natural-speed replay;
+- 22:00–25:00: callback, next action, and optional series bridge.
+
+### Flagship 40: 35–45 minutes, target 38–42
 
 - 00:00–00:45: inciting scene with an unanswered question;
-- 00:45–02:00: one central idea and an immediate usable move;
-- 02:00–07:00: first complete scene or story;
-- 07:00–12:00: complication, disagreement, or failed attempt;
-- 12:00–18:00: guided practice with decreasing support;
-- 18:00–24:00: new context and pattern interruption;
-- 24:00–30:00: natural-speed replay and callback;
-- 30:00–35:00: optional final challenge and next-episode bridge.
+- 00:45–03:00: one central idea and the cost of leaving it unresolved;
+- 03:00–09:00: first lived story, not a list of definitions;
+- 09:00–15:00: host disagreement, failed attempt, or counterargument;
+- 15:00–21:00: changed-condition scene with a different consequence;
+- 21:00–27:00: guided participation, reflection, or language practice;
+- 27:00–33:00: third application with less support and more natural speed;
+- 33:00–38:00: synthesis through a decision, not an announced summary;
+- 38:00–42:00: opening callback, one next action, and a series bridge;
+- 42:00–45:00: optional earned extension only; never padding.
 
 Every two to four minutes, something must change: scene, pressure, question, speaker goal, listening speed, or participation mode.
+
+A Flagship 40 script normally contains 5,200–6,200 spoken English words,
+subject to measured voice speed. Word count is a planning check, not permission
+to pad. The rendered media duration is the release authority: an episode under
+35 minutes must be relabeled and cannot satisfy the weekly flagship slot.
+
+## Topic and evidence card
+
+Before drafting, record:
+
+- the current demand signal and its capture date;
+- why this audience can use the idea now;
+- the single claim the episode can responsibly support;
+- the factual, historical, psychological, or philosophical sources required;
+- the boundary between education/reflection and medical or therapeutic advice;
+- the competitor mechanics being studied and the element that makes our
+  treatment meaningfully different.
+
+Google Trends values are normalized relative interest, not search volume.
+YouTube Studio Trends and competitor velocity should be considered alongside
+channel fit; no one keyword automatically becomes an episode.
 
 ## Anti-AI gates
 
@@ -77,5 +116,10 @@ Before synthesis, record:
 - the changed conditions;
 - the opening callback;
 - the previous same-series episode and the structural difference.
+
+For Extended and Flagship 40 episodes, also record the projected spoken-word
+count, measured target voice speed, predicted runtime, and the minute-by-minute
+stimulus-change map. After rendering, replace the prediction with the probed
+media duration before changing production status to ready.
 
 The script validator flags empty-confirmation density as an editorial warning. A warning does not invalidate a legacy packaged episode, but every newly written script must resolve it before rendering.

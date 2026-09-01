@@ -1,7 +1,7 @@
 {
   "schema": "youtube-channel-programming-v1",
   "timezone": "Asia/Shanghai",
-  "channelPromise": "Understand real English and know what to say next.",
+  "channelPromise": "Understand real English through useful ideas and know what to say next.",
   "rollout": {
     "startsOn": "2026-08-24",
     "scaleStartsOn": "2026-08-31",
@@ -27,9 +27,9 @@
     {"surface": "series_a", "day": "tuesday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "series_c", "day": "wednesday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "classic_listening", "day": "thursday", "time": "08:00", "status": "active"},
-    {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "deep_practice", "status": "active"},
-    {"surface": "series_a", "day": "friday", "time": "20:00", "format": "deep_practice", "status": "active"},
-    {"surface": "series_c", "day": "saturday", "time": "20:00", "format": "deep_practice", "status": "active"},
+    {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "long_form_rotation", "status": "active"},
+    {"surface": "series_a", "day": "friday", "time": "20:00", "format": "long_form_rotation", "status": "active"},
+    {"surface": "series_c", "day": "saturday", "time": "20:00", "format": "long_form_rotation", "status": "active"},
     {"surface": "shorts", "day": "daily", "time": "12:30", "status": "active"},
     {"surface": "shorts", "day": "daily", "time": "18:00", "status": "active"}
   ],
@@ -46,18 +46,58 @@
   },
   "dialogueFormat": {
     "standardDurationMinutes": [10, 15],
-    "deepPracticeDurationMinutes": [25, 35],
-    "deepPracticeEpisodesPerWeek": 3,
-    "rotation": ["series_b", "series_a", "series_c"],
-    "requiredDeepPracticeBeats": [
+    "extendedDurationMinutes": [18, 25],
+    "flagship40DurationMinutes": [35, 45],
+    "flagship40TargetMinutes": [38, 42],
+    "weeklyMix": {
+      "standardEpisodes": 3,
+      "extendedEpisodes": 2,
+      "flagship40Episodes": 1
+    },
+    "flagshipRotation": ["series_b", "series_a", "series_c"],
+    "requiredFlagshipBeats": [
       "cold_open_tension",
-      "useful_line",
-      "three_scenario_dialogues",
-      "breakdown",
-      "guided_repetition",
-      "natural_speed_replay",
-      "viewer_challenge"
+      "single_idea_promise",
+      "lived_story",
+      "host_disagreement_or_failed_attempt",
+      "changed_condition_scenes",
+      "guided_participation",
+      "natural_speed_replay_or_application",
+      "opening_callback",
+      "viewer_next_action"
     ]
+  },
+  "topicPortfolio": {
+    "editorialRule": "English is the delivery format; useful life ideas are the content engine.",
+    "weeklyMinimumDistinctPillars": 4,
+    "pillars": [
+      {"id": "practical_english", "examples": ["real conversation", "listening", "workplace language"]},
+      {"id": "everyday_life", "examples": ["routines", "bad days", "friendship", "work and rest"]},
+      {"id": "relationships", "examples": ["boundaries", "trust", "conflict", "loneliness"]},
+      {"id": "psychology", "examples": ["overthinking", "self-esteem", "attention", "comparison"]},
+      {"id": "resilience", "examples": ["discipline", "positive thinking", "starting again", "small habits"]},
+      {"id": "philosophy", "examples": ["stoicism", "control", "meaning", "mortality", "mindfulness"]}
+    ],
+    "safety": {
+      "medicalClaimsRequirePrimarySources": true,
+      "attributedQuotesRequireVerification": true,
+      "genericCelebrityVoiceImitationForbidden": true
+    }
+  },
+  "trendResearch": {
+    "runDay": "monday",
+    "sources": ["youtube_studio_trends", "google_trends_youtube_search", "youtube_competitor_velocity"],
+    "trendEvidenceMaxAgeDays": 7,
+    "competitorEvidenceMaxAgeDays": 28,
+    "candidateScoreWeights": {
+      "demand": 30,
+      "audienceFit": 20,
+      "differentiation": 15,
+      "watchTimePotential": 15,
+      "visualPotential": 10,
+      "seriesPotential": 10
+    },
+    "minimumCandidateScore": 65
   },
   "community": {
     "postsPerWeek": 4,
@@ -86,6 +126,12 @@
       "subscribers_per_1000_views",
       "playlist_continuation",
       "production_cost_per_watch_hour"
-    ]
+    ],
+    "longFormRecoveryTargets": {
+      "thumbnailCtrAtLeast": 0.035,
+      "first30SecondRetentionAtLeast": 0.55,
+      "flagshipAverageViewDurationSecondsAtLeast": 480,
+      "evaluateAt": ["T+7d", "T+28d"]
+    }
   }
 }

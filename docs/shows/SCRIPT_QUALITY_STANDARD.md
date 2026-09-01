@@ -2,7 +2,7 @@
 
 Use this standard for every new or substantially revised A/B/C episode. It supplements the series bibles and supersedes any instruction to use a cold open or teaching loop verbatim.
 
-For 20–40 minute episodes, also follow `docs/shows/LONG_FORM_SCRIPT_METHOD.md`. Its human spine and anti-AI gates are required, not optional inspiration.
+For 18–45 minute episodes, also follow `docs/shows/LONG_FORM_SCRIPT_METHOD.md`. Its human spine, runtime gates, and anti-AI gates are required, not optional inspiration.
 
 ## The viewer contract
 
@@ -47,6 +47,13 @@ Do not promise that one small framework lets a learner say "almost anything", so
 - give feedback using observation, impact, and a request;
 - join a conversation already in progress with one bridge line.
 
+Life, psychology, and philosophy topics must make similarly narrow promises.
+They may help a viewer examine a thought, compare two choices, or try one
+reflection practice. They must not promise to cure anxiety, depression,
+trauma, insomnia, or another health condition. Attribute historical ideas and
+quotes only after checking a reliable source; do not write a motivational
+speech in the voice of a living public figure.
+
 ## Titles and descriptions
 
 ### Title
@@ -72,3 +79,8 @@ Before human approval, the writer must state:
 - what differs from the prior episode in the same series.
 
 The validator's empty-confirmation warning must be zero for every newly written script. Legacy packaged episodes may retain a warning only when changing the draft would invalidate already rendered audio/video; record that exception in the weekly plan.
+
+For `flagship_40`, the review card must also include projected runtime, spoken
+word count, a stimulus-change map, source notes, and the probed rendered-media
+duration. A label, title, or manifest target does not override the measured
+duration gate.

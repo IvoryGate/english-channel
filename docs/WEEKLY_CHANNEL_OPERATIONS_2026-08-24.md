@@ -67,11 +67,13 @@ authority.
    cadence. Scale to a second 18:00 Short only after seven ready items are
    present in the scheduled buffer, rolling QC is at least 95%, and the
    identity store has no unresolved collision.
-3. The first 25-35 minute First Steps Deep Practice pilot now has a production
-   brief in `configs/channel/deep-practice-pilot-series-b-2026-09.json`; script
-   production is queued for the 2026-09-08 slot. Standard 10-15 minute episodes
-   remain in the weekly mix; the pilot adds scenarios, breakdown, guided
-   repetition, and a natural-speed replay rather than padding.
+3. Historical outcome: the first intended 25-35 minute First Steps Deep
+   Practice pilot rendered at 14:46 and is therefore classified as a standard
+   episode, not a valid duration treatment. The current recovery contract is
+   one 35-45 minute Flagship 40, two 18-25 minute Extended episodes, and three
+   10-15 minute Standard episodes per week. See
+   `configs/channel/weekly-plan-2026-09-07.json`; measured media duration, not
+   the planned label, controls classification.
 4. At T+24h, record delivery anomalies only. At T+7d, review packaging and the
    opening. At T+28d, decide the next portfolio allocation.
 

@@ -304,10 +304,19 @@ First Steps Tuesday evening, Daily Talk Thursday evening, Polished English
 Saturday evening, and Shorts every day at 12:30. Classic Listening
 occupies its slot only after narrator acceptance.
 
-Dialogue uses two duration classes. Standard episodes remain 10-15 minutes;
-one 25-35 minute Deep Practice episode rotates across the three series each
-week. A Deep Practice episode must add scenario breadth, guided practice, and a
-natural-speed replay. Duration alone is not a production goal.
+Dialogue uses three duration classes during long-form recovery. Standard
+episodes remain 10-15 minutes, Extended episodes run 18-25 minutes, and one
+35-45 minute Flagship 40 episode rotates across the three series each week with
+a target of 38-42 minutes. A flagship must add story depth, changed conditions,
+guided participation, and a callback; a measured render under 35 minutes
+cannot carry the flagship label. Duration alone is not a production goal.
+
+Topic selection is no longer restricted to explicit language mechanics.
+Everyday life, relationships, psychology, resilience, and philosophy may drive
+an episode while comprehensible English remains the delivery promise. Weekly
+topic lock requires fresh YouTube Studio Trends evidence, a US YouTube Search
+comparison in Google Trends, and competitor-velocity review under the scoring
+contract in `configs/channel/programming.json`.
 
 ### Daily
 
