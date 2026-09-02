@@ -1,0 +1,80 @@
+{
+  "schema": "youtube-flagship-40-brief-v1",
+  "status": "outline_ready",
+  "series": "series_c",
+  "episode": 25,
+  "contentId": "content:series_c:episode_025",
+  "targetPublishSlot": "2026-09-13T08:00:00+08:00",
+  "audience": {
+    "level": "B2-C1",
+    "viewerJob": "Use the Stoic control distinction without denying emotion or pretending every outcome is a personal choice."
+  },
+  "workingTitle": "What You Can Control — A 40-Minute Stoic English Conversation | B2-C1",
+  "topicPillar": "philosophy",
+  "centralDevice": "choice_influence_acceptance",
+  "languageHandles": [
+    "This part is mine to decide.",
+    "I can influence it, but I cannot guarantee it.",
+    "I do not control the outcome; I control the next honest action."
+  ],
+  "demandEvidence": {
+    "capturedOn": "2026-09-01",
+    "youtubeStudio": [
+      {"query": "stoicism philosophy podcast", "volume": "medium"},
+      {"query": "stoicism philosophy audiobook", "volume": "medium"}
+    ],
+    "googleTrends": {
+      "geo": "US",
+      "property": "youtube_search",
+      "window": "trailing_90_days",
+      "normalizedAverage": 35,
+      "risingRelatedQuery": "stoicism podcast"
+    },
+    "candidateScore": 81
+  },
+  "hostTension": {
+    "leo": "Treats control as a sharp binary and initially sounds emotionally detached.",
+    "mia": "Rejects any philosophy that turns grief, unfairness, or dependence into personal failure.",
+    "resolution": "They build a three-zone model: choice, influence, and acceptance, then test its limits."
+  },
+  "runtimeContract": {
+    "allowedMinutes": [35, 45],
+    "targetMinutes": [38, 42],
+    "spokenWordTarget": [5200, 6200],
+    "measuredRenderRequired": true,
+    "underMinimumAction": "reclassify_as_extended_and_leave_flagship_slot_unfilled"
+  },
+  "structure": [
+    {"start": "00:00", "end": "03:00", "beat": "The cancelled plan", "deliverable": "A concrete disappointment and the control question before any history lesson."},
+    {"start": "03:00", "end": "09:00", "beat": "A useful idea with a dangerous shortcut", "deliverable": "Introduce choice, influence, and acceptance while Mia challenges emotional suppression."},
+    {"start": "09:00", "end": "15:00", "beat": "Work decision", "deliverable": "Separate preparation, persuasion, and final outcome in a changed-condition dialogue."},
+    {"start": "15:00", "end": "21:00", "beat": "Relationship uncertainty", "deliverable": "Test the model where another person's freedom matters."},
+    {"start": "21:00", "end": "27:00", "beat": "Guided three-zone sort", "deliverable": "Listener classifies six cases with decreasing support."},
+    {"start": "27:00", "end": "33:00", "beat": "Loss, unfairness, and the limit of slogans", "deliverable": "Acknowledge what the model cannot solve and reject blame."},
+    {"start": "33:00", "end": "38:00", "beat": "Natural-speed dinner conversation", "deliverable": "Apply the model without announcing philosophical vocabulary."},
+    {"start": "38:00", "end": "42:00", "beat": "The plan is still cancelled", "deliverable": "Opening callback, one honest action, one reflective question."}
+  ],
+  "sourceRequirements": [
+    "Verify primary-text context for every attributed Stoic quotation.",
+    "Prefer paraphrase with named source over decorative quotation.",
+    "Distinguish ancient doctrine, modern interpretation, and ELR's teaching device."
+  ],
+  "packagingExperiment": {
+    "nativeYouTubeTest": true,
+    "variants": [
+      {"id": "A", "title": "What You Can Control — A 40-Minute Stoic English Conversation | B2-C1", "thumbnailText": "WHAT IS YOURS?"},
+      {"id": "B", "title": "You Cannot Control the Outcome — But This Part Is Yours | English Podcast", "thumbnailText": "CONTROL / RELEASE"},
+      {"id": "C", "title": "A Difficult Day, Three Honest Choices — Stoic English Listening", "thumbnailText": "CHOICE • INFLUENCE • ACCEPT"}
+    ]
+  },
+  "production": {
+    "researchAndSources": "queued",
+    "script": "queued",
+    "scriptLockBy": "2026-09-03T18:00:00+08:00",
+    "audio": "blocked_by_script",
+    "visuals": "blocked_by_script",
+    "package": "blocked_by_media",
+    "measuredRuntime": null,
+    "releaseReservation": "planned_after_release_gates"
+  }
+}

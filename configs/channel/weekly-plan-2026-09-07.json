@@ -10,20 +10,19 @@
     "controlPlaneRemoteMutationAuthority": false
   },
   "portfolio": {
-    "longFormCount": 8,
-    "dialogueCount": 6,
+    "longFormCount": 10,
+    "dialogueCount": 8,
     "classicListeningCount": 2,
     "shortsCount": 14,
-    "dialogueTargetMinutes": [104, 140],
+    "dialogueTargetMinutes": [130, 180],
     "topicPillarsRequired": 4,
     "method": "docs/shows/LONG_FORM_SCRIPT_METHOD.md",
     "research": "docs/shows/LONG_FORM_MARKET_RESEARCH_2026-09-01.md"
   },
   "productionDeadlines": {
     "standardScriptsLockedBy": "2026-09-02T18:00:00+08:00",
-    "extendedScriptsLockedBy": "2026-09-03T18:00:00+08:00",
-    "flagshipScriptLockedBy": "2026-09-03T12:00:00+08:00",
-    "flagshipAudioAndMeasuredRuntimeBy": "2026-09-05T12:00:00+08:00",
+    "flagshipScriptsLockedBy": "2026-09-03T18:00:00+08:00",
+    "flagshipAudioAndMeasuredRuntimeBy": "2026-09-05T18:00:00+08:00",
     "allDialoguePackagesReadyBy": "2026-09-06T12:00:00+08:00",
     "allUploadsReservedBy": "2026-09-06T18:00:00+08:00"
   },
@@ -56,22 +55,24 @@
 
     {"contentId": "content:shorts_main:elr-s-044", "scheduledAt": "2026-09-09T12:30:00+08:00", "source": "series_c_episode_023", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-045", "scheduledAt": "2026-09-09T18:00:00+08:00", "source": "series_c_episode_023", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_024", "scheduledAt": "2026-09-09T08:00:00+08:00", "format": "flagship_40", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:series_c:episode_023", "scheduledAt": "2026-09-09T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
 
     {"contentId": "content:classic_listening:persuasion_chapter_005", "scheduledAt": "2026-09-10T08:00:00+08:00", "format": "classic_listening", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-046", "scheduledAt": "2026-09-10T12:30:00+08:00", "source": "series_b_episode_024", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-047", "scheduledAt": "2026-09-10T18:00:00+08:00", "source": "series_b_episode_024", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_b:episode_024", "scheduledAt": "2026-09-10T20:00:00+08:00", "format": "flagship_40", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_b:episode_025", "scheduledAt": "2026-09-10T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
 
     {"contentId": "content:shorts_main:elr-s-048", "scheduledAt": "2026-09-11T12:30:00+08:00", "source": "series_a_episode_024", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-049", "scheduledAt": "2026-09-11T18:00:00+08:00", "source": "series_a_episode_024", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_a:episode_024", "scheduledAt": "2026-09-11T20:00:00+08:00", "format": "extended", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_a:episode_024", "scheduledAt": "2026-09-11T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
 
     {"contentId": "content:shorts_main:elr-s-050", "scheduledAt": "2026-09-12T12:30:00+08:00", "source": "series_c_episode_024", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-051", "scheduledAt": "2026-09-12T18:00:00+08:00", "source": "series_c_episode_024", "remoteAction": "planned", "checks": "pending"},
-    {"contentId": "content:series_c:episode_024", "scheduledAt": "2026-09-12T20:00:00+08:00", "format": "extended", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_024", "scheduledAt": "2026-09-12T20:00:00+08:00", "format": "standard", "remoteAction": "planned", "checks": "pending"},
 
-    {"contentId": "content:shorts_main:elr-s-052", "scheduledAt": "2026-09-13T12:30:00+08:00", "source": "weekly_topic_poll", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:series_c:episode_025", "scheduledAt": "2026-09-13T08:00:00+08:00", "format": "flagship_40", "remoteAction": "planned", "checks": "pending"},
+    {"contentId": "content:shorts_main:elr-s-052", "scheduledAt": "2026-09-13T12:30:00+08:00", "source": "series_c_episode_025", "remoteAction": "planned", "checks": "pending"},
     {"contentId": "content:shorts_main:elr-s-053", "scheduledAt": "2026-09-13T18:00:00+08:00", "source": "flagship_comment_followup", "remoteAction": "planned", "checks": "pending"}
   ],
   "dialogueBriefs": [
@@ -110,8 +111,17 @@
       "status": "outline_queued"
     },
     {
+      "contentId": "content:series_b:episode_025",
+      "format": "standard",
+      "topicPillar": "practical_english",
+      "workingTitle": "Fast English Took One Detail — Ask for Only That Part | A2-B1",
+      "centralIdea": "A narrow clarification keeps the conversation moving better than asking for everything again.",
+      "candidateScore": 73,
+      "status": "research_ready"
+    },
+    {
       "contentId": "content:series_a:episode_024",
-      "format": "extended",
+      "format": "standard",
       "topicPillar": "resilience",
       "workingTitle": "Starting Again Is a Skill — Rebuild After a Broken Routine | B1-B2",
       "centralIdea": "A restart should be designed for the day after failure, not the day of motivation.",
@@ -120,13 +130,23 @@
     },
     {
       "contentId": "content:series_c:episode_024",
-      "format": "extended",
+      "format": "standard",
       "topicPillar": "philosophy",
       "workingTitle": "What You Can Control — A Stoic Conversation for a Difficult Day | B2-C1",
       "centralIdea": "The control distinction is a decision aid, not a command to suppress emotion.",
       "demandEvidence": ["youtube_studio_medium_volume_stoicism_podcast", "google_trends_stoicism_35"],
       "candidateScore": 79,
       "status": "source_review_queued"
+    },
+    {
+      "contentId": "content:series_c:episode_025",
+      "format": "flagship_40",
+      "topicPillar": "philosophy",
+      "workingTitle": "What You Can Control — A 40-Minute Stoic English Conversation | B2-C1",
+      "centralIdea": "The control distinction is a decision aid, not a command to suppress emotion.",
+      "demandEvidence": ["youtube_studio_medium_volume_stoicism_podcast", "google_trends_stoicism_35"],
+      "candidateScore": 81,
+      "status": "outline_queued"
     }
   ],
   "flagshipStructure": [

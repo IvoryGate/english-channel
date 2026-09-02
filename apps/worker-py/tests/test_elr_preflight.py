@@ -81,3 +81,63 @@ Sam: This is another short test line.
     assert "export-disk" not in audio_by_name
     assert audio_by_name["visual-assets"].status == "warn"
     assert audio_report.ok is True
+
+
+def test_preflight_uses_flagship_spoken_word_contract(tmp_path: Path, monkeypatch) -> None:
+    context = build_context(tmp_path, "series_b", 24, tmp_path / "youtube")
+    paths = artifact_paths(context.workspace, context.episode_id)
+    draft = """Title: A Flagship Test
+Description: A practical long-form conversation.
+
+[Teaching Plan]
+Practice one idea in changed conditions.
+
+[Episode Contract]
+Use the idea today.
+
+Riley: This is a complete test line for the flagship contract.
+Sam: Comment with the next step you will practice today.
+"""
+    _write(paths["draft"], draft)
+    _write(
+        paths["manifest"],
+        json.dumps(
+            {
+                "episodeId": context.episode_id,
+                "showId": "series_b",
+                "title": "A Flagship Test",
+                "description": "A practical long-form conversation.",
+                "hosts": {},
+                "turns": [
+                    {"text": "This is a complete test line for the flagship contract.", "wordCount": 10},
+                    {"text": "Comment with the next step you will practice today.", "wordCount": 9},
+                ],
+            }
+        ),
+    )
+    _write(
+        context.workspace / "production" / "production_card.json",
+        json.dumps(
+            {
+                "format": "flagship_40",
+                "formatContract": {"spokenWordTarget": [10, 30]},
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        "elr_production.validate_script_text",
+        lambda _text, *, min_words, max_words, profile: {
+            "ok": (min_words, max_words, profile) == (10, 30, "series_b"),
+            "word_count": 19,
+            "issues": [],
+        },
+    )
+
+    report = preflight_episode(
+        context,
+        runtime_checks=False,
+        scaffold_metadata=True,
+        require_visuals=False,
+    )
+
+    assert {check.name: check for check in report.checks}["script-quality"].status == "pass"

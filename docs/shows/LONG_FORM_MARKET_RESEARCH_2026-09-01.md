@@ -2,9 +2,10 @@
 
 ## Decision
 
-Launch one real 40-minute flagship every week, keep three 10–15 minute
-episodes, and use the other two dialogue slots for 18–25 minute extended
-episodes. Broaden the subject portfolio, but keep one identity:
+Launch two real 40-minute flagships every week and six 10–15 minute Standard
+episodes. Retain the 18–25 minute Extended format as an honest fallback when a
+treatment cannot sustain forty minutes. Broaden the subject portfolio, but
+keep one identity:
 
 > English is the delivery format; useful life ideas are the content engine.
 
@@ -155,18 +156,16 @@ mechanics, not the paranoia or authority theater.
 
 | Lane | Episodes/week | Runtime | Purpose |
 | --- | ---: | ---: | --- |
-| Standard | 3 | 10–15 min | Fast topic tests, one human moment, one practical payoff |
-| Extended | 2 | 18–25 min | Story plus counterargument/application |
-| Flagship 40 | 1 | 35–45 min | Watch-hour anchor, deeper story, guided participation |
+| Standard | 6 | 10–15 min | Two weekly releases per dialogue series; fast topic tests and one practical payoff |
+| Extended | 0 planned | 18–25 min | Honest fallback for a treatment that cannot sustain forty minutes |
+| Flagship 40 | 2 | 35–45 min | Watch-hour anchors, deeper stories, guided participation |
 
-This keeps the six existing dialogue slots but raises planned dialogue minutes
-from roughly 60–90 to about 104–140 per week. Production growth is measured in
-finished, quality-gated minutes and ready inventory, not in labels.
-
-After two full weekly cycles, scale to two Flagship 40 episodes only if both
-pilots clear: CTR at least 3.5%, first-30-second retention at least 55%, average
-view duration at least 8:00, no factual or identity violation, and acceptable
-production cost per watch hour.
+This expands the dialogue slate from six to eight releases and raises planned
+dialogue minutes from roughly 60–90 to about 130–180 per week. Production
+growth is measured in finished, quality-gated minutes and ready inventory, not
+in labels. If either flagship misses its content or runtime gate, publish an
+honestly classified Extended episode only when it is independently strong;
+do not pad it to preserve the count.
 
 ### Subject ownership by series
 
@@ -204,11 +203,10 @@ copyright, identity, factual, or medical-safety gates.
 
 ## Immediate interventions
 
-1. Produce the first Flagship 40 on overthinking for the 2026-09-10 Series B
-   slot, because both channel-specific and broader US YouTube search evidence
-   support it.
-2. Use one 18–25 minute philosophy treatment and one relationship treatment in
-   the same week to test breadth without rebranding the channel overnight.
+1. Produce the first Flagship 40 on overthinking for the 2026-09-09 Series B
+   slot and the second on practical Stoicism for the 2026-09-13 Series C slot.
+2. Publish two Standard episodes per dialogue series in the same week so the
+   higher-volume test lane continues while the flagship lane develops.
 3. Run native YouTube title/thumbnail tests on long videos; retain a specific,
    bounded control rather than replacing every original package.
 4. Repackage `You Disagree at Work` before rewriting it: its 4:55 viewing depth
@@ -218,4 +216,3 @@ copyright, identity, factual, or medical-safety gates.
 6. Maintain a two-week script buffer and a one-week rendered-media buffer.
    A scheduled slot with no measured ready asset is a production warning, not
    evidence that the format exists.
-
