@@ -39,11 +39,12 @@ weekly programming.
 
 - Write a dated market and channel diagnosis with traceable sources.
 - Add a 35–45 minute flagship format with a target runtime of 38–42 minutes.
-- Keep three 10–15 minute episodes per week, but diversify their subject
+- Keep six 10–15 minute episodes per week, but diversify their subject
   engines across practical English, everyday life, relationships, psychology,
   resilience, and philosophy.
-- Use the remaining three dialogue slots for one flagship and two 18–25 minute
-  extended episodes during the recovery phase.
+- Add two weekly flagship slots, producing eight dialogue releases in total;
+  retain 18–25 minute Extended as a fallback classification rather than a
+  planned quota.
 - Add a weekly trend-research contract and a dated 2026-09-07 production plan.
 - Add tests that prevent a future weekly plan from calling a sub-35-minute
   target a flagship.
@@ -63,7 +64,7 @@ weekly programming.
 
 1. Record the current Studio diagnosis, competitor cohort, and trend evidence.
 2. Define standard, extended, and flagship runtime/quality contracts.
-3. Create the 2026-09-07 weekly plan with one 40-minute flagship and a broad
+3. Create the 2026-09-07 weekly plan with two 40-minute flagships and a broad
    topic portfolio across all three dialogue series.
 4. Add configuration invariants and automated tests.
 5. Run JSON, pytest, encoding, and repository quality checks.
@@ -92,22 +93,28 @@ weekly programming.
 ## Status
 
 - Owner: primary Codex agent.
-- Last updated: 2026-09-01.
+- Last updated: 2026-09-02.
 - Current channel data collected: complete.
 - Current trend and competitor evidence collected: complete.
 - Runtime and portfolio contract: complete.
 - Weekly plan and configuration tests: complete.
-- Validation: JSON parse, encoding, docs, architecture, Python compile, and all
-  175 Python tests pass. The local TypeScript test processes cannot start
+- Deterministic weekly scaffold and section assembler: complete.
+- First 40-minute flagship script: assembled at 6,035 spoken words and passed
+  the Series B script-quality gate; audio rendering is active, three native
+  thumbnail variants and the no-text background are ready, and final captions,
+  packaging, and upload remain.
+- Eight dialogue production cards for the 2026-09-07 week: scaffolded in the
+  formal workspace (six Standard and two Flagship 40).
+- Validation: JSON parse, encoding, docs, architecture, Python compile, the
+  prior 175-test Python suite, and the current 12 focused tests pass. The local TypeScript test processes cannot start
   because Windows returns `ENOMEM` from `uv_os_get_passwd`; tooling smoke tests
   still pass. Remote CI is required before merge.
 - PR: pending.
 
 ## Risks And Decisions
 
-- Longer runtime cannot compensate for weak retention. The first flagship is
-  one controlled weekly treatment, not an immediate conversion of all six
-  dialogue slots.
+- Longer runtime cannot compensate for weak retention. Two flagship treatments
+  run alongside six Standard controls rather than replacing the fast test lane.
 - Broad topics can confuse channel identity. Each treatment retains an English
   listening/participation job and is assigned to a clear series level.
 - Trend tools expose relative demand and can contain false-intent collisions.

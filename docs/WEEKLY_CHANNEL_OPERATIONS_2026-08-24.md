@@ -69,9 +69,9 @@ authority.
    identity store has no unresolved collision.
 3. Historical outcome: the first intended 25-35 minute First Steps Deep
    Practice pilot rendered at 14:46 and is therefore classified as a standard
-   episode, not a valid duration treatment. The current recovery contract is
-   one 35-45 minute Flagship 40, two 18-25 minute Extended episodes, and three
-   10-15 minute Standard episodes per week. See
+   episode, not a valid duration treatment. The scaled contract is two 35-45
+   minute Flagship 40 episodes and six 10-15 minute Standard episodes per
+   week; Extended remains an honest fallback classification. See
    `configs/channel/weekly-plan-2026-09-07.json`; measured media duration, not
    the planned label, controls classification.
 4. At T+24h, record delivery anomalies only. At T+7d, review packaging and the

@@ -191,6 +191,13 @@ def preflight_episode(
     config = load_json(config_path)["shows"][context.show_id]
     if draft_ok:
         min_words, max_words = (int(value) for value in config["wordCountRange"])
+        production_card_path = context.workspace / "production" / "production_card.json"
+        if production_card_path.is_file():
+            production_card = load_json(production_card_path)
+            if production_card.get("format") == "flagship_40":
+                flagship_range = production_card.get("formatContract", {}).get("spokenWordTarget")
+                if isinstance(flagship_range, list) and len(flagship_range) == 2:
+                    min_words, max_words = (int(value) for value in flagship_range)
         validation = validate_script_text(
             draft_text,
             min_words=min_words,

@@ -13,6 +13,7 @@ This repository is agent-first. Human maintainers define goals and constraints; 
 7. `docs/GIT_WORKFLOW.md` for trunk-based branch, PR, merge, and archive rules.
 8. `docs/LOCAL_RUNTIME.md` for project-local Python env and model paths.
 9. `docs/ENCODING.md` for UTF-8 and LF file rules.
+10. `docs/AGENT_EXECUTION_EFFICIENCY.md` for deterministic automation, model/browser budgets, and proportional validation.
 
 ## System Of Record
 

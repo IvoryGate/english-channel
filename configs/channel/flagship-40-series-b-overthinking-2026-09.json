@@ -1,10 +1,10 @@
 {
   "schema": "youtube-flagship-40-brief-v1",
-  "status": "outline_ready",
+  "status": "script_ready",
   "series": "series_b",
   "episode": 24,
   "contentId": "content:series_b:episode_024",
-  "targetPublishSlot": "2026-09-10T20:00:00+08:00",
+  "targetPublishSlot": "2026-09-09T08:00:00+08:00",
   "audience": {
     "level": "A2-B1",
     "primary": "United States women aged 25-44 who use English listening for both practice and emotional utility",
@@ -79,11 +79,11 @@
     {"format": "community_poll", "question": "Which loop is hardest to stop: a message, a work mistake, or a future decision?", "purpose": "next_episode_signal"}
   ],
   "production": {
-    "researchAndSources": "in_progress",
-    "script": "queued",
+    "researchAndSources": "complete_for_nonclinical_educational_scope",
+    "script": "validated_6035_spoken_words",
     "scriptLockBy": "2026-09-03T12:00:00+08:00",
-    "audio": "blocked_by_script",
-    "visuals": "blocked_by_script",
+    "audio": "ready_to_render",
+    "visuals": "ready_to_generate",
     "captions": "blocked_by_audio",
     "package": "blocked_by_media",
     "measuredRuntime": null,
