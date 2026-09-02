@@ -33,6 +33,8 @@ Defensive programming is not a goal. Evidence is.
   at final release, after repair, or for a known high-impact failure mode.
 - Stop after an authoritative success signal. Do not confirm the same fact on
   multiple UI surfaces unless the signals conflict.
+- Keep proven production concurrency and batch defaults. Do not lower them for
+  hypothetical safety; require a measured memory, quality, or failure signal.
 - On failure, diagnose the failing boundary once and retry only the affected
   stage. Do not restart the entire pipeline by default.
 
@@ -70,4 +72,3 @@ Defensive programming is not a goal. Evidence is.
 Complete the requested production slice before proposing optional safeguards.
 Block only on a real release, safety, authority, or data-integrity failure.
 Record warnings without turning every warning into a stop condition.
-
