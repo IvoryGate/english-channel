@@ -18,9 +18,9 @@ def test_programming_defines_a_real_40_minute_flagship_lane() -> None:
     assert dialogue["flagship40DurationMinutes"] == [35, 45]
     assert dialogue["flagship40TargetMinutes"] == [38, 42]
     assert dialogue["weeklyMix"] == {
-        "standardEpisodes": 6,
+        "standardEpisodes": 5,
         "extendedEpisodes": 0,
-        "flagship40Episodes": 2,
+        "flagship40Episodes": 1,
     }
     assert len(dialogue["requiredFlagshipBeats"]) >= 8
 
@@ -43,14 +43,14 @@ def test_programming_requires_a_diverse_evidence_backed_topic_portfolio() -> Non
     assert programming["trendResearch"]["minimumCandidateScore"] >= 65
 
 
-def test_next_week_plan_has_two_flagships_and_six_standard_episodes() -> None:
+def test_next_week_plan_has_one_flagship_and_five_standard_episodes() -> None:
     plan = _load_json("configs/channel/weekly-plan-2026-09-07.json")
     briefs = plan["dialogueBriefs"]
     formats = [brief["format"] for brief in briefs]
 
-    assert formats.count("standard") == 6
+    assert formats.count("standard") == 5
     assert formats.count("extended") == 0
-    assert formats.count("flagship_40") == 2
+    assert formats.count("flagship_40") == 1
     assert len({brief["topicPillar"] for brief in briefs}) >= 4
 
     flagships = [brief for brief in briefs if brief["format"] == "flagship_40"]
@@ -62,16 +62,16 @@ def test_next_week_plan_has_two_flagships_and_six_standard_episodes() -> None:
     assert all("40-Minute" in flagship["workingTitle"] for flagship in flagships)
 
 
-def test_next_week_plan_expands_to_eight_dialogue_slots_and_fourteen_shorts() -> None:
+def test_next_week_plan_matches_owner_approved_seven_plus_twenty_eight_mix() -> None:
     plan = _load_json("configs/channel/weekly-plan-2026-09-07.json")
     slots = plan["publicationSlots"]
     dialogue_slots = [slot for slot in slots if slot["contentId"].startswith("content:series_")]
     shorts_slots = [slot for slot in slots if slot["contentId"].startswith("content:shorts_main:")]
     classic_slots = [slot for slot in slots if slot["contentId"].startswith("content:classic_listening:")]
 
-    assert len(dialogue_slots) == 8
-    assert len(shorts_slots) == 14
-    assert len(classic_slots) == 2
+    assert len(dialogue_slots) == 6
+    assert len(shorts_slots) == 28
+    assert len(classic_slots) == 1
     assert plan["portfolio"]["longFormCount"] == len(dialogue_slots) + len(classic_slots)
 
 

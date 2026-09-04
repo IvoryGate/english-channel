@@ -24,12 +24,12 @@ def test_current_plan_matches_programming_and_scaffolds_once(tmp_path: Path) -> 
     assert errors == []
 
     created, total = long_form.scaffold_week(plan_path, programming_path, tmp_path)
-    assert (created, total) == (8, 8)
+    assert (created, total) == (6, 6)
     assert (tmp_path / "series_b" / "episode_024" / "production" / "production_card.json").exists()
-    assert (tmp_path / "series_c" / "episode_025" / "production" / "production_card.json").exists()
+    assert (tmp_path / "series_c" / "episode_023" / "production" / "production_card.json").exists()
 
     created_again, total_again = long_form.scaffold_week(plan_path, programming_path, tmp_path)
-    assert (created_again, total_again) == (0, 8)
+    assert (created_again, total_again) == (0, 6)
 
 
 def test_assemble_refuses_unfinished_sections_then_writes_finished_draft(tmp_path: Path) -> None:

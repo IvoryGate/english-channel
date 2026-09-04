@@ -25,7 +25,7 @@ def test_tracked_policy_and_catalog_are_valid() -> None:
 
     assert policy.authority is AuthorityLevel.SCHEDULE
     assert policy.publication_territories == ("US", "GB")
-    assert policy.chapters_per_week == 2
+    assert policy.chapters_per_week == 1
     assert policy.release_policy_ref == "configs/channel/release-policy.json"
     assert policy.release_program_id == "classic-listening-baseline"
     assert policy.analytics_windows_hours == (6, 24, 72, 168, 336, 672)
@@ -41,7 +41,7 @@ def test_classics_release_request_is_registered_in_shared_channel_policy() -> No
     channel_policy = load_json_object(repo / policy.release_policy_ref)
     program = channel_policy["programs"][policy.release_program_id]
 
-    assert channel_policy["authority"]["publicSchedulingEnabled"] is False
+    assert channel_policy["authority"]["publicSchedulingEnabled"] is True
     assert program["productLine"] == "classic_listening"
     assert program["status"] == "active"
     assert program["preferredDailyWindows"] == ["08:00"]

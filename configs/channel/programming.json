@@ -25,21 +25,20 @@
     {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
     {"surface": "series_b", "day": "monday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "series_a", "day": "tuesday", "time": "20:00", "format": "standard", "status": "active"},
-    {"surface": "dialogue_flagship_40", "day": "wednesday", "time": "08:00", "format": "flagship_40", "status": "active"},
     {"surface": "series_c", "day": "wednesday", "time": "20:00", "format": "standard", "status": "active"},
-    {"surface": "classic_listening", "day": "thursday", "time": "08:00", "status": "active"},
     {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "series_a", "day": "friday", "time": "20:00", "format": "standard", "status": "active"},
-    {"surface": "series_c", "day": "saturday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "dialogue_flagship_40", "day": "sunday", "time": "08:00", "format": "flagship_40", "status": "active"},
-    {"surface": "shorts", "day": "daily", "time": "12:30", "status": "active"},
-    {"surface": "shorts", "day": "daily", "time": "18:00", "status": "active"}
+    {"surface": "shorts", "day": "daily", "time": "09:30", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "13:00", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "17:00", "status": "active"},
+    {"surface": "shorts", "day": "daily", "time": "22:00", "status": "active"}
   ],
   "shortsCadence": {
     "launchUploadsPerWeek": 7,
     "launchWindow": "12:30",
-    "scaleUploadsPerWeek": 14,
-    "scaleWindow": "18:00",
+    "scaleUploadsPerWeek": 28,
+    "scaleWindows": ["09:30", "13:00", "17:00", "22:00"],
     "scaleConditions": {
       "readyInventoryAtLeast": 7,
       "rollingQcPassRateAtLeast": 0.95,
@@ -52,15 +51,11 @@
     "flagship40DurationMinutes": [35, 45],
     "flagship40TargetMinutes": [38, 42],
     "weeklyMix": {
-      "standardEpisodes": 6,
+      "standardEpisodes": 5,
       "extendedEpisodes": 0,
-      "flagship40Episodes": 2
+      "flagship40Episodes": 1
     },
-    "flagshipThreeWeekRotation": [
-      ["series_b", "series_c"],
-      ["series_a", "series_b"],
-      ["series_c", "series_a"]
-    ],
+    "flagshipThreeWeekRotation": ["series_b", "series_a", "series_c"],
     "requiredFlagshipBeats": [
       "cold_open_tension",
       "single_idea_promise",
@@ -119,10 +114,10 @@
   "descriptionFooter": [
     "First Steps: Mondays and Thursdays at 8:00 PM (UTC+8)",
     "Daily Talk: Tuesdays and Fridays at 8:00 PM (UTC+8)",
-    "Polished English: Wednesdays and Saturdays at 8:00 PM (UTC+8)",
-    "40-minute Flagships: Wednesdays and Sundays at 8:00 AM (UTC+8)",
-    "Classic Listening: Mondays and Thursdays at 8:00 AM (UTC+8)",
-    "New Shorts: every day at 12:30 PM and 6:00 PM (UTC+8)"
+    "Polished English: Wednesdays at 8:00 PM (UTC+8)",
+    "40-minute Flagship: Sundays at 8:00 AM (UTC+8)",
+    "Classic Listening: Mondays at 8:00 AM (UTC+8)",
+    "New Shorts: every day at 9:30 AM, 1:00 PM, 5:00 PM, and 10:00 PM (UTC+8)"
   ],
   "measurement": {
     "northStar": "qualified_watch_hours_per_week",

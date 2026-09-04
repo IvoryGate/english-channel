@@ -56,20 +56,23 @@ Dry-run (report only): `--dry-run`. Skip killing processes: `--no-kill`.
 
 If free virtual memory stays below ~2 GB, close heavy apps or reboot — the script cannot grow the Windows page file.
 
-Short-form VoxCPM runs cap the checkpoint's 8,192-token context at 2,048 by
-default and initialize checkpoint-backed modules on PyTorch's meta device. The
-cap avoids allocating an unused float32 parameter copy and multi-gigabyte KV
-cache before the 4.27 GB safetensors checkpoint is assigned directly to CUDA.
-Override only for a measured need:
+VoxCPM runs initialize checkpoint-backed modules on PyTorch's meta device. On
+Windows they also stream the 4.27 GB safetensors checkpoint into the target
+device one tensor at a time and cap the checkpoint's 8,192-token context at
+1,024. This avoids a full-file memory map competing with the model and CUDA
+allocations for Windows commit space. Other platforms retain the 2,048-token
+default and the normal safetensors loader. Override only for a measured need:
 
 ```powershell
 $env:ELR_VOXCPM_MAX_LENGTH = "1024" # validated for current Shorts production
 ```
 
 Values below 256 are rejected. This optimization reduces peak committed memory
-but does not replace healthy Windows virtual memory; persistent error 1455
-still requires closing heavy applications, increasing the D-drive page file,
-or rebooting.
+but does not replace healthy Windows virtual memory. Set
+`ELR_VOXCPM_STREAMING_LOAD=0` only on a host with enough commit capacity for the
+fast full-checkpoint path. `ELR_VOXCPM_CHECKPOINT_DEVICE=cpu|cuda` selects that
+path's load device. Persistent error 1455 still requires closing heavy
+applications, increasing the D-drive page file, or rebooting.
 
 
 Set these before starting the API:

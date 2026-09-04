@@ -20,7 +20,13 @@ from worker.shorts.audio import (
     build_audio_manifest,
     render_audio_batch,
 )
-from worker.shorts.contracts import ContractError, build_manifest, load_and_validate, validate_portfolio
+from worker.shorts.contracts import (
+    ContractError,
+    build_manifest,
+    load_and_validate,
+    validate_portfolio,
+    validate_product,
+)
 from worker.shorts.ledger import load_ledger, record_publication
 from worker.shorts.qc import check_audio, check_background, check_thumbnail
 from worker.shorts.render import build_render_props, build_thumbnail_props
@@ -35,6 +41,7 @@ PORTFOLIO_PATH = REPO / "configs" / "shorts" / "pilot-2026-08.json"
 CHANNEL_RELEASE_POLICY_PATH = REPO / "configs" / "channel" / "release-policy.json"
 WEEKLY_PRODUCT_PATH = REPO / "configs" / "shorts" / "product-weekly-scale.json"
 WEEKLY_PORTFOLIO_PATH = REPO / "configs" / "shorts" / "weekly-2026-08-31.json"
+FOUR_DAILY_PRODUCT_PATH = REPO / "configs" / "shorts" / "product-weekly-4x.json"
 
 
 def contracts() -> tuple[dict, dict]:
@@ -81,11 +88,26 @@ def test_steady_state_requests_channel_owned_release_capacity() -> None:
     assert publishing["releasePolicyRef"] == "configs/channel/release-policy.json"
     assert not {"weeklyShorts", "maxChannelUploadsPerWeek", "slots"} & set(publishing)
     assert channel_policy["timezone"] == "Asia/Shanghai"
-    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 18
-    assert channel_policy["authority"]["publicSchedulingEnabled"] is False
+    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 40
+    assert channel_policy["authority"]["publicSchedulingEnabled"] is True
     assert program["status"] == "active"
-    assert program["requestedUploadsPerWeek"] == 7
-    assert program["preferredDailyWindows"] == ["12:30"]
+    assert program["requestedUploadsPerWeek"] == 28
+    assert program["preferredDailyWindows"] == ["09:30", "13:00", "17:00", "22:00"]
+
+
+def test_four_daily_product_matches_the_approved_weekly_mix() -> None:
+    product = read_json(FOUR_DAILY_PRODUCT_PATH)
+
+    validate_product(product)
+    assert product["pilotSize"] == 28
+    assert product["formatAllocation"] == {
+        "micro_story": 8,
+        "listen_choose": 8,
+        "dialogue": 10,
+        "classic_cliffhanger": 2,
+    }
+    assert product["publishing"]["publicPublishingEnabled"] is True
+    assert product["publishing"]["requireRelatedVideo"] is True
 
 
 def test_duplicate_content_is_rejected() -> None:

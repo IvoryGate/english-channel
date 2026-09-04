@@ -164,6 +164,12 @@ def scaffold_week(plan_path: Path, programming_path: Path, workspace_root: Path)
         sections_dir = production_dir / "sections"
         record_path = production_dir / "production_card.json"
         record = production_record(brief, plan, slots[brief["contentId"]])
+        if record_path.exists():
+            existing_record = load_json(record_path)
+            if existing_record.get("contentId") == brief["contentId"]:
+                for progress_key in ("scriptPath", "spokenWords", "validationReport", "status"):
+                    if progress_key in existing_record:
+                        record[progress_key] = existing_record[progress_key]
         write_json(record_path, record)
         sections_dir.mkdir(parents=True, exist_ok=True)
         for index, name in enumerate(record["sections"], start=1):

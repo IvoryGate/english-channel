@@ -7,8 +7,8 @@
     "primaryAudience": "women aged 55 and over"
   },
   "cadence": {
-    "requestedChaptersPerWeek": 2,
-    "readyBufferChapters": 3
+    "requestedChaptersPerWeek": 1,
+    "readyBufferChapters": 1
   },
   "release": {
     "policyRef": "configs/channel/release-policy.json",

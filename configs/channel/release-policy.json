@@ -3,43 +3,43 @@
   "timezone": "Asia/Shanghai",
   "authority": {
     "defaultPrivacy": "private",
-    "publicSchedulingEnabled": false,
+    "publicSchedulingEnabled": true,
     "explicitApprovalRequired": true
   },
   "capacity": {
-    "maxChannelUploadsPerRolling7Days": 18,
+    "maxChannelUploadsPerRolling7Days": 40,
     "reservationRequired": true
   },
   "programs": {
     "shorts-steady-state-2026-08": {
       "productLine": "shorts",
       "status": "active",
-      "requestedUploadsPerWeek": 7,
+      "requestedUploadsPerWeek": 28,
       "startsOn": "2026-08-24",
       "endsOn": "2026-09-20",
-      "preferredDailyWindows": ["12:30"],
-      "minimumReadyInventory": 2,
+      "preferredDailyWindows": ["09:30", "13:00", "17:00", "22:00"],
+      "minimumReadyInventory": 8,
       "decisionWindowDays": 28,
-      "scaleTargetUploadsPerWeek": 14,
-      "scalePreferredDailyWindows": ["12:30", "18:00"],
-      "scaleReadyInventoryRequired": 7
+      "scaleTargetUploadsPerWeek": 28,
+      "scalePreferredDailyWindows": ["09:30", "13:00", "17:00", "22:00"],
+      "scaleReadyInventoryRequired": 8
     },
     "dialogue-weekly-2026-08-24": {
       "productLine": "dialogue",
       "status": "active",
-      "requestedUploadsPerWeek": 3,
+      "requestedUploadsPerWeek": 6,
       "startsOn": "2026-08-24",
       "endsOn": "2026-09-20",
       "preferredDailyWindows": ["20:00"],
-      "minimumReadyInventory": 3,
+      "minimumReadyInventory": 2,
       "decisionWindowDays": 28
     },
     "classic-listening-baseline": {
       "productLine": "classic_listening",
       "status": "active",
-      "requestedUploadsPerWeek": 2,
+      "requestedUploadsPerWeek": 1,
       "preferredDailyWindows": ["08:00"],
-      "minimumReadyInventory": 3,
+      "minimumReadyInventory": 1,
       "decisionWindowDays": 28
     }
   }
