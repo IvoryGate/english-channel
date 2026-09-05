@@ -57,7 +57,7 @@ Runtime-only surfaces:
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-08-24.
+- Last updated: 2026-09-05.
 - State: milestone 1 rights, authority, and immutable lifecycle foundation is
   complete. The Persuasion production adapter is being reconciled on
   `codex/persuasion-pilot-intake`; later shared publishing, analytics,
@@ -70,6 +70,9 @@ Runtime-only surfaces:
   renders and three blind review WAVs now exist in the ignored runtime audition
   directory. Explicit listening approval is still required; no candidate is
   approved yet.
+- Compatibility note: the legacy chapter renderer now normalizes the canonical
+  Classic Listening `spokenText` field into its internal `text` field. This
+  keeps weekly Persuasion manifests compatible without duplicating source text.
 
 ## Plan
 

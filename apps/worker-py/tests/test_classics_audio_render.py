@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 
@@ -38,3 +39,25 @@ def test_persuasion_manifest_routes_every_segment_to_one_voice() -> None:
     assert {segment["voiceProfile"] for segment in manifest["segments"]} == {
         "classic-listening-mia-narrator"
     }
+
+
+def test_legacy_renderer_accepts_canonical_spoken_text() -> None:
+    repo = Path(__file__).resolve().parents[3]
+    module_path = (
+        repo
+        / ".cursor"
+        / "skills"
+        / "audiobook-chapter-tts"
+        / "scripts"
+        / "audiobook_workspace.py"
+    )
+    spec = importlib.util.spec_from_file_location("legacy_audiobook_workspace", module_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    manifest = {"segments": [{"id": "1", "spokenText": "A clean canonical line."}]}
+    normalized = module.ensure_segment_defaults(manifest)
+
+    assert normalized["segments"][0]["text"] == "A clean canonical line."
+    assert normalized["segments"][0]["wordCount"] == 4

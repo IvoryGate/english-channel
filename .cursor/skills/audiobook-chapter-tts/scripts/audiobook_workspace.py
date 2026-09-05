@@ -122,10 +122,16 @@ def ensure_segment_defaults(manifest: dict[str, Any]) -> dict[str, Any]:
         order = int(segment.get("order", index))
         segment["order"] = order
         segment["id"] = normalize_segment_id(str(segment.get("id", f"{order:03d}")))
+        raw_text = segment.get("text")
+        if raw_text is None or not str(raw_text).strip():
+            raw_text = segment.get("spokenText") or segment.get("displayText")
+        if raw_text is None or not str(raw_text).strip():
+            raise ValueError(f"Segment {segment['id']} has no text, spokenText, or displayText")
+        segment["text"] = str(raw_text)
         segment.setdefault("kind", "narration")
         segment.setdefault("speaker", "narrator")
         segment.setdefault("deliveryCue", "plain understated narration")
-        segment["wordCount"] = int(segment.get("wordCount") or word_count(str(segment.get("text", ""))))
+        segment["wordCount"] = int(segment.get("wordCount") or word_count(segment["text"]))
         segment.setdefault("filename", segment_filename(order, str(segment["speaker"])))
     return manifest
 
