@@ -16,7 +16,9 @@
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
-      "qcStatus": "pass"
+      "qcStatus": "pass",
+      "youtubeVideoId": "_u7Kqt2tMr0",
+      "remoteStatus": "scheduled"
     },
     {
       "contentId": "content:series_a:episode_023",
@@ -31,7 +33,9 @@
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
-      "qcStatus": "pass"
+      "qcStatus": "pass",
+      "youtubeVideoId": "GMPfAwXiAFc",
+      "remoteStatus": "scheduled"
     },
     {
       "contentId": "content:series_c:episode_023",
@@ -46,7 +50,9 @@
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
-      "qcStatus": "pass"
+      "qcStatus": "pass",
+      "youtubeVideoId": "BjK6qvcQavU",
+      "remoteStatus": "scheduled"
     },
     {
       "contentId": "content:series_b:episode_024",
@@ -61,7 +67,9 @@
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
-      "qcStatus": "pass"
+      "qcStatus": "pass",
+      "youtubeVideoId": "QOCRk9Zus9Y",
+      "remoteStatus": "scheduled"
     }
   ]
 }
