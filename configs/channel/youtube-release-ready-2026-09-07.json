@@ -70,6 +70,40 @@
       "qcStatus": "pass",
       "youtubeVideoId": "QOCRk9Zus9Y",
       "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:series_b:episode_025",
+      "video": "workspace/shows/series_b/episode_025/video/000_episode_025.mp4",
+      "thumbnail": "workspace/shows/series_b/episode_025/video/000_episode_025.thumbnail.png",
+      "captions": "workspace/shows/series_b/episode_025/subtitles/000_episode_025.srt",
+      "metadataFile": "workspace/shows/series_b/episode_025/000_episode_025.youtube.json",
+      "titleFile": "workspace/shows/series_b/episode_025/reports/000_episode_025.youtube_title.txt",
+      "descriptionFile": "workspace/shows/series_b/episode_025/reports/000_episode_025.youtube_description.txt",
+      "scheduledAt": "2026-09-10T20:00:00+08:00",
+      "playlistId": "PLV6UzOzdXS_w",
+      "categoryId": "27",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "CiS4HhI8FUk",
+      "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:series_a:episode_024",
+      "video": "workspace/shows/series_a/episode_024/video/000_episode_024.mp4",
+      "thumbnail": "workspace/shows/series_a/episode_024/video/000_episode_024.thumbnail.png",
+      "captions": "workspace/shows/series_a/episode_024/subtitles/000_episode_024.srt",
+      "metadataFile": "workspace/shows/series_a/episode_024/000_episode_024.youtube.json",
+      "titleFile": "workspace/shows/series_a/episode_024/reports/000_episode_024.youtube_title.txt",
+      "descriptionFile": "workspace/shows/series_a/episode_024/reports/000_episode_024.youtube_description.txt",
+      "scheduledAt": "2026-09-11T20:00:00+08:00",
+      "playlistId": "PLUALyXHUPuM0",
+      "categoryId": "27",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "HB1e6GIaET0",
+      "remoteStatus": "scheduled"
     }
   ]
 }
