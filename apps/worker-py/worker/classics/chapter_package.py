@@ -38,6 +38,11 @@ CHAPTER_COPY = {
         "summary": "A possible naval tenant brings Admiral Croft into view and one long-remembered name back into Anne Elliot's world.",
         "keywords": ["Admiral Croft", "Captain Wentworth", "Royal Navy", "Kellynch Hall"],
     },
+    4: {
+        "hook": "The Broken Engagement",
+        "summary": "Anne remembers how family pressure and Lady Russell's counsel persuaded her to end her engagement to Frederick Wentworth, leaving a loss that time never erased.",
+        "keywords": ["Anne Elliot", "Frederick Wentworth", "Lady Russell", "broken engagement"],
+    },
 }
 
 

@@ -4,6 +4,23 @@
   "weeklyPlan": "configs/channel/weekly-plan-2026-09-07.json",
   "items": [
     {
+      "contentId": "content:classic_listening:persuasion_chapter_004",
+      "video": "workspace/classics/persuasion/chapter_004/video/000_chapter_004.mp4",
+      "thumbnail": "workspace/classics/persuasion/chapter_004/video/000_chapter_004.thumbnail.png",
+      "captions": "workspace/classics/persuasion/chapter_004/subtitles/000_chapter_004.youtube.srt",
+      "metadataFile": "workspace/classics/persuasion/chapter_004/reports/000_chapter_004.youtube.json",
+      "titleFile": "exports/youtube/persuasion/chapter-04/title.txt",
+      "descriptionFile": "exports/youtube/persuasion/chapter-04/description.txt",
+      "scheduledAt": "2026-09-07T08:00:00+08:00",
+      "playlistId": "PLbM2xsP8plRg",
+      "categoryId": "27",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "Tzy_YAgZp-U",
+      "remoteStatus": "scheduled"
+    },
+    {
       "contentId": "content:series_b:episode_023",
       "video": "workspace/shows/series_b/episode_023/video/000_episode_023.mp4",
       "thumbnail": "workspace/shows/series_b/episode_023/video/000_episode_023.thumbnail.png",
@@ -103,6 +120,20 @@
       "notifySubscribers": false,
       "qcStatus": "pass",
       "youtubeVideoId": "HB1e6GIaET0",
+      "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-040",
+      "video": "workspace/shorts/elr-s-040/video/elr-s-040.mp4",
+      "thumbnail": "workspace/shorts/elr-s-040/package/elr-s-040.thumbnail.png",
+      "metadataFile": "workspace/shorts/elr-s-040/package/upload.json",
+      "scheduledAt": "2026-09-07T09:30:00+08:00",
+      "categoryId": "27",
+      "relatedVideoId": "omDZHS1e4OM",
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "6qPpRrHjTEE",
       "remoteStatus": "scheduled"
     }
   ]

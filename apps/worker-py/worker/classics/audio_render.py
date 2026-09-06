@@ -19,6 +19,7 @@ from .io import atomic_write_json, read_json, sha256_file
 from .paths import ClassicPaths
 from .preflight import preflight_chapter
 from .run_state import RunStateStore
+from .voxcpm_memory import patch_voxcpm_low_memory_load
 
 
 class AudioRenderError(RuntimeError):
@@ -39,6 +40,8 @@ def parse_segment_ids(value: str | None) -> set[str]:
 
 def _default_model_factory(model_id: str, device: str) -> Any:
     import torch
+
+    patch_voxcpm_low_memory_load()
     from voxcpm import VoxCPM
 
     # VoxCPM2 checkpoints are bfloat16, but its loader otherwise constructs a

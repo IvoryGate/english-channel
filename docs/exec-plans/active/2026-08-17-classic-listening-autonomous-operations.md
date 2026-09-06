@@ -23,7 +23,7 @@ Included:
 
 Non-goals:
 
-- Publishing the current `Persuasion` audio while the electronic voice artifact remains unresolved.
+- Publishing any `Persuasion` chapter while a voice or content-quality defect remains unresolved.
 - Weakening rights, source fidelity, audio, subtitle, visual, or platform checks in order to maintain cadence.
 - Deleting, unlisting, or materially rewriting published videos without explicit user authorization.
 - Storing OAuth tokens or account credentials in tracked files.
@@ -64,15 +64,27 @@ Runtime-only surfaces:
   experiment, and retrospective services remain unimplemented.
 - Branch: the channel unification plan owns subsequent shared control-plane
   slices after the Persuasion adapter intake.
-- Current blocker: the approved Riley/VoxCPM2 path has a speech-coupled
-  electronic artifact. The existing Nora, Riley, and Mia female host references
-  are registered in `configs/classics/narrator-audition.json`. All 18 case
-  renders and three blind review WAVs now exist in the ignored runtime audition
-  directory. Explicit listening approval is still required; no candidate is
-  approved yet.
+- Current production status: the channel owner approved the Mia narrator path.
+  Persuasion Chapter 4 has 90 rendered narration segments; two failed content
+  checks were selectively regenerated and now pass. Chapter-specific visual,
+  branding, package, and platform gates are in progress for the 2026-09-07
+  release window. Shared autonomous publishing, analytics, experiment, and
+  retrospective services remain incomplete.
 - Compatibility note: the legacy chapter renderer now normalizes the canonical
   Classic Listening `spokenText` field into its internal `text` field. This
   keeps weekly Persuasion manifests compatible without duplicating source text.
+- Packaging note: reviewed chapter thumbnails declared in the book config are
+  copied into the release package unchanged. Remotion only renders a fallback
+  cover when no reviewed thumbnail is configured.
+- Runtime note: the shared Classic Listening VoxCPM loader now uses the same
+  Windows-safe meta initialization, 1,024-token cache cap, and one-tensor-at-a-
+  time checkpoint transfer already proven by the legacy chapter renderer. This
+  prevents chapter branding and later shared audio jobs from recreating the
+  full checkpoint in host memory before CUDA receives it.
+- Release note: Persuasion Chapter 4 passed local audio, subtitle, media, and
+  packaging gates; YouTube copyright and community checks also passed. It is
+  scheduled for 2026-09-07 08:00 (UTC+8) as video `Tzy_YAgZp-U`, with the
+  reviewed thumbnail and supplied English caption track.
 
 ## Plan
 

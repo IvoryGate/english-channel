@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gc
+import shutil
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -40,11 +41,31 @@ def render_chapter_visuals(
     rendered: list[dict[str, str]] = []
     for chapter in chapters:
         paths.video_dir(chapter).mkdir(parents=True, exist_ok=True)
+        thumbnail = paths.thumbnail(chapter)
+        configured_thumbnails = config.visual.get("chapterThumbnails")
+        configured_thumbnail = None
+        if isinstance(configured_thumbnails, dict) and str(chapter) in configured_thumbnails:
+            configured_thumbnail = config.repo_path(
+                repo_root, str(configured_thumbnails[str(chapter)])
+            )
+        if force or not thumbnail.is_file():
+            if configured_thumbnail is not None:
+                if not configured_thumbnail.is_file():
+                    raise ProductionError(
+                        f"Configured thumbnail is missing for chapter {chapter}: {configured_thumbnail}"
+                    )
+                shutil.copy2(configured_thumbnail, thumbnail)
+            else:
+                _render(
+                    repo_root,
+                    [
+                        "still",
+                        "src/classics/index.ts",
+                        f"PersuasionChapter{chapter}Cover",
+                        str(thumbnail),
+                    ],
+                )
         jobs = [
-            (
-                paths.thumbnail(chapter),
-                ["still", "src/classics/index.ts", f"PersuasionChapter{chapter}Cover", str(paths.thumbnail(chapter))],
-            ),
             (
                 paths.intro_video(chapter),
                 ["render", "src/classics/index.ts", f"PersuasionChapter{chapter}Intro", str(paths.intro_video(chapter))],
@@ -59,7 +80,7 @@ def render_chapter_visuals(
                 _render(repo_root, arguments)
         rendered.append(
             {
-                "thumbnail": paths.thumbnail(chapter).relative_to(repo_root).as_posix(),
+                "thumbnail": thumbnail.relative_to(repo_root).as_posix(),
                 "intro": paths.intro_video(chapter).relative_to(repo_root).as_posix(),
                 "outro": paths.outro_video(chapter).relative_to(repo_root).as_posix(),
             }

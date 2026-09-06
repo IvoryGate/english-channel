@@ -63,14 +63,19 @@ def test_final_composition_normalizes_timestamps_and_reencodes() -> None:
     assert "-c copy" not in rendered
 
 
-def test_first_three_youtube_titles_fit_limit() -> None:
+def test_reviewed_youtube_titles_fit_limit() -> None:
     for chapter, copy in CHAPTER_COPY.items():
         title = f"Persuasion Chapter {chapter}: {copy['hook']} | Jane Austen Full Audiobook"
         assert len(title) <= 100
 
 
+def test_chapter_four_copy_matches_the_thumbnail_promise() -> None:
+    assert CHAPTER_COPY[4]["hook"] == "The Broken Engagement"
+    assert "Frederick Wentworth" in CHAPTER_COPY[4]["summary"]
+
+
 def test_classic_description_uses_channel_owned_schedule() -> None:
     footer = channel_description_footer(REPO)
 
-    assert "Classic Listening: Mondays and Thursdays at 8:00 AM" in footer
-    assert "New Shorts: every day at 12:30 PM and 6:00 PM" in footer
+    assert "Classic Listening: Mondays at 8:00 AM" in footer
+    assert "New Shorts: every day at 9:30 AM, 1:00 PM, 5:00 PM, and 10:00 PM" in footer

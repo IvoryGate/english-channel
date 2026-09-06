@@ -108,12 +108,14 @@
     "chapterBackgrounds": {
       "1": "public/classics/persuasion/chapter-01-cover-bg-v2.png",
       "2": "public/classics/persuasion/chapter-02-cover-bg-v1.png",
-      "3": "public/classics/persuasion/chapter-03-cover-bg-v1.png"
+      "3": "public/classics/persuasion/chapter-03-cover-bg-v1.png",
+      "4": "public/classics/persuasion/chapter-04-cover-bg-v1-imagegen.png"
     },
     "chapterThumbnails": {
       "1": "public/classics/persuasion/chapter-01-thumbnail-v3-imagegen.jpg",
       "2": "public/classics/persuasion/chapter-02-thumbnail-v3-imagegen.jpg",
-      "3": "public/classics/persuasion/chapter-03-thumbnail-v3-imagegen.jpg"
+      "3": "public/classics/persuasion/chapter-03-thumbnail-v3-imagegen.jpg",
+      "4": "public/classics/persuasion/chapter-04-thumbnail-v1-imagegen.png"
     },
     "width": 2560,
     "height": 1440

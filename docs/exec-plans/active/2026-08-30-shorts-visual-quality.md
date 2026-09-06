@@ -39,11 +39,17 @@ Excluded:
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-08-30 Asia/Shanghai.
-- State: quality contract, exact legacy exception, automated luma/saturation
-  checks, US women audience contract, and research method are implemented.
-  The live high-view reference capture and next-cycle image generation remain
-  pending until the next weekly portfolio is planned.
+- Last updated: 2026-09-06 Asia/Shanghai.
+- State: the `weekly-2026-09-07` research, unique backgrounds, thumbnails,
+  audio, vertical renders, and release packages are complete for all 28
+  Shorts. Twenty-one source backgrounds that failed the luma or saturation
+  gate were corrected without changing their composition; the original files
+  were retained in each ignored workspace report directory. All 28 corrected
+  assets now pass the numeric gate, and phone-size contact sheets for the
+  backgrounds, opening frames, and thumbnails have passed human review.
+  Upload and scheduling remain pending for `elr-s-041` through `elr-s-067`
+  because the local in-app browser runtime is missing its expected service
+  component; `elr-s-040` is already scheduled for 2026-09-07 09:30 UTC+8.
 
 ## Plan
 

@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
+from types import SimpleNamespace
 from pathlib import Path
 
+from worker.classics import audio_render
 from worker.classics.audio_render import parse_segment_ids, tts_text
 
 
@@ -61,3 +64,22 @@ def test_legacy_renderer_accepts_canonical_spoken_text() -> None:
 
     assert normalized["segments"][0]["text"] == "A clean canonical line."
     assert normalized["segments"][0]["wordCount"] == 4
+
+
+def test_default_model_factory_applies_low_memory_patch(monkeypatch) -> None:
+    events: list[str] = []
+
+    class FakeVoxCPM:
+        @staticmethod
+        def from_pretrained(*_args, **_kwargs):
+            events.append("load")
+            return "model"
+
+    monkeypatch.setattr(
+        audio_render, "patch_voxcpm_low_memory_load", lambda: events.append("patch")
+    )
+    monkeypatch.setitem(sys.modules, "voxcpm", SimpleNamespace(VoxCPM=FakeVoxCPM))
+    monkeypatch.setenv("CLASSICS_VOXCPM_OPTIMIZE", "0")
+
+    assert audio_render._default_model_factory("model", "cpu") == "model"
+    assert events == ["patch", "load"]
