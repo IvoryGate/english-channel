@@ -233,6 +233,48 @@
       "qcStatus": "pass",
       "youtubeVideoId": "SmLvmmyDQ_Y",
       "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-048",
+      "video": "workspace/shorts/elr-s-048/video/elr-s-048.mp4",
+      "thumbnail": "workspace/shorts/elr-s-048/package/elr-s-048.thumbnail.png",
+      "metadataFile": "workspace/shorts/elr-s-048/package/upload.json",
+      "scheduledAt": "2026-09-09T09:30:00+08:00",
+      "categoryId": "27",
+      "relatedVideoId": null,
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "9jbH1GQ-Htg",
+      "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-049",
+      "video": "workspace/shorts/elr-s-049/video/elr-s-049.mp4",
+      "thumbnail": "workspace/shorts/elr-s-049/package/elr-s-049.thumbnail.png",
+      "metadataFile": "workspace/shorts/elr-s-049/package/upload.json",
+      "scheduledAt": "2026-09-09T13:00:00+08:00",
+      "categoryId": "27",
+      "relatedVideoId": null,
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "W-OgVyp8VOE",
+      "remoteStatus": "scheduled"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-050",
+      "video": "workspace/shorts/elr-s-050/video/elr-s-050.mp4",
+      "thumbnail": "workspace/shorts/elr-s-050/package/elr-s-050.thumbnail.png",
+      "metadataFile": "workspace/shorts/elr-s-050/package/upload.json",
+      "scheduledAt": "2026-09-09T17:00:00+08:00",
+      "categoryId": "27",
+      "relatedVideoId": null,
+      "containsSyntheticMedia": true,
+      "notifySubscribers": false,
+      "qcStatus": "pass",
+      "youtubeVideoId": "dypzLAaaM3g",
+      "remoteStatus": "scheduled"
     }
   ]
 }
