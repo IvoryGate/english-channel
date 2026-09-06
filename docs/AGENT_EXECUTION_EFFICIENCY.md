@@ -66,6 +66,20 @@ Defensive programming is not a goal. Evidence is.
   experiments, or platform changes.
 - During a browser run, collect all due rows in one pass and close temporary
   tabs when finished.
+- Treat repetitive Studio publication as a compact transaction, not an
+  interactive investigation. Read browser documentation once per compatible
+  runtime session, then complete each item with one bounded workflow.
+- On a normal success, retain only the content ID, YouTube ID, scheduled time,
+  and platform-check result. Do not emit full page, DOM, accessibility-tree, or
+  screenshot output.
+- Escalate inspection only after a failed interaction: first use a locator
+  count or focused status string, then a focused dialog excerpt, then a
+  screenshot. A full-page dump is the last resort, never the default.
+- Stop after the authoritative success dialog and immediately reconcile the
+  local ledger. Do not reopen or re-read the same page unless signals conflict.
+- Heartbeats must skip unchanged items, completed production stages, and
+  repeated preflight analysis. They may retry only the unresolved remote
+  transition and stay quiet when no user action is required.
 
 ## Completion discipline
 

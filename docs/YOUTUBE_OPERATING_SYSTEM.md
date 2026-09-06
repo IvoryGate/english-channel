@@ -261,6 +261,14 @@ shared scheduler later models:
 | Human review | explicit review task with deadline; never simulated approval |
 | Release calendar | channel-wide slot reservation before adapter production |
 
+Studio fallback work also has an interaction budget. One compatible browser
+runtime bootstrap serves the mutation session. Each publication item uses one
+compact transaction and one authoritative remote reconciliation. The normal
+evidence tuple is `contentId`, `youtubeVideoId`, `scheduledAt`, and platform
+check status; complete page structures are collected only when a focused
+failure inspection cannot identify the boundary. Background controllers skip
+unchanged state and retry only the unresolved transition.
+
 Every job declares priority, deadline, estimated duration, required resources,
 retry budget, checkpoint strategy, preemptibility, and artifact root. Initial
 priority order is safety/identity repair, release-critical work, scheduled

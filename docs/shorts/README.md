@@ -204,6 +204,16 @@ publication ledger. A signed-out session, different channel, account check, or
 ambiguous duplicate is a blocking condition. This fallback keeps operations
 moving, but OAuth remains the preferred unattended path.
 
+The Studio fallback runs under the repository's low-token browser contract.
+After one runtime bootstrap, each Short is handled as one compact transaction:
+upload, metadata, thumbnail, optional Related Video, platform checks, schedule,
+and ledger reconciliation. A successful transaction records only
+`shortId`, `youtubeVideoId`, `scheduledAt`, and the copyright/community result.
+Full page structures and screenshots are forbidden on the success path. On a
+failure, inspect only the smallest failing control or dialog before escalating.
+Scheduled controllers must retry the unresolved Short only; they must not
+repeat content analysis, media generation, rendering, or completed checks.
+
 Upload is intentionally private and idempotent:
 
 ```powershell
