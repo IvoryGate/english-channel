@@ -14,7 +14,7 @@ workspace/shows/series_X/episode_XXX/
   000_episode_XXX.youtube.json              # script metadata: hookText, coverScene, coverAction, coverOutfit*, tags (root)
   000_episode_XXX.episode_manifest.json     # render plan (root, control center)
   audio/
-    turns/                                   # per-turn rendered WAVs (VoxCPM output)
+    turns/                                   # per-turn provider WAVs + .trace.json identity
       turn_001.wav ...
     _master_turns/                           # per-turn mastered WAVs
       p001_turn_001.wav ...
@@ -181,7 +181,7 @@ service generates the native 16:9 cover and no-text background:
 1. Start `render-audio` immediately. Its audio-only preflight checks the draft,
    manifest coverage, title, voice references, local runtime, memory, and
    workspace capacity, but deliberately defers visual/branding/export checks.
-2. Generate and review the cover and video background remotely while VoxCPM
+2. Generate and review the cover and video background remotely while the selected TTS provider
    renders turn WAVs locally.
 3. Save both visual sources in the canonical episode workspace.
 4. Run full `preflight`, then `produce` or `resume`. Completed WAVs are reused;
@@ -189,7 +189,8 @@ service generates the native 16:9 cover and no-text background:
    packaging, verification, and export.
 
 `render-audio` may overlap remote image generation only. Do not run two local
-VoxCPM jobs at once; the global GPU lock continues to serialize A → B → C.
+GPU-backed TTS jobs at once; the global GPU lock continues to serialize A → B
+→ C. CPU Kokoro still uses one model load and sequential turns per batch.
 
 For unattended work with a visible progress window use
 `--detach --visible-window`. The command prints the PID, state file, and log
@@ -284,12 +285,20 @@ $man = "workspace/shows/series_b/episode_001/000_episode_001.episode_manifest.js
 & $py workspace/shows/tools/render_episode.py --manifest $man
 ```
 
-`render_episode.py` by default:
-1. Renders turns (one VoxCPM load)
+`render_episode.py` reads `renderSettings.ttsProvider` once and never mixes
+providers inside an episode. It supports pinned Kokoro, Chatterbox original
+500M, and the VoxCPM compatibility fallback. By default it:
+
+1. Renders turns (one selected-provider load per invocation)
 2. Concats `000_episode_XXX.raw.wav`
 3. **QC self-check** in chat (layer 1 + ASR on flagged turns)
 
 Flags: `--no-compose`, `--no-self-check`, `--segments p003`, `--skip-existing`.
+
+`--skip-existing` is trace-based: file existence alone is insufficient. A turn
+is reused only when provider/model revision, voice or reference hash, normalized
+text, seed, effective settings, output format, and WAV hash all match. Changing
+any of them invalidates only the affected turn.
 
 Selective rerender then recompose — **do not** call `render_episode.py` directly from Cursor agent shell after a full production run (VRAM/RAM fragmentation → crash). Use the GPU-safe repair tool instead:
 

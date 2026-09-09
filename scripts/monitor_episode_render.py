@@ -29,6 +29,8 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE, validate_render_batch_size  # noqa: E402
 sys.path.insert(0, str(TOOLS_DIR))
 from episode_artifacts import turn_wav_path  # noqa: E402
+sys.path.insert(0, str(REPO_ROOT / "apps" / "worker-py"))
+from worker.tts.dialogue import dialogue_turn_is_reusable  # noqa: E402
 
 _stop_requested = False
 
@@ -99,7 +101,8 @@ def pending_turns(manifest: dict[str, Any], workspace: Path, *, force: bool) -> 
         return list(manifest["turns"])
     pending: list[dict[str, Any]] = []
     for turn in manifest["turns"]:
-        if not turn_wav(workspace, turn).is_file():
+        output = turn_wav(workspace, turn)
+        if not dialogue_turn_is_reusable(REPO_ROOT, manifest, turn, output):
             pending.append(turn)
     return pending
 

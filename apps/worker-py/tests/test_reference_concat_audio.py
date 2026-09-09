@@ -21,10 +21,16 @@ def test_large_concat_uses_manifest_instead_of_clip_command_arguments(tmp_path: 
     commands: list[list[str]] = []
     concat_manifest = ""
 
-    def capture(command: list[str], *, check: bool) -> subprocess.CompletedProcess[str]:
+    def capture(command: list[str], *, check: bool, **_kwargs) -> subprocess.CompletedProcess[str]:
         nonlocal concat_manifest
         assert check is True
         commands.append(command)
+        if command[0] == "ffprobe":
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout='{"streams":[{"codec_name":"pcm_f32le","sample_rate":"24000","channels":1}]}',
+            )
         if "concat" in command:
             concat_manifest = Path(command[command.index("-i") + 1]).read_text(encoding="utf-8")
         return subprocess.CompletedProcess(command, 0)
@@ -34,7 +40,7 @@ def test_large_concat_uses_manifest_instead_of_clip_command_arguments(tmp_path: 
     output = build_concat_audio(clips, tmp_path / "episode.raw.wav", gap_sec=0.3)
 
     assert output == tmp_path / "episode.raw.wav"
-    assert len(commands) == 2
+    assert len(commands) == 3
     assert len(subprocess.list2cmdline(commands[-1])) < 2048
     assert concat_manifest.count("file '") == 299
     assert clips[-1].resolve().as_posix() in concat_manifest

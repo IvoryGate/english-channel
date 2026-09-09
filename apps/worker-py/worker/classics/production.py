@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import gc
 import shutil
 import subprocess
 from pathlib import Path
 from typing import Any
 
-from .audio_render import _default_model_factory, render_audio
+from .audio_render import render_audio
 from .brand_voice import render_chapter_brand_voice
 from .chapter_package import ChapterPackageError, package_chapter
 from .config import BookConfig
@@ -94,38 +93,19 @@ def produce_chapters(
     paths = ClassicPaths(repo_root, config.slug)
     state = RunStateStore(paths.state)
     state.update(status="RUNNING", phase="CHAPTER_BRANDING", activeChapters=chapters)
-    model_path = config.runtime_path(repo_root, str(config.render["modelId"]))
-    model = _default_model_factory(str(model_path), str(config.render.get("device", "cuda")))
-    def shared_factory(*_: object) -> object:
-        return model
-    brand_trace = render_chapter_brand_voice(
-        repo_root, config, chapters, force=force, model_factory=shared_factory
-    )
+    brand_trace = render_chapter_brand_voice(repo_root, config, chapters, force=force)
     audio: list[dict[str, Any]] = []
-    try:
-        state.update(status="RUNNING", phase="AUDIO_RENDER", activeChapters=chapters)
-        for chapter in chapters:
-            trace = render_audio(
-                repo_root, config, chapter, force=force, model_factory=shared_factory
-            )
-            audio.append(
-                {
-                    "chapter": chapter,
-                    "segments": len(trace["segments"]),
-                    "rawPath": trace["rawPath"],
-                    "tracePath": trace["tracePath"],
-                }
-            )
-    finally:
-        del model
-        gc.collect()
-        try:
-            import torch
-
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-        except ImportError:
-            pass
+    state.update(status="RUNNING", phase="AUDIO_RENDER", activeChapters=chapters)
+    for chapter in chapters:
+        trace = render_audio(repo_root, config, chapter, force=force)
+        audio.append(
+            {
+                "chapter": chapter,
+                "segments": len(trace["segments"]),
+                "rawPath": trace["rawPath"],
+                "tracePath": trace["tracePath"],
+            }
+        )
 
     state.update(status="RUNNING", phase="VISUAL_RENDER", activeChapters=chapters)
     visuals = render_chapter_visuals(repo_root, config, chapters, force=force)

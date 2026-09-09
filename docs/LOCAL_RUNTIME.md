@@ -7,6 +7,30 @@
 - Generated audio: `artifacts/`
 - Production temporary files: `workspace/runtime/tmp/`
 
+## TTS provider runtimes
+
+Dialogue and Classic Listening select one provider for an entire public
+episode. Provider subprocesses keep incompatible dependencies isolated and
+load the selected model once per render batch.
+
+| Provider | Interpreter / model | Public role |
+| --- | --- | --- |
+| Kokoro Heart + Fenrir | `workspace/runtime/tts-audition/kokoro-env/Scripts/python.exe` | Dialogue preset voices |
+| Chatterbox original 500M | `workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe`; `workspace/runtime/tts-audition/models/chatterbox-500m/` | Dialogue cloning and Classic narration |
+| VoxCPM | `.conda-env/python.exe`; `pretrained_models/VoxCPM2/` | Compatibility fallback |
+
+Kokoro is pinned to revision
+`f3ff3571791e39611d31c381e3a41a3af07b4987`; Chatterbox original 500M is
+pinned to `5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18`. Chatterbox Turbo remains
+internal-only during the first migration week. Environments, model weights,
+caches, temporary request files, and generated previews stay on the H drive
+under ignored runtime paths and must never be committed.
+
+Every provider turn is accompanied by a trace containing provider, pinned
+revision, voice/reference hash, normalized text, seed, effective settings,
+output format, watermark state, and output hash. Resume reuses a WAV only when
+that complete identity and the current file hash match.
+
 The ELR controller forces child-process `TEMP` and `TMP` into the ignored
 project workspace so model loading and media work do not consume a nearly full
 Windows system drive. Override with `ELR_RUNTIME_TEMP` only when the selected

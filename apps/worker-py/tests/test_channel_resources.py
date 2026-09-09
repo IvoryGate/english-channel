@@ -161,6 +161,7 @@ def test_legacy_gpu_api_uses_sqlite_lease_and_compatibility_mirror(
         active = repository.active_lease("gpu_heavy")
         assert active is not None
         assert active.label == "fixture-heavy-job"
+        assert lock.os.environ[lock.OWNER_PID_ENV] == str(lock.os.getpid())
         assert lock.LOCK_PATH.is_file()
         with lock.GpuProductionLock("nested-heavy-step"):
             assert repository.active_lease("gpu_heavy").lease_id == active.lease_id
@@ -168,3 +169,4 @@ def test_legacy_gpu_api_uses_sqlite_lease_and_compatibility_mirror(
 
     assert repository.active_lease("gpu_heavy") is None
     assert not lock.LOCK_PATH.exists()
+    assert lock.OWNER_PID_ENV not in lock.os.environ

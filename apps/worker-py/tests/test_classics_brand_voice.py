@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
+from worker.classics import brand_voice
 from worker.classics.brand_voice import render_brand_voice
 from worker.classics.config import parse_book_config
 from worker.classics.io import sha256_file
@@ -98,3 +99,65 @@ def test_brand_voice_uses_configured_riley_profile_and_writes_trace(tmp_path: Pa
         "cfgValue": 2.0,
         "inferenceTimesteps": 14,
     }
+
+
+def test_brand_voice_provider_batch_writes_trace_and_reuses_by_identity(
+    monkeypatch, tmp_path: Path
+) -> None:
+    reference = tmp_path / "assets" / "voices" / "series_b" / "riley_reference_clean.wav"
+    reference.parent.mkdir(parents=True)
+    sf.write(reference, np.zeros(2_400, dtype=np.float32), 24_000)
+    interpreter = tmp_path / "runtime" / "chatterbox" / "python.exe"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_bytes(b"")
+    (tmp_path / "runtime" / "chatterbox" / "model").mkdir()
+    payload = {
+        "schema": "classic-listening-book-v1",
+        "book": {"slug": "fixture", "title": "Fixture", "author": "Author", "language": "en", "chapterCount": 1},
+        "source": {"path": "fixture.epub", "sha256": "0" * 64, "chapterHeadingPattern": "CHAPTER", "boilerplateStopMarkers": ["END"]},
+        "release": {"seriesPolicyRef": "configs/classics/series.json", "programId": "classic-listening-baseline"},
+        "voice": {
+            "mode": "single", "profileId": "classic-listening-riley-narrator",
+            "acceptanceStatus": "approved", "referencePath": "assets/voices/series_b/riley_reference_clean.wav",
+            "referenceSha256": sha256_file(reference), "globalControl": "same narrator",
+            "cfgValue": 2.35, "inferenceTimesteps": 10, "normalize": False, "denoise": False,
+        },
+        "render": {
+            "ttsProvider": "chatterbox_500m", "modelId": "resemble-ai/chatterbox",
+            "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18", "device": "cpu",
+            "providerPython": "runtime/chatterbox/python.exe", "localModelPath": "runtime/chatterbox/model",
+            "sampleRate": 48_000,
+        },
+        "mastering": {},
+        "branding": {
+            "introVoicePath": "public/classics/fixture/intro.wav", "outroVoicePath": "public/classics/fixture/outro.wav",
+            "introSpokenText": "Welcome to Classic Listening.", "outroSpokenText": "Thank you for listening.",
+        },
+        "visual": {}, "export": {},
+    }
+    config = parse_book_config(payload, tmp_path / "configs" / "classics" / "fixture.json")
+    calls: list[int] = []
+
+    def fake_batch(_root, _provider, turns, *, label):
+        calls.append(len(turns))
+        rows = []
+        for turn in turns:
+            audio = np.full(2_400, 0.1, dtype=np.float32)
+            output = Path(turn["outputPath"])
+            output.parent.mkdir(parents=True, exist_ok=True)
+            sf.write(output, audio, 24_000, subtype="FLOAT")
+            rows.append({
+                "id": turn["id"], "sampleRate": 24_000, "packageVersion": "test",
+                "modelLoadSec": 0.1, "generationSec": 0.2,
+                "watermark": {"provider": "PerTh", "status": "implicit-enabled"},
+            })
+        return rows
+
+    monkeypatch.setattr(brand_voice, "run_provider_batch", fake_batch)
+    first = render_brand_voice(tmp_path, config)
+    second = render_brand_voice(tmp_path, config)
+
+    assert calls == [2]
+    assert all(clip["providerId"] == "chatterbox_500m" for clip in first["clips"])
+    assert all(clip["reused"] is True for clip in second["clips"])
+    assert all((tmp_path / clip["tracePath"]).is_file() for clip in first["clips"])

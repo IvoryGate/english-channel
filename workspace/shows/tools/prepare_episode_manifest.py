@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -40,6 +41,14 @@ def load_json(path: Path) -> dict[str, Any]:
 
 def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def word_count(text: str) -> int:
@@ -213,6 +222,14 @@ def main() -> int:
     episode_id = episode_dir.name
     manifest_path = Path(args.output) if args.output else episode_dir / f"000_{episode_id}.episode_manifest.json"
 
+    render_settings = {
+        "modelId": "pretrained_models/VoxCPM2",
+        "device": "cuda",
+        **show["renderSettings"],
+        "outputAudio": f"000_{episode_id}.raw.wav",
+        "renderReport": f"000_{episode_id}.render_report.json",
+    }
+    provider_id = str(render_settings.get("ttsProvider") or "voxcpm")
     hosts_block: dict[str, Any] = {}
     for host in show["hosts"]:
         profile = voices[host]
@@ -221,6 +238,19 @@ def main() -> int:
             "referenceAudioClean": profile["referenceAudioClean"],
             "referenceText": profile["referenceText"],
         }
+        if provider_id == "kokoro":
+            voice_id = str(show.get("presetVoices", {}).get(host) or "")
+            if not voice_id:
+                raise ValueError(f"Missing Kokoro preset voice for {show_id}/{host}")
+            hosts_block[host]["voice"] = {"kind": "preset", "voiceId": voice_id}
+        else:
+            reference = str(profile["referenceAudioClean"])
+            reference_path = repo_root / reference
+            hosts_block[host]["voice"] = {
+                "kind": "clone",
+                "referencePath": reference,
+                "referenceSha256": sha256_file(reference_path),
+            }
 
     manifest = {
         "schema": "dialogue-podcast-episode-v1",
@@ -233,13 +263,7 @@ def main() -> int:
         "estimatedDuration": meta.get("Estimated Duration", "15-20 minutes"),
         "sourceDraft": str(draft_path.relative_to(repo_root)).replace("\\", "/"),
         "hosts": hosts_block,
-        "renderSettings": {
-            "modelId": "pretrained_models/VoxCPM2",
-            "device": "cuda",
-            **show["renderSettings"],
-            "outputAudio": f"000_{episode_id}.raw.wav",
-            "renderReport": f"000_{episode_id}.render_report.json",
-        },
+        "renderSettings": render_settings,
         "turns": turns,
         "sourceCoverage": coverage,
     }

@@ -8,6 +8,7 @@ from .config import BookConfig
 from .io import read_json, sha256_file
 from .paths import ClassicPaths
 from .segment import normalize_coverage_text
+from worker.tts.schema import resolve_provider_config
 
 
 @dataclass(frozen=True)
@@ -89,6 +90,15 @@ def preflight_chapter(repo_root: Path, config: BookConfig, chapter: int) -> Pref
         else:
             checks.append(CheckResult("segment-manifest", "pass", f"{len(segments)} single-voice segments"))
             checks.append(CheckResult("source-coverage", "pass", "100% normalized ordered coverage"))
-    model_path = config.runtime_path(repo_root, str(config.render["modelId"]))
-    checks.append(CheckResult("model", "pass" if model_path.exists() else "error", str(model_path)))
+    provider = resolve_provider_config(repo_root, config.render)
+    interpreter_status = "pass" if provider.interpreter.is_file() else "error"
+    checks.append(CheckResult("tts-interpreter", interpreter_status, str(provider.interpreter)))
+    model_ready = provider.local_model_path.exists()
+    checks.append(
+        CheckResult(
+            "tts-model",
+            "pass" if model_ready else "error",
+            f"{provider.provider_id}: {provider.local_model_path}",
+        )
+    )
     return PreflightReport(config.slug, chapter, checks)

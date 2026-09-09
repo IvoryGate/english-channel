@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import tempfile
 from pathlib import Path
@@ -33,6 +34,29 @@ def build_concat_audio(
         lines: list[str] = []
 
         if gap_sec > 0 and len(clips) > 1:
+            probe = subprocess.run(
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-select_streams",
+                    "a:0",
+                    "-show_entries",
+                    "stream=codec_name,sample_rate,channels",
+                    "-of",
+                    "json",
+                    str(clips[0]),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            stream = json.loads(probe.stdout)["streams"][0]
+            codec = str(stream["codec_name"])
+            sample_rate = int(stream["sample_rate"])
+            channels = int(stream["channels"])
+            if codec not in {"pcm_f32le", "pcm_s16le", "pcm_s24le", "pcm_s32le"}:
+                raise ValueError(f"Unsupported concat PCM codec: {codec}")
             subprocess.run(
                 [
                     "ffmpeg",
@@ -43,11 +67,11 @@ def build_concat_audio(
                     "-f",
                     "lavfi",
                     "-i",
-                    "anullsrc=r=48000:cl=mono",
+                    f"anullsrc=r={sample_rate}:cl={'mono' if channels == 1 else 'stereo'}",
                     "-t",
                     str(gap_sec),
                     "-c:a",
-                    "pcm_s16le",
+                    codec,
                     str(silence),
                 ],
                 check=True,

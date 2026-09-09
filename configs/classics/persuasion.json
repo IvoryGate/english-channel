@@ -52,9 +52,21 @@
     }
   },
   "render": {
-    "modelId": "pretrained_models/VoxCPM2",
+    "ttsProvider": "chatterbox_500m",
+    "modelId": "resemble-ai/chatterbox",
+    "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
     "device": "cuda",
-    "optimize": true,
+    "providerPython": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
+    "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
+    "seedBase": 20260914,
+    "providerSettings": {
+      "exaggeration": 0.3,
+      "cfgWeight": 0.65,
+      "temperature": 0.8,
+      "topP": 1.0,
+      "minP": 0.05,
+      "repetitionPenalty": 1.2
+    },
     "sampleRate": 48000,
     "channels": 1,
     "interSegmentSilenceSec": 0.34,

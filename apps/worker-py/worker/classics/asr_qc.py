@@ -22,6 +22,7 @@ def asr_qc_chapter(
     *,
     selected_ids: set[str] | None = None,
     model_name: str = "base",
+    preview_name: str | None = None,
 ) -> dict[str, Any]:
     from faster_whisper import WhisperModel
 
@@ -35,7 +36,11 @@ def asr_qc_chapter(
     model = WhisperModel(model_name, device="cpu", compute_type="int8", local_files_only=True, cpu_threads=4)
     results: list[dict[str, Any]] = []
     for segment in segments:
-        audio_path = paths.segment_audio_dir(chapter) / str(segment["filename"])
+        audio_path = (
+            paths.audio_dir(chapter) / "previews" / preview_name / "segments" / str(segment["filename"])
+            if preview_name
+            else paths.segment_audio_dir(chapter) / str(segment["filename"])
+        )
         if not audio_path.is_file():
             continue
         transcription, _ = model.transcribe(str(audio_path), beam_size=3, vad_filter=True)
@@ -57,12 +62,17 @@ def asr_qc_chapter(
         "bookSlug": config.slug,
         "chapter": chapter,
         "model": model_name,
+        "previewName": preview_name,
         "checkedSegmentCount": len(results),
         "reviewSegmentIds": [item["id"] for item in results if item["status"] == "REVIEW"],
         "meanSimilarity": round(sum(item["similarity"] for item in results) / len(results), 4) if results else 0,
         "segments": results,
     }
-    report_path = paths.reports_dir(chapter) / f"000_{chapter_id(chapter)}.asr-qc.json"
+    report_path = paths.reports_dir(chapter) / (
+        f"audio-preview-{preview_name}.asr-qc.json"
+        if preview_name
+        else f"000_{chapter_id(chapter)}.asr-qc.json"
+    )
     atomic_write_json(report_path, report)
     report["reportPath"] = report_path.relative_to(repo_root).as_posix()
     return report

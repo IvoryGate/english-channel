@@ -57,7 +57,7 @@ def test_assemble_refuses_unfinished_sections_then_writes_finished_draft(tmp_pat
 
     output = long_form.assemble_episode(episode_dir)
     text = output.read_text(encoding="utf-8")
-    assert "Title: A Bad Morning Is Not a Bad Life" in text
+    assert f"Title: {card['workingTitle']}" in text
     assert "[Teaching Plan]" in text
     assert "[Episode Contract]" in text
     assert "TODO" not in text
