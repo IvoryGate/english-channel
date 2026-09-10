@@ -14,6 +14,9 @@ from pathlib import Path
 from typing import Any
 
 
+PROVIDER_FLOAT_PEAK_TARGET = 0.89
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -56,6 +59,18 @@ def atomic_wav(path: Path, audio: Any, sample_rate: int) -> None:
     except BaseException:
         Path(temp_name).unlink(missing_ok=True)
         raise
+
+
+def peak_normalize_float(audio: Any, target: float = PROVIDER_FLOAT_PEAK_TARGET) -> Any:
+    import numpy as np
+
+    value = np.asarray(audio, dtype=np.float32).reshape(-1)
+    if value.size == 0 or not np.isfinite(value).all():
+        raise RuntimeError("Provider returned empty or non-finite audio")
+    peak = float(np.max(np.abs(value)))
+    if peak > target:
+        value = value * (target / peak)
+    return value.astype(np.float32, copy=False)
 
 
 class Engine:
@@ -185,7 +200,7 @@ def main() -> int:
                 generation_seconds = time.perf_counter() - started
                 import numpy as np
 
-                value = np.asarray(audio, dtype=np.float32).reshape(-1)
+                value = peak_normalize_float(audio)
                 output = Path(turn["outputPath"])
                 atomic_wav(output, value, engine.sample_rate)
                 response["turns"].append(

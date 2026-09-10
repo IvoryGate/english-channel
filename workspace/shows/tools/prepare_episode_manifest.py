@@ -154,6 +154,8 @@ def source_spoken_word_count(text: str, show: dict[str, Any]) -> int:
         if stripped == "---":
             in_script = True
             continue
+        if DELIVERY_RE.match(stripped):
+            continue
         section_match = SECTION_RE.match(stripped)
         if not section_match:
             section_match = MARKDOWN_SECTION_RE.match(stripped)

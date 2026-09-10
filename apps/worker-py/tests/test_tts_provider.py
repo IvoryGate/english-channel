@@ -3,8 +3,10 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+import numpy as np
 import pytest
 
+from worker.tts.isolated_worker import peak_normalize_float
 from worker.tts.dialogue import dialogue_turn_is_reusable, dialogue_turn_spec
 from worker.tts.process import run_provider_batch
 from worker.tts.schema import ProviderConfigError, resolve_provider_config
@@ -13,6 +15,15 @@ from worker.tts.trace import TRACE_SCHEMA, atomic_write_json, sha256_file, turn_
 
 KOKORO_REVISION = "f3ff3571791e39611d31c381e3a41a3af07b4987"
 CHATTERBOX_REVISION = "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18"
+
+
+def test_provider_float_output_is_peak_normalized_before_trace_and_write() -> None:
+    audio = np.asarray([-1.2, 0.0, 0.6], dtype=np.float32)
+
+    normalized = peak_normalize_float(audio)
+
+    assert float(np.max(np.abs(normalized))) == pytest.approx(0.89, abs=1e-6)
+    assert normalized.dtype == np.float32
 
 
 def _kokoro_settings(**changes: object) -> dict[str, object]:

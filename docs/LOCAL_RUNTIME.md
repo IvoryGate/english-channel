@@ -9,6 +9,11 @@
 
 ## TTS provider runtimes
 
+Provider-native float WAV output is peak-normalized to 0.89 before its trace
+hash is recorded. For artifacts rendered before this guard was introduced,
+`scripts/normalize_float_tts_audio.py --segments-dir <path>` repairs the WAVs
+and their trace hashes without regenerating speech.
+
 Dialogue and Classic Listening select one provider for an entire public
 episode. Provider subprocesses keep incompatible dependencies isolated and
 load the selected model once per render batch.
