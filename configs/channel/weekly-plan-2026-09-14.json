@@ -1,0 +1,113 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-09-14",
+  "strategy": "high_intensity_validation_with_accepted_local_tts_providers",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedAt": "2026-09-09",
+    "scope": "produce_upload_and_schedule_after_all_release_gates_pass",
+    "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
+    "controlPlaneRemoteMutationAuthority": false
+  },
+  "portfolio": {
+    "longFormCount": 7,
+    "dialogueCount": 6,
+    "classicListeningCount": 1,
+    "shortsCount": 28,
+    "dialogueMix": {
+      "series_b_first_steps": 2,
+      "series_a_daily_talk": 2,
+      "series_c_polished_english": 1,
+      "flagship_40": 1
+    },
+    "qualityGate": "docs/QUALITY_SCORE.md"
+  },
+  "productionDeadlines": {
+    "allScriptsAndBriefsLockedBy": "2026-09-11T23:00:00+08:00",
+    "allMediaPackagesReadyBy": "2026-09-13T18:00:00+08:00",
+    "allUploadsScheduledBy": "2026-09-13T23:00:00+08:00"
+  },
+  "formatContracts": {
+    "standard": {"durationMinutes": [10, 15], "spokenWordTarget": [1400, 2800]},
+    "extended": {"durationMinutes": [18, 25], "spokenWordTarget": [2600, 3600]},
+    "flagship_40": {
+      "durationMinutes": [35, 45],
+      "targetMinutes": [38, 42],
+      "spokenWordTarget": [5200, 6200],
+      "measuredMediaDurationRequired": true,
+      "minimumStimulusChanges": 10
+    }
+  },
+  "publicationSlots": [
+    {"contentId":"content:classic_listening:persuasion_chapter_005","scheduledAt":"2026-09-14T08:00:00+08:00","format":"classic_listening","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_026","scheduledAt":"2026-09-14T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_025","scheduledAt":"2026-09-15T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_c:episode_026","scheduledAt":"2026-09-16T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_027","scheduledAt":"2026-09-17T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_026","scheduledAt":"2026-09-18T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_027","scheduledAt":"2026-09-20T08:00:00+08:00","format":"flagship_40","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-068","scheduledAt":"2026-09-14T09:30:00+08:00","source":"series_b_episode_025","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-069","scheduledAt":"2026-09-14T13:00:00+08:00","source":"series_a_episode_024","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-070","scheduledAt":"2026-09-14T17:00:00+08:00","source":"series_c_episode_023","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-071","scheduledAt":"2026-09-14T22:00:00+08:00","source":"series_b_episode_024","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-072","scheduledAt":"2026-09-15T09:30:00+08:00","source":"series_b_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-073","scheduledAt":"2026-09-15T13:00:00+08:00","source":"series_b_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-074","scheduledAt":"2026-09-15T17:00:00+08:00","source":"series_b_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-075","scheduledAt":"2026-09-15T22:00:00+08:00","source":"series_b_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-076","scheduledAt":"2026-09-16T09:30:00+08:00","source":"series_a_episode_025","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-077","scheduledAt":"2026-09-16T13:00:00+08:00","source":"series_a_episode_025","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-078","scheduledAt":"2026-09-16T17:00:00+08:00","source":"series_a_episode_025","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-079","scheduledAt":"2026-09-16T22:00:00+08:00","source":"series_a_episode_025","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-080","scheduledAt":"2026-09-17T09:30:00+08:00","source":"series_c_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-081","scheduledAt":"2026-09-17T13:00:00+08:00","source":"series_c_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-082","scheduledAt":"2026-09-17T17:00:00+08:00","source":"series_c_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-083","scheduledAt":"2026-09-17T22:00:00+08:00","source":"series_c_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-084","scheduledAt":"2026-09-18T09:30:00+08:00","source":"series_b_episode_027","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-085","scheduledAt":"2026-09-18T13:00:00+08:00","source":"series_b_episode_027","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-086","scheduledAt":"2026-09-18T17:00:00+08:00","source":"series_b_episode_027","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-087","scheduledAt":"2026-09-18T22:00:00+08:00","source":"series_b_episode_027","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-088","scheduledAt":"2026-09-19T09:30:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-089","scheduledAt":"2026-09-19T13:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-090","scheduledAt":"2026-09-19T17:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-091","scheduledAt":"2026-09-19T22:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-092","scheduledAt":"2026-09-20T09:30:00+08:00","source":"persuasion_chapter_005","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-093","scheduledAt":"2026-09-20T13:00:00+08:00","source":"weekly_best_first_steps","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-094","scheduledAt":"2026-09-20T17:00:00+08:00","source":"weekly_best_daily_talk","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-095","scheduledAt":"2026-09-20T22:00:00+08:00","source":"series_a_episode_027","remoteAction":"planned","checks":"pending"}
+  ],
+  "dialogueBriefs": [
+    {"contentId":"content:series_b:episode_026","format":"standard","topicBacklogId":"b07","topicPillar":"everyday_life","workingTitle":"Talk About Your Day in English — Even When Nothing Happened | A2-B1","centralIdea":"An ordinary day becomes speakable when you use one moment, one feeling, and one small detail.","candidateScore":76,"status":"approved_for_production"},
+    {"contentId":"content:series_a:episode_025","format":"standard","topicBacklogId":"a11","topicPillar":"relationships","workingTitle":"Networking When You Hate Small Talk | B1-B2","centralIdea":"A useful professional conversation begins with specific curiosity, not self-promotion.","candidateScore":77,"status":"approved_for_production"},
+    {"contentId":"content:series_c:episode_026","format":"standard","topicBacklogId":"c17","topicPillar":"practical_english","workingTitle":"You Need a Moment to Think — Say This Without Sounding Lost | B2-C1","centralIdea":"A precise bridge sentence protects thinking time while keeping authority and connection.","candidateScore":79,"status":"approved_for_production"},
+    {"contentId":"content:series_b:episode_027","format":"standard","topicBacklogId":"b10","topicPillar":"practical_english","workingTitle":"Fast English Sounds Like One Long Word — Listen This Way | A2-B1","centralIdea":"Listeners recover by catching the situation, one key detail, and the next action instead of every word.","candidateScore":78,"status":"approved_for_production"},
+    {"contentId":"content:series_a:episode_026","format":"standard","topicBacklogId":"a02","topicPillar":"resilience","workingTitle":"The Room Gets Tense — Stay Calm and Keep Talking | B1-B2","centralIdea":"Create ten useful seconds before choosing a response, then name the issue without escalating it.","candidateScore":78,"status":"approved_for_production"},
+    {"contentId":"content:series_a:episode_027","format":"flagship_40","topicPillar":"philosophy","workingTitle":"What Is Enough? — A 40-Minute English Conversation About a Good Life | B1-B2","centralIdea":"Enough is a practical threshold built from values and trade-offs, not a feeling that arrives after endless comparison.","candidateScore":82,"status":"approved_for_production"}
+  ],
+  "flagshipStructure": [
+    {"startMinute":0,"endMinute":3,"beat":"cold_open_and_promise"},
+    {"startMinute":3,"endMinute":9,"beat":"the_moment_more_stopped_helping"},
+    {"startMinute":9,"endMinute":15,"beat":"needs_wants_and_social_comparison"},
+    {"startMinute":15,"endMinute":21,"beat":"host_disagreement_and_changed_condition"},
+    {"startMinute":21,"endMinute":27,"beat":"guided_listening_and_response_practice"},
+    {"startMinute":27,"endMinute":33,"beat":"time_work_and_relationship_tradeoffs"},
+    {"startMinute":33,"endMinute":38,"beat":"natural_speed_application"},
+    {"startMinute":38,"endMinute":42,"beat":"opening_callback_and_next_action"}
+  ],
+  "ttsRollout": {
+    "ownerAcceptedOn": "2026-09-09",
+    "series_b": {"provider":"kokoro","voices":{"Riley":"af_heart","Sam":"am_fenrir"}},
+    "series_a": {"provider":"chatterbox_500m"},
+    "series_c": {"provider":"chatterbox_500m"},
+    "classic_listening": {"provider":"chatterbox_500m"},
+    "fallback":"voxcpm",
+    "turboPolicy":"internal_only",
+    "mixedProviderEpisodeAllowed":false
+  },
+  "releaseGates": {
+    "allDialogue":["script_quality_pass","audio_traceability_pass","caption_sync_pass","thumbnail_score_at_least_80","youtube_package_pass"],
+    "flagship_40":["measured_duration_35_to_45_minutes","stimulus_change_gap_no_more_than_4_minutes","three_native_ab_packaging_variants_ready"],
+    "classicListening":["rights_gate_pass","audio_texture_gate_pass","caption_sync_pass","thumbnail_score_at_least_80"],
+    "shorts":["hook_first_second_pass","duration_under_60_seconds","caption_safe_area_pass","no_duplicate_source_angle"]
+  }
+}

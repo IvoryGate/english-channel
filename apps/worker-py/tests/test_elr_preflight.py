@@ -11,7 +11,7 @@ TOOLS = REPO / "workspace" / "shows" / "tools"
 for import_path in (SCRIPTS, TOOLS):
     sys.path.insert(0, str(import_path))
 
-from elr_production import build_context, preflight_episode  # noqa: E402
+from elr_production import CheckResult, _runtime_checks, build_context, preflight_episode  # noqa: E402
 from episode_artifacts import artifact_paths  # noqa: E402
 
 
@@ -141,3 +141,38 @@ Sam: Comment with the next step you will practice today.
     )
 
     assert {check.name: check for check in report.checks}["script-quality"].status == "pass"
+
+
+def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_path: Path, monkeypatch) -> None:
+    interpreter = tmp_path / "runtime" / "kokoro" / "python.exe"
+    model_path = tmp_path / "runtime" / "kokoro" / "model"
+    _write(interpreter)
+    model_path.mkdir(parents=True)
+    monkeypatch.setattr(
+        "elr_production.subprocess.run",
+        lambda *_args, **_kwargs: type(
+            "Result",
+            (),
+            {"returncode": 0, "stdout": "provider=kokoro;device=cpu\n", "stderr": ""},
+        )(),
+    )
+    checks: list[CheckResult] = []
+
+    _runtime_checks(
+        checks,
+        tmp_path,
+        {
+            "ttsProvider": "kokoro",
+            "modelRevision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+            "providerPython": "runtime/kokoro/python.exe",
+            "localModelPath": "runtime/kokoro/model",
+            "device": "cpu",
+            "providerSettings": {"languageCode": "a", "speed": 0.95},
+        },
+    )
+
+    by_name = {check.name: check for check in checks}
+    assert by_name["tts-provider-runtime"].status == "pass"
+    assert by_name["tts-provider-model"].status == "pass"
+    assert by_name["runtime-imports"].status == "pass"
+    assert "cuda=true" not in by_name["runtime-imports"].detail

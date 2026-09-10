@@ -46,10 +46,10 @@ Explicit non-goals:
 
 - Branch: `feat/tts-provider-migration`.
 - Owner: primary Codex agent.
-- Last updated: 2026-09-09.
-- State: provider integration implemented and focused validation passing.
-  Three owner-gated previews are rendered with ASR/QC and mastering evidence;
-  owner listening acceptance is pending before weekly-plan creation.
+- Last updated: 2026-09-10.
+- State: completed. The owner accepted all three listening previews on
+  2026-09-09. The 2026-09-14 weekly plan is validated, its six dialogue
+  workspaces are scaffolded, and full production has started.
 
 ## Plan
 
@@ -111,9 +111,18 @@ Explicit non-goals:
   to -16.87 LUFS and -1.41 dBTP.
 - Review manifest: `workspace/runtime/tts-audition/previews/review.json`.
 
+## Owner Acceptance And Weekly Handoff
+
+- The owner explicitly accepted the Kokoro dialogue, Chatterbox dialogue, and
+  Chatterbox Classic previews on 2026-09-09.
+- `configs/channel/weekly-plan-2026-09-14.json` records the accepted provider
+  map, seven long-form releases, and 28 Shorts.
+- Full production started with Series B episode 026 and Series A episode 025;
+  provider-aware runtime preflight replaced the legacy unconditional VoxCPM
+  and CUDA check.
+
 ## Archive Criteria
 
-Move this plan to `completed/` only after provider integration, tests,
+Archive criteria met on 2026-09-10: provider integration, tests,
 documentation, all three previews, owner listening acceptance, and the
-subsequent weekly-plan handoff are complete. Keep it active while preview
-approval or full-week rollout remains pending.
+subsequent weekly-plan handoff are complete.
