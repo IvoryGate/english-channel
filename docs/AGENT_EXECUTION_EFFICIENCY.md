@@ -35,8 +35,20 @@ Defensive programming is not a goal. Evidence is.
   multiple UI surfaces unless the signals conflict.
 - Keep proven production concurrency and batch defaults. Do not lower them for
   hypothetical safety; require a measured memory, quality, or failure signal.
+- Capture repetitive renderer progress locally. On success, retain only the
+  artifact result; on failure, expose a bounded diagnostic tail instead of the
+  complete frame-by-frame log.
 - On failure, diagnose the failing boundary once and retry only the affected
   stage. Do not restart the entire pipeline by default.
+- Repair deterministic audio-level defects in place when the waveform is
+  otherwise valid. Re-run TTS only for content, voice, or timing defects.
+- Every selective TTS retry must advance the recorded seed offset. Repeating
+  the same prompt, voice, settings, and seed is not a repair attempt.
+- Shorts pacing repair targets the configured preferred maximum as soon as raw
+  audio exceeds it. Do not compress a near-limit recording all the way back to
+  its shorter experiment label merely because it remains below the hard cap.
+- Media duration gates allow 0.05 seconds of container and sample-rounding
+  tolerance at their hard boundaries; this tolerance is not a target extension.
 
 ## Risk tiers
 

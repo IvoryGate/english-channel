@@ -8,7 +8,7 @@
     "approvedAt": "2026-09-09",
     "scope": "produce_upload_and_schedule_after_all_release_gates_pass",
     "confirmationPolicy": "no_per_item_confirmation_after_all_release_gates_pass",
-    "controlPlaneRemoteMutationAuthority": false
+    "controlPlaneRemoteMutationAuthority": true
   },
   "portfolio": {
     "longFormCount": 7,
@@ -71,8 +71,8 @@
     {"contentId":"content:shorts_main:elr-s-089","scheduledAt":"2026-09-19T13:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
     {"contentId":"content:shorts_main:elr-s-090","scheduledAt":"2026-09-19T17:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
     {"contentId":"content:shorts_main:elr-s-091","scheduledAt":"2026-09-19T22:00:00+08:00","source":"series_a_episode_026","remoteAction":"planned","checks":"pending"},
-    {"contentId":"content:shorts_main:elr-s-092","scheduledAt":"2026-09-20T09:30:00+08:00","source":"persuasion_chapter_005","remoteAction":"planned","checks":"pending"},
-    {"contentId":"content:shorts_main:elr-s-093","scheduledAt":"2026-09-20T13:00:00+08:00","source":"weekly_best_first_steps","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-092","scheduledAt":"2026-09-20T09:30:00+08:00","source":"persuasion_chapter_004","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-093","scheduledAt":"2026-09-20T13:00:00+08:00","source":"persuasion_chapter_004","remoteAction":"planned","checks":"pending"},
     {"contentId":"content:shorts_main:elr-s-094","scheduledAt":"2026-09-20T17:00:00+08:00","source":"weekly_best_daily_talk","remoteAction":"planned","checks":"pending"},
     {"contentId":"content:shorts_main:elr-s-095","scheduledAt":"2026-09-20T22:00:00+08:00","source":"series_a_episode_027","remoteAction":"planned","checks":"pending"}
   ],

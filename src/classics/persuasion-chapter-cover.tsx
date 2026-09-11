@@ -18,9 +18,19 @@ const chapters = {
     hook: ['A NAME', 'RETURNS'],
     summary: 'A naval tenant brings the past within reach.',
   },
+  4: {
+    background: 'chapter-04-cover-bg-v1-imagegen.png',
+    hook: ['A QUIET', 'WARNING'],
+    summary: 'Anne sees a danger her family refuses to notice.',
+  },
+  5: {
+    background: 'chapter-05-cover-bg-v1-imagegen.png',
+    hook: ['LEFT BEHIND,', 'STILL NEEDED'],
+    summary: 'As Kellynch empties, Anne finds a new duty at Uppercross.',
+  },
 } as const;
 
-export const PersuasionChapterCover = ({chapter}: {chapter: 1 | 2 | 3}) => {
+export const PersuasionChapterCover = ({chapter}: {chapter: keyof typeof chapters}) => {
   const details = chapters[chapter];
   return (
     <AbsoluteFill style={{backgroundColor: '#f3dfb7', color: '#4c3328', overflow: 'hidden'}}>

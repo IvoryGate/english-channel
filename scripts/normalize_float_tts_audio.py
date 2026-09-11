@@ -30,12 +30,14 @@ def write_float_wav_atomic(path: Path, audio: np.ndarray, sample_rate: int) -> N
         raise
 
 
-def normalize_directory(segments_dir: Path, target: float) -> int:
+def normalize_directory(segments_dir: Path, target: float, *, boost_below: float = 0.0) -> int:
     changed = 0
     for wav_path in sorted(segments_dir.glob("*.wav")):
         audio, sample_rate = sf.read(wav_path, dtype="float32", always_2d=False)
         peak = float(np.max(np.abs(audio)))
-        if peak <= target:
+        should_attenuate = peak > target
+        should_boost = 0.0 < peak < boost_below
+        if not should_attenuate and not should_boost:
             continue
         normalized = np.asarray(audio * (target / peak), dtype=np.float32)
         write_float_wav_atomic(wav_path, normalized, int(sample_rate))
@@ -45,7 +47,11 @@ def normalize_directory(segments_dir: Path, target: float) -> int:
         trace = json.loads(trace_path.read_text(encoding="utf-8"))
         trace["peak"] = round(float(np.max(np.abs(normalized))), 6)
         trace["outputSha256"] = sha256_file(wav_path)
-        trace["postProcessing"] = {"peakNormalizedTo": target, "sampleType": "float32"}
+        trace["postProcessing"] = {
+            "peakNormalizedTo": target,
+            "sampleType": "float32",
+            "reason": "too_quiet" if should_boost else "clipping_guard",
+        }
         trace_path.write_text(
             json.dumps(trace, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -59,13 +65,21 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Peak-normalize traced float TTS segments in place.")
     parser.add_argument("--segments-dir", required=True)
     parser.add_argument("--target", type=float, default=0.89)
+    parser.add_argument(
+        "--boost-below",
+        type=float,
+        default=0.0,
+        help="Also normalize non-silent segments whose peak is below this threshold.",
+    )
     args = parser.parse_args()
     segments_dir = Path(args.segments_dir).resolve()
     if not segments_dir.is_dir():
         raise FileNotFoundError(segments_dir)
     if not 0.0 < args.target < 1.0:
         raise ValueError("--target must be between zero and one")
-    changed = normalize_directory(segments_dir, args.target)
+    if not 0.0 <= args.boost_below < args.target:
+        raise ValueError("--boost-below must be non-negative and lower than --target")
+    changed = normalize_directory(segments_dir, args.target, boost_below=args.boost_below)
     print(f"normalized={changed} target={args.target:.2f} directory={segments_dir}")
     return 0
 

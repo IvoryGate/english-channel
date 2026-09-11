@@ -72,6 +72,8 @@ def test_reviewed_youtube_titles_fit_limit() -> None:
 def test_chapter_four_copy_matches_the_thumbnail_promise() -> None:
     assert CHAPTER_COPY[4]["hook"] == "The Broken Engagement"
     assert "Frederick Wentworth" in CHAPTER_COPY[4]["summary"]
+    assert CHAPTER_COPY[5]["hook"] == "Left Behind, Still Needed"
+    assert "Uppercross" in CHAPTER_COPY[5]["summary"]
 
 
 def test_classic_description_uses_channel_owned_schedule() -> None:

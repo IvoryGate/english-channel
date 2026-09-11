@@ -28,7 +28,7 @@ from worker.shorts.contracts import (
     validate_product,
 )
 from worker.shorts.ledger import load_ledger, record_publication
-from worker.shorts.qc import check_audio, check_background, check_thumbnail
+from worker.shorts.qc import check_audio, check_background, check_manifest, check_thumbnail
 from worker.shorts.render import build_render_props, build_thumbnail_props
 from worker.shorts.review import build_review, write_review
 from worker.shorts.workspace import bootstrap_portfolio, read_json
@@ -42,6 +42,24 @@ CHANNEL_RELEASE_POLICY_PATH = REPO / "configs" / "channel" / "release-policy.jso
 WEEKLY_PRODUCT_PATH = REPO / "configs" / "shorts" / "product-weekly-scale.json"
 WEEKLY_PORTFOLIO_PATH = REPO / "configs" / "shorts" / "weekly-2026-08-31.json"
 FOUR_DAILY_PRODUCT_PATH = REPO / "configs" / "shorts" / "product-weekly-4x.json"
+
+
+def test_manifest_duration_gate_allows_subframe_rounding_tolerance() -> None:
+    product = json.loads(FOUR_DAILY_PRODUCT_PATH.read_text(encoding="utf-8"))
+    manifest = {
+        "shortId": "elr-s-test",
+        "durationSec": 28.985,
+        "title": "A valid title",
+        "hook": "Listen.",
+        "turns": [{"text": "One turn"}],
+        "visual": {
+            "backgroundImage": "background.png",
+            "brandLogo": "logo.png",
+        },
+        "relatedVideoId": "video-id",
+    }
+
+    assert "DURATION_OUT_OF_RANGE" not in check_manifest(manifest, product)["errors"]
 
 
 def contracts() -> tuple[dict, dict]:
@@ -379,6 +397,7 @@ def test_audio_pacing_only_corrects_a_crossed_duration_variant() -> None:
     long_manifest = build_manifest(portfolio["entries"][5], product, portfolio["cycleId"])
 
     assert _tempo_factor_for_variant(49.2, short_manifest) == 1.0
+    assert _tempo_factor_for_variant(59.0, short_manifest) == pytest.approx(59.0 / 55.0)
     assert _tempo_factor_for_variant(47.9, long_manifest) == pytest.approx(47.9 / 54.0)
     assert _tempo_factor_for_variant(61.2, long_manifest) == pytest.approx(61.2 / 55.0)
 

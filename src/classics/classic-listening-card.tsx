@@ -9,7 +9,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 
-type Props = {mode: 'intro' | 'outro'; chapter: 1 | 2 | 3 | 4; voiceFile: string};
+type Props = {mode: 'intro' | 'outro'; chapter: 1 | 2 | 3 | 4 | 5; voiceFile: string};
 
 const chapterWord = (chapter: number) => ({1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR'}[chapter] ?? String(chapter));
 

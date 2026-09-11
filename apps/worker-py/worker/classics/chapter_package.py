@@ -43,6 +43,11 @@ CHAPTER_COPY = {
         "summary": "Anne remembers how family pressure and Lady Russell's counsel persuaded her to end her engagement to Frederick Wentworth, leaving a loss that time never erased.",
         "keywords": ["Anne Elliot", "Frederick Wentworth", "Lady Russell", "broken engagement"],
     },
+    5: {
+        "hook": "Left Behind, Still Needed",
+        "summary": "As the Elliots leave Kellynch for Bath, Anne is dismissed by one sister and urgently claimed by another, finding purpose and fresh family tensions at Uppercross.",
+        "keywords": ["Anne Elliot", "Uppercross", "Mary Musgrove", "Kellynch Hall"],
+    },
 }
 
 

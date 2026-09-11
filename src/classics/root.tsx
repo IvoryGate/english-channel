@@ -6,7 +6,7 @@ const voice = (chapter: number, mode: 'intro' | 'outro') => `branding/chapter-${
 
 export const ClassicsRoot = () => (
   <>
-    {([1, 2, 3, 4] as const).flatMap((chapter) => [
+    {([1, 2, 3, 4, 5] as const).flatMap((chapter) => [
       <Composition
         key={`intro-${chapter}`}
         id={`PersuasionChapter${chapter}Intro`}
@@ -28,7 +28,7 @@ export const ClassicsRoot = () => (
         height={1440}
       />,
     ])}
-    {([1, 2, 3] as const).map((chapter) => (
+    {([1, 2, 3, 4, 5] as const).map((chapter) => (
       <Composition
         key={`cover-${chapter}`}
         id={`PersuasionChapter${chapter}Cover`}

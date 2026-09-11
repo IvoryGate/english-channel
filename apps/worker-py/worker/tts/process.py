@@ -31,6 +31,8 @@ def _runtime_env(repo_root: Path) -> dict[str, str]:
         "HF_HUB_DISABLE_XET": "1",
         "TORCH_HOME": str(cache / "torch"),
         "XDG_CACHE_HOME": str(cache),
+        "TRITON_CACHE_DIR": str(cache / "triton"),
+        "TORCHINDUCTOR_CACHE_DIR": str(cache / "torchinductor"),
         "NUMBA_CACHE_DIR": str(cache / "numba"),
         "MPLCONFIGDIR": str(cache / "matplotlib"),
         "PYTHONUTF8": "1",

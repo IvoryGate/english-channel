@@ -12,6 +12,10 @@
 Provider-native float WAV output is peak-normalized to 0.89 before its trace
 hash is recorded. For artifacts rendered before this guard was introduced,
 `scripts/normalize_float_tts_audio.py --segments-dir <path>` repairs the WAVs
+without another model call when only the recorded peak level is outside the
+accepted range. Provider subprocesses keep Triton and TorchInductor caches
+under `workspace/runtime/tts-audition/cache/`; they must not fall back to the
+Windows user profile.
 and their trace hashes without regenerating speech.
 
 Dialogue and Classic Listening select one provider for an entire public
@@ -44,6 +48,9 @@ drive has enough free space.
 Remotion uses four parallel render workers by default on this production host.
 Set `ELR_REMOTION_CONCURRENCY` before rendering to override it; values are
 clamped to `1..8` so an accidental setting cannot exhaust the shared machine.
+Shorts use quality-95 JPEG intermediate frames and request hardware video
+encoding when the host supports it; Remotion falls back to software encoding
+when it does not.
 
 ## One-Command Setup
 

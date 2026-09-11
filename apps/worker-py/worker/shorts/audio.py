@@ -140,7 +140,7 @@ def _tempo_factor_for_variant(raw_duration: float, manifest: dict[str, Any]) -> 
     target_max = float(render_settings.get("durationTargetMaxSec", hard_max))
     planned_is_short = planned <= cutoff
     raw_is_short = raw_duration <= cutoff
-    if raw_duration > hard_max:
+    if raw_duration > target_max:
         factor = raw_duration / min(target_max, hard_max)
     elif planned_is_short == raw_is_short:
         return 1.0

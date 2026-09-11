@@ -8,13 +8,22 @@ import pytest
 
 from worker.tts.isolated_worker import peak_normalize_float
 from worker.tts.dialogue import dialogue_turn_is_reusable, dialogue_turn_spec
-from worker.tts.process import run_provider_batch
+from worker.tts.process import _runtime_env, run_provider_batch
 from worker.tts.schema import ProviderConfigError, resolve_provider_config
 from worker.tts.trace import TRACE_SCHEMA, atomic_write_json, sha256_file, turn_trace_path
 
 
 KOKORO_REVISION = "f3ff3571791e39611d31c381e3a41a3af07b4987"
 CHATTERBOX_REVISION = "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18"
+
+
+def test_provider_runtime_caches_stay_inside_workspace(tmp_path: Path) -> None:
+    env = _runtime_env(tmp_path)
+    cache = tmp_path / "workspace" / "runtime" / "tts-audition" / "cache"
+
+    assert env["TRITON_CACHE_DIR"] == str(cache / "triton")
+    assert env["TORCHINDUCTOR_CACHE_DIR"] == str(cache / "torchinductor")
+    assert env["XDG_CACHE_HOME"] == str(cache)
 
 
 def test_provider_float_output_is_peak_normalized_before_trace_and_write() -> None:
