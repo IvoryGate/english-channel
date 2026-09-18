@@ -6,6 +6,8 @@
     {
       "contentId": "content:classic_listening:persuasion_chapter_005",
       "scheduledAt": "2026-09-14T08:00:00+08:00",
+      "youtubeVideoId": "ByRhINl6oYM",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -19,6 +21,8 @@
     {
       "contentId": "content:series_b:episode_026",
       "scheduledAt": "2026-09-14T20:00:00+08:00",
+      "youtubeVideoId": "xA9Tx89lwPQ",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -33,6 +37,8 @@
     {
       "contentId": "content:series_a:episode_025",
       "scheduledAt": "2026-09-15T20:00:00+08:00",
+      "youtubeVideoId": "R0TObgWE3E8",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -47,6 +53,8 @@
     {
       "contentId": "content:series_c:episode_026",
       "scheduledAt": "2026-09-16T20:00:00+08:00",
+      "youtubeVideoId": "xEYP6vz_0lQ",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -61,6 +69,8 @@
     {
       "contentId": "content:series_b:episode_027",
       "scheduledAt": "2026-09-17T20:00:00+08:00",
+      "youtubeVideoId": "bIZen_PBkeg",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -75,6 +85,8 @@
     {
       "contentId": "content:series_a:episode_026",
       "scheduledAt": "2026-09-18T20:00:00+08:00",
+      "youtubeVideoId": "dXWwKbquyUw",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -89,6 +101,8 @@
     {
       "contentId": "content:series_a:episode_027",
       "scheduledAt": "2026-09-20T08:00:00+08:00",
+      "youtubeVideoId": "J6pPV_qF470",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -103,6 +117,8 @@
     {
       "contentId": "content:shorts_main:elr-s-068",
       "scheduledAt": "2026-09-14T09:30:00+08:00",
+      "youtubeVideoId": "wnQWZgli0Pc",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -116,6 +132,8 @@
     {
       "contentId": "content:shorts_main:elr-s-069",
       "scheduledAt": "2026-09-14T13:00:00+08:00",
+      "youtubeVideoId": "KimM8ccRUpk",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -129,6 +147,8 @@
     {
       "contentId": "content:shorts_main:elr-s-070",
       "scheduledAt": "2026-09-14T17:00:00+08:00",
+      "youtubeVideoId": "TNCIqIdKapE",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -142,6 +162,8 @@
     {
       "contentId": "content:shorts_main:elr-s-071",
       "scheduledAt": "2026-09-14T22:00:00+08:00",
+      "youtubeVideoId": "pxxSuWGzw_U",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -155,6 +177,8 @@
     {
       "contentId": "content:shorts_main:elr-s-072",
       "scheduledAt": "2026-09-15T09:30:00+08:00",
+      "youtubeVideoId": "cmHmABRhnBU",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -168,6 +192,8 @@
     {
       "contentId": "content:shorts_main:elr-s-073",
       "scheduledAt": "2026-09-15T13:00:00+08:00",
+      "youtubeVideoId": "AD9GgUn38qk",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -181,6 +207,8 @@
     {
       "contentId": "content:shorts_main:elr-s-074",
       "scheduledAt": "2026-09-15T17:00:00+08:00",
+      "youtubeVideoId": "igGz_OnSPCA",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -194,6 +222,8 @@
     {
       "contentId": "content:shorts_main:elr-s-075",
       "scheduledAt": "2026-09-15T22:00:00+08:00",
+      "youtubeVideoId": "lEUREcUMnjs",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -207,6 +237,8 @@
     {
       "contentId": "content:shorts_main:elr-s-076",
       "scheduledAt": "2026-09-16T09:30:00+08:00",
+      "youtubeVideoId": "ucvmhnrkGWM",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -220,6 +252,8 @@
     {
       "contentId": "content:shorts_main:elr-s-077",
       "scheduledAt": "2026-09-16T13:00:00+08:00",
+      "youtubeVideoId": "Q1xp_xegEdI",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -233,6 +267,8 @@
     {
       "contentId": "content:shorts_main:elr-s-078",
       "scheduledAt": "2026-09-16T17:00:00+08:00",
+      "youtubeVideoId": "vuNlsm4385o",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -246,6 +282,8 @@
     {
       "contentId": "content:shorts_main:elr-s-079",
       "scheduledAt": "2026-09-16T22:00:00+08:00",
+      "youtubeVideoId": "BlURfUOSrNg",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -259,6 +297,8 @@
     {
       "contentId": "content:shorts_main:elr-s-080",
       "scheduledAt": "2026-09-17T09:30:00+08:00",
+      "youtubeVideoId": "0_xpmnzgdP8",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -272,6 +312,8 @@
     {
       "contentId": "content:shorts_main:elr-s-081",
       "scheduledAt": "2026-09-17T13:00:00+08:00",
+      "youtubeVideoId": "kwdA5HtL-hQ",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -285,6 +327,8 @@
     {
       "contentId": "content:shorts_main:elr-s-082",
       "scheduledAt": "2026-09-17T17:00:00+08:00",
+      "youtubeVideoId": "Bibzjb16Oh4",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -298,6 +342,8 @@
     {
       "contentId": "content:shorts_main:elr-s-083",
       "scheduledAt": "2026-09-17T22:00:00+08:00",
+      "youtubeVideoId": "86Tz007F4fc",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -311,6 +357,8 @@
     {
       "contentId": "content:shorts_main:elr-s-084",
       "scheduledAt": "2026-09-18T09:30:00+08:00",
+      "youtubeVideoId": "uZUpUa51ohw",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -324,6 +372,8 @@
     {
       "contentId": "content:shorts_main:elr-s-085",
       "scheduledAt": "2026-09-18T13:00:00+08:00",
+      "youtubeVideoId": "HjUJ1s0OKsM",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -337,6 +387,8 @@
     {
       "contentId": "content:shorts_main:elr-s-086",
       "scheduledAt": "2026-09-18T17:00:00+08:00",
+      "youtubeVideoId": "MxscohQgkWY",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -350,6 +402,8 @@
     {
       "contentId": "content:shorts_main:elr-s-087",
       "scheduledAt": "2026-09-18T22:00:00+08:00",
+      "youtubeVideoId": "3WYE0f1G_VQ",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -363,6 +417,8 @@
     {
       "contentId": "content:shorts_main:elr-s-088",
       "scheduledAt": "2026-09-19T09:30:00+08:00",
+      "youtubeVideoId": "TCULkBBxaj4",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -376,6 +432,8 @@
     {
       "contentId": "content:shorts_main:elr-s-089",
       "scheduledAt": "2026-09-19T13:00:00+08:00",
+      "youtubeVideoId": "vG8dd59rRTA",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -389,6 +447,8 @@
     {
       "contentId": "content:shorts_main:elr-s-090",
       "scheduledAt": "2026-09-19T17:00:00+08:00",
+      "youtubeVideoId": "56-Y9UMvkiQ",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -402,6 +462,8 @@
     {
       "contentId": "content:shorts_main:elr-s-091",
       "scheduledAt": "2026-09-19T22:00:00+08:00",
+      "youtubeVideoId": "HKDuq5bsZNY",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -415,6 +477,8 @@
     {
       "contentId": "content:shorts_main:elr-s-092",
       "scheduledAt": "2026-09-20T09:30:00+08:00",
+      "youtubeVideoId": "pOjm5M8I8GI",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -428,6 +492,8 @@
     {
       "contentId": "content:shorts_main:elr-s-093",
       "scheduledAt": "2026-09-20T13:00:00+08:00",
+      "youtubeVideoId": "wmiQLGB2Pwg",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -441,6 +507,8 @@
     {
       "contentId": "content:shorts_main:elr-s-094",
       "scheduledAt": "2026-09-20T17:00:00+08:00",
+      "youtubeVideoId": "7gzWhoONPGs",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
@@ -454,6 +522,8 @@
     {
       "contentId": "content:shorts_main:elr-s-095",
       "scheduledAt": "2026-09-20T22:00:00+08:00",
+      "youtubeVideoId": "im7G9GtRjJ4",
+      "assetsAlreadySet": true,
       "categoryId": "27",
       "containsSyntheticMedia": true,
       "notifySubscribers": false,
