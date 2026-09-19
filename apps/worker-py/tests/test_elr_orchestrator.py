@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from argparse import Namespace
 from pathlib import Path
 
@@ -16,6 +17,31 @@ import monitor_episode_render  # noqa: E402
 from elr import audio_render_command, command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
+from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE  # noqa: E402
+
+
+def test_default_render_batch_is_memory_safe_for_production_host() -> None:
+    assert DEFAULT_RENDER_BATCH_SIZE == 2
+
+
+def test_render_subprocess_timeout_terminates_stuck_process(tmp_path: Path) -> None:
+    logger = monitor_episode_render.MonitorLogger(tmp_path / "timeout.log")
+    started = time.monotonic()
+    try:
+        code = monitor_episode_render.run_subprocess(
+            [sys.executable, "-c", "import time; time.sleep(60)"],
+            logger,
+            timeout_sec=0.2,
+        )
+    finally:
+        logger.close()
+
+    assert code == 124
+    # The bound only has to prove the tree was terminated instead of waiting
+    # out the 60-second sleep. Interpreter spawn plus antivirus scanning on
+    # this Windows host has measured 7.5 seconds, so a tight bound flakes.
+    assert time.monotonic() - started < 30
+    assert "terminating process tree for retry" in (tmp_path / "timeout.log").read_text(encoding="utf-8")
 
 
 def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Path) -> None:

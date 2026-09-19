@@ -203,7 +203,7 @@ path. Query the durable state at any time:
 ### Why per-turn monitor?
 
 Loading VoxCPM once for 134 turns in one process often CUDA-crashes on 8GB GPUs.
-The internal monitor renders **batches of turns per subprocess** (default `--batch-size 20`):
+The internal monitor renders **batches of turns per subprocess** (default `--batch-size 2`):
 one model load → up to N turns → unload. Retries failed batches, resumes when WAVs already exist,
 then compose+QC once at the end. Do **not** set batch-size to the full episode turn count.
 
@@ -215,12 +215,18 @@ compatibility mirror.
 
 | Rule | Why |
 |------|-----|
-| **`--batch-size` default 20, max 20** | One VoxCPM load per batch; tested balance between load overhead and 8GB VRAM. Entire episodes still OOM |
+| **`--batch-size` default 2, max 20** | Batch 2 is the measured safe default on the 16 GB RAM / 8 GB VRAM production host. Chatterbox crashed with Windows exit `3221225477` at batch 8 on 2026-09-18. Larger values require an explicit monitored override for a validated provider and host |
+| **Five-minute turn-batch watchdog** | A stalled provider subprocess tree is terminated with exit 124 and retried through the existing cooldown path while completed WAVs remain reusable |
 | **`torch.cuda.empty_cache()` between turns** | Keeps VRAM stable within a batch on 8GB GPUs |
 | **Global GPU lock** on all production entry points | Prevents duplicate relaunches stacking 2× VoxCPM or VoxCPM + NVENC |
 | **Render `--no-self-check` when pack uses `--qc-no-asr`** | Skips redundant Whisper load after turns; pack runs layer-1 QC only |
 | **Pack compose defaults to `libx264`** (CPU) | ffmpeg NVENC contends with VoxCPM on the same NVIDIA GPU |
 | **Serial series** in `scripts/elr.py` | A → B → C; never parallel renders |
+
+The host-memory preflight blocks below 3 GiB available and warns between 3 and
+8 GiB. A warning requires the safe batch size of 2 and one heavy job at a time;
+it is not treated as a false out-of-memory failure after the provider smoke
+check has already loaded and released its libraries.
 
 `scripts/elr.py` holds the lock for the full selected series set. Internal child
 render/pack subprocesses inherit the parent lock.
