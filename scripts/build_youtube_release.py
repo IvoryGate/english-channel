@@ -71,7 +71,10 @@ def build_release_item(slot: dict[str, Any]) -> dict[str, Any]:
 
 def build_manifest(plan_path: Path) -> dict[str, Any]:
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
-    items = [build_release_item(slot) for slot in plan["publicationSlots"]]
+    items = sorted(
+        (build_release_item(slot) for slot in plan["publicationSlots"]),
+        key=lambda item: str(item["scheduledAt"]),
+    )
     return {
         "schema": "youtube-release-manifest-v1",
         "youtubeChannelId": CHANNEL_ID,
