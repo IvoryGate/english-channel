@@ -55,8 +55,15 @@ def _production_env(repo_root: Path) -> dict[str, str]:
 
 def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     runtime_root = _runtime_root(repo_root)
+    # Kokoro is the production default for 8 GiB Windows workstations. VoxCPM
+    # remains available only through an explicit operator override because its
+    # model-load peak can exceed the usable VRAM even when the idle reading
+    # appears to show roughly 7 GiB free.
+    provider = os.environ.get("ELR_SHORTS_TTS_PROVIDER", "kokoro").strip().casefold()
+    if provider not in {"voxcpm", "kokoro"}:
+        raise ValueError("ELR_SHORTS_TTS_PROVIDER must be 'voxcpm' or 'kokoro'")
     model = Path(os.environ.get("VOXCPM_MODEL_ID", runtime_root / "pretrained_models" / "VoxCPM2")).resolve()
-    if not model.is_dir():
+    if provider == "voxcpm" and not model.is_dir():
         raise FileNotFoundError(f"VoxCPM2 model is unavailable: {model}")
     riley = _required_runtime_file(
         runtime_root,
@@ -111,23 +118,43 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
                 "pauseAfterSec": pause_after,
             }
         )
+    hosts = {
+        "Riley": {"role": "narrator", "referenceAudioClean": str(riley)},
+        "Sam": {"role": "dialogue partner", "referenceAudioClean": str(sam)},
+    }
+    render_settings: dict[str, Any]
+    if provider == "kokoro":
+        hosts["Riley"]["voice"] = {"kind": "preset", "voiceId": "af_heart"}
+        hosts["Sam"]["voice"] = {"kind": "preset", "voiceId": "am_fenrir"}
+        render_settings = {
+            "modelId": "hexgrad/Kokoro-82M",
+            "device": "cpu",
+            "ttsProvider": "kokoro",
+            "modelRevision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+            "providerPython": "workspace/runtime/tts-audition/kokoro-env/Scripts/python.exe",
+            "localModelPath": "workspace/runtime/tts-audition/cache/huggingface/hub",
+            "seedBase": 20260914,
+            "providerSettings": {"languageCode": "a", "speed": 0.95},
+            "interTurnSilenceSec": float(manifest["renderSettings"]["interTurnSilenceSec"]),
+            "renderReport": "short_audio_render_report.json",
+        }
+    else:
+        render_settings = {
+            "modelId": str(model),
+            "device": os.environ.get("ELR_SHORTS_DEVICE", "cuda"),
+            "ttsProvider": "voxcpm",
+            "cfgValue": 2.15,
+            "inferenceTimesteps": 10,
+            "interTurnSilenceSec": float(manifest["renderSettings"]["interTurnSilenceSec"]),
+            "renderReport": "short_audio_render_report.json",
+        }
     return {
         "schema": "elr-short-audio-manifest-v1",
         "episodeId": manifest["shortId"],
         "shortId": manifest["shortId"],
         "showId": "series_b",
-        "hosts": {
-            "Riley": {"role": "narrator", "referenceAudioClean": str(riley)},
-            "Sam": {"role": "dialogue partner", "referenceAudioClean": str(sam)},
-        },
-        "renderSettings": {
-            "modelId": str(model),
-            "device": os.environ.get("ELR_SHORTS_DEVICE", "cuda"),
-            "cfgValue": 2.15,
-            "inferenceTimesteps": 10,
-            "interTurnSilenceSec": float(manifest["renderSettings"]["interTurnSilenceSec"]),
-            "renderReport": "short_audio_render_report.json",
-        },
+        "hosts": hosts,
+        "renderSettings": render_settings,
         "turns": turns,
     }
 
@@ -239,7 +266,7 @@ def _sync_timing(
     manifest["audio"] = {
         "status": "ready",
         "master": str(master_path.relative_to(workspace)),
-        "renderer": "voxcpm2-short-form-v1",
+        "renderer": f"{audio_manifest['renderSettings']['ttsProvider']}-short-form-v1",
         "sourceManifest": "audio_manifest.json",
         "timelineScale": round(timeline_scale, 6),
     }

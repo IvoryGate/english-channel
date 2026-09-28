@@ -99,6 +99,15 @@ def validate_product(product: dict[str, Any]) -> None:
             raise ContractError(f"product.quality.{key} must be numeric")
     if quality["durationMinSec"] >= quality["durationHardMaxSec"]:
         raise ContractError("durationMinSec must be below durationHardMaxSec")
+    minimum_spoken_rates = quality.get("minimumSpokenWordsPerSec")
+    if minimum_spoken_rates is not None:
+        if not isinstance(minimum_spoken_rates, dict) or set(minimum_spoken_rates) != {"short", "long"}:
+            raise ContractError("quality.minimumSpokenWordsPerSec must define short and long")
+        if any(
+            not isinstance(value, (int, float)) or not 0 < float(value) <= 3
+            for value in minimum_spoken_rates.values()
+        ):
+            raise ContractError("quality.minimumSpokenWordsPerSec values must be between 0 and 3")
     cutoff = quality.get("durationVariantCutoffSec")
     if not isinstance(cutoff, (int, float)) or not (
         quality["durationMinSec"] <= cutoff < quality["durationHardMaxSec"]
@@ -231,7 +240,11 @@ def validate_entry(entry: dict[str, Any], product: dict[str, Any], where: str) -
             entry["answer"],
         ]
     )
-    minimum_words = int(float(duration) * (2.1 if expected_duration == "short" else 2.15))
+    minimum_spoken_rates = quality.get("minimumSpokenWordsPerSec") or {
+        "short": 2.1,
+        "long": 2.15,
+    }
+    minimum_words = int(float(duration) * float(minimum_spoken_rates[expected_duration]))
     if spoken_words < minimum_words:
         raise ContractError(
             f"{where} has {spoken_words} spoken words; at least {minimum_words} are required "

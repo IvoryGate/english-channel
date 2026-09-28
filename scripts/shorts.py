@@ -257,7 +257,9 @@ def build_parser() -> argparse.ArgumentParser:
     render.add_argument("--preview", action="store_true")
     render.set_defaults(func=command_render)
 
-    render_audio_parser = subparsers.add_parser("render-audio", help="Render and master Short audio with VoxCPM2")
+    render_audio_parser = subparsers.add_parser(
+        "render-audio", help="Render and master Short audio with the configured TTS provider"
+    )
     add_contract_args(render_audio_parser)
     render_audio_parser.add_argument("--short", required=True)
     render_audio_parser.add_argument("--force", action="store_true")
@@ -265,7 +267,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     render_audio_batch_parser = subparsers.add_parser(
         "render-audio-batch",
-        help="Render several Shorts in GPU-safe chunks while reusing each model load",
+        help="Render several Shorts in provider-safe chunks while reusing each model load",
     )
     add_contract_args(render_audio_batch_parser)
     batch_selection = render_audio_batch_parser.add_mutually_exclusive_group(required=True)

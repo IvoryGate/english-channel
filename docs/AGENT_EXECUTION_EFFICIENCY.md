@@ -43,6 +43,9 @@ Defensive programming is not a goal. Evidence is.
 - A dialogue-TTS turn batch has a five-minute watchdog. If its subprocess tree
   does not finish, terminate the tree with exit code 124 and use the ordinary
   cooldown/retry path; never delete already valid turn WAVs.
+- Shorts audio defaults to Kokoro on CPU. VoxCPM may be used only through an
+  explicit `ELR_SHORTS_TTS_PROVIDER=voxcpm` override for a named recovery or
+  comparison run; process restarts must preserve the Kokoro default.
 - Capture repetitive renderer progress locally. On success, retain only the
   artifact result; on failure, expose a bounded diagnostic tail instead of the
   complete frame-by-frame log.
