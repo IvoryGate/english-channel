@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "friday-2026-10-02",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-140",
+      "title": "You Do Not Need to Feel Ready to Start",
+      "thumbnailHeadline": "START BEFORE READY",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "You want to start an English task, but you do not feel ready. Which first step gives you useful evidence?",
+      "turns": [
+        {"speaker": "narrator", "text": "Option A: Wait until you feel completely confident and can predict every problem."},
+        {"speaker": "narrator", "text": "Option B: Write three rough bullet points, then decide what information you need."}
+      ],
+      "prompt": "Which option helps you become ready?",
+      "answer": "Option B, because a small result shows you the real next step. The evidence replaces guessing with a concrete decision.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime home office, adult man chooses between a distant glowing confidence cloud and three practical bullet cards beside a laptop, adult woman offers calm support, no readable text.",
+      "backgroundImage": "shorts/friday-2026-10-02/elr-s-140/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-141",
+      "title": "Treat the First Attempt as a Draft",
+      "thumbnailHeadline": "IT IS A DRAFT",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Your first attempt does not need to prove that you are good enough.",
+      "turns": [
+        {"speaker": "mia", "text": "I keep deleting my English voice message because it does not sound smooth."},
+        {"speaker": "leo", "text": "Treat it as a draft. Record twenty seconds, listen once, and choose one sentence to improve."},
+        {"speaker": "mia", "text": "So the first recording gives me information. It is not a final performance."},
+        {"speaker": "leo", "text": "Right. One recording, one listen, one change. That is enough to move forward today."}
+      ],
+      "prompt": "What is the job of a draft?",
+      "answer": "To make the next improvement visible, not to be perfect.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime desk scene, adult woman records a short voice message while adult man points to one simple revision card, warm coral and teal light, no readable text.",
+      "backgroundImage": "shorts/friday-2026-10-02/elr-s-141/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-142",
+      "title": "One Bridge Line Can Start the Conversation",
+      "thumbnailHeadline": "USE A BRIDGE LINE",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "statement",
+      "hook": "Ethan waited for the perfect moment to join a conversation, so he stayed silent while everyone else kept talking.",
+      "turns": [
+        {"speaker": "narrator", "text": "The topic kept changing while he searched for a brilliant opening, and each new idea made him hesitate again."},
+        {"speaker": "narrator", "text": "Then he used one ordinary bridge line: I have heard about that place. Is it good?"},
+        {"speaker": "narrator", "text": "The real reply gave him his next move, and the conversation finally felt open."}
+      ],
+      "prompt": "What does a bridge line do?",
+      "answer": "It moves you from listening to participating.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime networking scene, adult man uses a small conversational bridge to join two friendly adults, visible social connection motif without words, vivid warm colors, no readable text.",
+      "backgroundImage": "shorts/friday-2026-10-02/elr-s-142/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-143",
+      "title": "Separate Real Requirements From Feelings",
+      "thumbnailHeadline": "WHAT DO YOU NEED?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "question",
+      "hook": "Do you need more preparation, or are you waiting for certainty?",
+      "turns": [
+        {"speaker": "mia", "text": "I want to call the clinic, but I do not feel ready for every possible question."},
+        {"speaker": "leo", "text": "Check the real requirements. You need the phone number, your calendar, and the reason for the call."},
+        {"speaker": "mia", "text": "I can prepare one opening line and ask them to repeat a time if I miss it."},
+        {"speaker": "leo", "text": "That is practical readiness. You can begin without predicting the whole conversation."}
+      ],
+      "prompt": "What is practical readiness?",
+      "answer": "Having the information and tools the next action truly requires.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime kitchen-table phone scene, adult woman calmly checks a calendar and phone while adult man separates essential preparation cards from a cloudy worry pile, no readable text.",
+      "backgroundImage": "shorts/friday-2026-10-02/elr-s-143/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "long"}
+    }
+  ]
+}

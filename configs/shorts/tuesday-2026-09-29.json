@@ -1,0 +1,100 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "tuesday-2026-09-29",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-128",
+      "title": "Stop Using Other People's Scoreboard",
+      "thumbnailHeadline": "SCOREBOARD OR MAP?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 34,
+      "hookStyle": "question",
+      "hook": "Feeling behind? You may be using the wrong scoreboard.",
+      "turns": [
+        {"speaker": "narrator", "text": "A scoreboard asks who is winning. A map asks where you are and what comes next."},
+        {"speaker": "narrator", "text": "Replace comparison with one honest location."}
+      ],
+      "prompt": "Which tool helps you choose the next action?",
+      "answer": "A map, not a scoreboard.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime adult woman replacing a sports scoreboard with a simple route map at a cozy desk, relieved adult man nearby, mustard and teal, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-09-29/elr-s-128/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-129",
+      "title": "Make the Next Step Visible",
+      "thumbnailHeadline": "ONE VISIBLE STEP",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Your brain cannot finish a feeling. It can finish an action.",
+      "turns": [
+        {"speaker": "ethan", "text": "I need to get my life together."},
+        {"speaker": "nora", "text": "That is pressure, not a task. Try a verb, an object, and a time."},
+        {"speaker": "ethan", "text": "I will update two lines on my résumé at seven thirty."}
+      ],
+      "prompt": "What makes a next step visible?",
+      "answer": "A clear action, object, and time.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime home desk, adult man turns a cloudy thought bubble into one clear task card while an adult woman encourages him, warm daylight, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-09-29/elr-s-129/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-130",
+      "title": "Choose Continuity Over Speed",
+      "thumbnailHeadline": "KEEP IT ALIVE",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 43,
+      "hookStyle": "statement",
+      "hook": "A difficult week does not need to destroy the whole plan.",
+      "turns": [
+        {"speaker": "narrator", "text": "Ethan planned five study sessions, but work and family changed the week."},
+        {"speaker": "narrator", "text": "He reduced the plan to two short sessions and one review."},
+        {"speaker": "narrator", "text": "He chose continuity over speed."}
+      ],
+      "prompt": "What did Ethan protect?",
+      "answer": "Regular progress, even at a slower pace.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime adult man calmly simplifying an overloaded weekly planner into three clear blocks, warm home setting, hopeful mood, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-09-29/elr-s-130/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-131",
+      "title": "Fact or Summary? Repair the Thought",
+      "thumbnailHeadline": "FACT OR SUMMARY?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "question",
+      "hook": "Everyone is moving forward. Is that a fact or a summary?",
+      "turns": [
+        {"speaker": "nora", "text": "Replace the heavy summary with facts."},
+        {"speaker": "ethan", "text": "I have not applied for a new role, but I completed a course and led a project."},
+        {"speaker": "nora", "text": "Now ask what you want and choose one visible step this week."}
+      ],
+      "prompt": "What comes before choosing the next step?",
+      "answer": "Replace the summary with accurate facts.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime split composition, adult man faces a dark vague cloud on one side and three clear evidence cards on the other, adult woman guides the change, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-09-29/elr-s-131/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "long"}
+    }
+  ]
+}

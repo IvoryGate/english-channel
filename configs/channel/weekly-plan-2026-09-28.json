@@ -1,0 +1,94 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-09-28",
+  "strategy": "mature_week_evidence_with_search_intent_and_daily_short_form",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedAt": "2026-09-27",
+    "scope": "plan_full_week_and_produce_release_monday_slice",
+    "confirmationPolicy": "owner_requested_immediate_monday_production",
+    "controlPlaneRemoteMutationAuthority": true
+  },
+  "evidence": {
+    "planningRule": "Use the latest complete seven-day cohort, compare the current partial week only as directional evidence, and preserve fixed publish times.",
+    "directions": [
+      "search_aligned_real_english_listening_tasks",
+      "one_clear_problem_per_video",
+      "answer_and_repair_loops_for_a2_b1",
+      "specific_workplace_tension_for_b2_c1",
+      "shorts_as_complete_micro_lessons_not_trailers"
+    ]
+  },
+  "portfolio": {
+    "longFormCount": 7,
+    "dialogueCount": 6,
+    "classicListeningCount": 1,
+    "shortsCount": 28,
+    "qualityGate": "docs/QUALITY_SCORE.md"
+  },
+  "formatContracts": {
+    "standard": {"durationMinutes": [10, 15], "spokenWordTarget": [1400, 2800]},
+    "extended": {"durationMinutes": [18, 25], "spokenWordTarget": [2600, 3600]},
+    "flagship_40": {
+      "durationMinutes": [35, 45],
+      "targetMinutes": [38, 42],
+      "spokenWordTarget": [5200, 6200],
+      "measuredMediaDurationRequired": true,
+      "minimumStimulusChanges": 10
+    }
+  },
+  "publicationSlots": [
+    {"contentId":"content:classic_listening:persuasion_chapter_007","scheduledAt":"2026-09-28T08:00:00+08:00","format":"classic_listening","remoteAction":"scheduled","youtubeVideoId":"o1Us58qLG78","shareUrl":"https://youtu.be/o1Us58qLG78","subtitles":"uploaded","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-124","scheduledAt":"2026-09-28T09:30:00+08:00","source":"series_b_episode_031","remoteAction":"scheduled","youtubeVideoId":"ld8xLlPOr8E","shareUrl":"https://youtube.com/shorts/ld8xLlPOr8E","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-125","scheduledAt":"2026-09-28T13:00:00+08:00","source":"series_b_episode_031","remoteAction":"scheduled","youtubeVideoId":"qVTvmtlOQ40","shareUrl":"https://youtube.com/shorts/qVTvmtlOQ40","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-126","scheduledAt":"2026-09-28T17:00:00+08:00","source":"series_b_episode_031","remoteAction":"scheduled","youtubeVideoId":"hzGDroaYnAo","shareUrl":"https://youtube.com/shorts/hzGDroaYnAo","checks":"local_and_platform_pass"},
+    {"contentId":"content:series_b:episode_031","scheduledAt":"2026-09-28T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"CLpTP1VjyGI","shareUrl":"https://youtu.be/CLpTP1VjyGI","subtitles":"uploaded","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-127","scheduledAt":"2026-09-28T22:00:00+08:00","source":"series_b_episode_031","remoteAction":"scheduled","youtubeVideoId":"525kBJ9TyZA","shareUrl":"https://youtube.com/shorts/525kBJ9TyZA","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-128","scheduledAt":"2026-09-29T11:45:00+08:00","source":"series_a_episode_030","remoteAction":"scheduled","youtubeVideoId":"b7A2HKZK7ng","shareUrl":"https://youtube.com/shorts/b7A2HKZK7ng","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-129","scheduledAt":"2026-09-29T13:00:00+08:00","source":"series_a_episode_030","remoteAction":"scheduled","youtubeVideoId":"66DnSe_AhHA","shareUrl":"https://youtube.com/shorts/66DnSe_AhHA","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-130","scheduledAt":"2026-09-29T17:00:00+08:00","source":"series_a_episode_030","remoteAction":"scheduled","youtubeVideoId":"uQK5TENYIls","shareUrl":"https://youtube.com/shorts/uQK5TENYIls","checks":"local_and_platform_pass"},
+    {"contentId":"content:series_a:episode_030","scheduledAt":"2026-09-29T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"Uy78cZpyqq8","shareUrl":"https://youtu.be/Uy78cZpyqq8","subtitles":"uploaded","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-131","scheduledAt":"2026-09-29T22:00:00+08:00","source":"series_a_episode_030","remoteAction":"scheduled","youtubeVideoId":"hSp5V-O_FbE","shareUrl":"https://youtube.com/shorts/hSp5V-O_FbE","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-132","scheduledAt":"2026-09-30T15:30:00+08:00","source":"series_c_episode_028","remoteAction":"scheduled","youtubeVideoId":"l48Gx_zzt_Q","shareUrl":"https://youtube.com/shorts/l48Gx_zzt_Q","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-133","scheduledAt":"2026-09-30T17:00:00+08:00","source":"series_c_episode_028","remoteAction":"scheduled","youtubeVideoId":"V_vux4BmfD8","shareUrl":"https://youtube.com/shorts/V_vux4BmfD8","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-134","scheduledAt":"2026-09-30T18:30:00+08:00","source":"series_c_episode_028","remoteAction":"scheduled","youtubeVideoId":"hQkUOWlAujk","shareUrl":"https://youtube.com/shorts/hQkUOWlAujk","checks":"local_pass_platform_processing"},
+    {"contentId":"content:series_c:episode_028","scheduledAt":"2026-09-30T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"rXPA2jIIPjI","shareUrl":"https://youtu.be/rXPA2jIIPjI","subtitles":"uploaded","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-135","scheduledAt":"2026-09-30T22:00:00+08:00","source":"series_c_episode_028","remoteAction":"scheduled","youtubeVideoId":"ieK_951uuMU","shareUrl":"https://youtube.com/shorts/ieK_951uuMU","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-136","scheduledAt":"2026-10-02T00:30:00+08:00","source":"series_b_episode_032","remoteAction":"scheduled","youtubeVideoId":"0UUQJJ6PViI","shareUrl":"https://youtube.com/shorts/0UUQJJ6PViI","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-137","scheduledAt":"2026-10-02T01:00:00+08:00","source":"series_b_episode_032","remoteAction":"scheduled","youtubeVideoId":"vpBNWtyGt_c","shareUrl":"https://youtube.com/shorts/vpBNWtyGt_c","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-138","scheduledAt":"2026-10-02T01:30:00+08:00","source":"series_b_episode_032","remoteAction":"scheduled","youtubeVideoId":"V3UIuo5owcg","shareUrl":"https://youtube.com/shorts/V3UIuo5owcg","checks":"local_and_platform_pass"},
+    {"contentId":"content:series_b:episode_032","scheduledAt":"2026-10-02T15:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"sOq-HtZPNEY","shareUrl":"https://youtu.be/sOq-HtZPNEY","subtitles":"uploaded","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-139","scheduledAt":"2026-10-02T02:00:00+08:00","source":"series_b_episode_032","remoteAction":"scheduled","youtubeVideoId":"o-E88wSSkF4","shareUrl":"https://youtube.com/shorts/o-E88wSSkF4","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-140","scheduledAt":"2026-10-02T16:00:00+08:00","source":"series_a_episode_031","remoteAction":"scheduled","youtubeVideoId":"ohsUSXDB0js","shareUrl":"https://youtube.com/shorts/ohsUSXDB0js","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-141","scheduledAt":"2026-10-02T17:00:00+08:00","source":"series_a_episode_031","remoteAction":"scheduled","youtubeVideoId":"KyfIG2ka3KM","shareUrl":"https://youtube.com/shorts/KyfIG2ka3KM","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-142","scheduledAt":"2026-10-02T18:30:00+08:00","source":"series_a_episode_031","remoteAction":"scheduled","youtubeVideoId":"tbypc0IGbtg","shareUrl":"https://youtube.com/shorts/tbypc0IGbtg","checks":"local_and_platform_processing"},
+    {"contentId":"content:series_a:episode_031","scheduledAt":"2026-10-02T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"YrAOjiXzGqI","shareUrl":"https://youtu.be/YrAOjiXzGqI","subtitles":"uploaded","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-143","scheduledAt":"2026-10-02T22:00:00+08:00","source":"series_a_episode_031","remoteAction":"scheduled","youtubeVideoId":"QnAz1U6x4m0","shareUrl":"https://youtube.com/shorts/QnAz1U6x4m0","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-144","scheduledAt":"2026-10-03T09:30:00+08:00","source":"weekly_best_listening","remoteAction":"scheduled","youtubeVideoId":"0gQkMkxgvgs","shareUrl":"https://youtube.com/shorts/0gQkMkxgvgs","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-145","scheduledAt":"2026-10-03T13:00:00+08:00","source":"weekly_best_daily_talk","remoteAction":"scheduled","youtubeVideoId":"LnY20sKTH4E","shareUrl":"https://youtube.com/shorts/LnY20sKTH4E","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-146","scheduledAt":"2026-10-03T17:00:00+08:00","source":"persuasion_chapter_007","remoteAction":"scheduled","youtubeVideoId":"V7jMINOaUuo","shareUrl":"https://youtube.com/shorts/V7jMINOaUuo","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-147","scheduledAt":"2026-10-03T22:00:00+08:00","source":"persuasion_chapter_007","remoteAction":"scheduled","youtubeVideoId":"RlwyQrlwhyg","shareUrl":"https://youtube.com/shorts/RlwyQrlwhyg","checks":"local_pass_platform_processing"},
+    {"contentId":"content:series_b:episode_033","scheduledAt":"2026-10-04T08:00:00+08:00","format":"flagship_40","remoteAction":"scheduled","youtubeVideoId":"m9MyZNFnedA","shareUrl":"https://youtu.be/m9MyZNFnedA","subtitles":"uploaded","durationSec":2151.633,"checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-148","scheduledAt":"2026-10-04T09:30:00+08:00","source":"series_b_episode_033","remoteAction":"scheduled","youtubeVideoId":"-6EnnEwa7bQ","shareUrl":"https://youtube.com/shorts/-6EnnEwa7bQ","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-149","scheduledAt":"2026-10-04T13:00:00+08:00","source":"series_b_episode_033","remoteAction":"scheduled","youtubeVideoId":"fPW2koJI-28","shareUrl":"https://youtube.com/shorts/fPW2koJI-28","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-150","scheduledAt":"2026-10-04T17:00:00+08:00","source":"series_b_episode_033","remoteAction":"scheduled","youtubeVideoId":"EN-WazrWEJc","shareUrl":"https://youtube.com/shorts/EN-WazrWEJc","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-151","scheduledAt":"2026-10-04T22:00:00+08:00","source":"weekly_transfer_challenge","remoteAction":"scheduled","youtubeVideoId":"nYy4Xr2z3Sk","shareUrl":"https://youtube.com/shorts/nYy4Xr2z3Sk","checks":"local_pass_platform_processing"}
+  ],
+  "dialogueBriefs": [
+    {"contentId":"content:series_b:episode_031","format":"standard","topicPillar":"practical_english","workingTitle":"English Phone Listening Practice — Catch the Key Detail | A2-B1","centralIdea":"Phone listening becomes manageable when learners predict the needed detail, catch the answer, and confirm it once.","candidateScore":90,"status":"approved_for_production"},
+    {"contentId":"content:series_a:episode_030","format":"standard","topicPillar":"resilience","workingTitle":"Daily Talk | When You Feel Behind | Learn English B1-B2","centralIdea":"Feeling behind becomes useful only after it is converted into one visible next step that fits the real week.","candidateScore":84,"status":"planned"},
+    {"contentId":"content:series_c:episode_028","format":"standard","topicPillar":"relationships","workingTitle":"How to Ask for More Time Without Sounding Unprepared | B2-C1","centralIdea":"A credible request for more time names progress, constraint, decision, and a specific revised commitment.","candidateScore":86,"status":"planned"},
+    {"contentId":"content:series_b:episode_032","format":"standard","topicPillar":"everyday_life","workingTitle":"Airport English Listening Practice — Gate, Time, Change | A2-B1","centralIdea":"Travel announcements become easier when learners separate the original detail from the final changed instruction.","candidateScore":89,"status":"planned"},
+    {"contentId":"content:series_a:episode_031","format":"standard","topicPillar":"psychology","workingTitle":"Daily Talk | Stop Waiting to Feel Ready | Learn English B1-B2","centralIdea":"Readiness often follows a small real action instead of arriving before it.","candidateScore":82,"status":"planned"},
+    {"contentId":"content:series_b:episode_033","format":"flagship_40","topicPillar":"practical_english","workingTitle":"40-Minute Real English Phone Listening Test | A2-B1","centralIdea":"A complete phone-listening test trains names, numbers, times, corrections, actions, and confirmation across realistic calls.","candidateScore":92,"status":"planned"}
+  ],
+  "ttsRollout": {
+    "series_b": {"provider":"kokoro","voices":{"Riley":"af_heart","Sam":"am_fenrir"}},
+    "series_a": {"provider":"chatterbox_500m"},
+    "series_c": {"provider":"chatterbox_500m"},
+    "classic_listening": {"provider":"chatterbox_500m"},
+    "fallback":"voxcpm",
+    "mixedProviderEpisodeAllowed":false
+  }
+}
