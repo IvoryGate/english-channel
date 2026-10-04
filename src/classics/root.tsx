@@ -4,9 +4,11 @@ import {PersuasionChapterCover} from './persuasion-chapter-cover';
 
 const voice = (chapter: number, mode: 'intro' | 'outro') => `branding/chapter-${String(chapter).padStart(2, '0')}-${mode}.wav`;
 
+const persuasionChapters = Array.from({length: 24}, (_, index) => index + 1);
+
 export const ClassicsRoot = () => (
   <>
-    {([1, 2, 3, 4, 5] as const).flatMap((chapter) => [
+    {persuasionChapters.flatMap((chapter) => [
       <Composition
         key={`intro-${chapter}`}
         id={`PersuasionChapter${chapter}Intro`}
@@ -28,7 +30,7 @@ export const ClassicsRoot = () => (
         height={1440}
       />,
     ])}
-    {([1, 2, 3, 4, 5] as const).map((chapter) => (
+    {persuasionChapters.map((chapter) => (
       <Composition
         key={`cover-${chapter}`}
         id={`PersuasionChapter${chapter}Cover`}

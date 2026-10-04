@@ -2,7 +2,7 @@ import {AbsoluteFill, Img, staticFile} from 'remotion';
 
 const serif = 'Georgia, Times New Roman, serif';
 
-const chapters = {
+const chapters: Record<number, {background: string; hook: [string, string]; summary: string}> = {
   1: {
     background: 'chapter-01-cover-bg-v2.png',
     hook: ['A FAMILY', 'OF PRIDE'],
@@ -28,10 +28,36 @@ const chapters = {
     hook: ['LEFT BEHIND,', 'STILL NEEDED'],
     summary: 'As Kellynch empties, Anne finds a new duty at Uppercross.',
   },
-} as const;
+  6: {
+    background: 'chapter-06-cover-bg-v1-imagegen.png',
+    hook: ['A NAME', 'DRAWS NEAR'],
+    summary: 'At Uppercross, ordinary life brings Captain Wentworth close again.',
+  },
+  7: {
+    background: 'chapter-07-cover-bg-v1-imagegen.png',
+    hook: ['HE SEES HER', 'AGAIN'],
+    summary: 'Anne and Captain Wentworth meet again—and one quiet remark wounds deeply.',
+  },
+  8: {
+    background: 'chapter-08-cover-bg-v1-imagegen.png',
+    hook: ['WORSE THAN', 'STRANGERS'],
+    summary: 'In the same room again, Anne and Wentworth feel the full distance of their shared past.',
+  },
+  9: {
+    background: 'chapter-09-cover-bg-v1-imagegen.png',
+    hook: ['ONE SMALL', 'KINDNESS'],
+    summary: 'A child, a crowded room, and one quiet act reveal what careful words cannot say.',
+  },
+};
 
-export const PersuasionChapterCover = ({chapter}: {chapter: keyof typeof chapters}) => {
-  const details = chapters[chapter];
+const fallback = {
+  background: 'chapter-01-cover-bg-v2.png',
+  hook: ['AUSTEN IN', 'FULL'],
+  summary: 'Continue Anne Elliot’s story in a complete chapter of classic English listening.',
+} satisfies {background: string; hook: [string, string]; summary: string};
+
+export const PersuasionChapterCover = ({chapter}: {chapter: number}) => {
+  const details = chapters[chapter] ?? fallback;
   return (
     <AbsoluteFill style={{backgroundColor: '#f3dfb7', color: '#4c3328', overflow: 'hidden'}}>
       <Img

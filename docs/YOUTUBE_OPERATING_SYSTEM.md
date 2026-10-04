@@ -245,6 +245,21 @@ Sequential title and format comparisons are matched-cohort evidence and must
 not be presented as laboratory causality. Cadence changes are channel-level
 experiments because they affect every product line.
 
+## Thumbnail Production Contract
+
+Long-form thumbnails must be delivered as one complete image-generation output
+with the scene, hierarchy, and final viewer-facing text generated together.
+Their visual language must match the video's approved background art; classic
+listening thumbnails use the same anime/editorial language as their Shorts
+promotion art. A long-form thumbnail is incomplete when its main title text is
+missing or unreadable at mobile size.
+Template compositing, split-panel assembly, or adding a typography layer to a
+generated background is not an approved production path unless the channel
+owner explicitly requests that treatment for a named item. Deterministic tools
+may resize, convert, compress, and validate the finished image, but must not
+redesign or recompose it. Before upload, inspect the final pixels for spelling,
+safe margins, mobile readability, duplicated anatomy, and extra hands or limbs.
+
 ## Resource Scheduling
 
 The current 8 GB GPU constraint starts with one exclusive heavy-GPU lease. The
