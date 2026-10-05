@@ -86,6 +86,28 @@ def test_monitor_command_can_skip_external_export(tmp_path: Path) -> None:
     assert "--youtube-root" in cmd
 
 
+def test_run_commands_default_to_canonical_workspace_only(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "sys.argv",
+        ["elr.py", "produce", "--episode", "20", "--series", "series_b"],
+    )
+
+    args = elr.parse_args()
+
+    assert args.skip_export is True
+
+
+def test_external_export_requires_explicit_flag(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "sys.argv",
+        ["elr.py", "produce", "--episode", "20", "--series", "series_b", "--export"],
+    )
+
+    args = elr.parse_args()
+
+    assert args.skip_export is False
+
+
 def test_audio_render_command_defers_compose_and_visual_pack(tmp_path: Path) -> None:
     context = build_context(tmp_path, "series_a", 17, tmp_path / "youtube")
     cmd = audio_render_command(
@@ -130,6 +152,56 @@ def test_turns_only_monitor_skips_compose_and_qc(tmp_path: Path, monkeypatch) ->
 
     assert result == 0
     assert any("deferred to formal production" in message for message in messages)
+
+
+def test_monitor_splits_multi_turn_batch_after_timeout(tmp_path: Path, monkeypatch) -> None:
+    manifest = tmp_path / "000_episode_017.episode_manifest.json"
+    turns = [
+        {"id": f"p{index:03d}", "filename": f"p{index:03d}.wav"}
+        for index in range(1, 5)
+    ]
+    manifest.write_text(
+        json.dumps({"renderSettings": {}, "turns": turns}),
+        encoding="utf-8",
+    )
+    messages: list[str] = []
+    calls: list[list[str]] = []
+    completed: set[str] = set()
+
+    class Logger:
+        def log(self, message: str) -> None:
+            messages.append(message)
+
+    def fake_pending(_manifest: dict[str, object], _workspace: Path, *, force: bool) -> list[dict[str, str]]:
+        del force
+        return [turn for turn in turns if turn["id"] not in completed]
+
+    def fake_render(*, turn_ids: list[str], **_kwargs: object) -> int:
+        calls.append(turn_ids)
+        if len(turn_ids) > 2:
+            return 124
+        completed.update(turn_ids)
+        return 0
+
+    monkeypatch.setattr(monitor_episode_render, "pending_turns", fake_pending)
+    monkeypatch.setattr(monitor_episode_render, "render_turn_batch", fake_render)
+
+    result = monitor_episode_render.monitor_render(
+        manifest_path=manifest,
+        python=Path("python.exe"),
+        device="cuda",
+        logger=Logger(),
+        batch_size=4,
+        force=False,
+        retry_on_failure=2,
+        cfg=2.35,
+        no_self_check=True,
+        turns_only=True,
+    )
+
+    assert result == 0
+    assert calls == [["p001", "p002", "p003", "p004"], ["p001", "p002"], ["p003", "p004"]]
+    assert any("splitting 4 turns into 2+2" in message for message in messages)
 
 
 def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:

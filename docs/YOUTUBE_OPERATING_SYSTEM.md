@@ -260,6 +260,18 @@ may resize, convert, compress, and validate the finished image, but must not
 redesign or recompose it. Before upload, inspect the final pixels for spelling,
 safe margins, mobile readability, duplicated anatomy, and extra hands or limbs.
 
+## Media Storage Contract
+
+The project workspace is the single canonical location for generated video,
+audio, subtitle, thumbnail, metadata, and trace artifacts. Do not copy finished
+packages into `H:\Youtube` or another parallel archive after upload. Upload and
+release tooling must consume the canonical workspace artifact directly.
+
+Temporary transfer files may exist only for the duration of an active upload.
+Remove them after platform verification. Before deleting any legacy archive,
+match it to the canonical item and verify the content fingerprint; preserve and
+report unmatched files instead of treating similar names as proof of duplication.
+
 ## Resource Scheduling
 
 The current 8 GB GPU constraint starts with one exclusive heavy-GPU lease. The

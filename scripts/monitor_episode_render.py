@@ -259,6 +259,11 @@ def render_turn_batch(
         code = run_subprocess(cmd, logger, timeout_sec=render_timeout_sec)
         if code == 0:
             return 0
+        # Retrying the same multi-turn batch after a watchdog timeout usually
+        # repeats the timeout. Let the monitor split it into smaller batches.
+        if code == 124 and len(turn_ids) > 1:
+            logger.log(f"turns {label} timed out; returning for adaptive split")
+            return code
         if attempt < attempts:
             logger.log(f"turns {label} failed (exit {code}); retrying after 15s cooldown")
             time.sleep(15)
@@ -327,8 +332,10 @@ def monitor_render(
         f"batch_size={batch_size} force={force}"
     )
 
-    completed_batches = 0
-    for batch in chunk_turns(pending, batch_size):
+    initial_pending = len(pending)
+    batches = chunk_turns(pending, batch_size)
+    while batches:
+        batch = batches.pop(0)
         if _stop_requested:
             return 130
         ids = [str(t["id"]) for t in batch]
@@ -341,11 +348,35 @@ def monitor_render(
             retry_on_failure=retry_on_failure,
             render_timeout_sec=render_timeout_sec,
         )
+        if code == 124 and len(batch) > 1:
+            # A timed-out worker may already have committed some turn WAVs.
+            # Re-check artifacts first, then retry only the missing turns in
+            # two smaller, ordered batches.
+            missing_ids = {
+                str(turn["id"])
+                for turn in pending_turns(load_manifest(manifest_path), workspace, force=False)
+            }
+            remaining = [turn for turn in batch if str(turn["id"]) in missing_ids]
+            if not remaining:
+                logger.log(f"turns {','.join(ids)} completed before timeout cleanup")
+                continue
+            if len(remaining) == 1:
+                batches.insert(0, remaining)
+                logger.log(f"batch {','.join(ids)} timed out; retrying remaining turn individually")
+                continue
+            midpoint = max(1, len(remaining) // 2)
+            smaller = [remaining[:midpoint], remaining[midpoint:]]
+            batches[0:0] = smaller
+            logger.log(
+                f"batch {','.join(ids)} timed out; splitting {len(remaining)} turns "
+                f"into {len(smaller[0])}+{len(smaller[1])}"
+            )
+            continue
         if code != 0:
             return code
-        completed_batches += 1
-        done = min(total, completed_batches * batch_size)
-        logger.log(f"progress {done}/{total} turns rendered this run")
+        missing_now = pending_turns(load_manifest(manifest_path), workspace, force=False)
+        rendered_this_run = max(0, initial_pending - len(missing_now))
+        logger.log(f"progress {rendered_this_run}/{initial_pending} pending turns completed this run")
 
     still = pending_turns(load_manifest(manifest_path), workspace, force=False)
     if still:

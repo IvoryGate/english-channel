@@ -321,7 +321,7 @@ Series C `[Word Tour + Close]` uses slow mirror echoes (`Hook.`, `Tangent.`, sig
 
 1. **Script:** mirror echoes should be 2–4 words (`Hook — got it.`), not bare one-word lines (see Series C `SCRIPT_TEMPLATE.md`).
 2. **Manifest:** `prepare_episode_manifest.py` caps `maxLen=28` for 1-word turns (was 56).
-3. **Pack:** `repair_episode_qc.py` trims trailing silence when possible, then re-renders blocking turns **one subprocess at a time** with GPU lock, re-composes `raw.wav`, loops up to 3 rounds.
+3. **Pack:** `repair_episode_qc.py` first normalizes valid but abnormally quiet turns and trims trailing silence, updating artifact hashes and trace metadata. Only remaining blocking turns are re-rendered **one subprocess at a time** with the GPU lock. It then re-composes `raw.wav` and loops up to 3 rounds.
 
 Timing-only flags (`CHECK_LONG` on slow Word Tour repeats) remain advisory and do not block pack when ASR/content is fine.
 
@@ -331,11 +331,12 @@ One job: **thumbnail (step 0) → QC → master → scripted subs → compose �
 
 **YouTube title hard limit (100 chars).** `prepare_episode_youtube_packaging.py` (step 5) fails the pack if `youtube.json` `title` exceeds 100 characters — YouTube silently truncates or rejects longer titles. Author the title ≤100 from the start; the `| Learn English` suffix on Series A titles is optional and should be dropped first if a title is over 100. The same guard runs in `export_episode_to_youtube_dir.py` as a safety net.
 
-**Workspace-only production.** The public controller accepts `--skip-export` on
-`produce` and `resume`. This keeps the verified MP4, WAV, subtitles, thumbnail,
-YouTube metadata, and reports in the canonical episode workspace while skipping
-the duplicate copy under `H:\Youtube`. Repository-managed production uses this
-mode unless an external upload directory is explicitly requested.
+**Workspace-only production is the default.** `produce` and `resume` keep the
+verified MP4, WAV, subtitles, thumbnail, YouTube metadata, and reports in the
+canonical episode workspace and do not create a duplicate under `H:\Youtube`.
+Use `--export --youtube-root <path>` only when the channel owner explicitly
+requests an external transfer copy. `--skip-export` remains accepted as an
+explicit, backward-compatible statement of the default.
 
 ```powershell
 & $py scripts/elr.py produce --episode 17 --series series_b

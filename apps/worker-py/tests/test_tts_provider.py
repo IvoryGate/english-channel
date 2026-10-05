@@ -35,6 +35,17 @@ def test_provider_float_output_is_peak_normalized_before_trace_and_write() -> No
     assert normalized.dtype == np.float32
 
 
+def test_provider_float_output_boosts_only_abnormally_quiet_audio() -> None:
+    quiet = np.asarray([-0.30, 0.15], dtype=np.float32)
+    ordinary = np.asarray([-0.60, 0.30], dtype=np.float32)
+
+    boosted = peak_normalize_float(quiet)
+    unchanged = peak_normalize_float(ordinary)
+
+    assert float(np.max(np.abs(boosted))) == pytest.approx(0.89, abs=1e-6)
+    assert np.array_equal(unchanged, ordinary)
+
+
 def _kokoro_settings(**changes: object) -> dict[str, object]:
     value: dict[str, object] = {
         "ttsProvider": "kokoro",

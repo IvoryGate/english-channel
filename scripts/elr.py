@@ -528,11 +528,20 @@ def _add_run_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--youtube-root", default=r"H:\Youtube")
     parser.add_argument("--batch-size", type=int, default=DEFAULT_RENDER_BATCH_SIZE)
     parser.add_argument("--force", action="store_true", help="Re-render existing turn WAVs.")
-    parser.add_argument(
+    export_mode = parser.add_mutually_exclusive_group()
+    export_mode.add_argument(
         "--skip-export",
+        dest="skip_export",
         action="store_true",
-        help="Keep verified products in the episode workspace and skip copying them to --youtube-root.",
+        help="Keep verified products only in the canonical episode workspace (default).",
     )
+    export_mode.add_argument(
+        "--export",
+        dest="skip_export",
+        action="store_false",
+        help="Explicitly copy verified products to --youtube-root after production.",
+    )
+    parser.set_defaults(skip_export=True)
     parser.add_argument("--detach", action="store_true", help="Run in the background and return PID/status/log paths.")
     parser.add_argument("--visible-window", action="store_true", help="With --detach on Windows, open a visible console.")
     parser.add_argument("--dry-run", action="store_true", help="Print canonical paths and commands without writing or running.")
@@ -552,7 +561,7 @@ def parse_args() -> argparse.Namespace:
     preflight.add_argument("--no-scaffold-metadata", action="store_true")
     preflight.set_defaults(func=command_preflight)
 
-    produce = subparsers.add_parser("produce", help="Prepare, preflight, then render/pack/export serially.")
+    produce = subparsers.add_parser("produce", help="Prepare, preflight, then render and pack serially.")
     _add_run_args(produce)
     produce.set_defaults(func=command_produce)
 
