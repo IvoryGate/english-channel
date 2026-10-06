@@ -1,0 +1,99 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "thursday-2026-10-08",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-164",
+      "title": "Can You Catch the Changed Train Platform?",
+      "thumbnailHeadline": "PLATFORM 4 OR 6?",
+      "format": "listen_choose",
+      "cefr": "A2",
+      "durationSec": 49,
+      "hookStyle": "question",
+      "hook": "Your train was on platform four. Listen for the final platform.",
+      "turns": [
+        {"speaker": "narrator", "text": "The eleven eighteen service to Brighton will now leave from platform six, not platform four. It is running twelve minutes late."},
+        {"speaker": "narrator", "text": "The final platform is six. Twelve is the delay in minutes, not another platform."}
+      ],
+      "prompt": "Which platform should you use?",
+      "answer": "Platform six.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime-style British railway concourse with one adult traveller looking at an abstract departure board, chest-up, hands out of frame, blue and amber palette, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-08/elr-s-164/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-165",
+      "title": "British Train Announcement: What Changed?",
+      "thumbnailHeadline": "LISTEN AFTER ‘NOW’",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "One word tells you the old travel plan has changed: now.",
+      "turns": [
+        {"speaker": "mia", "text": "The train was due at ten forty from platform two."},
+        {"speaker": "leo", "text": "It will now depart at eleven ten from platform five."},
+        {"speaker": "mia", "text": "So I cross out the old time and platform. The final instruction is eleven ten, platform five."}
+      ],
+      "prompt": "What are the final time and platform?",
+      "answer": "Eleven ten from platform five.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Polished bright anime illustration of two adult travellers beneath a modern station board made of abstract lines and shapes, shoulders-up, hands hidden, navy teal and warm yellow, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-08/elr-s-165/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-166",
+      "title": "A2 Listening Test: Appointment Time",
+      "thumbnailHeadline": "WHAT TIME?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 48,
+      "hookStyle": "question",
+      "hook": "The appointment is at nine forty, but what time should she arrive?",
+      "turns": [
+        {"speaker": "mia", "text": "Your appointment is at nine forty tomorrow. Please arrive ten minutes early and use the side entrance."},
+        {"speaker": "leo", "text": "Ten minutes before nine forty is nine thirty."}
+      ],
+      "prompt": "Should she arrive at nine twenty, nine thirty, or nine forty?",
+      "answer": "Nine thirty.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime-style health centre reception with one adult woman checking a wall clock, upper body only, both hands out of frame, coral blue and cream palette, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-08/elr-s-166/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-167",
+      "title": "British English Time: Half Nine",
+      "thumbnailHeadline": "HALF NINE = ?",
+      "format": "micro_story",
+      "cefr": "A2",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "In British English, half nine does not mean eight thirty.",
+      "turns": [
+        {"speaker": "narrator", "text": "Maya heard, ‘The meeting begins at half nine.’ She first thought it meant eight thirty."},
+        {"speaker": "narrator", "text": "In everyday British English, half nine means half past nine: nine thirty."},
+        {"speaker": "narrator", "text": "A quarter to nine is eight forty-five, but half nine is nine thirty."}
+      ],
+      "prompt": "What time does the meeting begin?",
+      "answer": "Nine thirty.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Cheerful bright anime office scene with one adult learner beside a large simple analogue clock showing nine thirty, hands out of frame, cobalt yellow and cream palette, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-08/elr-s-167/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

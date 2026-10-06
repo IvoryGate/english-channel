@@ -1,0 +1,104 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "wednesday-2026-10-07",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-160",
+      "title": "Ask for Help Without Sounding Helpless",
+      "thumbnailHeadline": "USE THIS FORMULA",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "A strong request for help has three parts. Use this formula.",
+      "turns": [
+        {"speaker": "mia", "text": "I’m trying to send the client update before three."},
+        {"speaker": "leo", "text": "What exactly is stopping you?"},
+        {"speaker": "mia", "text": "I’m stuck on choosing the two results for the opening. Could you mark the two you would lead with?"},
+        {"speaker": "leo", "text": "Goal, exact obstacle, smallest useful help. That sounds responsible, not helpless."}
+      ],
+      "prompt": "What are the three parts?",
+      "answer": "The goal, the exact obstacle, and the smallest useful help.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright illustrated shared workspace with an adult woman and adult man beside a three-point notebook, shoulders-up, all hands hidden below desk, rust, navy and cream palette, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-10-07/elr-s-160/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-161",
+      "title": "Workplace Idiom: Get the Ball Rolling",
+      "thumbnailHeadline": "WHAT DOES IT MEAN?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 48,
+      "hookStyle": "question",
+      "hook": "Your manager says, ‘Let’s get the ball rolling.’ What should you do?",
+      "turns": [
+        {"speaker": "narrator", "text": "The team has approved the idea. Maya says, ‘I’ll book the first meeting so we can get the ball rolling.’"},
+        {"speaker": "narrator", "text": "She is not looking for a ball. Get the ball rolling means start a process or activity."},
+        {"speaker": "narrator", "text": "In other words, move from discussion to the first concrete action, even if the project is still small."}
+      ],
+      "prompt": "Does it mean start, delay, or cancel?",
+      "answer": "Start the process.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Bright illustrated modern office with one confident adult professional beside a simple project board made of abstract shapes, upper body only, hands out of frame, teal and amber palette, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-10-07/elr-s-161/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-162",
+      "title": "Workplace Idiom: Keep Me in the Loop",
+      "thumbnailHeadline": "IN THE LOOP?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 50,
+      "hookStyle": "question",
+      "hook": "If a colleague says, ‘Keep me in the loop,’ what do they want?",
+      "turns": [
+        {"speaker": "mia", "text": "I’m meeting the supplier tomorrow."},
+        {"speaker": "leo", "text": "Please keep me in the loop, especially if the delivery date changes."},
+        {"speaker": "mia", "text": "Of course. I’ll send you every important update."},
+        {"speaker": "leo", "text": "Keep someone in the loop means keep them informed and involved."},
+        {"speaker": "mia", "text": "So you need the decisions and changes that affect your work, not every tiny detail."}
+      ],
+      "prompt": "What does Leo want?",
+      "answer": "Important updates about the supplier and delivery date.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Polished illustrated office conversation between two adult colleagues with a clean abstract update board behind them, chest-up, all hands hidden, blue-green and warm cream palette, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-10-07/elr-s-162/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-163",
+      "title": "A Clear Way to Say No When Someone Asks for Help",
+      "thumbnailHeadline": "SAY NO, OFFER THIS",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 54,
+      "hookStyle": "statement",
+      "hook": "You cannot help with everything, but you can answer without sounding cold.",
+      "turns": [
+        {"speaker": "narrator", "text": "A colleague asked, ‘Can you review my whole report today?’"},
+        {"speaker": "narrator", "text": "The answer was clear: ‘I cannot review the whole report today, but I can look at the opening paragraph after lunch.’"},
+        {"speaker": "narrator", "text": "That answer works because it names a firm limit and offers a smaller useful action. Only offer the smaller action if you truly have capacity."}
+      ],
+      "prompt": "What two things make the answer clear?",
+      "answer": "A firm limit and a smaller possible action.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Warm illustrated shared office with two adult colleagues having a respectful conversation across a desk, shoulders-up, hands fully out of frame, rust, navy and cream palette, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-10-07/elr-s-163/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

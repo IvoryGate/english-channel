@@ -1,0 +1,139 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-10-05",
+  "strategy": "double_long_form_with_search_led_listening_and_daily_short_form",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedAt": "2026-10-03",
+    "scope": "produce_upload_and_schedule_full_double_long_form_week",
+    "confirmationPolicy": "owner_authorized_execution_without_per_item_confirmation",
+    "controlPlaneRemoteMutationAuthority": true
+  },
+  "evidence": {
+    "capturedAt": "2026-10-03",
+    "sources": [
+      "youtube_studio_trends_channel_signed_in",
+      "latest_complete_week_operating_results",
+      "current_partial_week_directional_results"
+    ],
+    "searchSignals": [
+      "british english listening practice",
+      "english listening practice with questions",
+      "vocabulary words english learn"
+    ],
+    "inspirationSignals": [
+      "idiom challenge with a clear score",
+      "long British English conversation",
+      "level-labelled listening test"
+    ],
+    "planningRule": "Use search demand as the packaging entry point, then deliver one complete learning outcome per video. Do not clone competitor wording or presentation."
+  },
+  "portfolio": {
+    "longFormCount": 14,
+    "standardDialogueCount": 10,
+    "classicListeningCount": 2,
+    "flagship40Count": 2,
+    "shortsCount": 28,
+    "totalUploadCount": 42,
+    "qualityGate": "docs/QUALITY_SCORE.md"
+  },
+  "formatContracts": {
+    "standard": {"durationMinutes":[10,15],"spokenWordTarget":[1400,2800]},
+    "classic_listening": {"measuredDurationRequired":true,"completeChapterRequired":true},
+    "flagship_40": {
+      "durationMinutes":[35,45],
+      "targetMinutes":[38,42],
+      "spokenWordTarget":[5200,6200],
+      "measuredMediaDurationRequired":true,
+      "minimumStimulusChanges":10
+    }
+  },
+  "publicationSlots": [
+    {"contentId":"content:classic_listening:persuasion_chapter_008","scheduledAt":"2026-10-05T08:00:00+08:00","format":"classic_listening","remoteAction":"scheduled","youtubeVideoId":"8ciGuHBuvlI","shareUrl":"https://youtu.be/8ciGuHBuvlI","subtitles":"uploaded","playlist":"Persuasion | Jane Austen Full Audiobook & English Listening","checks":"local_pass_platform_checks_running"},
+    {"contentId":"content:shorts_main:elr-s-152","scheduledAt":"2026-10-05T09:30:00+08:00","source":"persuasion_chapter_008","remoteAction":"scheduled","youtubeVideoId":"CdvZNHpuWMU","shareUrl":"https://youtube.com/shorts/CdvZNHpuWMU","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-153","scheduledAt":"2026-10-05T13:00:00+08:00","source":"series_b_episode_034","remoteAction":"scheduled","youtubeVideoId":"Ye6na8j5UPI","shareUrl":"https://youtube.com/shorts/Ye6na8j5UPI","checks":"local_pass_platform_checks_running"},
+    {"contentId":"content:shorts_main:elr-s-154","scheduledAt":"2026-10-05T17:00:00+08:00","source":"series_b_episode_034","remoteAction":"scheduled","youtubeVideoId":"3fiLkz365Fk","shareUrl":"https://youtube.com/shorts/3fiLkz365Fk","checks":"local_pass_platform_processing"},
+    {"contentId":"content:series_b:episode_034","scheduledAt":"2026-10-05T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"-MiMhEd2FGE","shareUrl":"https://youtu.be/-MiMhEd2FGE","subtitles":"uploaded","playlist":"First Steps — English Listening Room | A2-B1 Easy English Podcast","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-155","scheduledAt":"2026-10-05T22:00:00+08:00","source":"persuasion_chapter_008","remoteAction":"scheduled","youtubeVideoId":"pEXIqjYua3o","shareUrl":"https://youtube.com/shorts/pEXIqjYua3o","checks":"local_pass_platform_processing"},
+
+    {"contentId":"content:series_b:episode_035","scheduledAt":"2026-10-06T08:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"3GKS3MwVtpU","shareUrl":"https://youtu.be/3GKS3MwVtpU","subtitles":"uploaded","playlist":"First Steps — English Listening Room | A2-B1 Easy English Podcast","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-156","scheduledAt":"2026-10-06T09:30:00+08:00","source":"series_b_episode_035","remoteAction":"scheduled","youtubeVideoId":"-k9a6S4tqBA","shareUrl":"https://youtube.com/shorts/-k9a6S4tqBA","checks":"local_pass_platform_processing"},
+    {"contentId":"content:shorts_main:elr-s-157","scheduledAt":"2026-10-06T13:00:00+08:00","source":"series_a_episode_032","remoteAction":"scheduled","youtubeVideoId":"B6jYUm4ghHk","shareUrl":"https://youtube.com/shorts/B6jYUm4ghHk","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-158","scheduledAt":"2026-10-06T17:00:00+08:00","source":"series_a_episode_032","remoteAction":"scheduled","youtubeVideoId":"TEcsHDJ6dNo","shareUrl":"https://youtube.com/shorts/TEcsHDJ6dNo","checks":"local_pass_platform_checks_running"},
+    {"contentId":"content:series_a:episode_032","scheduledAt":"2026-10-06T20:00:00+08:00","format":"standard","remoteAction":"scheduled","youtubeVideoId":"NNo6z_AqqJ4","shareUrl":"https://youtu.be/NNo6z_AqqJ4","subtitles":"uploaded","playlist":"Daily Talk — English Listening Room | B1-B2 English Podcast","checks":"local_and_platform_pass"},
+    {"contentId":"content:shorts_main:elr-s-159","scheduledAt":"2026-10-06T22:00:00+08:00","source":"series_b_episode_035","remoteAction":"scheduled","youtubeVideoId":"6YbOQ_XgttY","shareUrl":"https://youtube.com/shorts/6YbOQ_XgttY","checks":"local_pass_platform_checks_running"},
+
+    {"contentId":"content:series_a:episode_033","scheduledAt":"2026-10-07T08:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-160","scheduledAt":"2026-10-07T09:30:00+08:00","source":"series_a_episode_033","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-161","scheduledAt":"2026-10-07T13:00:00+08:00","source":"series_c_episode_029","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-162","scheduledAt":"2026-10-07T17:00:00+08:00","source":"series_c_episode_029","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_c:episode_029","scheduledAt":"2026-10-07T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-163","scheduledAt":"2026-10-07T22:00:00+08:00","source":"series_a_episode_033","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_b:episode_038","scheduledAt":"2026-10-08T08:00:00+08:00","format":"flagship_40","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-164","scheduledAt":"2026-10-08T09:30:00+08:00","source":"series_b_episode_038","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-165","scheduledAt":"2026-10-08T13:00:00+08:00","source":"series_b_episode_036","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-166","scheduledAt":"2026-10-08T17:00:00+08:00","source":"series_b_episode_038","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_036","scheduledAt":"2026-10-08T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-167","scheduledAt":"2026-10-08T22:00:00+08:00","source":"series_b_episode_036","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_c:episode_030","scheduledAt":"2026-10-09T08:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-168","scheduledAt":"2026-10-09T09:30:00+08:00","source":"series_c_episode_030","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-169","scheduledAt":"2026-10-09T13:00:00+08:00","source":"series_a_episode_034","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-170","scheduledAt":"2026-10-09T17:00:00+08:00","source":"series_a_episode_034","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_034","scheduledAt":"2026-10-09T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-171","scheduledAt":"2026-10-09T22:00:00+08:00","source":"series_c_episode_030","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:classic_listening:persuasion_chapter_009","scheduledAt":"2026-10-10T08:00:00+08:00","format":"classic_listening","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-172","scheduledAt":"2026-10-10T09:30:00+08:00","source":"persuasion_chapter_009","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-173","scheduledAt":"2026-10-10T13:00:00+08:00","source":"series_b_episode_037","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-174","scheduledAt":"2026-10-10T17:00:00+08:00","source":"series_b_episode_037","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_037","scheduledAt":"2026-10-10T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-175","scheduledAt":"2026-10-10T22:00:00+08:00","source":"persuasion_chapter_009","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_c:episode_031","scheduledAt":"2026-10-11T08:00:00+08:00","format":"flagship_40","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-176","scheduledAt":"2026-10-11T09:30:00+08:00","source":"series_c_episode_031","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-177","scheduledAt":"2026-10-11T13:00:00+08:00","source":"series_a_episode_035","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-178","scheduledAt":"2026-10-11T17:00:00+08:00","source":"series_c_episode_031","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_035","scheduledAt":"2026-10-11T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-179","scheduledAt":"2026-10-11T22:00:00+08:00","source":"series_a_episode_035","remoteAction":"planned","checks":"pending"}
+  ],
+  "dialogueBriefs": [
+    {"contentId":"content:series_b:episode_034","format":"standard","topicPillar":"practical_english","workingTitle":"Restaurant English Listening Practice with Questions | A2-B1","centralIdea":"Learners identify the final order, correction, price, and collection time across a realistic restaurant call.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":92,"status":"planned"},
+    {"contentId":"content:series_b:episode_035","format":"standard","topicPillar":"practical_english","workingTitle":"Doctor Appointment English — Names, Times and Symptoms | A2-B1","centralIdea":"A structured appointment call teaches learners to catch spelling, dates, symptom language, and the final action.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":88,"status":"planned"},
+    {"contentId":"content:series_a:episode_032","format":"standard","topicPillar":"psychology","workingTitle":"Stop Replaying That Awkward Conversation | B1-B2","centralIdea":"Replace endless replay with one factual review, one repair decision, and one sentence to use next time.","demandEvidence":["current_channel_psychology_fit"],"candidateScore":84,"status":"planned"},
+    {"contentId":"content:series_a:episode_033","format":"standard","topicPillar":"relationships","workingTitle":"How to Ask for Help Without Sounding Helpless | B1-B2","centralIdea":"A useful request names the goal, the exact obstacle, and the smallest help needed.","demandEvidence":["current_channel_specific_tension_fit"],"candidateScore":86,"status":"planned"},
+    {"contentId":"content:series_c:episode_029","format":"standard","topicPillar":"practical_english","workingTitle":"10 Workplace Idioms You Need to Understand | B2-C1","centralIdea":"Learners infer high-utility workplace idioms from context before receiving concise meaning and usage guidance.","demandEvidence":["studio_vocabulary_words_english_learn","studio_recent_idiom_video_velocity"],"candidateScore":93,"status":"planned"},
+    {"contentId":"content:series_b:episode_038","format":"flagship_40","topicPillar":"practical_english","workingTitle":"40-Minute English Listening Test with Questions | A2-B1","centralIdea":"A progressive test uses everyday calls, announcements, orders, and messages with answers and repair explanations.","demandEvidence":["studio_english_listening_practice_with_questions","public_level_labelled_listening_test"],"candidateScore":96,"status":"planned"},
+    {"contentId":"content:series_b:episode_036","format":"standard","topicPillar":"practical_english","workingTitle":"British Train Announcement Listening Practice | A2-B1","centralIdea":"Learners separate the original platform and time from the final changed travel instruction.","demandEvidence":["studio_british_english_listening_practice"],"candidateScore":91,"status":"planned"},
+    {"contentId":"content:series_c:episode_030","format":"standard","topicPillar":"relationships","workingTitle":"How British English Softens Disagreement | B2-C1","centralIdea":"Learners hear how partial agreement, understatement, and precise contrast make disagreement clear without sounding hostile.","demandEvidence":["studio_british_english_listening_practice"],"candidateScore":90,"status":"planned"},
+    {"contentId":"content:series_a:episode_034","format":"standard","topicPillar":"relationships","workingTitle":"When Someone Says “We Need to Talk” | B1-B2","centralIdea":"Slow the threat response, ask for scope, and keep the conversation specific enough to solve.","demandEvidence":["current_channel_relationship_tension_fit"],"candidateScore":85,"status":"planned"},
+    {"contentId":"content:series_b:episode_037","format":"standard","topicPillar":"everyday_life","workingTitle":"Returns and Refunds English Listening Practice | A2-B1","centralIdea":"Learners track the item, problem, receipt rule, refund method, and final next step in a shop conversation.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":89,"status":"planned"},
+    {"contentId":"content:series_c:episode_031","format":"flagship_40","topicPillar":"practical_english","workingTitle":"40-Minute British English Conversation Challenge | B2-C1","centralIdea":"A long-form British conversation challenge trains implied meaning, polite disagreement, idioms, and compressed replies.","demandEvidence":["studio_british_english_listening_practice","studio_recent_british_conversation_velocity"],"candidateScore":95,"status":"planned"},
+    {"contentId":"content:series_a:episode_035","format":"standard","topicPillar":"resilience","workingTitle":"Stop Taking Every Delay Personally | B1-B2","centralIdea":"Separate inconvenience from rejection, verify the facts, and choose the next useful action.","demandEvidence":["current_channel_resilience_fit"],"candidateScore":83,"status":"planned"}
+  ],
+  "classicBriefs": [
+    {"contentId":"content:classic_listening:persuasion_chapter_008","book":"Persuasion","chapter":8,"sourceWordCount":3338,"status":"planned"},
+    {"contentId":"content:classic_listening:persuasion_chapter_009","book":"Persuasion","chapter":9,"sourceWordCount":2864,"status":"planned"}
+  ],
+  "shortsStrategy": {
+    "dailyCount": 4,
+    "windows":["09:30","13:00","17:00","22:00"],
+    "roles":["complete_listening_question","one_key_phrase","mistake_and_repair","fast_final_challenge"],
+    "rule":"Each Short must stand alone as a complete micro-lesson and may point to one of that day's two long videos."
+  },
+  "releaseGates": {
+    "allLongForm":["script_profile_pass","thumbnail_phone_size_pass","audio_traceability_pass","subtitles_present","metadata_synchronized","identity_collision_zero"],
+    "flagship_40":["measured_duration_35_to_45_minutes","stimulus_change_gap_no_more_than_4_minutes","minimum_ten_stimulus_changes"],
+    "portfolio":["exactly_two_long_form_releases_per_day","exactly_two_flagship_40_releases","exactly_twenty_eight_shorts","rolling_seven_day_uploads_no_more_than_42"]
+  },
+  "ttsRollout": {
+    "series_b":{"provider":"kokoro","voices":{"Riley":"af_heart","Sam":"am_fenrir"}},
+    "series_a":{"provider":"chatterbox_500m"},
+    "series_c":{"provider":"chatterbox_500m"},
+    "classic_listening":{"provider":"chatterbox_500m"},
+    "fallback":"voxcpm",
+    "mixedProviderEpisodeAllowed":false
+  }
+}

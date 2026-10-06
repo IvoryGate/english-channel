@@ -1,0 +1,31 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "friday-2026-10-09",
+  "visualResearch": {"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries": [
+    {
+      "shortId":"elr-s-168","title":"Disagree Politely in British English","thumbnailHeadline":"AGREE, THEN CONTRAST","format":"dialogue","cefr":"B1","durationSec":52,"hookStyle":"statement","hook":"Clear disagreement does not need to sound hostile.",
+      "turns":[{"speaker":"mia","text":"I see your point about launching quickly, but I’m not convinced Friday gives us enough testing time."},{"speaker":"leo","text":"Fair concern. What would you suggest?"},{"speaker":"mia","text":"Could we test through Monday and launch on Tuesday?"},{"speaker":"leo","text":"Partial agreement, one precise concern, and a workable alternative."}],
+      "prompt":"What three moves made the disagreement useful?","answer":"Partial agreement, a precise concern, and an alternative.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright polished anime office with two adult British colleagues in a calm discussion, shoulders-up, hands out of frame, teal navy and amber palette, no readable text.","backgroundImage":"shorts/friday-2026-10-09/elr-s-168/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-169","title":"When Someone Says We Need to Talk","thumbnailHeadline":"ASK FOR SCOPE","format":"dialogue","cefr":"B1","durationSec":48,"hookStyle":"question","hook":"Someone says, ‘We need to talk.’ What should you ask first?",
+      "turns":[{"speaker":"mia","text":"We need to talk when you get home."},{"speaker":"leo","text":"Okay. Can you tell me roughly what it’s about, so I don’t worry about the wrong thing?"},{"speaker":"mia","text":"It’s about the weekend plans. Nothing dangerous."}],
+      "prompt":"What did Leo ask for?","answer":"The general topic, or scope, of the conversation.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Warm bright anime apartment scene with two adult partners having a calm serious conversation, chest-up, hands hidden, rust navy and cream palette, no readable text.","backgroundImage":"shorts/friday-2026-10-09/elr-s-169/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-170","title":"What Does ‘Not Entirely Convinced’ Mean?","thumbnailHeadline":"A POLITE NO?","format":"listen_choose","cefr":"B1","durationSec":49,"hookStyle":"question","hook":"Your manager is ‘not entirely convinced.’ Is the plan approved?",
+      "turns":[{"speaker":"narrator","text":"There’s something in the proposal, but I’m not entirely convinced by a national launch. Could we test it in two cities first?"},{"speaker":"narrator","text":"The whole idea is not rejected. The manager supports a smaller pilot before a national launch."}],
+      "prompt":"Reject everything, approve everything, or request a smaller test?","answer":"Request a smaller test.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Polished bright anime presentation room with one adult professional considering two abstract map options, upper body only, hands out of frame, cobalt teal and gold, no readable text.","backgroundImage":"shorts/friday-2026-10-09/elr-s-170/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-171","title":"Stop Solving an Imaginary Conversation","thumbnailHeadline":"FACT OR PREDICTION?","format":"micro_story","cefr":"B1","durationSec":54,"hookStyle":"statement","hook":"One vague message can make your brain write a disaster film.",
+      "turns":[{"speaker":"narrator","text":"Nora received, ‘We need to talk tonight,’ and immediately predicted the relationship was ending."},{"speaker":"narrator","text":"The fact was smaller: someone wanted a conversation. The prediction was not evidence."},{"speaker":"narrator","text":"She asked for the topic and time, then waited for the real words."}],
+      "prompt":"What should you separate?","answer":"What you know from what you are predicting.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Expressive bright anime adult woman looking at a phone while imagined storm clouds dissolve into a calm speech bubble, shoulders-up, hands hidden, warm coral blue and cream, no readable text.","backgroundImage":"shorts/friday-2026-10-09/elr-s-171/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

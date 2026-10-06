@@ -106,7 +106,7 @@ def test_steady_state_requests_channel_owned_release_capacity() -> None:
     assert publishing["releasePolicyRef"] == "configs/channel/release-policy.json"
     assert not {"weeklyShorts", "maxChannelUploadsPerWeek", "slots"} & set(publishing)
     assert channel_policy["timezone"] == "Asia/Shanghai"
-    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 40
+    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 42
     assert channel_policy["authority"]["publicSchedulingEnabled"] is True
     assert program["status"] == "active"
     assert program["requestedUploadsPerWeek"] == 28

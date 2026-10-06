@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"sunday-2026-10-11",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-176","title":"British English: Is ‘Thorough’ Really Praise?","thumbnailHeadline":"PRAISE OR WARNING?","format":"listen_choose","cefr":"B1","durationSec":49,"hookStyle":"question","hook":"Your manager says your report is ‘certainly thorough.’ Is that praise?",
+      "turns":[{"speaker":"narrator","text":"Well, it’s certainly thorough. Could we produce a two-page version for the board?"},{"speaker":"narrator","text":"The request for a shorter version shows that thorough also means too long for this audience."}],
+      "prompt":"What action reveals the implied meaning?","answer":"The request for a two-page version.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright polished anime boardroom with one adult professional holding a very thick report beside a slim abstract summary, hands hidden behind documents, teal gold and navy, no readable text.","backgroundImage":"shorts/sunday-2026-10-11/elr-s-176/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-177","title":"Stop Taking a Late Reply Personally","thumbnailHeadline":"FACT OR STORY?","format":"dialogue","cefr":"B1","durationSec":52,"hookStyle":"statement","hook":"A late reply is a fact. Rejection is a story until you verify it.",
+      "turns":[{"speaker":"mia","text":"I sent the draft Monday. It is Tuesday evening, and there is no reply."},{"speaker":"leo","text":"That is the fact. ‘My work was rejected’ is one possible interpretation, not confirmed evidence."},{"speaker":"mia","text":"I’ll send one follow-up with my Thursday deadline."}],
+      "prompt":"What is the next useful action?","answer":"Send a factual follow-up with the deadline.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Warm expressive anime home-office scene with an adult woman calmly reviewing an unanswered laptop message, shoulders-up, hands below desk, rust blue and cream, no readable text.","backgroundImage":"shorts/sunday-2026-10-11/elr-s-177/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-178","title":"Take It with a Pinch of Salt","thumbnailHeadline":"DON’T FULLY BELIEVE IT","format":"dialogue","cefr":"B1","durationSec":48,"hookStyle":"question","hook":"A colleague says, ‘Take that rumour with a pinch of salt.’ What should you do?",
+      "turns":[{"speaker":"mia","text":"I heard the company is closing the Bristol office."},{"speaker":"leo","text":"I’d take that with a pinch of salt. The same source shared a false rumour last month."},{"speaker":"mia","text":"I’ll wait for the official staff meeting."}],
+      "prompt":"Believe it, ignore all news, or stay sceptical?","answer":"Stay sceptical and wait for reliable information.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Lively bright anime office with two adult colleagues discussing a rumour, one abstract speech bubble fading beside an official notice shape, hands out of frame, blue coral and cream, no readable text.","backgroundImage":"shorts/sunday-2026-10-11/elr-s-178/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-179","title":"One Delay or a Pattern?","thumbnailHeadline":"CHECK THE PATTERN","format":"micro_story","cefr":"B1","durationSec":54,"hookStyle":"statement","hook":"One late arrival and ten late arrivals are not the same evidence.",
+      "turns":[{"speaker":"narrator","text":"A friend was late once because a bus broke down. Patience made sense."},{"speaker":"narrator","text":"Then the friend arrived forty minutes late every week and never sent an update."},{"speaker":"narrator","text":"The useful response changed: name the repeated impact and set a clear limit."}],
+      "prompt":"What three things should you check?","answer":"Pattern, impact, and whether the person repairs the problem.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright anime split scene with the same adult waiting once calmly and later noticing a repeated calendar pattern, shoulders-up, hands hidden, warm yellow navy and coral, no readable text.","backgroundImage":"shorts/sunday-2026-10-11/elr-s-179/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

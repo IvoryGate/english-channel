@@ -334,12 +334,13 @@ The first channel-wide programming contract is tracked in
 `configs/channel/programming.json`. It assigns one recurring public role to
 each specialized adapter, adds a fixed schedule footer to new packages, and
 keeps Community as a retention layer rather than an independent content
-pipeline. The initial four-week grid is Classic Listening Monday morning,
-First Steps Tuesday evening, Daily Talk Thursday evening, Polished English
-Saturday evening, and Shorts every day at 12:30. Classic Listening
-occupies its slot only after narrator acceptance.
+pipeline. The current grid publishes long-form English every day at 08:00 and
+20:00 UTC+8, Classic Listening Monday and Saturday morning, the 40-minute
+Flagship Thursday and Sunday morning, and Shorts at 09:30, 13:00, 17:00, and
+22:00 every day. Classic Listening occupies its slot only after narrator
+acceptance.
 
-Dialogue supports three duration classes. The scaled production target is six
+Dialogue supports three duration classes. The scaled production target is ten
 10-15 minute Standard episodes and two 35-45 minute Flagship 40 episodes per
 week; 18-25 minute Extended episodes remain available for a treatment that
 cannot honestly support forty minutes. Flagships rotate across the three

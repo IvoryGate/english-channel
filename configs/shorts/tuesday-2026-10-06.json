@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "tuesday-2026-10-06",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-156",
+      "title": "Doctor Appointment English: Catch the Final Time",
+      "thumbnailHeadline": "WHAT TIME IS FINAL?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 46,
+      "hookStyle": "question",
+      "hook": "Three appointment times appear, but only one is correct. Can you catch the final time?",
+      "turns": [
+        {"speaker": "mia", "text": "We have Tuesday at ten thirty, or Wednesday at eleven fifteen."},
+        {"speaker": "leo", "text": "Wednesday at eleven fifteen works for me."},
+        {"speaker": "mia", "text": "Sorry, that appointment has just been taken. Wednesday at two forty-five is available."},
+        {"speaker": "leo", "text": "Two forty-five, please. The final accepted option replaces the earlier times."}
+      ],
+      "prompt": "What is the final appointment time?",
+      "answer": "Wednesday at 2:45 PM.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright illustrated clinic reception, adult woman receptionist and adult man patient shown chest-up beside a wall clock, all hands hidden below desk, teal and cream palette, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-10-06/elr-s-156/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-157",
+      "title": "Stop Replaying an Awkward Conversation",
+      "thumbnailHeadline": "FACT OR STORY?",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 48,
+      "hookStyle": "question",
+      "hook": "Your mind keeps replaying one awkward sentence. Which part is fact, and which part is your story?",
+      "turns": [
+        {"speaker": "narrator", "text": "Fact: you made a joke, and the other person became quiet for five seconds."},
+        {"speaker": "narrator", "text": "Story: they now dislike you, everyone noticed, and the relationship is ruined."},
+        {"speaker": "narrator", "text": "Separate what you observed from what you imagined. A short silence is evidence of a pause, not proof of rejection."}
+      ],
+      "prompt": "What should you separate?",
+      "answer": "The observed facts from the story you added.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Warm illustrated cafe, thoughtful adult woman on left and supportive adult man on right, two simple thought bubbles represented only by shapes, hands out of frame, amber and cream, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-10-06/elr-s-157/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-158",
+      "title": "One Sentence to Repair an Awkward Moment",
+      "thumbnailHeadline": "USE THIS REPAIR",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 54,
+      "hookStyle": "statement",
+      "hook": "You do not need a long apology. Use one specific repair sentence.",
+      "turns": [
+        {"speaker": "mia", "text": "I think my joke sounded dismissive earlier."},
+        {"speaker": "leo", "text": "What did you mean instead?"},
+        {"speaker": "mia", "text": "I meant to make the situation lighter, not to ignore what you said. I’m sorry."},
+        {"speaker": "leo", "text": "That works because it names the moment, explains the intention, and gives a clear apology without making the other person comfort you."}
+      ],
+      "prompt": "What are the three parts of the repair?",
+      "answer": "Name the moment, explain the intention, and apologize.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Warm illustrated home study with two adult friends in a calm repair conversation, shown shoulders-up, all hands below frame, amber and teal accents, no readable text.",
+      "backgroundImage": "shorts/tuesday-2026-10-06/elr-s-158/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-159",
+      "title": "Doctor Appointment English: Arrive or Appointment?",
+      "thumbnailHeadline": "9:10 OR 9:20?",
+      "format": "listen_choose",
+      "cefr": "A2",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Arrival time and appointment time are not always the same. Listen for both.",
+      "turns": [
+        {"speaker": "narrator", "text": "Your appointment is Thursday at nine twenty. Please arrive at nine ten so the nurse can check your temperature."},
+        {"speaker": "narrator", "text": "Nine twenty is the doctor’s appointment. Nine ten is when you should enter the clinic. The phrase please arrive tells you the earlier action time."}
+      ],
+      "prompt": "When should the patient arrive?",
+      "answer": "At 9:10, ten minutes before the appointment.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright illustrated clinic waiting room with one adult patient looking toward a large clock, upper body only, hands fully out of frame, teal, cream and blue-gray palette, no readable text or numbers.",
+      "backgroundImage": "shorts/tuesday-2026-10-06/elr-s-159/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

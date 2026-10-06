@@ -20,9 +20,9 @@ def test_programming_defines_a_real_40_minute_flagship_lane() -> None:
     assert dialogue["flagship40DurationMinutes"] == [35, 45]
     assert dialogue["flagship40TargetMinutes"] == [38, 42]
     assert dialogue["weeklyMix"] == {
-        "standardEpisodes": 5,
+        "standardEpisodes": 10,
         "extendedEpisodes": 0,
-        "flagship40Episodes": 1,
+        "flagship40Episodes": 2,
     }
     assert len(dialogue["requiredFlagshipBeats"]) >= 8
 
@@ -77,6 +77,34 @@ def test_next_week_plan_matches_owner_approved_seven_plus_twenty_eight_mix(week_
     assert len(shorts_slots) == 28
     assert len(classic_slots) == 1
     assert plan["portfolio"]["longFormCount"] == len(dialogue_slots) + len(classic_slots)
+
+
+def test_double_long_form_week_has_two_longs_per_day_and_exact_capacity() -> None:
+    plan = _load_json("configs/channel/weekly-plan-2026-10-05.json")
+    slots = plan["publicationSlots"]
+    dialogue_slots = [slot for slot in slots if slot["contentId"].startswith("content:series_")]
+    shorts_slots = [slot for slot in slots if slot["contentId"].startswith("content:shorts_main:")]
+    classic_slots = [slot for slot in slots if slot["contentId"].startswith("content:classic_listening:")]
+    flagships = [slot for slot in dialogue_slots if slot["format"] == "flagship_40"]
+
+    assert len(dialogue_slots) == 12
+    assert len(classic_slots) == 2
+    assert len(shorts_slots) == 28
+    assert len(flagships) == 2
+    assert len(slots) == 42
+    assert plan["portfolio"]["longFormCount"] == 14
+
+    long_slots = dialogue_slots + classic_slots
+    long_dates = [slot["scheduledAt"][:10] for slot in long_slots]
+    assert {day: long_dates.count(day) for day in sorted(set(long_dates))} == {
+        "2026-10-05": 2,
+        "2026-10-06": 2,
+        "2026-10-07": 2,
+        "2026-10-08": 2,
+        "2026-10-09": 2,
+        "2026-10-10": 2,
+        "2026-10-11": 2,
+    }
 
 
 def test_accepted_tts_rollout_is_locked_into_the_new_week_plan() -> None:
