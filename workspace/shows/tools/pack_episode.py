@@ -41,6 +41,28 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def duration_contract_error(
+    production_card: dict[str, Any] | None,
+    video_report: dict[str, Any],
+) -> str | None:
+    if not production_card:
+        return None
+    bounds = production_card.get("formatContract", {}).get("durationMinutes")
+    if not isinstance(bounds, list) or len(bounds) != 2:
+        return None
+    duration_sec = video_report.get("verification", {}).get("durationSec")
+    if not isinstance(duration_sec, (int, float)):
+        return "video report is missing measured duration"
+    duration_min = float(duration_sec) / 60.0
+    lower, upper = float(bounds[0]), float(bounds[1])
+    if lower <= duration_min <= upper:
+        return None
+    return (
+        f"measured duration {duration_min:.2f} minutes is outside "
+        f"the {lower:.0f}-{upper:.0f} minute contract"
+    )
+
+
 class PackLogger:
     def __init__(self, log_path: Path | None) -> None:
         self._file = None
@@ -351,6 +373,20 @@ def pack_episode(
     )
     if code != 0:
         return code
+
+    production_card_path = workspace / "production" / "production_card.json"
+    video_report_path = workspace / "reports" / f"000_{episode}.video_report.json"
+    production_card = load_json(production_card_path) if production_card_path.is_file() else None
+    if not video_report_path.is_file():
+        log.log(f"error: missing measured video report {video_report_path}")
+        return 2
+    duration_error = duration_contract_error(production_card, load_json(video_report_path))
+    if duration_error:
+        log.log(f"duration gate failed: {duration_error}")
+        return 2
+    if production_card:
+        measured = load_json(video_report_path)["verification"]["durationSec"] / 60.0
+        log.log(f"duration gate passed: {measured:.2f} minutes")
 
     # 5 — YouTube packaging (title + description with chapter timestamps)
     # Runs after audio render/master so turn durations are real. The export step
