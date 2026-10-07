@@ -1,3 +1,4 @@
+import "./load-env.js";
 import { buildServer } from "./index.js";
 import { createProviders } from "./providers/index.js";
 import { startTtsQueueWorker } from "./providers/queue-worker.js";
