@@ -143,6 +143,61 @@ Sam: Comment with the next step you will practice today.
     assert {check.name: check for check in report.checks}["script-quality"].status == "pass"
 
 
+def test_preflight_accepts_preset_voices_without_reference_audio(tmp_path: Path, monkeypatch) -> None:
+    context = build_context(tmp_path, "series_b", 38, tmp_path / "youtube")
+    paths = artifact_paths(context.workspace, context.episode_id)
+    draft = """Title: A Preset Voice Test
+Description: A practical long-form conversation.
+
+Riley: This is a complete test line for a preset voice.
+Sam: This is another complete test line for a preset voice.
+"""
+    _write(paths["draft"], draft)
+    _write(
+        paths["manifest"],
+        json.dumps(
+            {
+                "episodeId": context.episode_id,
+                "showId": "series_b",
+                "title": "A Preset Voice Test",
+                "description": "A practical long-form conversation.",
+                "hosts": {
+                    "Riley": {
+                        "referenceAudioClean": "assets/voices/series_b/missing-riley.wav",
+                        "voice": {"kind": "preset", "voiceId": "af_heart"},
+                    },
+                    "Sam": {
+                        "referenceAudioClean": "assets/voices/series_b/missing-sam.wav",
+                        "voice": {"kind": "preset", "voiceId": "am_fenrir"},
+                    },
+                },
+                "turns": [
+                    {"text": "This is a complete test line for a preset voice.", "wordCount": 10},
+                    {"text": "This is another complete test line for a preset voice.", "wordCount": 10},
+                ],
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        "elr_production.validate_script_text",
+        lambda *_args, **_kwargs: {"ok": True, "word_count": 20, "issues": []},
+    )
+
+    report = preflight_episode(
+        context,
+        runtime_checks=False,
+        scaffold_metadata=True,
+        require_visuals=False,
+    )
+
+    by_name = {check.name: check for check in report.checks}
+    assert by_name["voice-reference-Riley"].status == "pass"
+    assert by_name["voice-reference-Sam"].status == "pass"
+    assert "af_heart" in by_name["voice-reference-Riley"].detail
+    assert "am_fenrir" in by_name["voice-reference-Sam"].detail
+    assert report.ok is True
+
+
 def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_path: Path, monkeypatch) -> None:
     interpreter = tmp_path / "runtime" / "kokoro" / "python.exe"
     model_path = tmp_path / "runtime" / "kokoro" / "model"

@@ -276,6 +276,13 @@ def preflight_episode(
             checks.append(CheckResult("manifest-turns", "error", "Manifest contains no turns."))
 
         for host, profile in (manifest.get("hosts") or {}).items():
+            voice = dict(profile.get("voice") or {})
+            if str(voice.get("kind") or "").strip().lower() == "preset":
+                voice_id = str(voice.get("voiceId") or "").strip()
+                status = "pass" if voice_id else "error"
+                detail = f"preset voice: {voice_id}" if voice_id else "Preset voiceId is empty."
+                checks.append(CheckResult(f"voice-reference-{host}", status, detail))
+                continue
             reference = Path(str(profile.get("referenceAudioClean") or ""))
             reference_path = reference if reference.is_absolute() else context.repo_root / reference
             _check_file(checks, f"voice-reference-{host}", reference_path)
