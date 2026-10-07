@@ -208,6 +208,7 @@ intake-chain ancestry, and worktree cleanliness. Plan of record:
 | `feat/episode-audio-mastering` | +1 / -118 | superseded at `298cfa4`; 3 paths classified | retire candidate | delete only after authorization |
 | `feat/youtube-research-topic-selection` | +4 / -118 | superseded at `298cfa4`; 43 paths classified | retire candidate | delete only after authorization |
 | `intake-backup-20261006` | +3 / -15 | step-1 rollback point; equivalent content landed through PR #13 | retire candidate | delete only after authorization |
+| `codex/channel-wide-youtube-ab` | +1 / -34 | experiments-tracking commit unique by patch parity; no earlier disposition in this ledger | preserve, absorb later | no action; intake when the experiments slice is ready |
 | 18 zero-commit branches (including the three merged by PR #11-#13 and this PR's branch) | 0 | contained in `main` | retire candidate | delete after authorization; this PR's branch after its merge |
 | `codex/classics-persuasion-pilot` | +1 / -111 | checkpoint `8d548d0` is not in `main`; adapter absorbed at `dd9cdce`; media SHA-256 inventoried | preserve, supersede | keep branch and worktree; close PR #5 |
 | `codex/douyin-migration` | +1 / -19 | active plan `2026-09-12-douyin-migration` with two uncommitted doc edits | preserve | no action |
@@ -222,6 +223,41 @@ Worktree dispositions: keep the root, `.worktrees/douyin-migration`,
 `D:/CodexData/.codex/worktrees/b8b4/english-channel` at `27b17a7` — all six
 verified clean — only after authorization.
 
-Cleanup status: awaiting the explicit authorization this ledger requires.
-No branch was deleted, no worktree was removed, and no pull request was
-closed by this pass.
+Cleanup executed 2026-10-07 with the owner's explicit authorization
+("delete local branches, keep remote"):
+
+- Branches: 24 local branches deleted — the 7 retire candidates with
+  unique commits and 17 zero-commit branches. No remote branch was
+  deleted; `origin` retains every branch as the archive of the
+  2026-08-24 publication. Remaining local branches: `main`, this
+  reconciliation PR's branch, and the four preserve branches
+  (`codex/classics-persuasion-pilot`, `codex/douyin-migration`,
+  `feat/weekly-analytics-loop`, `codex/channel-wide-youtube-ab`).
+- Worktrees: removed after inventory `classics-autonomous-worktree`
+  (1.1 MB, no generated media) and the detached
+  `D:/CodexData/.codex/worktrees/b8b4/english-channel` (139 MB, all 71
+  `public/` files tracked). The four `.worktrees/` removals were
+  interrupted by Windows filesystem errors after git had already
+  unregistered them; per the owner's decision only their dependency
+  directories were removed (573 MB reclaimed) and their generated
+  content is preserved in place under the ignored `.worktrees/` as
+  artifact archives. The registered worktree list went from 11 to 4:
+  the root plus the three preserve worktrees.
+- Incident: the interrupted removal deleted the never-committed
+  `exports/youtube/persuasion/chapter-02-recovered/` media (62 MB).
+  No copies exist on `H:`, `C:/.codex`, or `D:`; the content was never
+  committed and is unrecoverable. The removal check relied on
+  `git status` cleanliness, which does not cover ignored files, while
+  the artifact rules protect exactly those files. Future worktree
+  removals must inventory ignored artifacts first.
+- Incident 2: the follow-up removal of the two orphaned `node_modules`
+  directories followed Windows junctions into the root checkout,
+  emptying the root `node_modules` and deleting tracked files under
+  `apps/` and `packages/`. Every tracked file was restored byte-exact
+  from the index with `git restore`, `npm install` rebuilt
+  `node_modules`, and all untracked assets were verified intact
+  (`workspace` 127 GB, `public/shorts`, `exports`, `artifacts`, `logs`,
+  `videos`, `.venv` 4.4 GB, `.env.example`). Rule recorded: inventory
+  junctions before any Windows `rm -rf` under a `node_modules` tree.
+- PR #5 was closed 2026-10-07 with the supersede rationale in its
+  comments; its head `8d548d0` remains preserved as a branch.

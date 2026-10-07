@@ -87,6 +87,9 @@ Retire candidates (no content beyond what `main` already holds):
 
 Preserve (in flight or protected media):
 
+- `codex/channel-wide-youtube-ab` (+1/-34): unique experiments-tracking
+  commit with no earlier ledger disposition; found during execution and
+  added to this matrix. Absorb later through its own intake.
 - `codex/douyin-migration` (+1/-19) with two uncommitted doc files in
   `.worktrees/douyin-migration`.
 - `feat/weekly-analytics-loop` (+2/-19) with one uncommitted script in
@@ -97,8 +100,8 @@ Preserve (in flight or protected media):
 Supersede:
 
 - PR #5 (head `8d548d0`, opened 2026-08-24): the production adapter was
-  absorbed at `dd9cdce`; close with the rationale and keep the
-  checkpoint branch as the history record.
+  absorbed at `dd9cdce`; closed 2026-10-07 with the rationale in its
+  comments, with the checkpoint branch kept as the history record.
 
 Worktree disposition (11 total):
 
@@ -111,6 +114,48 @@ Worktree disposition (11 total):
   detached `D:/CodexData/.codex/worktrees/b8b4/english-channel` at
   `27b17a7`.
 
+## Execution Record — 2026-10-07
+
+- Worktrees: `classics-autonomous-worktree` (1.1 MB, no generated media)
+  and the detached `D:` sandbox (139 MB, all 71 `public/` files tracked)
+  were inventoried first and then removed cleanly. The four
+  `.worktrees/` removals (`shorts-pipeline-pilot`, `shorts-rapid-3x3`,
+  `long-form-expansion`, `youtube-operating-system-foundation`) were
+  interrupted by Windows filesystem errors after git had already
+  unregistered them. Per the owner's decision only their dependency
+  directories were removed (573 MB reclaimed) and their generated
+  content stays in place under the ignored `.worktrees/` as artifact
+  archives. The Persuasion, douyin, and weekly-analytics worktrees were
+  never touched; the registered worktree list went from 11 to 4.
+- Incident: the interrupted removal deleted the never-committed
+  `exports/youtube/persuasion/chapter-02-recovered/` media (62 MB
+  recovered chapter MP4, SRT, QC frames and audio, three JSON records
+  from the 2026-08-31 recovery). Copies were searched for on `H:`,
+  `C:/.codex`, and `D:`, and none exist; the content was never
+  committed, so it is unrecoverable. Root cause: the removal check used
+  `git status` cleanliness, which does not cover ignored files, while
+  the ledger's artifact rules protect exactly those files. Future
+  worktree removals must inventory ignored artifacts first.
+- Branches: 24 local branches deleted under the explicit authorization
+  (7 retire candidates with unique commits, 17 zero-commit). No remote
+  branch was deleted; `origin` keeps every branch as the archive. Six
+  local branches remain: `main`, this PR's branch, and the four
+  preserve branches.
+- Incident 2: the background removal of the two orphaned `node_modules`
+  directories followed Windows junctions out of their targets. Because
+  npm's workspace entries inside them resolved into the root checkout,
+  the removal emptied the root `node_modules` and deleted tracked files
+  under `apps/` and `packages/` in the root worktree. Recovery: every
+  tracked file was restored byte-exact from the index with
+  `git restore -- apps packages`, `npm install` rebuilt the root
+  `node_modules`, and all untracked assets were verified intact
+  afterwards (`workspace` 127 GB, `public/shorts`, `exports`,
+  `artifacts`, `logs`, `videos`, `books`, `reference`, `.venv` 4.4 GB,
+  `.env.example`). Rule recorded: never `rm -rf` a `node_modules` tree
+  on Windows without inspecting its junctions first.
+- PR #5 closed with the supersede rationale; `8d548d0` remains
+  preserved as a branch.
+
 ## Validation
 
 - Every disposition cites ahead/behind counts, a `git cherry` result, or
@@ -119,6 +164,9 @@ Worktree disposition (11 total):
   retire-candidate list; each deletion and removal is recorded in the
   ledger with its date and result.
 - `npm run lint` and `npm run test` stay green on this PR branch.
+- Results 2026-10-07: registered worktrees 11 → 4, local branches 30 → 6,
+  PR #5 closed, 573 MB of dependency directories reclaimed, and the two
+  worktree removals that did complete were pre-inventoried.
 
 ## Risks And Decisions
 
@@ -130,9 +178,13 @@ Worktree disposition (11 total):
   deletion is safe once that merge (already done) and the authorization
   are both true.
 - Risk: removing a worktree with untracked media would destroy protected
-  assets. Mitigation: the Persuasion, douyin, and weekly-analytics
-  worktrees are excluded from every removal list, and every removal
-  target was verified clean immediately before removal.
+  assets. The `git status`-based "clean" check proved insufficient: it
+  does not cover ignored files, and the interrupted removal of
+  `youtube-operating-system-foundation` destroyed its never-committed
+  `exports/` recovery media (see Execution Record). Mitigation from now
+  on: inventory ignored artifacts before any removal, and keep the
+  Persuasion, douyin, and weekly-analytics worktrees excluded from every
+  removal list.
 
 ## Archive Criteria
 
