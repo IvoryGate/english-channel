@@ -21,18 +21,21 @@ YouTube writes, or discarding generated assets.
 
 ## Repository Snapshot
 
-- Current root worktree: `main` at `2a22230`, seven commits behind
-  `origin/main`.
-- Latest known trunk: `origin/main` at `0c245ec`.
-- Root worktree has 45 file-level untracked entries under `.worktrees/`,
-  `logs/`, `videos/`, and two `_tmp_prompts_*.json` files. These appear to be
-  local operations/media state but remain protected until separately
-  classified.
-- No git stashes were present.
-- Initial worktrees: root `main`, clean Shorts, clean Classics foundation, and
-  dirty Persuasion pilot. The unification worktree was then created separately
-  from `origin/main`. Persuasion code is now checkpointed; only its inventoried
-  media remains untracked.
+- Current root worktree: `main` at `0cfd244`, equal to `origin/main` and
+  clean. Refreshed 2026-10-07; the previous values (`main` at `2a22230`
+  seven commits behind, `origin/main` at `0c245ec`) are superseded.
+- Trunk now contains the intake chain (`92bbc57`, `8e39d68`, `9f4a7a3`,
+  `dd9cdce`, `298cfa4`), the TTS provider migration (PR #11), the
+  shared-types build-order fix (PR #12), and the worktree intake
+  convergence (PR #13), which ended the `deploy-staging` failure streak
+  that began on 2026-08-30.
+- Eleven worktrees exist: the root, six under `.worktrees/`, two under
+  `~/.codex/visualizations`, one detached sandbox on `D:`, and the
+  Persuasion pilot worktree. Nine are clean; `.worktrees/douyin-migration`
+  and `.worktrees/weekly-analytics` hold uncommitted doc and script edits;
+  the Persuasion worktree holds only its inventoried untracked `public/`
+  media.
+- No git stashes were present (re-verified 2026-10-07).
 
 Branch divergence counts below are relative to `origin/main` and have the form
 `trunk-only / branch-only`.
@@ -188,3 +191,37 @@ logs, temporary prompt files, nested worktrees, and the protected Persuasion
 review assets remain untracked and preserved in place under the documented
 artifact rules. No pull request, merge, cleanup, or remote publication action
 was performed by this archive operation.
+
+## Reconciliation Pass — 2026-10-07
+
+Trunk reference for this pass: `0cfd244`, after PR #11, PR #12, and PR #13.
+Evidence per branch: ahead/behind against `main`, `git cherry` patch parity,
+intake-chain ancestry, and worktree cleanliness. Plan of record:
+`docs/exec-plans/active/2026-10-07-worktree-branch-reconciliation.md`.
+
+| Source | Unique vs `main` | Evidence | Disposition | Action |
+| --- | --- | --- | --- | --- |
+| `codex/long-form-expansion` | +3 / -33 | all three patches already in `main` by patch id | retire candidate | delete only after authorization |
+| `codex/shorts-rapid-3x3-2026-08-30` | +1 / -35 | its patch is already in `main` (merged through PR #9) | retire candidate | delete only after authorization |
+| `codex/shorts-pipeline-pilot` | +4 / -90 | absorbed at `8e39d68`, which is in `main`; four pilot-week operational records superseded by trunk's weekly configs | retire candidate | delete only after authorization |
+| `feat/audiobook-skill-opt-in-srt` | +5 / -118 | superseded at `298cfa4`; 41 paths classified in `LEGACY_PIPELINE_PARITY.md` | retire candidate | delete only after authorization |
+| `feat/episode-audio-mastering` | +1 / -118 | superseded at `298cfa4`; 3 paths classified | retire candidate | delete only after authorization |
+| `feat/youtube-research-topic-selection` | +4 / -118 | superseded at `298cfa4`; 43 paths classified | retire candidate | delete only after authorization |
+| `intake-backup-20261006` | +3 / -15 | step-1 rollback point; equivalent content landed through PR #13 | retire candidate | delete only after authorization |
+| 18 zero-commit branches (including the three merged by PR #11-#13 and this PR's branch) | 0 | contained in `main` | retire candidate | delete after authorization; this PR's branch after its merge |
+| `codex/classics-persuasion-pilot` | +1 / -111 | checkpoint `8d548d0` is not in `main`; adapter absorbed at `dd9cdce`; media SHA-256 inventoried | preserve, supersede | keep branch and worktree; close PR #5 |
+| `codex/douyin-migration` | +1 / -19 | active plan `2026-09-12-douyin-migration` with two uncommitted doc edits | preserve | no action |
+| `feat/weekly-analytics-loop` | +2 / -19 | unfinished analytics loop with one uncommitted script change | preserve, absorb later | no action; intake when the work is finished |
+
+Worktree dispositions: keep the root, `.worktrees/douyin-migration`,
+`.worktrees/weekly-analytics`, and the Persuasion worktree. Retire
+`.worktrees/shorts-pipeline-pilot`, `.worktrees/shorts-rapid-3x3`,
+`.worktrees/long-form-expansion`,
+`.worktrees/youtube-operating-system-foundation`,
+`classics-autonomous-worktree`, and the detached
+`D:/CodexData/.codex/worktrees/b8b4/english-channel` at `27b17a7` — all six
+verified clean — only after authorization.
+
+Cleanup status: awaiting the explicit authorization this ledger requires.
+No branch was deleted, no worktree was removed, and no pull request was
+closed by this pass.
