@@ -36,7 +36,8 @@ const checkedExtensions = new Set([
   ".py",
   ".txt",
   ".ps1",
-  ".env"
+  ".env",
+  ".example"
 ]);
 const checkedNames = new Set([".gitignore", ".editorconfig"]);
 const crlfAllowedExtensions = new Set([".cmd", ".bat"]);

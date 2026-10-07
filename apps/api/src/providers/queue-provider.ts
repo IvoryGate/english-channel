@@ -17,17 +17,24 @@ export function getQueueConnection() {
 }
 
 export function createQueueProvider() {
-  const queue = new Queue<TtsQueuePayload>(TTS_QUEUE_NAME, { connection: getQueueConnection() });
+  // BullMQ opens its Redis connection the moment a Queue exists. Inline mode
+  // never enqueues, so the Queue is created on first use: with
+  // JOB_EXECUTION_MODE=inline the API never touches a broker at all.
+  let queue: Queue<TtsQueuePayload> | undefined;
+  const getQueue = () => {
+    queue ??= new Queue<TtsQueuePayload>(TTS_QUEUE_NAME, { connection: getQueueConnection() });
+    return queue;
+  };
 
   return {
     async enqueueTtsJob(payload: TtsQueuePayload) {
-      await queue.add("generate-chapter-audio", payload, {
+      await getQueue().add("generate-chapter-audio", payload, {
         attempts: 3,
         removeOnComplete: true
       });
     },
     async close() {
-      await queue.close();
+      await queue?.close();
     }
   };
 }
