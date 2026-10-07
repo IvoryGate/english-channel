@@ -46,7 +46,12 @@ Explicit non-goals:
 
 - Owner: OpenCode agent.
 - Started: 2026-10-07.
-- State: in progress.
+- State: completed 2026-10-07. Ledger refreshed, dispositions evidenced,
+  the authorized cleanup executed and recorded (with both incidents),
+  PR #5 closed, and this plan archived in PR #14, the PR that completes
+  its scope. Absorb-later items (`feat/weekly-analytics-loop`,
+  `codex/douyin-migration`, `codex/channel-wide-youtube-ab`) remain
+  preserve dispositions for their own future intake.
 
 ## Plan
 
