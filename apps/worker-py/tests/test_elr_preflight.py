@@ -53,6 +53,8 @@ Sam: This is another short test line.
         ],
     }
     _write(paths["manifest"], json.dumps(manifest))
+    _write(paths["thumbnailPng"], "derivative thumbnail")
+    _write(paths["videoBgJpg"], "derivative background")
 
     report = preflight_episode(context, runtime_checks=False, scaffold_metadata=True)
 
@@ -61,7 +63,9 @@ Sam: This is another short test line.
     assert saved["title"] == title
     by_name = {check.name: check for check in report.checks}
     assert by_name["manifest-coverage"].status == "pass"
+    # Derivatives cannot satisfy the packer's native image-source contract.
     assert by_name["cover-16x9"].status == "error"
+    assert by_name["background-16x9"].status == "error"
     assert report.ok is False
 
     monkeypatch.setattr(
