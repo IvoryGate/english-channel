@@ -1,5 +1,7 @@
+import json
 from pathlib import Path
 
+from worker.classics.chapter_package import CHAPTER_COPY
 from worker.classics.production import render_chapter_visuals
 
 
@@ -62,3 +64,23 @@ def test_render_chapter_visuals_renders_fallback_thumbnail(
     assert len(calls) == 3
     assert any("PersuasionChapter5Cover" in call for call in calls)
     assert result[0]["thumbnail"].endswith("000_chapter_005.thumbnail.png")
+
+
+def test_all_persuasion_compositions_and_next_week_assets_are_registered() -> None:
+    repo_root = Path(__file__).resolve().parents[3]
+    root = (repo_root / "src" / "classics" / "root.tsx").read_text(encoding="utf-8")
+    card = (repo_root / "src" / "classics" / "classic-listening-card.tsx").read_text(encoding="utf-8")
+    cover = (repo_root / "src" / "classics" / "persuasion-chapter-cover.tsx").read_text(encoding="utf-8")
+
+    assert "Array.from({length: 24}" in root
+    assert "chapter: number" in card
+    assert "chapter-07-cover-bg-v1-imagegen.png" in cover
+    assert "chapter-08-cover-bg-v1-imagegen.png" in cover
+    assert "chapter-09-cover-bg-v1-imagegen.png" in cover
+    config = json.loads((repo_root / "configs" / "classics" / "persuasion.json").read_text(encoding="utf-8"))
+    assert config["visual"]["chapterBackgrounds"]["7"].endswith("chapter-07-cover-bg-v1-imagegen.png")
+    assert config["visual"]["chapterBackgrounds"]["8"].endswith("chapter-08-cover-bg-v1-imagegen.png")
+    assert config["visual"]["chapterBackgrounds"]["9"].endswith("chapter-09-cover-bg-v1-imagegen.png")
+    assert CHAPTER_COPY[7]["hook"] == "He Sees Her Again"
+    assert CHAPTER_COPY[8]["hook"] == "Worse Than Strangers"
+    assert CHAPTER_COPY[9]["hook"] == "One Small Kindness"

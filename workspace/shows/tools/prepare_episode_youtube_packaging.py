@@ -568,7 +568,17 @@ def prepare_episode_youtube_packaging(
     resolved = resolve_markers(timeline, markers, intro_offset_sec=resolved_intro_offset_sec)
     timestamps_block = _format_timestamps_block(resolved)
 
-    show_name = str(youtube.get("showName") or manifest.get("title", "")).strip()
+    show_id = str(manifest.get("showId") or youtube.get("showId") or "").strip()
+    default_show_names = {
+        "series_a": "Daily Talk",
+        "series_b": "First Steps",
+        "series_c": "Polished English",
+    }
+    show_name = str(
+        youtube.get("showName")
+        or default_show_names.get(show_id)
+        or "English Listening Room"
+    ).strip()
     level_band = str(manifest.get("targetLevel", ""))
     description = assemble_description(
         youtube=youtube,

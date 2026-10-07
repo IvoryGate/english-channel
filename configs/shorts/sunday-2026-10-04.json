@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "sunday-2026-10-04",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-148",
+      "title": "Phone Test: Catch the Corrected Name",
+      "thumbnailHeadline": "WHICH NAME IS FINAL?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "The caller corrects one letter in a name. Can you keep the final spelling?",
+      "turns": [
+        {"speaker": "narrator", "text": "The reservation is for Mara Lee. Sorry, that is M A R A, not M A R Y."},
+        {"speaker": "narrator", "text": "Listen for the correction signal and replace the old ending. The final spelling is the answer you keep and repeat back. Do not let the first version stay in your notes."}
+      ],
+      "prompt": "Which name is correct?",
+      "answer": "Mara Lee, spelled M A R A.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime phone desk, adult woman listens and swaps one small letter tile in a name card while adult man watches, no readable text.",
+      "backgroundImage": "shorts/sunday-2026-10-04/elr-s-148/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-149",
+      "title": "Phone Test: Is That Fifteen or Fifty?",
+      "thumbnailHeadline": "15 OR 50?",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "When two numbers sound close, confirm the whole detail.",
+      "turns": [
+        {"speaker": "mia", "text": "I heard room fifteen, but the line was noisy."},
+        {"speaker": "leo", "text": "Do not guess from one sound. Ask, did you say room one five?"},
+        {"speaker": "mia", "text": "The caller says, no, room five zero, on the fifth floor."},
+        {"speaker": "leo", "text": "Now the extra context and the confirmation give you the final number."}
+      ],
+      "prompt": "What should you confirm?",
+      "answer": "The complete number, using separate digits if needed.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime phone-listening scene, adult woman compares two abstract number cards and confirms one with an adult male caller, crisp blue and coral, no readable text.",
+      "backgroundImage": "shorts/sunday-2026-10-04/elr-s-149/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-150",
+      "title": "Phone Test: Turn Details Into an Action",
+      "thumbnailHeadline": "WHAT WILL YOU DO?",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "statement",
+      "hook": "Good listening ends with a next action, not a pile of notes.",
+      "turns": [
+        {"speaker": "narrator", "text": "Sam heard a new delivery window, a door code, and a request to call on arrival."},
+        {"speaker": "narrator", "text": "He repeated the final details once."},
+        {"speaker": "narrator", "text": "Then he wrote one action: be home during the new window and keep the phone nearby. Clear notes should tell you exactly what to do next."}
+      ],
+      "prompt": "What makes the notes useful?",
+      "answer": "They lead to one clear next action.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime home delivery scene, adult man turns several listening detail cards into one clear action path while adult woman checks a phone, no readable text.",
+      "backgroundImage": "shorts/sunday-2026-10-04/elr-s-150/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-151",
+      "title": "Your One-Minute Phone Listening Challenge",
+      "thumbnailHeadline": "FINAL DETAIL CHALLENGE",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "question",
+      "hook": "Can you catch the name, final time, and next action in one call?",
+      "turns": [
+        {"speaker": "mia", "text": "This is Nina Park. Your pickup moved from four fifteen to four fifty at the west entrance."},
+        {"speaker": "leo", "text": "The listener needs three things: Nina Park, four fifty, and go to the west entrance."},
+        {"speaker": "mia", "text": "Then confirm only if one of those details is still unclear."},
+        {"speaker": "leo", "text": "That is the transfer challenge: final detail, meaning, and action."}
+      ],
+      "prompt": "What are the three final details?",
+      "answer": "Nina Park, four fifty, and the west entrance.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime split phone-call challenge, adult woman caller and adult man listener connect three visual detail cards into one action arrow, energetic teal and gold, no readable text.",
+      "backgroundImage": "shorts/sunday-2026-10-04/elr-s-151/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "long"}
+    }
+  ]
+}

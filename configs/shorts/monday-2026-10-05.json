@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "monday-2026-10-05",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-152",
+      "title": "Persuasion Listening: Worse Than Strangers",
+      "thumbnailHeadline": "WORSE THAN STRANGERS?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Why does Anne think they are worse than strangers? Listen for the contrast.",
+      "turns": [
+        {"speaker": "narrator", "text": "Once, Anne and Captain Wentworth had been everything to each other. Now they spoke only with the politeness required between strangers."},
+        {"speaker": "narrator", "text": "But real strangers can still become acquainted. Anne believes that their shared past makes even a new beginning impossible. That is why the distance feels worse."}
+      ],
+      "prompt": "Why are they worse than strangers?",
+      "answer": "Their shared past prevents a simple new beginning.",
+      "relatedShow": "classic_listening",
+      "relatedVideoId": null,
+      "visualBrief": "Elegant Regency drawing room, Anne and Captain Wentworth stand far apart with a social gathering between them, restrained emotional distance, hands fully out of frame, no readable text.",
+      "backgroundImage": "shorts/monday-2026-10-05/elr-s-152/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-153",
+      "title": "Restaurant English: Catch the Final Dressing",
+      "thumbnailHeadline": "WHICH DRESSING?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "The first choice is unavailable. Can you catch the final dressing?",
+      "turns": [
+        {"speaker": "mia", "text": "Could I have Caesar dressing?"},
+        {"speaker": "leo", "text": "Sorry, we have no Caesar dressing this evening. We have lemon dressing or no dressing."},
+        {"speaker": "mia", "text": "Lemon dressing, please."},
+        {"speaker": "leo", "text": "The first choice was Caesar, but the final choice was lemon. When you hear unavailable, remove the old answer and listen for the replacement."}
+      ],
+      "prompt": "Which dressing is in the final order?",
+      "answer": "Lemon dressing.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright modern restaurant listening scene, two adult hosts shown chest-up with simple salad icons between them, hands fully below frame, teal and orange, no readable text.",
+      "backgroundImage": "shorts/monday-2026-10-05/elr-s-153/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-154",
+      "title": "Restaurant English: Let Me Check That",
+      "thumbnailHeadline": "CHECK YOUR ORDER",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "One phrase can stop a wrong restaurant order before the kitchen starts.",
+      "turns": [
+        {"speaker": "mia", "text": "Let me check that: one chicken wrap with extra cheese and no chips."},
+        {"speaker": "leo", "text": "Good. Repeat only the final version, not every change in the conversation."},
+        {"speaker": "mia", "text": "And one small Greek salad with lemon dressing."},
+        {"speaker": "leo", "text": "Exactly. Let me check that tells the listener you are confirming the important details."}
+      ],
+      "prompt": "What phrase starts the confirmation?",
+      "answer": "Let me check that.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Warm anime restaurant counter, adult woman and adult man shown from shoulders up confirming a takeaway order, hands out of frame, clean teal and amber composition, no readable text.",
+      "backgroundImage": "shorts/monday-2026-10-05/elr-s-154/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-155",
+      "title": "Persuasion Listening: Cold Politeness",
+      "thumbnailHeadline": "POLITE BUT PAINFUL",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Polite language can still feel painfully cold when two people share a past.",
+      "turns": [
+        {"speaker": "narrator", "text": "Captain Wentworth sees Anne near the instrument and immediately offers her the seat."},
+        {"speaker": "narrator", "text": "His words are perfectly courteous: I beg your pardon, madam, this is your seat."},
+        {"speaker": "narrator", "text": "Yet the formal distance hurts Anne more than open anger. The tone shows that politeness and warmth are not the same thing."}
+      ],
+      "prompt": "Why does the polite sentence hurt?",
+      "answer": "Its formal distance replaces their former closeness.",
+      "relatedShow": "classic_listening",
+      "relatedVideoId": null,
+      "visualBrief": "Regency music room, Anne near a piano and Captain Wentworth standing at a respectful distance, restrained sadness, hands obscured by furniture, no readable text.",
+      "backgroundImage": "shorts/monday-2026-10-05/elr-s-155/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

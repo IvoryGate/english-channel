@@ -1,0 +1,100 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "wednesday-2026-09-30",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-132",
+      "title": "Do Not Just Say I Need More Time",
+      "thumbnailHeadline": "MAKE THE DELAY CLEAR",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 42,
+      "hookStyle": "question",
+      "hook": "Which delay request sounds more prepared?",
+      "turns": [
+        {"speaker": "narrator", "text": "Option A: Sorry, I need more time."},
+        {"speaker": "narrator", "text": "Option B: The draft is complete, but two figures changed. I recommend sending the checked version by ten tomorrow."}
+      ],
+      "prompt": "Which request helps the listener make a decision?",
+      "answer": "Option B, because it shows progress, the constraint, and a new commitment.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime office scene, adult professional woman compares one vague faded message bubble with one clear timeline card while an adult male colleague listens, teal and plum accents, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-09-30/elr-s-132/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-133",
+      "title": "Use a Checkpoint When the Time Is Unclear",
+      "thumbnailHeadline": "PROMISE A CHECKPOINT",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Do not promise a finish time you cannot trust.",
+      "turns": [
+        {"speaker": "mia", "text": "I am not sure when finance will confirm the number."},
+        {"speaker": "leo", "text": "Then promise a checkpoint, not a guess. That gives them a time they can trust."},
+        {"speaker": "mia", "text": "The draft is complete. I can confirm the final delivery time by four."}
+      ],
+      "prompt": "What should you promise when completion is uncertain?",
+      "answer": "A reliable checkpoint.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime office, adult woman points to a clear checkpoint marker on a simple timeline while adult man nods, warm afternoon light, clean center, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-09-30/elr-s-133/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-134",
+      "title": "If the Deadline Cannot Move, Change the Scope",
+      "thumbnailHeadline": "TIME OR SCOPE?",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "statement",
+      "hook": "Sometimes you do not need more time. You need a scope decision.",
+      "turns": [
+        {"speaker": "narrator", "text": "The client meeting could not move, but the full proposal was not ready."},
+        {"speaker": "narrator", "text": "Mia offered the core proposal by nine or the verified full version by noon."},
+        {"speaker": "narrator", "text": "Her manager could choose the outcome that mattered most."}
+      ],
+      "prompt": "What did Mia make visible?",
+      "answer": "The trade-off between time and scope.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime business scene with adult woman presenting two clear paths, a small core folder now and a complete verified folder later, adult manager choosing, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-09-30/elr-s-134/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-135",
+      "title": "One Apology, Then Give the Plan",
+      "thumbnailHeadline": "APOLOGIZE ONCE",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "question",
+      "hook": "Can too much apologizing weaken a professional update?",
+      "turns": [
+        {"speaker": "mia", "text": "I am so sorry. I know this is terrible. I really hope you understand."},
+        {"speaker": "leo", "text": "One apology can acknowledge the impact. Then move to the plan."},
+        {"speaker": "mia", "text": "I am sorry this shifts your review time. The checked version will be ready by ten tomorrow."}
+      ],
+      "prompt": "What should follow a clean apology?",
+      "answer": "A specific plan and commitment.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime split office scene, adult woman moves from tangled apology bubbles to one clear plan card, supportive adult man beside her, expressive but professional, no readable text.",
+      "backgroundImage": "shorts/wednesday-2026-09-30/elr-s-135/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "long"}
+    }
+  ]
+}

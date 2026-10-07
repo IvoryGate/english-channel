@@ -48,6 +48,26 @@ CHAPTER_COPY = {
         "summary": "As the Elliots leave Kellynch for Bath, Anne is dismissed by one sister and urgently claimed by another, finding purpose and fresh family tensions at Uppercross.",
         "keywords": ["Anne Elliot", "Uppercross", "Mary Musgrove", "Kellynch Hall"],
     },
+    6: {
+        "hook": "A Name Draws Near",
+        "summary": "At Uppercross, Anne settles into the Musgroves' lively family life until news of Captain Wentworth's return brings the past suddenly close again.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Uppercross", "Musgrove family"],
+    },
+    7: {
+        "hook": "He Sees Her Again",
+        "summary": "Anne and Captain Wentworth meet again after eight years, but his guarded manner and one painful remark reveal how much their broken engagement still stands between them.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Uppercross", "first reunion"],
+    },
+    8: {
+        "hook": "Worse Than Strangers",
+        "summary": "Anne and Captain Wentworth move through the same lively Uppercross circle while memory, naval stories, and cold politeness reveal the painful distance between them.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Uppercross", "naval stories"],
+    },
+    9: {
+        "hook": "One Small Kindness",
+        "summary": "At Uppercross, a crowded family scene and one quiet act of help expose the feeling that Anne and Captain Wentworth cannot put into words.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Uppercross", "quiet kindness"],
+    },
 }
 
 

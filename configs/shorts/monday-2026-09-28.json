@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "monday-2026-09-28",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-124",
+      "title": "The First Time Is Not Always the Final Time",
+      "thumbnailHeadline": "WHICH TIME IS FINAL?",
+      "format": "listen_choose",
+      "cefr": "A2",
+      "durationSec": 28,
+      "hookStyle": "question",
+      "hook": "Two times. Which one is final?",
+      "turns": [
+        {"speaker": "narrator", "text": "Your appointment was ten thirty, but now it is eleven fifteen."},
+        {"speaker": "narrator", "text": "But signals the change."}
+      ],
+      "prompt": "Which time is final?",
+      "answer": "Eleven fifteen. Confirm it.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime clinic phone call, adult woman holding a phone beside a simple wall clock while a receptionist speaks, clear changed-plan emotion, turquoise and coral, clean upper caption space, no readable text.",
+      "backgroundImage": "shorts/monday-2026-09-28/elr-s-124/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-125",
+      "title": "Ask for the Last Part, Not the Whole Call",
+      "thumbnailHeadline": "THE LAST PART, PLEASE",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Missed the ending? Ask only for the missing part.",
+      "turns": [
+        {"speaker": "sam", "text": "Sorry, could you say the last part again?"},
+        {"speaker": "riley", "text": "Bring your photo ID."},
+        {"speaker": "riley", "text": "A narrow question saves time. It keeps the call clear and gets exactly the detail you need."}
+      ],
+      "prompt": "Which sentence repairs the missing ending?",
+      "answer": "Sorry, could you say the last part again?",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime home desk, adult man on a phone calmly asking for the last part while taking one note, friendly focused expression, blue and warm orange, clean vertical layout, no text.",
+      "backgroundImage": "shorts/monday-2026-09-28/elr-s-125/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-126",
+      "title": "Who Calls Back? Catch the Action Owner",
+      "thumbnailHeadline": "WHO CALLS BACK?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 36,
+      "hookStyle": "question",
+      "hook": "Two people mention calling. Who owns the next action?",
+      "turns": [
+        {"speaker": "riley", "text": "Listen for the final decision."},
+        {"speaker": "sam", "text": "I will contact billing and call you back before five."},
+        {"speaker": "riley", "text": "Action, owner, deadline. That is what matters."},
+        {"speaker": "sam", "text": "Keep the final decision, not every possible plan."}
+      ],
+      "prompt": "Who will call back before five?",
+      "answer": "The speaker will, after contacting billing.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime split phone conversation, adult woman at a service desk and adult man at home, one clear folder and one clock symbolize action owner and deadline, teal, gold, and coral, no readable text.",
+      "backgroundImage": "shorts/monday-2026-09-28/elr-s-126/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-127",
+      "title": "A Voicemail Needs One Clear Next Action",
+      "thumbnailHeadline": "WHAT HAPPENS NEXT?",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Maya understood the voicemail but missed the next action.",
+      "turns": [
+        {"speaker": "narrator", "text": "She replayed it asking: what must happen next?"},
+        {"speaker": "narrator", "text": "Call before Thursday. Confirm your pharmacy."},
+        {"speaker": "narrator", "text": "She wrote three boxes: action, deadline, detail."},
+        {"speaker": "narrator", "text": "Now the long message feels simple and useful. One replay was enough today."}
+      ],
+      "prompt": "Which three boxes helped?",
+      "answer": "Action, deadline, and detail.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime evening kitchen, adult woman replaying a voicemail and writing three simple blank boxes in a notebook, relieved focused mood, lavender, turquoise, and warm lamp light, no readable text.",
+      "backgroundImage": "shorts/monday-2026-09-28/elr-s-127/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

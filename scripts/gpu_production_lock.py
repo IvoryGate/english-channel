@@ -195,15 +195,18 @@ def release_gpu_lock() -> None:
         os.environ.pop(OWNER_PID_ENV, None)
 
 
-DEFAULT_RENDER_BATCH_SIZE = 20
+DEFAULT_RENDER_BATCH_SIZE = 2
 MAX_RENDER_BATCH_SIZE = 20
 
 
 def validate_render_batch_size(batch_size: int) -> int:
     """Turns per VoxCPM subprocess — load once, render N turns, unload.
 
-    Default 20 balances model-load overhead against the tested 8GB VRAM ceiling. Do not run
-    an entire episode in one process (134+ turns); that still CUDA-crashes.
+    Default 2 is the measured safe setting for the 16 GB system-RAM / 8 GB VRAM
+    production host. Chatterbox crashed with Windows access-violation exit
+    3221225477 at batch size 8 on 2026-09-18. Larger batches remain available
+    only as an explicit, monitored override for a validated provider and host.
+    Never run an entire episode in one process.
     """
     if batch_size < 1:
         print(f"ERROR: --batch-size must be >= 1 (got {batch_size}).", file=sys.stderr)

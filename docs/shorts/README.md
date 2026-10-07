@@ -97,20 +97,21 @@ warning until the channel video ID is assigned.
 
 ### 2. Render audio
 
-Short audio reuses the project-local VoxCPM2 runtime and the proven Riley/Sam
-references. A narrator maps to Riley; a real dialogue maps Riley and Sam to two
-voices. The renderer loads the model once for the small Short batch, masters to
-48 kHz mono near -14 LUFS, then replaces planned timings with measured WAV
-timings.
+Short audio defaults to the project-local Kokoro runtime. Riley maps to
+`af_heart`; Sam maps to `am_fenrir`. The renderer loads the provider once for a
+small Short batch, masters to 48 kHz mono near -14 LUFS, then replaces planned
+timings with measured WAV timings. VoxCPM is a compatibility fallback only and
+must be selected explicitly with `ELR_SHORTS_TTS_PROVIDER=voxcpm`; a restart
+must not silently switch Shorts back to VoxCPM.
 
 ```powershell
 & $py scripts/shorts.py render-audio --short elr-s-001
 ```
 
 For a production week, batch the selected IDs. The controller keeps at most 20
-turns per VoxCPM process, resumes completed turn WAVs, and holds the shared GPU
-lease for the batch. This reduces repeated model loads without crossing the
-tested 8 GB VRAM ceiling.
+turns per provider process, resumes completed turn WAVs, and holds the shared
+production lease for the batch. The Kokoro default runs on CPU and avoids the
+VoxCPM model-load peak on the 8 GB GPU host.
 
 ```powershell
 & $py scripts/shorts.py render-audio-batch --short elr-s-012 elr-s-013 elr-s-014
@@ -124,12 +125,12 @@ voice assets in the owning repository. Override only when necessary:
 
 ```powershell
 $env:ELR_SHORTS_RUNTIME_ROOT = "H:\english-channel"
+$env:ELR_SHORTS_TTS_PROVIDER = "voxcpm"
 $env:ELR_SHORTS_DEVICE = "cuda"
-$env:ELR_VOXCPM_MAX_LENGTH = "1024"
 ```
 
-The renderer uses the owning repository's global GPU lock, so a scheduled Short
-cannot overlap a long-form VoxCPM or Whisper production job.
+The renderer uses the owning repository's shared production lock, so a
+scheduled Short cannot overlap another heavyweight audio or media job.
 
 Measured delivery is preserved unless it crosses the pre-registered short/long
 duration boundary or exceeds the hard platform limit. Mastering then applies a

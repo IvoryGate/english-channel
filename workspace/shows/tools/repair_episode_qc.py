@@ -21,6 +21,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -36,12 +37,14 @@ RENDER_SCRIPT = TOOLS / "render_episode.py"
 sys.path.insert(0, str(TOOLS))
 sys.path.insert(0, str(REPO / "scripts"))
 sys.path.insert(0, str(REPO / ".cursor" / "skills" / "audiobook-chapter-tts" / "scripts"))
+sys.path.insert(0, str(REPO / "apps" / "worker-py"))
 
 from audiobook_workspace import (  # noqa: E402
     QC_SHORT_TOO_LONG_SEC,
     QC_SHORT_WORD_LIMIT,
     SINGLE_WORD_MAX_LEN,
     analyze_segment_qc,
+    normalize_segment_peak,
     read_mono,
     trailing_silence_sec,
 )
@@ -53,6 +56,7 @@ from check_episode import (  # noqa: E402
 from episode_artifacts import turn_wav_path  # noqa: E402
 from gpu_production_lock import GpuProductionLock  # noqa: E402
 from prepare_reference_concat_audio import build_concat_audio  # noqa: E402
+from worker.tts.trace import atomic_write_json, sha256_file, turn_trace_path  # noqa: E402
 
 
 def compose_raw_wav(manifest_path: Path) -> Path:
@@ -137,11 +141,18 @@ def trim_trailing_silence(path: Path, *, tail_pad_sec: float = 0.12) -> bool:
     trimmed = audio[: min(len(audio), end + pad)]
     if len(trimmed) >= len(audio):
         return False
-    sf.write(path, trimmed, sr, subtype="PCM_16")
+    # Turn WAVs are float PCM. Changing one repaired clip to PCM_16 makes the
+    # concat demuxer interpret its packet size using the first clip's codec,
+    # which can halve that clip in the composed raw track.
+    _atomic_float_wav(path, trimmed, sr)
     return True
 
 
-def try_trim_repair(workspace: Path, segment: dict[str, Any]) -> bool:
+def try_trim_repair(
+    workspace: Path,
+    segment: dict[str, Any],
+    manifest: dict[str, Any],
+) -> bool:
     flags = set(segment.get("flags") or [])
     if "SHORT_TOO_LONG" not in flags and "TRAILING_SILENCE" not in flags:
         return False
@@ -157,11 +168,125 @@ def try_trim_repair(workspace: Path, segment: dict[str, Any]) -> bool:
     after, _sr = read_mono(path)
     qc = analyze_segment_qc(segment, after, sr)
     ok = "SHORT_TOO_LONG" not in qc.get("flags", [])
+    if ok:
+        output_hash = sha256_file(path)
+        trace_path = turn_trace_path(path)
+        if trace_path.is_file():
+            trace = load_json(trace_path)
+            trace["durationSec"] = round(float(len(after) / sr), 3)
+            trace["peak"] = round(float(np.max(np.abs(after))), 6)
+            trace["outputSha256"] = output_hash
+            transforms = list(trace.get("postProcessing") or [])
+            transforms.append(
+                {
+                    "kind": "trailing-silence-trim",
+                    "beforeDurationSec": round(float(len(before) / sr), 3),
+                    "afterDurationSec": round(float(len(after) / sr), 3),
+                }
+            )
+            trace["postProcessing"] = transforms
+            atomic_write_json(trace_path, trace)
+        turn_id = str(segment["id"])
+        for rendered in manifest.get("rendered") or []:
+            if str(rendered.get("id")) == turn_id:
+                rendered["durationSec"] = round(float(len(after) / sr), 3)
+                rendered["peak"] = round(float(np.max(np.abs(after))), 6)
+                rendered["outputSha256"] = output_hash
+                break
     print(
         f"trim {segment['id']} {len(before)/sr:.2f}s -> {len(after)/sr:.2f}s flags={qc.get('flags')} ok={ok}",
         flush=True,
     )
     return ok
+
+
+def _atomic_float_wav(path: Path, audio: np.ndarray, sample_rate: int) -> None:
+    fd, temp_name = tempfile.mkstemp(prefix=f".{path.stem}.", suffix=".wav", dir=path.parent)
+    os.close(fd)
+    try:
+        sf.write(temp_name, audio.astype(np.float32, copy=False), sample_rate, subtype="FLOAT")
+        os.replace(temp_name, path)
+    except BaseException:
+        Path(temp_name).unlink(missing_ok=True)
+        raise
+
+
+def try_quiet_repair(
+    workspace: Path,
+    segment: dict[str, Any],
+    manifest: dict[str, Any],
+) -> bool:
+    """Normalize valid but abnormally quiet speech without another TTS render."""
+    if "TOO_QUIET" not in set(segment.get("flags") or []):
+        return False
+    path = turn_wav_path(workspace, str(segment["filename"]))
+    trace_path = turn_trace_path(path)
+    if not path.is_file() or not trace_path.is_file():
+        return False
+    audio, sr = read_mono(path)
+    if len(audio) == 0:
+        return False
+    before_peak = float(np.max(np.abs(audio)))
+    repaired = normalize_segment_peak(audio)
+    after_peak = float(np.max(np.abs(repaired)))
+    if after_peak <= before_peak:
+        return False
+    qc = analyze_segment_qc(segment, repaired, sr)
+    if "TOO_QUIET" in qc.get("flags", []) or "CLIPPING" in qc.get("flags", []):
+        return False
+
+    _atomic_float_wav(path, repaired, sr)
+    output_hash = sha256_file(path)
+    trace = load_json(trace_path)
+    trace["peak"] = round(after_peak, 6)
+    trace["outputSha256"] = output_hash
+    transforms = list(trace.get("postProcessing") or [])
+    transforms.append(
+        {
+            "kind": "quiet-peak-normalization",
+            "beforePeak": round(before_peak, 6),
+            "afterPeak": round(after_peak, 6),
+        }
+    )
+    trace["postProcessing"] = transforms
+    atomic_write_json(trace_path, trace)
+
+    turn_id = str(segment["id"])
+    for rendered in manifest.get("rendered") or []:
+        if str(rendered.get("id")) == turn_id:
+            rendered["peak"] = round(after_peak, 6)
+            rendered["outputSha256"] = output_hash
+            break
+    print(f"normalize {turn_id} peak={before_peak:.3f} -> {after_peak:.3f}", flush=True)
+    return True
+
+
+def repair_turn_encodings(workspace: Path, manifest: dict[str, Any]) -> int:
+    """Restore legacy/non-float turn WAVs to the pipeline's float PCM contract."""
+    repaired_count = 0
+    for turn in manifest.get("turns") or []:
+        path = turn_wav_path(workspace, str(turn["filename"]))
+        if not path.is_file() or sf.info(path).subtype == "FLOAT":
+            continue
+        audio, sr = read_mono(path)
+        _atomic_float_wav(path, audio, sr)
+        output_hash = sha256_file(path)
+        trace_path = turn_trace_path(path)
+        if trace_path.is_file():
+            trace = load_json(trace_path)
+            trace["outputSha256"] = output_hash
+            transforms = list(trace.get("postProcessing") or [])
+            transforms.append({"kind": "restore-float-pcm"})
+            trace["postProcessing"] = transforms
+            atomic_write_json(trace_path, trace)
+        turn_id = str(turn["id"])
+        for rendered in manifest.get("rendered") or []:
+            if str(rendered.get("id")) == turn_id:
+                rendered["outputSha256"] = output_hash
+                break
+        repaired_count += 1
+        print(f"encoding {turn_id} -> FLOAT", flush=True)
+    return repaired_count
 
 
 def rerender_turns(
@@ -231,7 +356,10 @@ def repair_episode_qc(
     workspace = manifest_path.parent
     episode = load_json(manifest_path)
     tighten_short_turn_caps(episode)
+    encoding_repairs = repair_turn_encodings(workspace, episode)
     write_json(manifest_path, episode)
+    if encoding_repairs:
+        compose_raw_wav(manifest_path)
 
     report: dict[str, Any] = {}
     for round_idx in range(1, max_rounds + 1):
@@ -252,11 +380,25 @@ def repair_episode_qc(
         print(f"qc repair round {round_idx}/{max_rounds} blocking={ids}", flush=True)
 
         still_blocking: list[str] = []
+        manifest_changed = False
+        audio_changed = False
         for turn_id in ids:
             seg = by_id.get(turn_id)
-            if seg and try_trim_repair(workspace, seg):
+            if seg and try_quiet_repair(workspace, seg, episode):
+                manifest_changed = True
+                audio_changed = True
+                continue
+            if seg and try_trim_repair(workspace, seg, episode):
+                audio_changed = True
+                manifest_changed = True
                 continue
             still_blocking.append(turn_id)
+
+        if manifest_changed:
+            write_json(manifest_path, episode)
+
+        if audio_changed and not still_blocking:
+            compose_raw_wav(manifest_path)
 
         if still_blocking:
             advance_seed_offsets(episode, still_blocking)

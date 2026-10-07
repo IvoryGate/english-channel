@@ -13,9 +13,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import queue
 import signal
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,6 +35,7 @@ sys.path.insert(0, str(REPO_ROOT / "apps" / "worker-py"))
 from worker.tts.dialogue import dialogue_turn_is_reusable  # noqa: E402
 
 _stop_requested = False
+DEFAULT_RENDER_TIMEOUT_SEC = 300.0
 
 
 def _utc_now() -> datetime:
@@ -142,7 +145,34 @@ def build_render_cmd(
     return cmd
 
 
-def run_subprocess(cmd: list[str], logger: MonitorLogger) -> int:
+def _terminate_process_tree(process: subprocess.Popen[str]) -> None:
+    if process.poll() is not None:
+        return
+    if os.name == "nt":
+        subprocess.run(
+            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    else:
+        try:
+            os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    try:
+        process.wait(timeout=2)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=2)
+
+
+def run_subprocess(
+    cmd: list[str],
+    logger: MonitorLogger,
+    *,
+    timeout_sec: float | None = None,
+) -> int:
     env = os.environ.copy()
     env["KMP_DUPLICATE_LIB_OK"] = "TRUE"
     env.pop("PYTORCH_CUDA_ALLOC_CONF", None)
@@ -158,11 +188,44 @@ def run_subprocess(cmd: list[str], logger: MonitorLogger) -> int:
         encoding="utf-8",
         errors="replace",
         bufsize=1,
+        start_new_session=os.name != "nt",
     )
     assert process.stdout is not None
-    for line in process.stdout:
-        logger.write(f"    {line.rstrip()}")
-    code = int(process.wait())
+    output: queue.Queue[str | None] = queue.Queue()
+
+    def pump_output() -> None:
+        try:
+            for line in process.stdout:
+                output.put(line)
+        finally:
+            output.put(None)
+
+    reader = threading.Thread(target=pump_output, name=f"render-output-{process.pid}", daemon=True)
+    reader.start()
+    deadline = started + timeout_sec if timeout_sec is not None else None
+    timed_out = False
+    while True:
+        wait_sec = 0.5
+        if deadline is not None:
+            wait_sec = max(0.01, min(wait_sec, deadline - time.monotonic()))
+        try:
+            line = output.get(timeout=wait_sec)
+        except queue.Empty:
+            line = ""
+        if line is None:
+            break
+        if line:
+            logger.write(f"    {line.rstrip()}")
+        if deadline is not None and time.monotonic() >= deadline and process.poll() is None:
+            timed_out = True
+            logger.log(
+                f"subprocess exceeded {_format_duration(timeout_sec or 0)}; "
+                "terminating process tree for retry"
+            )
+            _terminate_process_tree(process)
+            deadline = None
+    reader.join(timeout=5)
+    code = 124 if timed_out else int(process.wait())
     logger.log(f"subprocess finished in {_format_duration(time.monotonic() - started)} (exit {code})")
     return code
 
@@ -175,6 +238,7 @@ def render_turn_batch(
     device: str,
     logger: MonitorLogger,
     retry_on_failure: int,
+    render_timeout_sec: float,
 ) -> int:
     attempts = 1 + max(retry_on_failure, 0)
     label = ",".join(turn_ids)
@@ -192,9 +256,14 @@ def render_turn_batch(
             compose=False,
             self_check=False,
         )
-        code = run_subprocess(cmd, logger)
+        code = run_subprocess(cmd, logger, timeout_sec=render_timeout_sec)
         if code == 0:
             return 0
+        # Retrying the same multi-turn batch after a watchdog timeout usually
+        # repeats the timeout. Let the monitor split it into smaller batches.
+        if code == 124 and len(turn_ids) > 1:
+            logger.log(f"turns {label} timed out; returning for adaptive split")
+            return code
         if attempt < attempts:
             logger.log(f"turns {label} failed (exit {code}); retrying after 15s cooldown")
             time.sleep(15)
@@ -250,6 +319,7 @@ def monitor_render(
     cfg: float,
     no_self_check: bool,
     turns_only: bool = False,
+    render_timeout_sec: float = DEFAULT_RENDER_TIMEOUT_SEC,
 ) -> int:
     workspace = manifest_path.parent
     patch_cfg(manifest_path, cfg, logger)
@@ -262,8 +332,10 @@ def monitor_render(
         f"batch_size={batch_size} force={force}"
     )
 
-    completed_batches = 0
-    for batch in chunk_turns(pending, batch_size):
+    initial_pending = len(pending)
+    batches = chunk_turns(pending, batch_size)
+    while batches:
+        batch = batches.pop(0)
         if _stop_requested:
             return 130
         ids = [str(t["id"]) for t in batch]
@@ -274,12 +346,37 @@ def monitor_render(
             device=device,
             logger=logger,
             retry_on_failure=retry_on_failure,
+            render_timeout_sec=render_timeout_sec,
         )
+        if code == 124 and len(batch) > 1:
+            # A timed-out worker may already have committed some turn WAVs.
+            # Re-check artifacts first, then retry only the missing turns in
+            # two smaller, ordered batches.
+            missing_ids = {
+                str(turn["id"])
+                for turn in pending_turns(load_manifest(manifest_path), workspace, force=False)
+            }
+            remaining = [turn for turn in batch if str(turn["id"]) in missing_ids]
+            if not remaining:
+                logger.log(f"turns {','.join(ids)} completed before timeout cleanup")
+                continue
+            if len(remaining) == 1:
+                batches.insert(0, remaining)
+                logger.log(f"batch {','.join(ids)} timed out; retrying remaining turn individually")
+                continue
+            midpoint = max(1, len(remaining) // 2)
+            smaller = [remaining[:midpoint], remaining[midpoint:]]
+            batches[0:0] = smaller
+            logger.log(
+                f"batch {','.join(ids)} timed out; splitting {len(remaining)} turns "
+                f"into {len(smaller[0])}+{len(smaller[1])}"
+            )
+            continue
         if code != 0:
             return code
-        completed_batches += 1
-        done = min(total, completed_batches * batch_size)
-        logger.log(f"progress {done}/{total} turns rendered this run")
+        missing_now = pending_turns(load_manifest(manifest_path), workspace, force=False)
+        rendered_this_run = max(0, initial_pending - len(missing_now))
+        logger.log(f"progress {rendered_this_run}/{initial_pending} pending turns completed this run")
 
     still = pending_turns(load_manifest(manifest_path), workspace, force=False)
     if still:
@@ -314,6 +411,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--force", action="store_true", help="Re-render all turns even if WAV exists.")
     parser.add_argument("--retry-on-failure", type=int, default=2, help="Retries per batch (default 2).")
     parser.add_argument(
+        "--render-timeout-sec",
+        type=float,
+        default=DEFAULT_RENDER_TIMEOUT_SEC,
+        help="Terminate and retry a turn batch after this many seconds (default 300).",
+    )
+    parser.add_argument(
         "--no-self-check",
         action="store_true",
         help="Skip Whisper ASR in render compose+QC (pack runs layer-1 QC only with --qc-no-asr).",
@@ -333,6 +436,9 @@ def main() -> int:
     validate_render_batch_size(args.batch_size)
     if not args.python.is_file():
         print(f"error: python not found: {args.python}", file=sys.stderr)
+        return 2
+    if args.render_timeout_sec <= 0:
+        print("error: --render-timeout-sec must be positive", file=sys.stderr)
         return 2
     manifest_path = Path(args.manifest)
     if not manifest_path.is_file():
@@ -358,6 +464,7 @@ def main() -> int:
             cfg=args.cfg,
             no_self_check=args.no_self_check,
             turns_only=args.turns_only,
+            render_timeout_sec=args.render_timeout_sec,
         )
     finally:
         logger.log(

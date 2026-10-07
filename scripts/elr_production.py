@@ -33,8 +33,10 @@ from worker.tts.schema import ProviderConfigError, resolve_provider_config  # no
 
 
 MIN_FREE_GIB = 10.0
-MIN_AVAILABLE_MEMORY_GIB = 8.0
+MIN_AVAILABLE_MEMORY_GIB = 3.0
+RECOMMENDED_AVAILABLE_MEMORY_GIB = 8.0
 YOUTUBE_TITLE_MAX = 100
+RUNTIME_SMOKE_TIMEOUT_SECONDS = 120
 
 
 @dataclass(frozen=True)
@@ -140,13 +142,25 @@ def _runtime_checks(
             f"import _ctypes, soundfile, torch; {provider_import}"
             f"print('provider={provider.provider_id};cuda=' + str(torch.cuda.is_available()).lower())"
         )
+    runtime_cache = repo_root / "workspace" / "runtime" / "tts-audition" / "cache"
+    huggingface_cache = runtime_cache / "huggingface"
+    huggingface_hub_cache = huggingface_cache / "hub"
+    huggingface_hub_cache.mkdir(parents=True, exist_ok=True)
+    smoke_env = {
+        **os.environ,
+        "HF_HOME": str(huggingface_cache),
+        "HF_HUB_CACHE": str(huggingface_hub_cache),
+        "XDG_CACHE_HOME": str(runtime_cache),
+        "PYTHONNOUSERSITE": "1",
+    }
     try:
         result = subprocess.run(
             [str(provider.interpreter), "-c", smoke],
             cwd=str(repo_root),
+            env=smoke_env,
             text=True,
             capture_output=True,
-            timeout=60,
+            timeout=RUNTIME_SMOKE_TIMEOUT_SECONDS,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         checks.append(CheckResult("runtime-imports", "error", f"Runtime smoke check failed: {exc}"))
@@ -162,12 +176,21 @@ def _runtime_checks(
         import psutil
 
         available_gib = psutil.virtual_memory().available / 1024**3
-        status = "pass" if available_gib >= MIN_AVAILABLE_MEMORY_GIB else "error"
+        if available_gib < MIN_AVAILABLE_MEMORY_GIB:
+            status = "error"
+        elif available_gib < RECOMMENDED_AVAILABLE_MEMORY_GIB:
+            status = "warn"
+        else:
+            status = "pass"
         checks.append(
             CheckResult(
                 "available-memory",
                 status,
-                f"{available_gib:.1f} GiB available (minimum {MIN_AVAILABLE_MEMORY_GIB:.0f} GiB)",
+                (
+                    f"{available_gib:.1f} GiB available "
+                    f"(hard minimum {MIN_AVAILABLE_MEMORY_GIB:.0f} GiB; "
+                    f"recommended {RECOMMENDED_AVAILABLE_MEMORY_GIB:.0f} GiB)"
+                ),
             )
         )
     except Exception as exc:

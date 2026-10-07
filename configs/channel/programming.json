@@ -24,11 +24,18 @@
   "scaleGrid": [
     {"surface": "classic_listening", "day": "monday", "time": "08:00", "status": "active"},
     {"surface": "series_b", "day": "monday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_b", "day": "tuesday", "time": "08:00", "format": "standard", "status": "active"},
     {"surface": "series_a", "day": "tuesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_a", "day": "wednesday", "time": "08:00", "format": "standard", "status": "active"},
     {"surface": "series_c", "day": "wednesday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "dialogue_flagship_40", "day": "thursday", "time": "08:00", "format": "flagship_40", "status": "active"},
     {"surface": "series_b", "day": "thursday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "series_c", "day": "friday", "time": "08:00", "format": "standard", "status": "active"},
     {"surface": "series_a", "day": "friday", "time": "20:00", "format": "standard", "status": "active"},
+    {"surface": "classic_listening", "day": "saturday", "time": "08:00", "status": "active"},
+    {"surface": "series_b", "day": "saturday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "dialogue_flagship_40", "day": "sunday", "time": "08:00", "format": "flagship_40", "status": "active"},
+    {"surface": "series_a", "day": "sunday", "time": "20:00", "format": "standard", "status": "active"},
     {"surface": "shorts", "day": "daily", "time": "09:30", "status": "active"},
     {"surface": "shorts", "day": "daily", "time": "13:00", "status": "active"},
     {"surface": "shorts", "day": "daily", "time": "17:00", "status": "active"},
@@ -51,9 +58,9 @@
     "flagship40DurationMinutes": [35, 45],
     "flagship40TargetMinutes": [38, 42],
     "weeklyMix": {
-      "standardEpisodes": 5,
+      "standardEpisodes": 10,
       "extendedEpisodes": 0,
-      "flagship40Episodes": 1
+      "flagship40Episodes": 2
     },
     "flagshipThreeWeekRotation": ["series_b", "series_a", "series_c"],
     "requiredFlagshipBeats": [
@@ -112,11 +119,9 @@
     "replyWindowHours": 24
   },
   "descriptionFooter": [
-    "First Steps: Mondays and Thursdays at 8:00 PM (UTC+8)",
-    "Daily Talk: Tuesdays and Fridays at 8:00 PM (UTC+8)",
-    "Polished English: Wednesdays at 8:00 PM (UTC+8)",
-    "40-minute Flagship: Sundays at 8:00 AM (UTC+8)",
-    "Classic Listening: Mondays at 8:00 AM (UTC+8)",
+    "Long-form English: every day at 8:00 AM and 8:00 PM (UTC+8)",
+    "40-minute Flagship: Thursdays and Sundays at 8:00 AM (UTC+8)",
+    "Classic Listening: Mondays and Saturdays at 8:00 AM (UTC+8)",
     "New Shorts: every day at 9:30 AM, 1:00 PM, 5:00 PM, and 10:00 PM (UTC+8)"
   ],
   "measurement": {

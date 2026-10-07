@@ -79,5 +79,5 @@ def test_chapter_four_copy_matches_the_thumbnail_promise() -> None:
 def test_classic_description_uses_channel_owned_schedule() -> None:
     footer = channel_description_footer(REPO)
 
-    assert "Classic Listening: Mondays at 8:00 AM" in footer
+    assert "Classic Listening: Mondays and Saturdays at 8:00 AM" in footer
     assert "New Shorts: every day at 9:30 AM, 1:00 PM, 5:00 PM, and 10:00 PM" in footer

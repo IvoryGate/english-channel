@@ -245,6 +245,33 @@ Sequential title and format comparisons are matched-cohort evidence and must
 not be presented as laboratory causality. Cadence changes are channel-level
 experiments because they affect every product line.
 
+## Thumbnail Production Contract
+
+Long-form thumbnails must be delivered as one complete image-generation output
+with the scene, hierarchy, and final viewer-facing text generated together.
+Their visual language must match the video's approved background art; classic
+listening thumbnails use the same anime/editorial language as their Shorts
+promotion art. A long-form thumbnail is incomplete when its main title text is
+missing or unreadable at mobile size.
+Template compositing, split-panel assembly, or adding a typography layer to a
+generated background is not an approved production path unless the channel
+owner explicitly requests that treatment for a named item. Deterministic tools
+may resize, convert, compress, and validate the finished image, but must not
+redesign or recompose it. Before upload, inspect the final pixels for spelling,
+safe margins, mobile readability, duplicated anatomy, and extra hands or limbs.
+
+## Media Storage Contract
+
+The project workspace is the single canonical location for generated video,
+audio, subtitle, thumbnail, metadata, and trace artifacts. Do not copy finished
+packages into `H:\Youtube` or another parallel archive after upload. Upload and
+release tooling must consume the canonical workspace artifact directly.
+
+Temporary transfer files may exist only for the duration of an active upload.
+Remove them after platform verification. Before deleting any legacy archive,
+match it to the canonical item and verify the content fingerprint; preserve and
+report unmatched files instead of treating similar names as proof of duplication.
+
 ## Resource Scheduling
 
 The current 8 GB GPU constraint starts with one exclusive heavy-GPU lease. The
@@ -307,12 +334,13 @@ The first channel-wide programming contract is tracked in
 `configs/channel/programming.json`. It assigns one recurring public role to
 each specialized adapter, adds a fixed schedule footer to new packages, and
 keeps Community as a retention layer rather than an independent content
-pipeline. The initial four-week grid is Classic Listening Monday morning,
-First Steps Tuesday evening, Daily Talk Thursday evening, Polished English
-Saturday evening, and Shorts every day at 12:30. Classic Listening
-occupies its slot only after narrator acceptance.
+pipeline. The current grid publishes long-form English every day at 08:00 and
+20:00 UTC+8, Classic Listening Monday and Saturday morning, the 40-minute
+Flagship Thursday and Sunday morning, and Shorts at 09:30, 13:00, 17:00, and
+22:00 every day. Classic Listening occupies its slot only after narrator
+acceptance.
 
-Dialogue supports three duration classes. The scaled production target is six
+Dialogue supports three duration classes. The scaled production target is ten
 10-15 minute Standard episodes and two 35-45 minute Flagship 40 episodes per
 week; 18-25 minute Extended episodes remain available for a treatment that
 cannot honestly support forty minutes. Flagships rotate across the three

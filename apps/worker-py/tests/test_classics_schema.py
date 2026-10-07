@@ -25,7 +25,7 @@ def test_tracked_policy_and_catalog_are_valid() -> None:
 
     assert policy.authority is AuthorityLevel.SCHEDULE
     assert policy.publication_territories == ("US", "GB")
-    assert policy.chapters_per_week == 1
+    assert policy.chapters_per_week == 2
     assert policy.release_policy_ref == "configs/channel/release-policy.json"
     assert policy.release_program_id == "classic-listening-baseline"
     assert policy.analytics_windows_hours == (6, 24, 72, 168, 336, 672)

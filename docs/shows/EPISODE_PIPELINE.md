@@ -203,7 +203,7 @@ path. Query the durable state at any time:
 ### Why per-turn monitor?
 
 Loading VoxCPM once for 134 turns in one process often CUDA-crashes on 8GB GPUs.
-The internal monitor renders **batches of turns per subprocess** (default `--batch-size 20`):
+The internal monitor renders **batches of turns per subprocess** (default `--batch-size 2`):
 one model load → up to N turns → unload. Retries failed batches, resumes when WAVs already exist,
 then compose+QC once at the end. Do **not** set batch-size to the full episode turn count.
 
@@ -215,12 +215,18 @@ compatibility mirror.
 
 | Rule | Why |
 |------|-----|
-| **`--batch-size` default 20, max 20** | One VoxCPM load per batch; tested balance between load overhead and 8GB VRAM. Entire episodes still OOM |
+| **`--batch-size` default 2, max 20** | Batch 2 is the measured safe default on the 16 GB RAM / 8 GB VRAM production host. Chatterbox crashed with Windows exit `3221225477` at batch 8 on 2026-09-18. Larger values require an explicit monitored override for a validated provider and host |
+| **Five-minute turn-batch watchdog** | A stalled provider subprocess tree is terminated with exit 124 and retried through the existing cooldown path while completed WAVs remain reusable |
 | **`torch.cuda.empty_cache()` between turns** | Keeps VRAM stable within a batch on 8GB GPUs |
 | **Global GPU lock** on all production entry points | Prevents duplicate relaunches stacking 2× VoxCPM or VoxCPM + NVENC |
 | **Render `--no-self-check` when pack uses `--qc-no-asr`** | Skips redundant Whisper load after turns; pack runs layer-1 QC only |
 | **Pack compose defaults to `libx264`** (CPU) | ffmpeg NVENC contends with VoxCPM on the same NVIDIA GPU |
 | **Serial series** in `scripts/elr.py` | A → B → C; never parallel renders |
+
+The host-memory preflight blocks below 3 GiB available and warns between 3 and
+8 GiB. A warning requires the safe batch size of 2 and one heavy job at a time;
+it is not treated as a false out-of-memory failure after the provider smoke
+check has already loaded and released its libraries.
 
 `scripts/elr.py` holds the lock for the full selected series set. Internal child
 render/pack subprocesses inherit the parent lock.
@@ -315,7 +321,7 @@ Series C `[Word Tour + Close]` uses slow mirror echoes (`Hook.`, `Tangent.`, sig
 
 1. **Script:** mirror echoes should be 2–4 words (`Hook — got it.`), not bare one-word lines (see Series C `SCRIPT_TEMPLATE.md`).
 2. **Manifest:** `prepare_episode_manifest.py` caps `maxLen=28` for 1-word turns (was 56).
-3. **Pack:** `repair_episode_qc.py` trims trailing silence when possible, then re-renders blocking turns **one subprocess at a time** with GPU lock, re-composes `raw.wav`, loops up to 3 rounds.
+3. **Pack:** `repair_episode_qc.py` first normalizes valid but abnormally quiet turns and trims trailing silence, updating artifact hashes and trace metadata. Only remaining blocking turns are re-rendered **one subprocess at a time** with the GPU lock. It then re-composes `raw.wav` and loops up to 3 rounds.
 
 Timing-only flags (`CHECK_LONG` on slow Word Tour repeats) remain advisory and do not block pack when ASR/content is fine.
 
@@ -325,11 +331,12 @@ One job: **thumbnail (step 0) → QC → master → scripted subs → compose �
 
 **YouTube title hard limit (100 chars).** `prepare_episode_youtube_packaging.py` (step 5) fails the pack if `youtube.json` `title` exceeds 100 characters — YouTube silently truncates or rejects longer titles. Author the title ≤100 from the start; the `| Learn English` suffix on Series A titles is optional and should be dropped first if a title is over 100. The same guard runs in `export_episode_to_youtube_dir.py` as a safety net.
 
-**Workspace-only production.** The public controller accepts `--skip-export` on
-`produce` and `resume`. This keeps the verified MP4, WAV, subtitles, thumbnail,
-YouTube metadata, and reports in the canonical episode workspace while skipping
-the duplicate copy under `H:\Youtube`. Repository-managed production uses this
-mode unless an external upload directory is explicitly requested.
+**Workspace-only production is the default.** `produce` and `resume` keep the
+verified MP4, WAV, subtitles, thumbnail, YouTube metadata, and reports in the
+canonical episode workspace and do not create a duplicate under `H:\Youtube`.
+Use `--export --youtube-root <path>` only when the channel owner explicitly
+requests an external transfer copy. `--skip-export` remains accepted as an
+explicit, backward-compatible statement of the default.
 
 ```powershell
 & $py scripts/elr.py produce --episode 17 --series series_b

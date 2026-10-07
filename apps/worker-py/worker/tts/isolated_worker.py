@@ -15,6 +15,7 @@ from typing import Any
 
 
 PROVIDER_FLOAT_PEAK_TARGET = 0.89
+PROVIDER_FLOAT_PEAK_BOOST_BELOW = 0.45
 
 
 def sha256_file(path: Path) -> str:
@@ -68,7 +69,10 @@ def peak_normalize_float(audio: Any, target: float = PROVIDER_FLOAT_PEAK_TARGET)
     if value.size == 0 or not np.isfinite(value).all():
         raise RuntimeError("Provider returned empty or non-finite audio")
     peak = float(np.max(np.abs(value)))
-    if peak > target:
+    # Preserve ordinary provider dynamics, but bring abnormally quiet output
+    # above the episode QC floor. This avoids expensive seed retries for a
+    # voice whose synthesis is otherwise valid but consistently low-level.
+    if peak > target or (0 < peak < PROVIDER_FLOAT_PEAK_BOOST_BELOW):
         value = value * (target / peak)
     return value.astype(np.float32, copy=False)
 

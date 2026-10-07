@@ -106,7 +106,7 @@ def test_steady_state_requests_channel_owned_release_capacity() -> None:
     assert publishing["releasePolicyRef"] == "configs/channel/release-policy.json"
     assert not {"weeklyShorts", "maxChannelUploadsPerWeek", "slots"} & set(publishing)
     assert channel_policy["timezone"] == "Asia/Shanghai"
-    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 40
+    assert channel_policy["capacity"]["maxChannelUploadsPerRolling7Days"] == 42
     assert channel_policy["authority"]["publicSchedulingEnabled"] is True
     assert program["status"] == "active"
     assert program["requestedUploadsPerWeek"] == 28
@@ -309,6 +309,10 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
 
     assert len(audio_manifest["turns"]) == 8
     assert {turn["speaker"] for turn in audio_manifest["turns"]} == {"Riley"}
+    assert audio_manifest["renderSettings"]["ttsProvider"] == "kokoro"
+    assert audio_manifest["renderSettings"]["device"] == "cpu"
+    assert audio_manifest["hosts"]["Riley"]["voice"]["voiceId"] == "af_heart"
+    assert audio_manifest["hosts"]["Sam"]["voice"]["voiceId"] == "am_fenrir"
     prompt = next(turn for turn in audio_manifest["turns"] if turn["sourceId"] == "prompt")
     assert prompt["pauseAfterSec"] == 2.25
 
@@ -335,6 +339,7 @@ def test_audio_batch_limits_each_model_load_to_twenty_turns(tmp_path: Path, monk
     (voice_dir / "riley_reference_clean.wav").write_bytes(b"riley")
     (voice_dir / "sam_reference_clean.wav").write_bytes(b"sam")
     monkeypatch.setenv("ELR_SHORTS_RUNTIME_ROOT", str(tmp_path))
+    monkeypatch.setenv("ELR_SHORTS_TTS_PROVIDER", "voxcpm")
     items = []
     for entry in portfolio["entries"][:3]:
         manifest = build_manifest(entry, product, portfolio["cycleId"])

@@ -25,6 +25,9 @@ assets/branding/*
 !assets/branding/video/
 !assets/branding/video/*.mp4
 public/classics/*/branding/*.wav
+# Generated Short backgrounds: briefs and paths are tracked in
+# configs/shorts/*.json; the PNGs are regenerated on demand, not versioned.
+public/shorts/
 reference/
 workspace/*
 !workspace/shows/

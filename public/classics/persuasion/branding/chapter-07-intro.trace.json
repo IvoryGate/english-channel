@@ -1,0 +1,53 @@
+{
+  "schema": "elr-tts-turn-trace-v1",
+  "turnId": "chapter-07-intro",
+  "bookSlug": "persuasion",
+  "renderedAt": "2026-09-26T16:21:08.831938+00:00",
+  "provider": {
+    "providerId": "chatterbox_500m",
+    "modelId": "resemble-ai/chatterbox",
+    "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+    "device": "cuda",
+    "interpreter": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
+    "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
+    "seedBase": 20260914,
+    "outputFormat": {
+      "container": "wav",
+      "sampleType": "float32"
+    },
+    "providerSettings": {
+      "exaggeration": 0.3,
+      "cfgWeight": 0.65,
+      "temperature": 0.8,
+      "topP": 1.0,
+      "minP": 0.05,
+      "repetitionPenalty": 1.2
+    },
+    "packageVersion": "0.1.7",
+    "modelLoadSec": 69.658
+  },
+  "voice": {
+    "kind": "clone",
+    "referencePath": "workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    "referenceSha256": "b6ec5f21090399e24c371fbac8f211a602c40a70dde45bdfd13cef631b19f803"
+  },
+  "normalizedText": "Welcome to Classic Listening, from the English Listening Room. Persuasion, by Jane Austen. Chapter Seven.",
+  "seed": 20260914,
+  "effectiveSettings": {
+    "exaggeration": 0.3,
+    "cfgWeight": 0.65,
+    "temperature": 0.8,
+    "topP": 1.0,
+    "minP": 0.05,
+    "repetitionPenalty": 1.2
+  },
+  "identitySha256": "238eeb2fe9517d9b7adc6b1baae46e85bd69d5bfa0a6122c15309bce9fcf4abc",
+  "sampleRate": 48000,
+  "durationSec": 8.54,
+  "generationSec": 14.648,
+  "outputSha256": "4f6d35adedf9148911cf83569b3194cf9659d3843f99e62fb2bf2ef36e02908e",
+  "watermark": {
+    "provider": "PerTh",
+    "status": "implicit-enabled"
+  }
+}

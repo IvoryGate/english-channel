@@ -7,7 +7,7 @@
     "explicitApprovalRequired": true
   },
   "capacity": {
-    "maxChannelUploadsPerRolling7Days": 40,
+    "maxChannelUploadsPerRolling7Days": 42,
     "reservationRequired": true
   },
   "programs": {
@@ -27,7 +27,7 @@
     "dialogue-weekly-2026-08-24": {
       "productLine": "dialogue",
       "status": "active",
-      "requestedUploadsPerWeek": 6,
+      "requestedUploadsPerWeek": 12,
       "startsOn": "2026-08-24",
       "endsOn": "2026-09-20",
       "preferredDailyWindows": ["20:00"],
@@ -37,7 +37,7 @@
     "classic-listening-baseline": {
       "productLine": "classic_listening",
       "status": "active",
-      "requestedUploadsPerWeek": 1,
+      "requestedUploadsPerWeek": 2,
       "preferredDailyWindows": ["08:00"],
       "minimumReadyInventory": 1,
       "decisionWindowDays": 28

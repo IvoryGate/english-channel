@@ -1,0 +1,107 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "thursday-2026-10-01",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "entries": [
+    {
+      "shortId": "elr-s-136",
+      "title": "At the Airport, Keep the Final Gate",
+      "thumbnailHeadline": "WHICH GATE NOW?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Your gate changed from D four to D fourteen. Which detail is true now?",
+      "turns": [
+        {"speaker": "narrator", "text": "Boarding was scheduled at gate D four."},
+        {"speaker": "narrator", "text": "The flight will now board from gate D fourteen."},
+        {"speaker": "narrator", "text": "The word now replaces the old information."},
+        {"speaker": "narrator", "text": "Keep one final note, then walk to the gate you need."},
+        {"speaker": "narrator", "text": "Move now, before the boarding line grows."}
+      ],
+      "prompt": "Which gate should you use?",
+      "answer": "Gate D fourteen, because it is the final changed instruction.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime airport departure hall, adult woman traveler compares an old gate marker with a clearly emphasized new gate direction while adult male traveler follows, vivid teal and orange, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-01/elr-s-136/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-137",
+      "title": "Ask This When Two Airport Gates Disagree",
+      "thumbnailHeadline": "CONFIRM THE GATE",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "statement",
+      "hook": "Do not repeat the whole announcement when only one detail is unclear.",
+      "turns": [
+        {"speaker": "mia", "text": "My boarding pass says C six, but the announcement said C sixteen."},
+        {"speaker": "leo", "text": "Ask only for the missing detail."},
+        {"speaker": "mia", "text": "Excuse me, which gate is correct for this flight?"},
+        {"speaker": "leo", "text": "That is better than asking the staff to repeat every word. Confirm the one detail that controls where you go next."}
+      ],
+      "prompt": "What should you ask?",
+      "answer": "Which gate is correct?",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime airport help desk, adult woman traveler politely confirms a gate with an adult male staff member, boarding pass visible but unreadable, clean center focus, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-01/elr-s-137/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-138",
+      "title": "Boarding Time Changed—What Do You Do?",
+      "thumbnailHeadline": "KEEP THE NEW TIME",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "statement",
+      "hook": "The first time you hear may already be wrong.",
+      "turns": [
+        {"speaker": "narrator", "text": "Sam heard that boarding would begin at seven thirty."},
+        {"speaker": "narrator", "text": "Then the airline corrected the time to seven twenty."},
+        {"speaker": "narrator", "text": "Sam stopped using the old time and walked to the gate early."},
+        {"speaker": "narrator", "text": "A correction means the second time becomes your new plan."},
+        {"speaker": "narrator", "text": "Use that final time for your action."}
+      ],
+      "prompt": "Which time should Sam keep?",
+      "answer": "Seven twenty, the final corrected time.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime airport concourse, adult male traveler notices a changed boarding time and moves purposefully toward the gate, clock shapes without readable numbers, energetic warm light, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-01/elr-s-138/background.png",
+      "experimentAssignments": {"hook": "statement", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-139",
+      "title": "Missed One Detail? Ask Only for That",
+      "thumbnailHeadline": "ASK FOR ONE DETAIL",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 52,
+      "hookStyle": "question",
+      "hook": "What if you caught the boarding time but missed the new gate?",
+      "turns": [
+        {"speaker": "mia", "text": "I heard that boarding closes at nine fifty-five, but I missed the gate."},
+        {"speaker": "leo", "text": "Tell the staff what you heard, then ask for the one missing detail."},
+        {"speaker": "mia", "text": "Sorry, what is the new gate for this flight?"},
+        {"speaker": "leo", "text": "Now the staff can answer quickly, and you can act without listening to the full announcement again."}
+      ],
+      "prompt": "Why is this question effective?",
+      "answer": "It is short, specific, and easy for staff to answer.",
+      "relatedShow": "series_b",
+      "relatedVideoId": null,
+      "visualBrief": "Bright anime boarding area, adult woman traveler asks a calm adult male airline worker one focused question, luggage and gate seating frame the scene, saturated blue and coral, no readable text.",
+      "backgroundImage": "shorts/thursday-2026-10-01/elr-s-139/background.png",
+      "experimentAssignments": {"hook": "question", "duration": "long"}
+    }
+  ]
+}

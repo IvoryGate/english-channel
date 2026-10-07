@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"saturday-2026-10-10",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-172","title":"Persuasion: Why Is Charles Hayter Jealous?","thumbnailHeadline":"WHO CHANGED HER MIND?","format":"listen_choose","cefr":"B1","durationSec":49,"hookStyle":"question","hook":"Henrietta once cared about Charles Hayter. What changed?",
+      "turns":[{"speaker":"narrator","text":"Before Captain Wentworth arrived, Henrietta seemed strongly attached to Charles Hayter. After Wentworth became a daily visitor, Charles returned to find her manners greatly altered."},{"speaker":"narrator","text":"Charles believes Captain Wentworth is the probable cause of that change."}],
+      "prompt":"Who does Charles see as his rival?","answer":"Captain Wentworth.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Bright romantic anime Regency drawing room with an adult young woman between two adult gentlemen at a respectful distance, expressive faces, hands hidden, rose blue and gold palette, no readable text.","backgroundImage":"shorts/saturday-2026-10-10/elr-s-172/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-173","title":"Return an Item in Clear English","thumbnailHeadline":"ITEM, PROBLEM, RESULT","format":"dialogue","cefr":"A2","durationSec":52,"hookStyle":"statement","hook":"A clear return request needs three facts.",
+      "turns":[{"speaker":"mia","text":"I bought this desk lamp yesterday, but it will not switch on. I tried two sockets."},{"speaker":"leo","text":"Do you have the receipt, and would you prefer a refund or exchange?"},{"speaker":"mia","text":"Yes. I have the receipt, and I’d like an exchange, please."}],
+      "prompt":"What three facts did Mia give?","answer":"The item, the problem, and the result she wants.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Cheerful bright anime shop counter with two adult people discussing a boxed desk lamp, upper bodies only, hands below frame, blue yellow and cream palette, no readable text.","backgroundImage":"shorts/saturday-2026-10-10/elr-s-173/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-174","title":"Refund or Exchange: Catch the Final Choice","thumbnailHeadline":"WHAT DID SHE CHOOSE?","format":"dialogue","cefr":"A2","durationSec":48,"hookStyle":"question","hook":"The customer asks for a refund, but does she keep that choice?",
+      "turns":[{"speaker":"mia","text":"I’d like a refund, please."},{"speaker":"leo","text":"A card refund takes three to five working days, but I can exchange the lamp immediately."},{"speaker":"mia","text":"In that case, I’ll exchange it. I need a working lamp tonight."}],
+      "prompt":"What is the final choice?","answer":"An immediate exchange.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Polished bright anime retail scene with an adult woman comparing a refund card symbol and replacement lamp box, hands hidden, coral navy and warm yellow, no readable text.","backgroundImage":"shorts/saturday-2026-10-10/elr-s-174/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-175","title":"Persuasion: Wentworth Helps Anne in Silence","thumbnailHeadline":"A SILENT KINDNESS","format":"micro_story","cefr":"B1","durationSec":54,"hookStyle":"statement","hook":"One small kindness leaves Anne unable to speak.",
+      "turns":[{"speaker":"narrator","text":"Little Walter climbs onto Anne while she cares for his sick brother. She orders and pleads, but cannot make him move."},{"speaker":"narrator","text":"Captain Wentworth silently lifts the child away. He makes noise with Walter as if he means to avoid hearing Anne thank him."},{"speaker":"narrator","text":"The kindness and the distance together leave Anne painfully overcome."}],
+      "prompt":"Why can Anne not thank him?","answer":"His quiet kindness awakens powerful, conflicting feelings.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Emotional bright anime Regency interior showing adult Anne seated beside a child while an adult naval captain quietly helps, sensitive expressions, anatomically correct hands mostly out of frame, blue rose and cream palette, no readable text.","backgroundImage":"shorts/saturday-2026-10-10/elr-s-175/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

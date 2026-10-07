@@ -35,6 +35,17 @@ Defensive programming is not a goal. Evidence is.
   multiple UI surfaces unless the signals conflict.
 - Keep proven production concurrency and batch defaults. Do not lower them for
   hypothetical safety; require a measured memory, quality, or failure signal.
+- The measured safe dialogue-TTS default on the 16 GB RAM / 8 GB VRAM host is
+  two turns per subprocess. Preserve completed turn WAVs, terminate a repeating
+  failed batch, release the dead resource lease, and resume only missing turns.
+  Do not automatically retry the same larger Chatterbox batch after Windows
+  exit `3221225477`.
+- A dialogue-TTS turn batch has a five-minute watchdog. If its subprocess tree
+  does not finish, terminate the tree with exit code 124 and use the ordinary
+  cooldown/retry path; never delete already valid turn WAVs.
+- Shorts audio defaults to Kokoro on CPU. VoxCPM may be used only through an
+  explicit `ELR_SHORTS_TTS_PROVIDER=voxcpm` override for a named recovery or
+  comparison run; process restarts must preserve the Kokoro default.
 - Capture repetitive renderer progress locally. On success, retain only the
   artifact result; on failure, expose a bounded diagnostic tail instead of the
   complete frame-by-frame log.

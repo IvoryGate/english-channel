@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from argparse import Namespace
 from pathlib import Path
 
@@ -16,6 +17,31 @@ import monitor_episode_render  # noqa: E402
 from elr import audio_render_command, command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
+from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE  # noqa: E402
+
+
+def test_default_render_batch_is_memory_safe_for_production_host() -> None:
+    assert DEFAULT_RENDER_BATCH_SIZE == 2
+
+
+def test_render_subprocess_timeout_terminates_stuck_process(tmp_path: Path) -> None:
+    logger = monitor_episode_render.MonitorLogger(tmp_path / "timeout.log")
+    started = time.monotonic()
+    try:
+        code = monitor_episode_render.run_subprocess(
+            [sys.executable, "-c", "import time; time.sleep(60)"],
+            logger,
+            timeout_sec=0.2,
+        )
+    finally:
+        logger.close()
+
+    assert code == 124
+    # The bound only has to prove the tree was terminated instead of waiting
+    # out the 60-second sleep. Interpreter spawn plus antivirus scanning on
+    # this Windows host has measured 7.5 seconds, so a tight bound flakes.
+    assert time.monotonic() - started < 30
+    assert "terminating process tree for retry" in (tmp_path / "timeout.log").read_text(encoding="utf-8")
 
 
 def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Path) -> None:
@@ -58,6 +84,28 @@ def test_monitor_command_can_skip_external_export(tmp_path: Path) -> None:
 
     assert "--skip-export" in cmd
     assert "--youtube-root" in cmd
+
+
+def test_run_commands_default_to_canonical_workspace_only(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "sys.argv",
+        ["elr.py", "produce", "--episode", "20", "--series", "series_b"],
+    )
+
+    args = elr.parse_args()
+
+    assert args.skip_export is True
+
+
+def test_external_export_requires_explicit_flag(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "sys.argv",
+        ["elr.py", "produce", "--episode", "20", "--series", "series_b", "--export"],
+    )
+
+    args = elr.parse_args()
+
+    assert args.skip_export is False
 
 
 def test_audio_render_command_defers_compose_and_visual_pack(tmp_path: Path) -> None:
@@ -104,6 +152,56 @@ def test_turns_only_monitor_skips_compose_and_qc(tmp_path: Path, monkeypatch) ->
 
     assert result == 0
     assert any("deferred to formal production" in message for message in messages)
+
+
+def test_monitor_splits_multi_turn_batch_after_timeout(tmp_path: Path, monkeypatch) -> None:
+    manifest = tmp_path / "000_episode_017.episode_manifest.json"
+    turns = [
+        {"id": f"p{index:03d}", "filename": f"p{index:03d}.wav"}
+        for index in range(1, 5)
+    ]
+    manifest.write_text(
+        json.dumps({"renderSettings": {}, "turns": turns}),
+        encoding="utf-8",
+    )
+    messages: list[str] = []
+    calls: list[list[str]] = []
+    completed: set[str] = set()
+
+    class Logger:
+        def log(self, message: str) -> None:
+            messages.append(message)
+
+    def fake_pending(_manifest: dict[str, object], _workspace: Path, *, force: bool) -> list[dict[str, str]]:
+        del force
+        return [turn for turn in turns if turn["id"] not in completed]
+
+    def fake_render(*, turn_ids: list[str], **_kwargs: object) -> int:
+        calls.append(turn_ids)
+        if len(turn_ids) > 2:
+            return 124
+        completed.update(turn_ids)
+        return 0
+
+    monkeypatch.setattr(monitor_episode_render, "pending_turns", fake_pending)
+    monkeypatch.setattr(monitor_episode_render, "render_turn_batch", fake_render)
+
+    result = monitor_episode_render.monitor_render(
+        manifest_path=manifest,
+        python=Path("python.exe"),
+        device="cuda",
+        logger=Logger(),
+        batch_size=4,
+        force=False,
+        retry_on_failure=2,
+        cfg=2.35,
+        no_self_check=True,
+        turns_only=True,
+    )
+
+    assert result == 0
+    assert calls == [["p001", "p002", "p003", "p004"], ["p001", "p002"], ["p003", "p004"]]
+    assert any("splitting 4 turns into 2+2" in message for message in messages)
 
 
 def test_run_state_write_and_update_are_atomic(tmp_path: Path) -> None:
