@@ -45,6 +45,16 @@ and `descriptionFile`. An already-created Studio upload can be declared with
 `youtubeVideoId`; `assetsAlreadySet` is allowed only after the thumbnail and
 captions were actually verified.
 
+After all local packages pass, build the release manifest from the approved
+weekly plan with the deterministic artifact mapper. It stops if any required
+video, thumbnail, or Shorts package is missing or failed:
+
+```powershell
+& $py scripts/build_youtube_release.py `
+  --plan configs/channel/weekly-plan-2026-09-14.json `
+  --output configs/channel/youtube-release-2026-09-14.json
+```
+
 ```powershell
 $manifest = "configs\channel\youtube-release-2026-08-31.json"
 

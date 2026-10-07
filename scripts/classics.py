@@ -90,11 +90,12 @@ def command_preview_voice(args: argparse.Namespace) -> int:
 
 
 def command_preview_voice_variants(args: argparse.Namespace) -> int:
-    from worker.classics.audio_render import _default_model_factory, render_audio
+    from worker.classics.audio_render import render_audio
+    from worker.tts.schema import resolve_provider_config
 
     config = load_book_config(REPO, args.book)
-    model_path = config.runtime_path(REPO, str(config.render["modelId"]))
-    model = _default_model_factory(str(model_path), str(config.render.get("device", "cuda")))
+    if resolve_provider_config(REPO, config.render).provider_id != "voxcpm":
+        raise ValueError("NAME:CFG:STEPS variants are available only for the VoxCPM fallback provider")
     selected = parse_segment_ids(args.segments)
     for value in args.variant:
         parts = value.split(":")
@@ -111,7 +112,6 @@ def command_preview_voice_variants(args: argparse.Namespace) -> int:
             cfg_value=float(cfg_text),
             inference_timesteps=int(steps_text),
             isolated_preview=True,
-            model_factory=lambda *_: model,
         )
         print(f"variant={name} preview={REPO / str(trace['previewPath'])}")
     return 0
@@ -259,14 +259,12 @@ def command_render_chapter_brand_voice(args: argparse.Namespace) -> int:
 
 
 def command_render_audio_range(args: argparse.Namespace) -> int:
-    from worker.classics.audio_render import _default_model_factory, render_audio
+    from worker.classics.audio_render import render_audio
 
     config = load_book_config(REPO, args.book)
     chapters = parse_chapters(args.chapters)
-    model_path = config.runtime_path(REPO, str(config.render["modelId"]))
-    model = _default_model_factory(str(model_path), str(config.render.get("device", "cuda")))
     for chapter in chapters:
-        trace = render_audio(REPO, config, chapter, force=args.force, model_factory=lambda *_: model)
+        trace = render_audio(REPO, config, chapter, force=args.force)
         print(f"chapter={chapter} segments={len(trace['segments'])} raw={trace['rawPath']}")
     return 0
 
@@ -304,7 +302,14 @@ def command_qc_asr(args: argparse.Namespace) -> int:
 
     config = load_book_config(REPO, args.book)
     selected = parse_segment_ids(args.segments) if args.segments else None
-    report = asr_qc_chapter(REPO, config, args.chapter, selected_ids=selected, model_name=args.model)
+    report = asr_qc_chapter(
+        REPO,
+        config,
+        args.chapter,
+        selected_ids=selected,
+        model_name=args.model,
+        preview_name=args.preview_name,
+    )
     print(f"checked={report['checkedSegmentCount']} mean_similarity={report['meanSimilarity']}")
     print(f"review={','.join(report['reviewSegmentIds']) or 'none'}")
     print(f"report={REPO / str(report['reportPath'])}")
@@ -482,6 +487,7 @@ def build_parser() -> argparse.ArgumentParser:
     asr.add_argument("--chapter", required=True, type=int)
     asr.add_argument("--segments")
     asr.add_argument("--model", default="base")
+    asr.add_argument("--preview-name")
     asr.set_defaults(func=command_qc_asr)
     produce = subparsers.add_parser("produce", help="Run chapter branding, narration, visuals, packaging, and export.")
     produce.add_argument("--book", required=True)

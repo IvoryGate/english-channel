@@ -43,6 +43,7 @@ _lease: ResourceLease | None = None
 _lease_service: ResourceLeaseService | None = None
 _heartbeat_stop: threading.Event | None = None
 _heartbeat_thread: threading.Thread | None = None
+OWNER_PID_ENV = "ELR_GPU_LEASE_OWNER_PID"
 
 
 def _utc_now() -> str:
@@ -97,11 +98,12 @@ def acquire_gpu_lock(label: str) -> int | None:
     me = os.getpid()
     service, heartbeat_interval = _services()
     active = service.repository.active_lease("gpu_heavy")
+    inherited_owner = int(os.environ.get(OWNER_PID_ENV, "0") or 0)
     if active and active.owner_pid == me:
         _holding = True
         _hold_depth += 1
         return me
-    if active and active.owner_pid == os.getppid() and pid_alive(active.owner_pid):
+    if active and active.owner_pid in {os.getppid(), inherited_owner} and pid_alive(active.owner_pid):
         _holding = True
         _holding_from_parent = True
         _hold_depth += 1
@@ -146,6 +148,7 @@ def acquire_gpu_lock(label: str) -> int | None:
     _hold_depth = 1
     _lease = lease
     _lease_service = service
+    os.environ[OWNER_PID_ENV] = str(me)
     _start_heartbeat(service, lease, heartbeat_interval)
     return me
 
@@ -188,6 +191,8 @@ def release_gpu_lock() -> None:
     _lease_service = None
     _heartbeat_stop = None
     _heartbeat_thread = None
+    if os.environ.get(OWNER_PID_ENV) == str(os.getpid()):
+        os.environ.pop(OWNER_PID_ENV, None)
 
 
 DEFAULT_RENDER_BATCH_SIZE = 20

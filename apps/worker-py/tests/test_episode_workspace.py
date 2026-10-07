@@ -65,3 +65,22 @@ Ethan: This line belongs in the manifest too.
     ]
     coverage = manifest_coverage(draft, SHOW, turns)
     assert coverage["ratio"] == 1.0
+
+
+def test_delivery_cue_does_not_reenable_a_skipped_section_for_coverage() -> None:
+    draft = """---
+
+[Teaching Plan]
+[Delivery: internal planning note]
+Ethan: This planning note must not count as spoken coverage.
+
+[Cold Open]
+[Delivery: warm]
+Nora: This spoken line must count exactly once.
+"""
+
+    turns = parse_turns(draft, SHOW)
+    coverage = manifest_coverage(draft, SHOW, turns)
+
+    assert [turn["text"] for turn in turns] == ["This spoken line must count exactly once."]
+    assert coverage == {"sourceWords": 7, "manifestWords": 7, "ratio": 1.0}

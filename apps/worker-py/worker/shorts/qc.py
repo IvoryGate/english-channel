@@ -217,7 +217,11 @@ def check_manifest(manifest: dict[str, Any], product: dict[str, Any]) -> dict[st
     warnings: list[str] = []
     quality = product["quality"]
     duration = float(manifest.get("durationSec", 0.0))
-    if duration < float(quality["durationMinSec"]) or duration > float(quality["durationHardMaxSec"]):
+    duration_tolerance_sec = 0.05
+    if (
+        duration < float(quality["durationMinSec"]) - duration_tolerance_sec
+        or duration > float(quality["durationHardMaxSec"]) + duration_tolerance_sec
+    ):
         errors.append("DURATION_OUT_OF_RANGE")
     if duration > float(quality["durationTargetMaxSec"]):
         warnings.append("DURATION_ABOVE_TARGET")

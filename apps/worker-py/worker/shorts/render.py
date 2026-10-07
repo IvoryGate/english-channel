@@ -10,6 +10,23 @@ from typing import Any
 from .workspace import atomic_write_json, ensure_workspace
 
 
+def _run_quiet(command: list[str], *, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+    """Run media tooling without streaming progress noise into agent context."""
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if result.returncode != 0:
+        details = "\n".join((result.stderr or result.stdout).splitlines()[-40:])
+        raise RuntimeError(f"Media command failed ({result.returncode}):\n{details}")
+    return result
+
+
 def _caption_pages(text: str, max_chars: int = 50) -> list[str]:
     words = text.split()
     pages: list[str] = []
@@ -99,7 +116,7 @@ def _mux_audio(silent_video: Path, audio_path: Path, output_path: Path) -> None:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise RuntimeError("ffmpeg is required to mux Shorts audio")
-    subprocess.run(
+    _run_quiet(
         [
             ffmpeg,
             "-y",
@@ -125,7 +142,6 @@ def _mux_audio(silent_video: Path, audio_path: Path, output_path: Path) -> None:
             "+faststart",
             str(output_path),
         ],
-        check=True,
     )
 
 
@@ -173,13 +189,15 @@ def render_short(
         "--codec=h264",
         "--crf=18",
         "--pixel-format=yuv420p",
-        "--concurrency=1",
+        "--image-format=jpeg",
+        "--jpeg-quality=95",
+        "--hardware-acceleration=if-possible",
         "--x264-preset=ultrafast",
     ]
     browser = _browser_executable()
     if browser is not None:
         command.append(f"--browser-executable={browser}")
-    subprocess.run(command, cwd=repo_root, check=True)
+    _run_quiet(command, cwd=repo_root)
     if audio_path is not None:
         if not audio_path.is_file():
             raise FileNotFoundError(f"Short audio does not exist: {audio_path}")
@@ -215,5 +233,5 @@ def render_thumbnail(repo_root: Path, manifest: dict[str, Any]) -> Path:
     browser = _browser_executable()
     if browser is not None:
         command.append(f"--browser-executable={browser}")
-    subprocess.run(command, cwd=repo_root, check=True)
+    _run_quiet(command, cwd=repo_root)
     return output_path

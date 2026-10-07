@@ -13,6 +13,16 @@ import soundfile as sf
 from scipy import signal
 
 from worker.voice_profiles import resolve_voice_profile
+from worker.tts.process import run_provider_batch
+from worker.tts.schema import resolve_provider_config, validate_voice
+from worker.tts.trace import (
+    TRACE_SCHEMA,
+    atomic_write_json as atomic_write_turn_trace,
+    build_turn_identity,
+    normalized_text,
+    trace_is_reusable,
+    turn_trace_path,
+)
 
 from .config import BookConfig, ConfigError, require_approved_voice
 from .io import atomic_write_json, read_json, sha256_file
@@ -77,7 +87,7 @@ def _atomic_write_wav(path: Path, audio: np.ndarray, sample_rate: int) -> None:
     fd, temp_name = tempfile.mkstemp(prefix=f".{path.stem}.", suffix=".wav", dir=path.parent)
     os.close(fd)
     try:
-        sf.write(temp_name, audio.astype(np.float32, copy=False), sample_rate, subtype="PCM_24")
+        sf.write(temp_name, audio.astype(np.float32, copy=False), sample_rate, subtype="FLOAT")
         os.replace(temp_name, path)
     except BaseException:
         Path(temp_name).unlink(missing_ok=True)
@@ -121,6 +131,7 @@ def render_audio(
     cfg_value: float | None = None,
     inference_timesteps: int | None = None,
     isolated_preview: bool = False,
+    seed_offsets: dict[str, int] | None = None,
     model_factory: ModelFactory = _default_model_factory,
 ) -> dict[str, Any]:
     if isolated_preview and not preview_name:
@@ -149,58 +160,137 @@ def render_audio(
     if profile.id != config.voice["profileId"]:
         raise AudioRenderError(f"Voice profile is not registered: {config.voice['profileId']}")
     reference_path = config.repo_path(repo_root, str(config.voice["referencePath"]))
-    model_path = config.runtime_path(repo_root, str(config.render["modelId"]))
-    device = str(config.render.get("device", "cuda"))
+    provider = resolve_provider_config(repo_root, config.render)
     target_rate = int(config.render["sampleRate"])
     silence_seconds = float(config.render["interSegmentSilenceSec"])
-    effective_cfg_value = float(config.voice["cfgValue"] if cfg_value is None else cfg_value)
-    effective_timesteps = int(
-        config.voice["inferenceTimesteps"] if inference_timesteps is None else inference_timesteps
+    if provider.provider_id != "voxcpm" and (cfg_value is not None or inference_timesteps is not None):
+        raise AudioRenderError("VoxCPM generation overrides cannot be used with this provider")
+    if provider.provider_id == "voxcpm":
+        provider.settings["cfgValue"] = float(
+            config.voice["cfgValue"] if cfg_value is None else cfg_value
+        )
+        provider.settings["inferenceTimesteps"] = int(
+            config.voice["inferenceTimesteps"]
+            if inference_timesteps is None
+            else inference_timesteps
+        )
+    voice = validate_voice(
+        provider.provider_id,
+        {
+            "kind": "clone",
+            "referencePath": str(config.voice["referencePath"]),
+            "referenceSha256": str(config.voice["referenceSha256"]),
+        },
     )
-    if effective_cfg_value <= 0 or effective_timesteps <= 0:
-        raise AudioRenderError("Generation overrides must be positive")
+    if sha256_file(reference_path) != voice["referenceSha256"]:
+        raise AudioRenderError("Classic narrator reference SHA-256 mismatch")
 
     segment_dir = (
         paths.audio_dir(chapter) / "previews" / str(preview_name) / "segments"
         if isolated_preview
         else paths.segment_audio_dir(chapter)
     )
-    needs_generation = force or any(not (segment_dir / str(segment["filename"])).is_file() for segment in targets)
-    model = model_factory(str(model_path), device) if needs_generation else None
-    model_rate = int(model.tts_model.sample_rate) if model is not None else None
+    provider_trace = provider.to_trace(repo_root)
+    specs: dict[str, dict[str, Any]] = {}
+    requests: list[dict[str, Any]] = []
+    for segment in targets:
+        segment_id = str(segment["id"])
+        output = segment_dir / str(segment["filename"])
+        seed_offset = (seed_offsets or {}).get(segment_id, 0)
+        if not isinstance(seed_offset, int) or isinstance(seed_offset, bool):
+            raise AudioRenderError("seed_offsets values must be integers")
+        seed = provider.seed_base + int(segment_id) + seed_offset
+        text = normalized_text(tts_text(segment))
+        identity = build_turn_identity(
+            provider=provider_trace,
+            voice=voice,
+            text=text,
+            seed=seed,
+        )
+        specs[segment_id] = {"seed": seed, "text": text, "identity": identity}
+        if force or not trace_is_reusable(output, str(identity["sha256"])):
+            requests.append(
+                {
+                    "id": segment_id,
+                    "outputPath": str(output),
+                    "text": text,
+                    "voice": {**voice, "referencePath": str(reference_path)},
+                    "referenceText": profile.prompt_text,
+                    "seed": seed,
+                    "maxLen": None,
+                }
+            )
+    if model_factory is not _default_model_factory and requests:
+        raise AudioRenderError("Custom in-process model factories are supported only by the legacy VoxCPM renderer")
+    results = run_provider_batch(
+        repo_root,
+        provider,
+        requests,
+        label=f"classic-{config.slug}-{chapter:03d}-{provider.provider_id}",
+    )
+    by_id = {str(item["id"]): item for item in results}
+    model_rate = int(results[0]["sampleRate"]) if results else target_rate
     rendered: list[dict[str, Any]] = []
     composed_parts: list[np.ndarray] = []
     for index, segment in enumerate(targets):
+        segment_id = str(segment["id"])
         output = segment_dir / str(segment["filename"])
-        if output.is_file() and not force:
+        spec = specs[segment_id]
+        if segment_id not in by_id:
             audio, existing_rate = sf.read(output, dtype="float32")
             audio = _mono_float(audio)
             if int(existing_rate) != target_rate:
                 raise AudioRenderError(f"Existing segment has wrong sample rate: {output}")
             reused = True
         else:
-            if model is None or model_rate is None:
-                raise AudioRenderError("Narration model was not initialized for a missing segment")
-            generated = model.generate(
-                text=tts_text(segment),
-                prompt_wav_path=str(reference_path),
-                prompt_text=profile.prompt_text,
-                reference_wav_path=str(reference_path),
-                cfg_value=effective_cfg_value,
-                inference_timesteps=effective_timesteps,
-                normalize=bool(config.voice["normalize"]),
-                denoise=bool(config.voice["denoise"]),
-            )
-            audio = _resample(_mono_float(generated), model_rate, target_rate)
-            _atomic_write_wav(output, audio, target_rate)
+            result = by_id[segment_id]
+            audio, generated_rate = sf.read(output, dtype="float32")
+            audio = _resample(_mono_float(audio), int(generated_rate), target_rate)
+            if int(generated_rate) != target_rate:
+                _atomic_write_wav(output, audio, target_rate)
+            prior: dict[str, Any] = {}
+            prior_path = turn_trace_path(output)
+            if prior_path.is_file():
+                try:
+                    prior = read_json(prior_path)
+                except (OSError, ValueError):
+                    pass
+            trace = {
+                "schema": TRACE_SCHEMA,
+                "turnId": segment_id,
+                "bookSlug": config.slug,
+                "chapter": chapter,
+                "renderedAt": datetime.now(timezone.utc).isoformat(),
+                "provider": {
+                    **provider_trace,
+                    "packageVersion": result["packageVersion"],
+                    "modelLoadSec": result["modelLoadSec"],
+                },
+                "voice": voice,
+                "normalizedText": spec["text"],
+                "seed": spec["seed"],
+                "effectiveSettings": provider.settings,
+                "identitySha256": spec["identity"]["sha256"],
+                "sampleRate": target_rate,
+                "durationSec": round(float(len(audio) / target_rate), 3),
+                "generationSec": result["generationSec"],
+                "peak": round(float(np.max(np.abs(audio))), 6),
+                "outputSha256": sha256_file(output),
+                "watermark": result["watermark"],
+                "retryNumber": int(prior.get("retryNumber") or -1) + 1 if prior else 0,
+                "priorArtifactSha256": prior.get("outputSha256"),
+            }
+            atomic_write_turn_trace(prior_path, trace)
             reused = False
         rendered.append(
             {
-                "id": str(segment["id"]),
+                "id": segment_id,
                 "path": output.relative_to(repo_root).as_posix(),
                 "sha256": sha256_file(output),
                 "durationSec": round(float(len(audio) / target_rate), 3),
                 "reused": reused,
+                "providerId": provider.provider_id,
+                "tracePath": turn_trace_path(output).relative_to(repo_root).as_posix(),
             }
         )
         composed_parts.append(audio)
@@ -231,16 +321,11 @@ def render_audio(
         "sourceSha256": manifest["sourceSha256"],
         "segmentManifestSha256": sha256_file(paths.segments(chapter)),
         "referenceSha256": sha256_file(reference_path),
-        "modelPath": str(model_path),
+        "provider": provider_trace,
+        "modelPath": str(provider.local_model_path),
         "modelSampleRate": model_rate,
         "outputSampleRate": target_rate,
-        "generationSettings": {
-            "cfgValue": effective_cfg_value,
-            "inferenceTimesteps": effective_timesteps,
-            "normalize": bool(config.voice["normalize"]),
-            "denoise": bool(config.voice["denoise"]),
-            "isolatedPreview": isolated_preview,
-        },
+        "generationSettings": {**provider.settings, "isolatedPreview": isolated_preview},
         "segments": rendered,
         "previewPath": preview_path.relative_to(repo_root).as_posix() if preview_path else None,
         "rawPath": raw_path.relative_to(repo_root).as_posix() if raw_path else None,

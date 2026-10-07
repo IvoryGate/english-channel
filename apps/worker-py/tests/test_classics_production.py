@@ -40,3 +40,25 @@ def test_render_chapter_visuals_preserves_configured_thumbnail(
     assert len(calls) == 2
     assert all("PersuasionChapter4Cover" not in call for call in calls)
     assert result[0]["thumbnail"].endswith("000_chapter_004.thumbnail.png")
+
+
+class _FallbackBookConfig:
+    slug = "persuasion"
+    visual: dict[str, object] = {}
+
+
+def test_render_chapter_visuals_renders_fallback_thumbnail(
+    tmp_path: Path, monkeypatch
+) -> None:
+    calls: list[list[str]] = []
+
+    def fake_render(_repo_root: Path, arguments: list[str]) -> None:
+        calls.append(arguments)
+
+    monkeypatch.setattr("worker.classics.production._render", fake_render)
+
+    result = render_chapter_visuals(tmp_path, _FallbackBookConfig(), [5])
+
+    assert len(calls) == 3
+    assert any("PersuasionChapter5Cover" in call for call in calls)
+    assert result[0]["thumbnail"].endswith("000_chapter_005.thumbnail.png")

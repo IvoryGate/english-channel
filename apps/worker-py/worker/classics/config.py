@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from worker.tts.schema import ProviderConfigError, resolve_provider_config
+
 
 SCHEMA = "classic-listening-book-v1"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -131,6 +133,10 @@ def parse_book_config(payload: dict[str, Any], path: Path) -> BookConfig:
     markers = source.get("boilerplateStopMarkers")
     if not isinstance(markers, list) or not all(isinstance(item, str) and item for item in markers):
         raise ConfigError("source.boilerplateStopMarkers must be a non-empty string list")
+    try:
+        resolve_provider_config(path.parents[2], render)
+    except ProviderConfigError as exc:
+        raise ConfigError(f"Invalid render provider: {exc}") from exc
 
     return BookConfig(
         path=path,

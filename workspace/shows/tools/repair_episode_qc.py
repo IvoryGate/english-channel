@@ -85,6 +85,18 @@ def segment_by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {str(row["id"]): row for row in report.get("segments") or []}
 
 
+def advance_seed_offsets(manifest: dict[str, Any], turn_ids: list[str], *, step: int = 1000) -> None:
+    """Move blocking turns to a new deterministic sample before re-rendering."""
+    selected = set(turn_ids)
+    for turn in manifest.get("turns") or []:
+        if str(turn.get("id")) not in selected:
+            continue
+        current = turn.get("ttsSeedOffset", 0)
+        if not isinstance(current, int) or isinstance(current, bool):
+            current = 0
+        turn["ttsSeedOffset"] = current + step
+
+
 def tighten_short_turn_caps(manifest: dict[str, Any]) -> int:
     """Ensure manifest maxLen caps match current policy (esp. single-word mirrors)."""
     updated = 0
@@ -247,6 +259,8 @@ def repair_episode_qc(
             still_blocking.append(turn_id)
 
         if still_blocking:
+            advance_seed_offsets(episode, still_blocking)
+            write_json(manifest_path, episode)
             for turn_id in still_blocking:
                 turn = next(t for t in episode["turns"] if str(t["id"]) == turn_id)
                 wav = turn_wav_path(workspace, str(turn["filename"]))

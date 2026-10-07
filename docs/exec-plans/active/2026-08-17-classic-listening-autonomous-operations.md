@@ -57,7 +57,7 @@ Runtime-only surfaces:
 ## Status
 
 - Owner: Codex primary agent.
-- Last updated: 2026-09-05.
+- Last updated: 2026-09-11.
 - State: milestone 1 rights, authority, and immutable lifecycle foundation is
   complete. The Persuasion production adapter is being reconciled on
   `codex/persuasion-pilot-intake`; later shared publishing, analytics,
@@ -85,6 +85,10 @@ Runtime-only surfaces:
   packaging gates; YouTube copyright and community checks also passed. It is
   scheduled for 2026-09-07 08:00 (UTC+8) as video `Tzy_YAgZp-U`, with the
   reviewed thumbnail and supplied English caption track.
+- Current production note: Persuasion Chapter 5 has passed full segment audio
+  and ASR review. Its chapter-specific background, Remotion cover/branding,
+  reviewed YouTube copy, and fallback-render test are complete; final packaging
+  is in progress for the 2026-09-14 08:00 (UTC+8) release slot.
 
 ## Plan
 

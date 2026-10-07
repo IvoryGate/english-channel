@@ -4,6 +4,7 @@ import { join, relative } from "node:path";
 const root = process.cwd();
 const ignoredDirs = new Set([
   ".git",
+  ".worktrees",
   "node_modules",
   ".venv",
   ".conda-env",

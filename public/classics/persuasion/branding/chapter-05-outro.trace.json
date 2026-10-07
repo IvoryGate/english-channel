@@ -1,0 +1,53 @@
+{
+  "schema": "elr-tts-turn-trace-v1",
+  "turnId": "chapter-05-outro",
+  "bookSlug": "persuasion",
+  "renderedAt": "2026-09-11T03:00:03.337635+00:00",
+  "provider": {
+    "providerId": "chatterbox_500m",
+    "modelId": "resemble-ai/chatterbox",
+    "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+    "device": "cuda",
+    "interpreter": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
+    "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
+    "seedBase": 20260914,
+    "outputFormat": {
+      "container": "wav",
+      "sampleType": "float32"
+    },
+    "providerSettings": {
+      "exaggeration": 0.3,
+      "cfgWeight": 0.65,
+      "temperature": 0.8,
+      "topP": 1.0,
+      "minP": 0.05,
+      "repetitionPenalty": 1.2
+    },
+    "packageVersion": "0.1.7",
+    "modelLoadSec": 126.232
+  },
+  "voice": {
+    "kind": "clone",
+    "referencePath": "workspace/dialogue_podcast_research/voices/mia/mia_reference_clean.wav",
+    "referenceSha256": "b6ec5f21090399e24c371fbac8f211a602c40a70dde45bdfd13cef631b19f803"
+  },
+  "normalizedText": "Thank you for listening. Subscribe to the English Listening Room, and continue with Chapter Six of Persuasion.",
+  "seed": 20260915,
+  "effectiveSettings": {
+    "exaggeration": 0.3,
+    "cfgWeight": 0.65,
+    "temperature": 0.8,
+    "topP": 1.0,
+    "minP": 0.05,
+    "repetitionPenalty": 1.2
+  },
+  "identitySha256": "dce71b6e1612330819301beae14effab9d7cf7ae8e0a16ac8448b3c67aedb3d0",
+  "sampleRate": 48000,
+  "durationSec": 8.1,
+  "generationSec": 7.105,
+  "outputSha256": "6b346266facaf6a0d817dcb8d9902ea52c3d1a9feca109e7e9efcbaf3e374ebf",
+  "watermark": {
+    "provider": "PerTh",
+    "status": "implicit-enabled"
+  }
+}

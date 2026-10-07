@@ -133,7 +133,18 @@ Every transition records the actor, timestamp, input fingerprints, outputs, chec
 - Treat content errors, electronic/vocoder texture, unstable pronunciation, clipped words, and voice drift as generation failures.
 - Compose and master only after every expected segment exists and strict QC passes.
 
-The current VoxCPM2 checkpoint encodes reference audio at 16 kHz and produces output at 48 kHz. A higher-rate Riley file cannot change that encoder limit. The `Persuasion` rollout remains blocked until a voice path passes blind listening without the speech-coupled 7.5-8.8 kHz artifact. The durable solution should be a better synthesis provider/model or a demonstrably clean setting, not stronger broadband post-processing.
+Classic Listening now selects a pinned episode-level TTS provider. Chatterbox
+original 500M is the primary migration candidate; VoxCPM remains a compatibility
+fallback, and Turbo is internal-only during the first week. Provider-native
+turns remain sequential, trace-backed, ASR checked, and mastered only after
+content QC. Chatterbox's implicit PerTh watermark remains enabled and is
+recorded in the trace. Never combine providers within one public chapter.
+
+The older VoxCPM2 checkpoint encodes reference audio at 16 kHz and produces
+output at 48 kHz. A higher-rate Riley file cannot change that encoder limit.
+Do not use stronger broadband post-processing to hide its speech-coupled
+7.5–8.8 kHz artifact; switch the whole chapter to an accepted provider or a
+demonstrably clean fallback instead.
 
 ### 4. Subtitles
 

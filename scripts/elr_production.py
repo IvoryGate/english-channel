@@ -29,6 +29,7 @@ from episode_workspace import (  # noqa: E402
 from episode_youtube_meta import sync_youtube_json  # noqa: E402
 from prepare_episode_manifest import manifest_coverage  # noqa: E402
 from validate_podcast_script import validate_script_text  # noqa: E402
+from worker.tts.schema import ProviderConfigError, resolve_provider_config  # noqa: E402
 
 
 MIN_FREE_GIB = 10.0
@@ -113,22 +114,35 @@ def _disk_check(checks: list[CheckResult], name: str, path: Path) -> None:
     checks.append(CheckResult(name, status, f"{free_gib:.1f} GiB free at {probe} (minimum {MIN_FREE_GIB:.0f} GiB)"))
 
 
-def _runtime_checks(checks: list[CheckResult], repo_root: Path) -> None:
-    python = repo_root / ".conda-env" / "python.exe"
-    if not _check_file(checks, "python-runtime", python):
+def _runtime_checks(
+    checks: list[CheckResult],
+    repo_root: Path,
+    render_settings: dict[str, Any],
+) -> None:
+    try:
+        provider = resolve_provider_config(repo_root, render_settings)
+    except ProviderConfigError as exc:
+        checks.append(CheckResult("tts-provider-config", "error", str(exc)))
         return
-    model_dir = repo_root / "pretrained_models" / "VoxCPM2"
-    required_model_files = (model_dir / "config.json", model_dir / "model.safetensors", model_dir / "audiovae.pth")
-    missing = [str(path) for path in required_model_files if not path.is_file() or path.stat().st_size == 0]
-    if missing:
-        checks.append(CheckResult("voxcpm-model", "error", "Missing: " + ", ".join(missing)))
-    else:
-        checks.append(CheckResult("voxcpm-model", "pass", str(model_dir)))
 
-    smoke = "import _ctypes, soundfile, torch; print('cuda=' + str(torch.cuda.is_available()).lower())"
+    if not _check_file(checks, "tts-provider-runtime", provider.interpreter):
+        return
+    if provider.local_model_path.exists():
+        checks.append(CheckResult("tts-provider-model", "pass", str(provider.local_model_path)))
+    else:
+        checks.append(CheckResult("tts-provider-model", "error", f"Missing: {provider.local_model_path}"))
+
+    if provider.provider_id == "kokoro":
+        smoke = "import _ctypes, kokoro, soundfile; print('provider=kokoro;device=cpu')"
+    else:
+        provider_import = "import chatterbox.tts; " if provider.provider_id == "chatterbox_500m" else ""
+        smoke = (
+            f"import _ctypes, soundfile, torch; {provider_import}"
+            f"print('provider={provider.provider_id};cuda=' + str(torch.cuda.is_available()).lower())"
+        )
     try:
         result = subprocess.run(
-            [str(python), "-c", smoke],
+            [str(provider.interpreter), "-c", smoke],
             cwd=str(repo_root),
             text=True,
             capture_output=True,
@@ -138,7 +152,8 @@ def _runtime_checks(checks: list[CheckResult], repo_root: Path) -> None:
         checks.append(CheckResult("runtime-imports", "error", f"Runtime smoke check failed: {exc}"))
     else:
         output = (result.stdout + " " + result.stderr).strip()
-        if result.returncode != 0 or "cuda=true" not in result.stdout.lower():
+        gpu_unavailable = provider.uses_gpu and "cuda=true" not in result.stdout.lower()
+        if result.returncode != 0 or gpu_unavailable:
             checks.append(CheckResult("runtime-imports", "error", output or f"exit={result.returncode}"))
         else:
             checks.append(CheckResult("runtime-imports", "pass", output))
@@ -294,7 +309,8 @@ def preflight_episode(
         _disk_check(checks, "workspace-disk", context.workspace)
         if require_visuals:
             _disk_check(checks, "export-disk", context.youtube_root)
-        _runtime_checks(checks, context.repo_root)
+        render_settings = dict(manifest.get("renderSettings") or config.get("renderSettings") or {})
+        _runtime_checks(checks, context.repo_root, render_settings)
 
     return PreflightReport(context.show_id, context.episode_id, str(context.workspace), tuple(checks))
 

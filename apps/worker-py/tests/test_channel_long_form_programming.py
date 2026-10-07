@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -43,8 +45,9 @@ def test_programming_requires_a_diverse_evidence_backed_topic_portfolio() -> Non
     assert programming["trendResearch"]["minimumCandidateScore"] >= 65
 
 
-def test_next_week_plan_has_one_flagship_and_five_standard_episodes() -> None:
-    plan = _load_json("configs/channel/weekly-plan-2026-09-07.json")
+@pytest.mark.parametrize("week_start", ["2026-09-07", "2026-09-14"])
+def test_next_week_plan_has_one_flagship_and_five_standard_episodes(week_start: str) -> None:
+    plan = _load_json(f"configs/channel/weekly-plan-{week_start}.json")
     briefs = plan["dialogueBriefs"]
     formats = [brief["format"] for brief in briefs]
 
@@ -62,8 +65,9 @@ def test_next_week_plan_has_one_flagship_and_five_standard_episodes() -> None:
     assert all("40-Minute" in flagship["workingTitle"] for flagship in flagships)
 
 
-def test_next_week_plan_matches_owner_approved_seven_plus_twenty_eight_mix() -> None:
-    plan = _load_json("configs/channel/weekly-plan-2026-09-07.json")
+@pytest.mark.parametrize("week_start", ["2026-09-07", "2026-09-14"])
+def test_next_week_plan_matches_owner_approved_seven_plus_twenty_eight_mix(week_start: str) -> None:
+    plan = _load_json(f"configs/channel/weekly-plan-{week_start}.json")
     slots = plan["publicationSlots"]
     dialogue_slots = [slot for slot in slots if slot["contentId"].startswith("content:series_")]
     shorts_slots = [slot for slot in slots if slot["contentId"].startswith("content:shorts_main:")]
@@ -73,6 +77,18 @@ def test_next_week_plan_matches_owner_approved_seven_plus_twenty_eight_mix() -> 
     assert len(shorts_slots) == 28
     assert len(classic_slots) == 1
     assert plan["portfolio"]["longFormCount"] == len(dialogue_slots) + len(classic_slots)
+
+
+def test_accepted_tts_rollout_is_locked_into_the_new_week_plan() -> None:
+    plan = _load_json("configs/channel/weekly-plan-2026-09-14.json")
+    rollout = plan["ttsRollout"]
+
+    assert rollout["ownerAcceptedOn"] == "2026-09-09"
+    assert rollout["series_b"]["provider"] == "kokoro"
+    assert rollout["series_a"]["provider"] == "chatterbox_500m"
+    assert rollout["series_c"]["provider"] == "chatterbox_500m"
+    assert rollout["classic_listening"]["provider"] == "chatterbox_500m"
+    assert rollout["mixedProviderEpisodeAllowed"] is False
 
 
 def test_flagship_release_gate_rejects_a_standard_length_render() -> None:

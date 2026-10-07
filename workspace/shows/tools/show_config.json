@@ -10,8 +10,21 @@
       "hostLinePattern": "^(Ethan|Nora):",
       "wordCountRange": [1800, 3000],
       "renderSettings": {
-        "cfgValue": 2.35,
-        "inferenceTimesteps": 10,
+        "ttsProvider": "chatterbox_500m",
+        "modelId": "resemble-ai/chatterbox",
+        "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+        "device": "cuda",
+        "providerPython": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
+        "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
+        "seedBase": 20260914,
+        "providerSettings": {
+          "exaggeration": 0.5,
+          "cfgWeight": 0.5,
+          "temperature": 0.8,
+          "topP": 1.0,
+          "minP": 0.05,
+          "repetitionPenalty": 1.2
+        },
         "interTurnSilenceSec": 0.28
       },
       "characterProfiles": {
@@ -41,9 +54,22 @@
       "hostLinePattern": "^(Riley|Sam):",
       "wordCountRange": [1400, 2800],
       "renderSettings": {
-        "cfgValue": 2.15,
-        "inferenceTimesteps": 10,
+        "ttsProvider": "kokoro",
+        "modelId": "hexgrad/Kokoro-82M",
+        "modelRevision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+        "device": "cpu",
+        "providerPython": "workspace/runtime/tts-audition/kokoro-env/Scripts/python.exe",
+        "localModelPath": "workspace/runtime/tts-audition/cache/huggingface/hub",
+        "seedBase": 20260914,
+        "providerSettings": {
+          "languageCode": "a",
+          "speed": 0.95
+        },
         "interTurnSilenceSec": 0.3
+      },
+      "presetVoices": {
+        "Riley": "af_heart",
+        "Sam": "am_fenrir"
       },
       "characterProfiles": {
         "Riley": "Riley, clear simple female teacher, consistent manner",
@@ -72,8 +98,21 @@
       "hostLinePattern": "^(Leo|Mia):",
       "wordCountRange": [2000, 3200],
       "renderSettings": {
-        "cfgValue": 2.35,
-        "inferenceTimesteps": 10,
+        "ttsProvider": "chatterbox_500m",
+        "modelId": "resemble-ai/chatterbox",
+        "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+        "device": "cuda",
+        "providerPython": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
+        "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
+        "seedBase": 20260914,
+        "providerSettings": {
+          "exaggeration": 0.5,
+          "cfgWeight": 0.5,
+          "temperature": 0.8,
+          "topP": 1.0,
+          "minP": 0.05,
+          "repetitionPenalty": 1.2
+        },
         "interTurnSilenceSec": 0.28
       },
       "characterProfiles": {

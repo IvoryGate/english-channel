@@ -1,28 +1,25 @@
 from __future__ import annotations
 
 import argparse
-import gc
 import json
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-
-import numpy as np
-import soundfile as sf
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TOOLS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO_ROOT / ".cursor" / "skills" / "audiobook-chapter-tts" / "scripts"))
 sys.path.insert(0, str(TOOLS_DIR))
+sys.path.insert(0, str(REPO_ROOT / "apps" / "worker-py"))
 
-from audiobook_workspace import compose_control, normalize_segment_peak  # noqa: E402
 from prepare_reference_concat_audio import build_concat_audio  # noqa: E402
-from render_chapter import load_voxcpm  # noqa: E402
 from episode_artifacts import turn_wav_path  # noqa: E402
-
-SHOW_CONFIG_PATH = Path(__file__).resolve().parent / "show_config.json"
-
+from worker.tts.dialogue import dialogue_turn_is_reusable, dialogue_turn_spec  # noqa: E402
+from worker.tts.process import run_provider_batch  # noqa: E402
+from worker.tts.schema import resolve_provider_config  # noqa: E402
+from worker.tts.trace import TRACE_SCHEMA, atomic_write_json, sha256_file, turn_trace_path  # noqa: E402
 
 def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -38,16 +35,9 @@ def parse_segment_ids(value: str | None) -> set[str]:
     return {part.strip() for part in value.split(",") if part.strip()}
 
 
-def character_profiles_for(show: dict[str, Any]) -> dict[str, str]:
-    profiles = dict(show.get("characterProfiles") or {})
-    if profiles:
-        return {str(k): str(v) for k, v in profiles.items()}
-    return {str(k): str(v) for k, v in dict(show.get("deliveryCues") or {}).items()}
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Render dialogue podcast turns (audiobook-parity: one model load, compose_control)."
+        description="Render dialogue turns with one manifest-selected provider load per invocation."
     )
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--segments", help="Comma-separated turn ids, e.g. p003,p015.")
@@ -55,7 +45,7 @@ def main() -> int:
     parser.add_argument(
         "--skip-existing",
         action="store_true",
-        help="Skip turns whose WAV already exists (full-run resume).",
+        help="Reuse turns whose WAV and complete trace identity still match.",
     )
     parser.add_argument(
         "--force",
@@ -81,10 +71,7 @@ def main() -> int:
     manifest_path = Path(args.manifest)
     workspace = manifest_path.parent
     manifest = load_json(manifest_path)
-    show_id = str(manifest["showId"])
     settings = manifest["renderSettings"]
-    show = load_json(SHOW_CONFIG_PATH)["shows"][show_id]
-    profiles = character_profiles_for(show)
     selected_ids = parse_segment_ids(args.segments)
     known_ids = {str(turn["id"]) for turn in manifest["turns"]}
     unknown_ids = selected_ids - known_ids
@@ -97,85 +84,116 @@ def main() -> int:
         if selected_ids and turn_id not in selected_ids:
             continue
         out = turn_wav_path(workspace, str(turn["filename"]))
-        # Selective --segments overwrites (same as render_chapter --segments).
-        # Full run with --skip-existing resumes by keeping existing WAVs.
-        if not selected_ids and args.skip_existing and not args.force and out.is_file():
+        # Selective --segments overwrites. Full-run resume reuses only a WAV
+        # whose provider/voice/text/settings identity and recorded hash match.
+        if (
+            not selected_ids
+            and args.skip_existing
+            and not args.force
+            and dialogue_turn_is_reusable(REPO_ROOT, manifest, turn, out)
+        ):
             continue
         to_render.append(turn)
 
     if not to_render:
         print("nothing to render", flush=True)
     else:
-        print(f"Loading VoxCPM2 once for {len(to_render)} turn(s)...", flush=True)
-        model = load_voxcpm(str(settings.get("modelId", "pretrained_models/VoxCPM2")), args.device)
-        sample_rate = int(model.tts_model.sample_rate)
+        if "ttsProvider" not in settings:
+            settings["device"] = args.device
+        provider = resolve_provider_config(REPO_ROOT, settings)
+        print(
+            f"Loading {provider.provider_id} once for {len(to_render)} turn(s)...",
+            flush=True,
+        )
+        requests: list[dict[str, Any]] = []
+        specs: dict[str, dict[str, Any]] = {}
+        previous_trace: dict[str, dict[str, Any]] = {}
+        for turn in to_render:
+            turn_id = str(turn["id"])
+            output = turn_wav_path(workspace, str(turn["filename"]))
+            spec = dialogue_turn_spec(REPO_ROOT, manifest, turn)
+            specs[turn_id] = spec
+            prior_path = turn_trace_path(output)
+            if prior_path.is_file():
+                try:
+                    previous_trace[turn_id] = load_json(prior_path)
+                except (OSError, ValueError):
+                    pass
+            requests.append(
+                {
+                    "id": turn_id,
+                    "outputPath": str(output),
+                    "text": spec["normalizedText"],
+                    "voice": spec["workerVoice"],
+                    "referenceText": manifest["hosts"][str(turn["speaker"])].get("referenceText", ""),
+                    "seed": spec["seed"],
+                    "maxLen": turn.get("maxLen"),
+                }
+            )
+        results = run_provider_batch(
+            REPO_ROOT,
+            provider,
+            requests,
+            label=f"elr-{manifest['episodeId']}-{provider.provider_id}",
+        )
+        by_id = {str(item["id"]): item for item in results}
         rendered: list[dict[str, Any]] = []
 
         for turn in to_render:
+            turn_id = str(turn["id"])
             speaker = str(turn["speaker"])
-            host = manifest["hosts"][speaker]
             output = turn_wav_path(workspace, str(turn["filename"]))
-            output.parent.mkdir(parents=True, exist_ok=True)
-            segment = {
-                "id": turn["id"],
-                "order": turn["order"],
-                "filename": turn["filename"],
-                "kind": "dialogue",
+            result = by_id[turn_id]
+            spec = specs[turn_id]
+            prior = previous_trace.get(turn_id) or {}
+            prior_hash = prior.get("outputSha256")
+            retry_number = int(prior.get("retryNumber") or -1) + 1 if prior else 0
+            trace = {
+                "schema": TRACE_SCHEMA,
+                "turnId": turn_id,
+                "episodeId": manifest["episodeId"],
                 "speaker": speaker,
-                "text": turn["text"],
-                "wordCount": turn.get("wordCount"),
-                "deliveryCue": turn.get("deliveryCue") or "natural dialogue delivery",
+                "renderedAt": datetime.now(timezone.utc).isoformat(),
+                "provider": {
+                    **provider.to_trace(REPO_ROOT),
+                    "packageVersion": result["packageVersion"],
+                    "modelLoadSec": result["modelLoadSec"],
+                },
+                "voice": spec["voice"],
+                "normalizedText": spec["normalizedText"],
+                "seed": spec["seed"],
+                "effectiveSettings": provider.settings,
+                "identitySha256": spec["identity"]["sha256"],
+                "sampleRate": result["sampleRate"],
+                "durationSec": result["durationSec"],
+                "generationSec": result["generationSec"],
+                "peak": result["peak"],
+                "outputSha256": result["outputSha256"],
+                "watermark": result["watermark"],
+                "retryNumber": retry_number,
+                "priorArtifactSha256": prior_hash,
             }
-            if turn.get("maxLen") is not None and int(turn["maxLen"]) <= 128:
-                segment["maxLen"] = int(turn["maxLen"])
-            request = compose_control(
-                segment,
-                global_control="",
-                pace_cue=None,
-                character_profiles=profiles,
-            )
-            reference_audio = str(REPO_ROOT / host["referenceAudioClean"])
+            atomic_write_json(turn_trace_path(output), trace)
             print(
-                f"Rendering {turn['id']} {speaker} -> {output.name} | "
-                f"{request['policy']} max_len={request['maxLen']}",
+                f"Rendered {turn_id} {speaker} -> {output.name} | "
+                f"provider={provider.provider_id} seed={spec['seed']}",
                 flush=True,
             )
-            kwargs = {
-                "text": request["ttsText"],
-                "reference_wav_path": reference_audio,
-                "cfg_value": float(settings.get("cfgValue", 2.35)),
-                "inference_timesteps": int(settings.get("inferenceTimesteps", 10)),
-                "normalize": False,
-                "denoise": False,
-            }
-            if request["maxLen"] is not None:
-                kwargs["max_len"] = int(request["maxLen"])
-            wav = model.generate(**kwargs).astype(np.float32, copy=False)
-            wav = normalize_segment_peak(wav)
-            sf.write(output, wav, sample_rate)
             rendered.append(
                 {
-                    "id": turn["id"],
+                    "id": turn_id,
                     "speaker": speaker,
                     "filename": turn["filename"],
-                    "sampleRate": sample_rate,
-                    "durationSec": round(float(len(wav) / sample_rate), 3),
-                    "peak": round(float(np.max(np.abs(wav))) if len(wav) else 0.0, 6),
-                    "referenceAudio": host["referenceAudioClean"],
+                    "sampleRate": result["sampleRate"],
+                    "durationSec": result["durationSec"],
+                    "peak": result["peak"],
+                    "providerId": provider.provider_id,
+                    "tracePath": turn_trace_path(output).relative_to(REPO_ROOT).as_posix(),
+                    "outputSha256": sha256_file(output),
                     "deliveryCue": turn.get("deliveryCue", ""),
-                    "policy": request["policy"],
-                    "maxLen": request["maxLen"],
+                    "maxLen": turn.get("maxLen"),
                 }
             )
-            del wav
-            gc.collect()
-            try:
-                import torch
-
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            except ImportError:
-                pass
 
         previous_rendered = list(manifest.get("rendered") or [])
         rendered_ids = {str(item["id"]) for item in rendered}
@@ -183,22 +201,13 @@ def main() -> int:
             manifest["rendered"] = [item for item in previous_rendered if str(item.get("id")) not in rendered_ids] + rendered
         else:
             manifest["rendered"] = rendered
-        manifest["activeRenderer"] = "elr-show-episode-renderer-v2-audiobook-parity"
+        manifest["activeRenderer"] = "elr-show-episode-renderer-v3-provider-batch"
         write_json(manifest_path, manifest)
         report_name = str(settings.get("renderReport", "render_report.json"))
         report_path = workspace / "reports" / report_name if not Path(report_name).is_absolute() else Path(report_name)
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        write_json(report_path, {"rendered": rendered})
+        write_json(report_path, {"provider": provider.to_trace(REPO_ROOT), "rendered": rendered})
         print(f"rendered={len(rendered)}", flush=True)
-        del model
-        gc.collect()
-        try:
-            import torch
-
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-        except ImportError:
-            pass
 
     if not args.no_compose:
         clips = [turn_wav_path(workspace, str(t["filename"])) for t in manifest["turns"]]

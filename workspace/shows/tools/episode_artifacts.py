@@ -26,8 +26,9 @@ def artifact_paths(workspace: Path, episode_id: str) -> dict[str, Path]:
         000_<episode_id>.youtube.json              # script metadata (root)
         000_<episode_id>.episode_manifest.json     # render plan (root, control center)
         audio/
-          turns/                                    # per-turn rendered WAVs (VoxCPM output)
+          turns/                                    # per-turn provider WAVs and trace sidecars
             turn_001.wav
+            turn_001.trace.json                     # provider/voice/settings identity
           _master_turns/                            # per-turn mastered WAVs
             p001_turn_001.wav
           000_<episode_id>.raw.wav                 # concatenated raw
