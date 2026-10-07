@@ -255,9 +255,20 @@ Cleanup executed 2026-10-07 with the owner's explicit authorization
   emptying the root `node_modules` and deleting tracked files under
   `apps/` and `packages/`. Every tracked file was restored byte-exact
   from the index with `git restore`, `npm install` rebuilt
-  `node_modules`, and all untracked assets were verified intact
+  `node_modules`, and the listed untracked assets were verified intact
   (`workspace` 127 GB, `public/shorts`, `exports`, `artifacts`, `logs`,
-  `videos`, `.venv` 4.4 GB, `.env.example`). Rule recorded: inventory
-  junctions before any Windows `rm -rf` under a `node_modules` tree.
+  `videos`, `.venv` 4.4 GB, `.env.example`). Correction added
+  2026-10-07: that verification was incomplete — `.conda-env/` (created
+  2026-05-16) had also been emptied during the removal window (directory
+  LastWrite 13:19:52, inside the `rm` execution interval) and was only
+  discovered later by CreationTime/LastWrite forensics. It was recovered
+  the same day by recloning the local `base` environment
+  (`conda create --prefix .conda-env --clone base`, no download),
+  verified with `check_env.py` (torch 2.7.1+cu118, CUDA on the RTX 4060,
+  voxcpm) and the full suite running on `.conda-env/python.exe`. Rules
+  recorded: inventory junctions before any Windows `rm -rf` under a
+  `node_modules` tree, and verify **every ignored runtime directory**
+  (`.conda-env`, `.venv`, profiles), not only media and dependency
+  trees, before declaring an incident closed.
 - PR #5 was closed 2026-10-07 with the supersede rationale in its
   comments; its head `8d548d0` remains preserved as a branch.
