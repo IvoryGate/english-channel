@@ -40,7 +40,10 @@ Explicit non-goals:
 
 - Owner: OpenCode agent.
 - Started: 2026-10-07.
-- State: in progress.
+- State: completed 2026-10-07. PR-A #11 merged as `5e2258b`; PR-C #12
+  carries the build-order fix; PR-B #13 carries the intake commits and
+  archives both plans. Branch and worktree reconciliation is handed to the
+  next plan.
 
 ## Plan
 
@@ -48,10 +51,17 @@ Explicit non-goals:
 2. Prove the PR-A candidate `2831e11` in isolation: `git archive` extract
    plus the Python suite must be green before any PR is opened.
 3. Open PR-A with `main` as base so `ci-pr` runs, and leave its branch
-   untouched until the PR merges.
-4. Open PR-B from the intake branch once PR-A has merged, so PR-B carries
-   exactly the nine intake commits.
-5. Record the inventory below and hand branch/worktree reconciliation to a
+   untouched until the PR merges. Done: PR #11, `quality-gates` success,
+   merged as `5e2258b` with a merge commit so the four commits stay
+   individually reviewable.
+4. Fix the deterministic `deploy-staging` failure that every push to `main`
+   hits (root `build` did not emit `@english-channel/shared-types` before
+   the dependent workspaces) as its own scoped PR-C. Done: PR #12, verified
+   by deleting `packages/shared-types/dist` locally and rebuilding.
+5. Open PR-B from the intake branch once PR-A has merged, so PR-B carries
+   exactly the intake commits. Done: PR #13 on
+   `chore/worktree-intake-2026-10`.
+6. Record the inventory below and hand branch/worktree reconciliation to a
    separate plan.
 
 ## Validation
@@ -60,6 +70,12 @@ Explicit non-goals:
 - The PR-A head is green in isolation before the PR exists; PR-A and PR-B
   each show green `quality-gates` before merge.
 - PR-B's file and commit list contains only the intake work.
+- Results 2026-10-07: `main` fast-forwarded from `2a22230` (2026-05-17) with
+  zero unique commits; PR #11 green in `ci-pr` and merged as `5e2258b`,
+  which also turned the trunk's pre-existing red test green (205 passed on
+  the merge tree); the build-order fix verified from a deleted
+  `packages/shared-types/dist` (build exit 0, lint exit 0, 205 passed) and
+  gated on `ci-pr` as PR #12; PR #13 re-validated on push before merge.
 
 ## Risks And Decisions
 

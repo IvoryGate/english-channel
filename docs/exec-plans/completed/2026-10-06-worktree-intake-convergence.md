@@ -44,8 +44,11 @@ Explicit non-goals:
 
 - Owner: OpenCode agent.
 - Started: 2026-10-06.
-- State: committed and validated; push and PR remain the next step and stay
-  outside this plan's scope.
+- State: completed 2026-10-06. The nine intake commits landed on
+  `chore/worktree-intake-2026-10` and shipped in PR #13 together with the
+  trunk-sync plan; this file moves to `completed/` in that PR per the
+  archive rule. The media inventory and the per-commit validation record
+  below are the durable record of the split.
 
 ## Plan
 
