@@ -47,9 +47,17 @@ The packaging step runs after compose and reads the compose report. For branded 
   --show series_b --episode episode_001 --workspace $ws --print-prompts
 ```
 
-2. Generate two images with the image-generation tool (16:9, target 1920×1080):
+2. Generate two images with the web ChatGPT image tool (16:9, target 1920×1080):
    - `000_episode_XXX.scene_source.png` — hosts + scene, **no text**
    - `000_episode_XXX.video_bg_source.png` — same scene, cleaner center for subtitles
+
+```powershell
+python apps/worker-py/scripts/generate_image.py --prompt "<scene prompt>" `
+  --out workspace/shows/series_b/episode_001/000_episode_001.scene_source.png
+```
+
+Session setup, anti-fingerprint rules, and the `.meta.json`
+traceability sidecar live in `docs/IMAGEGEN_BROWSER.md`.
 
 3. Normalize scene + overlay text:
 
