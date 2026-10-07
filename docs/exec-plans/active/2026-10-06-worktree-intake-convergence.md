@@ -44,7 +44,8 @@ Explicit non-goals:
 
 - Owner: OpenCode agent.
 - Started: 2026-10-06.
-- State: in progress.
+- State: committed and validated; push and PR remain the next step and stay
+  outside this plan's scope.
 
 ## Plan
 
@@ -54,16 +55,23 @@ Explicit non-goals:
 2. Update the Operating Cadence section of `docs/YOUTUBE_OPERATING_SYSTEM.md`,
    which still states the superseded six-standard/one-flagship week.
 3. Run `npm run lint` and `npm run test`; both must be fully green.
-4. Classify the working tree and commit in scoped units: contract fix,
-   weekly production configuration and plans, production hardening code with
-   its tests and docs, then generated media.
-5. Record any entry that must stay untracked instead of silently dropping it.
+4. Classify the working tree and commit in scoped units, each commit dated
+   to the period its content describes: 2026-09-19 week plan, 09-19 render
+   watchdog, 09-21 release manifest, 09-28 Shorts Kokoro default, 10-04 week
+   plan, 10-04 Classics chapters, 10-05 export and quiet-repair hardening,
+   10-06 the 42-item week.
+5. Decide every generated-media entry explicitly instead of silently
+   dropping it; the outcome is recorded under Risks And Decisions.
 
 ## Validation
 
 - `npm run lint` passes (encoding, shared-types build, remotion typecheck,
   architecture, docs index, Python compileall).
 - `npm run test` passes with 0 failures (Node 9 tests, Python 215 tests).
+- Every commit was verified in isolation by extracting it with `git archive`
+  and running the Python suite against the extract: 205, 207, 207, 207, 207,
+  208, 214, 215 passed, zero failures. The final tree is byte-identical to
+  the pre-split state.
 - `git status --short` shows no uncommitted tracked modification after the
   final commit, and every remaining untracked path is an ignored runtime
   artifact or an explicitly inventoried media file.
@@ -76,9 +84,22 @@ Explicit non-goals:
   defines the 14 long-form plus 28 Shorts schedule contract, and the existing
   modified tests already assert the ten-standard/two-flagship mix. The stale
   value is the tracked `series.json` cadence, not the release policy.
-- Risk: generated media adds hundreds of megabytes to the repository. The
-  repository already tracks `public/` media, so this follows convention, but
-  the size is recorded before committing.
+- Decision: generated Short backgrounds stay untracked. 79 files / 149 MB in
+  `public/shorts/` (`weekly-2026-09-21` plus the ten daily directories from
+  `monday-2026-09-28` through `wednesday-2026-10-07`) are image-generation
+  outputs; their visual briefs and `backgroundImage` paths are already
+  tracked in `configs/shorts/*.json`. Nothing outside a local re-render
+  reads them: the Python and Node suites pass from `git archive` extracts
+  that contain none of them, and no code under `src/`, `apps/web`, or
+  `packages/` references `public/shorts`. `.gitignore` now excludes
+  `public/shorts/`; the files stay on disk and no history is rewritten. The
+  110 MB already tracked for `weekly-2026-09-07` (already on `origin/main`)
+  and `weekly-2026-09-14` is left alone; shrinking published history is out
+  of scope.
+- Decision: the 12 MB of Persuasion chapter 6-9 covers and intro/outro
+  traces committed with the Classics commit are a different class:
+  `src/classics/persuasion-chapter-cover.tsx` maps chapter numbers to those
+  exact files, so they are site assets rather than intermediates.
 - Risk: the working tree mixes at least three plans. Committing them together
   would violate the one-plan-per-PR rule, so they are separated by commit.
 
