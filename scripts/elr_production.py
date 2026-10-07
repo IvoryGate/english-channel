@@ -301,20 +301,18 @@ def preflight_episode(
             checks.append(CheckResult("youtube-metadata", "pass", f"{action}: {sync['path']}"))
 
     if require_visuals:
-        cover_ready = paths["coverBakedScene"].is_file() or paths["thumbnailPng"].is_file()
-        background_ready = paths["videoBgSource16x9"].is_file() or paths["videoBgJpg"].is_file()
         checks.append(
             CheckResult(
                 "cover-16x9",
-                "pass" if cover_ready else "error",
-                str(paths["coverBakedScene"] if paths["coverBakedScene"].is_file() else paths["thumbnailPng"]),
+                "pass" if paths["coverBakedScene"].is_file() else "error",
+                str(paths["coverBakedScene"]),
             )
         )
         checks.append(
             CheckResult(
                 "background-16x9",
-                "pass" if background_ready else "error",
-                str(paths["videoBgSource16x9"] if paths["videoBgSource16x9"].is_file() else paths["videoBgJpg"]),
+                "pass" if paths["videoBgSource16x9"].is_file() else "error",
+                str(paths["videoBgSource16x9"]),
             )
         )
         for name in ("english-listening-room-intro.mp4", "english-listening-room-outro.mp4"):
