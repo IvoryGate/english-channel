@@ -41,6 +41,18 @@ Explicit non-goals:
 - No pipeline orchestration changes: cover/shorts steps keep calling this
   CLI as an external tool.
 
+## System Boundaries
+
+- `apps/worker-py/worker/imagegen/` — new package (session + CLI library).
+- `apps/worker-py/scripts/` — two new entry scripts.
+- `apps/worker-py/tests/test_imagegen.py` — new unit tests.
+- `docs/IMAGEGEN_BROWSER.md` — new doc; `docs/shows/VIDEO_PIPELINE.md`
+  cover step gains the concrete command.
+- Ignored runtime state: `workspace/runtime/imagegen/chromium-profile/`.
+- Explicitly untouched: `.gitignore`, package manifests, CI config,
+  the workspace-side `render_episode_thumbnail.py` tool, Shorts config
+  schemas.
+
 ## Status
 
 - Owner: OpenCode agent.
