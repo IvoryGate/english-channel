@@ -207,14 +207,17 @@ def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_pat
     model_path = tmp_path / "runtime" / "kokoro" / "model"
     _write(interpreter)
     model_path.mkdir(parents=True)
-    monkeypatch.setattr(
-        "elr_production.subprocess.run",
-        lambda *_args, **_kwargs: type(
+    captured: dict[str, object] = {}
+
+    def fake_run(*_args, **kwargs):
+        captured.update(kwargs)
+        return type(
             "Result",
             (),
             {"returncode": 0, "stdout": "provider=kokoro;device=cpu\n", "stderr": ""},
-        )(),
-    )
+        )()
+
+    monkeypatch.setattr("elr_production.subprocess.run", fake_run)
     checks: list[CheckResult] = []
 
     _runtime_checks(
@@ -235,3 +238,4 @@ def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_pat
     assert by_name["tts-provider-model"].status == "pass"
     assert by_name["runtime-imports"].status == "pass"
     assert "cuda=true" not in by_name["runtime-imports"].detail
+    assert captured["timeout"] == 180

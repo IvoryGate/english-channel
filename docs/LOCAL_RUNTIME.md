@@ -22,6 +22,11 @@ Dialogue and Classic Listening select one provider for an entire public
 episode. Provider subprocesses keep incompatible dependencies isolated and
 load the selected model once per render batch.
 
+On the Windows production host, the Chatterbox runtime smoke check allows a
+180-second cold start. Torch plus the Chatterbox watermark stack can take just
+over two minutes to import after memory cleanup; this timeout applies only to
+the readiness check and does not weaken the render watchdog or release gates.
+
 | Provider | Interpreter / model | Public role |
 | --- | --- | --- |
 | Kokoro Heart + Fenrir | `workspace/runtime/tts-audition/kokoro-env/Scripts/python.exe` | Dialogue preset voices |

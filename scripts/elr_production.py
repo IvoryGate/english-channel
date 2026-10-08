@@ -36,7 +36,11 @@ MIN_FREE_GIB = 10.0
 MIN_AVAILABLE_MEMORY_GIB = 3.0
 RECOMMENDED_AVAILABLE_MEMORY_GIB = 8.0
 YOUTUBE_TITLE_MAX = 100
-RUNTIME_SMOKE_TIMEOUT_SECONDS = 120
+# Chatterbox imports Torch and its watermark stack on a cold Windows process.
+# The production host has repeatedly completed that import just after two
+# minutes, so the smoke gate must cover a measured cold start rather than fail
+# before inference begins.
+RUNTIME_SMOKE_TIMEOUT_SECONDS = 180
 
 
 @dataclass(frozen=True)
