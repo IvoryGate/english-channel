@@ -12,9 +12,16 @@ from .workspace import atomic_write_json, ensure_workspace
 
 def _run_quiet(command: list[str], *, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
     """Run media tooling without streaming progress noise into agent context."""
+    env = os.environ.copy()
+    if cwd is not None:
+        runtime_temp = (cwd / "workspace" / "runtime" / "tmp" / "remotion").resolve()
+        runtime_temp.mkdir(parents=True, exist_ok=True)
+        env["TEMP"] = str(runtime_temp)
+        env["TMP"] = str(runtime_temp)
     result = subprocess.run(
         command,
         cwd=cwd,
+        env=env,
         check=False,
         capture_output=True,
         text=True,
@@ -191,7 +198,6 @@ def render_short(
         "--pixel-format=yuv420p",
         "--image-format=jpeg",
         "--jpeg-quality=95",
-        "--hardware-acceleration=if-possible",
         "--x264-preset=ultrafast",
     ]
     browser = _browser_executable()

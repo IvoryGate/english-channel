@@ -65,16 +65,6 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
     model = Path(os.environ.get("VOXCPM_MODEL_ID", runtime_root / "pretrained_models" / "VoxCPM2")).resolve()
     if provider == "voxcpm" and not model.is_dir():
         raise FileNotFoundError(f"VoxCPM2 model is unavailable: {model}")
-    riley = _required_runtime_file(
-        runtime_root,
-        "assets/voices/series_b/riley_reference_clean.wav",
-        "ELR_SHORTS_RILEY_REFERENCE",
-    )
-    sam = _required_runtime_file(
-        runtime_root,
-        "assets/voices/series_b/sam_reference_clean.wav",
-        "ELR_SHORTS_SAM_REFERENCE",
-    )
     source_segments: list[dict[str, Any]] = [
         {"sourceId": "hook", "kind": "hook", "speaker": "Riley", "text": manifest["hook"]}
     ]
@@ -118,9 +108,9 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
                 "pauseAfterSec": pause_after,
             }
         )
-    hosts = {
-        "Riley": {"role": "narrator", "referenceAudioClean": str(riley)},
-        "Sam": {"role": "dialogue partner", "referenceAudioClean": str(sam)},
+    hosts: dict[str, dict[str, Any]] = {
+        "Riley": {"role": "narrator"},
+        "Sam": {"role": "dialogue partner"},
     }
     render_settings: dict[str, Any]
     if provider == "kokoro":
@@ -139,6 +129,18 @@ def build_audio_manifest(repo_root: Path, manifest: dict[str, Any]) -> dict[str,
             "renderReport": "short_audio_render_report.json",
         }
     else:
+        riley = _required_runtime_file(
+            runtime_root,
+            "assets/voices/series_b/riley_reference_clean.wav",
+            "ELR_SHORTS_RILEY_REFERENCE",
+        )
+        sam = _required_runtime_file(
+            runtime_root,
+            "assets/voices/series_b/sam_reference_clean.wav",
+            "ELR_SHORTS_SAM_REFERENCE",
+        )
+        hosts["Riley"]["referenceAudioClean"] = str(riley)
+        hosts["Sam"]["referenceAudioClean"] = str(sam)
         render_settings = {
             "modelId": str(model),
             "device": os.environ.get("ELR_SHORTS_DEVICE", "cuda"),
