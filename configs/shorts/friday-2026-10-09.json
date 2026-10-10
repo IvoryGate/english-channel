@@ -11,7 +11,7 @@
     },
     {
       "shortId":"elr-s-169","title":"When Someone Says We Need to Talk","thumbnailHeadline":"ASK FOR SCOPE","format":"dialogue","cefr":"B1","durationSec":48,"hookStyle":"question","hook":"Someone says, ‘We need to talk.’ What should you ask first?",
-      "turns":[{"speaker":"mia","text":"We need to talk when you get home."},{"speaker":"leo","text":"Okay. Can you tell me roughly what it’s about, so I don’t worry about the wrong thing?"},{"speaker":"mia","text":"It’s about the weekend plans. Nothing dangerous."}],
+      "turns":[{"speaker":"mia","text":"We need to talk when you get home."},{"speaker":"leo","text":"Okay. Can you tell me roughly what it’s about, so I don’t worry about the wrong thing?"},{"speaker":"mia","text":"It’s about the weekend plans. Nothing dangerous."},{"speaker":"leo","text":"That helps. I know the scope now, and we can save the details until we are both home and have time to talk properly."}],
       "prompt":"What did Leo ask for?","answer":"The general topic, or scope, of the conversation.","relatedShow":"series_a","relatedVideoId":null,
       "visualBrief":"Warm bright anime apartment scene with two adult partners having a calm serious conversation, chest-up, hands hidden, rust navy and cream palette, no readable text.","backgroundImage":"shorts/friday-2026-10-09/elr-s-169/background.png","experimentAssignments":{"hook":"question","duration":"short"}
     },
