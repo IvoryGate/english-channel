@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"saturday-2026-10-17",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-200","title":"Persuasion: Anne Meets Captain Benwick","thumbnailHeadline":"A GRIEVING CAPTAIN","format":"classic_cliffhanger","cefr":"B1","durationSec":53,"hookStyle":"question","hook":"At a Lyme evening, Anne is placed beside a young captain deep in mourning. What can she possibly say?",
+      "turns":[{"speaker":"narrator","text":"At the Harvilles' small house, Captains Wentworth and Harville talked of former days, while Anne found herself placed apart with Captain Benwick."},{"speaker":"narrator","text":"Benwick was young, engaged once, and left grieving; he filled his days with poetry and grief."},{"speaker":"narrator","text":"Anne, remembering her own losses, began the acquaintance with care. Tomorrow, listen to what she recommends to a heart in mourning."}],
+      "prompt":"Who is Anne placed beside?","answer":"Captain Benwick, a grieving young officer.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Quiet Regency seaside parlour at evening with an adult woman and a solemn young naval officer seated apart from the group near a window, candlelight, restrained melancholy, hands out of frame, no readable text.","backgroundImage":"shorts/saturday-2026-10-17/elr-s-200/background.png","experimentAssignments":{"hook":"question","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-201","title":"Hotel Check-In: Confirm the Name","thumbnailHeadline":"NAME AND ROOM","format":"dialogue","cefr":"A2","durationSec":48,"hookStyle":"statement","hook":"A hotel check-in has three catches: the name, the room, and the payment.",
+      "turns":[{"speaker":"receptionist","text":"Good evening. May I have the name on the booking?"},{"speaker":"guest","text":"Helen Brooks, two nights, twin room."},{"speaker":"receptionist","text":"Thank you. Room two fourteen, breakfast from seven. Please sign here."}],
+      "prompt":"Which room is assigned?","answer":"Room two fourteen.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright modern hotel reception with an adult traveller and an adult receptionist at a wooden desk, upper bodies only, hands below frame, warm amber and cream palette, no readable text.","backgroundImage":"shorts/saturday-2026-10-17/elr-s-201/background.png","experimentAssignments":{"hook":"statement","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-202","title":"Persuasion: The Walk to the Cobb","thumbnailHeadline":"TO THE OLD PIER","format":"listen_choose","cefr":"B1","durationSec":46,"hookStyle":"question","hook":"The Uppercross party descends to the sea. What is their object?",
+      "turns":[{"speaker":"narrator","text":"The party passed the deserted sea-shore rooms and descended to the water's edge."},{"speaker":"narrator","text":"They proceeded towards the Cobb, equally its object in itself and on Captain Wentworth's account."},{"speaker":"narrator","text":"For near the old pier, in a small house, the Harvilles were settled."}],
+      "prompt":"Why do they walk to the Cobb?","answer":"For the Cobb itself and to visit the Harvilles.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Autumn English seaside with an old stone pier and a small group of elegantly dressed adult figures walking along the empty shore, wide restrained composition, hands out of frame, no readable text.","backgroundImage":"shorts/saturday-2026-10-17/elr-s-202/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-203","title":"Hotel English: Breakfast and Checkout","thumbnailHeadline":"WHAT TIME?","format":"dialogue","cefr":"A2","durationSec":47,"hookStyle":"question","hook":"Breakfast starts at seven. But what time does your checkout start?",
+      "turns":[{"speaker":"guest","text":"What time is breakfast, and when is checkout?"},{"speaker":"receptionist","text":"Breakfast runs from seven to ten. Checkout is any time before eleven."},{"speaker":"narrator","text":"Two times, two answers. Listen for from and before: one is a range, one is a limit."}],
+      "prompt":"What is the checkout limit?","answer":"Any time before eleven.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright anime hotel breakfast room in the morning with an adult guest asking an adult staff member near a set table, chest-up framing, hands below frame, cream blue and honey palette, no readable text.","backgroundImage":"shorts/saturday-2026-10-17/elr-s-203/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    }
+  ]
+}

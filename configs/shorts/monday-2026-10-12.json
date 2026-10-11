@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"monday-2026-10-12",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-180","title":"Persuasion Listening: Who Skips the Walk?","thumbnailHeadline":"WHO STAYED HOME?","format":"listen_choose","cefr":"B1","durationSec":47,"hookStyle":"question","hook":"Three people walk to Winthrop, but one Elliot refuses. Who stays behind?",
+      "turns":[{"speaker":"narrator","text":"Mary Elliot would not join the walk to Winthrop. She declared she could not possibly walk there and back again."},{"speaker":"narrator","text":"So Charles and Henrietta went, and Anne walked with them, while Mary kept safely at the cottage."},{"speaker":"narrator","text":"Listen for the reason before the name: the refusal comes first, the person is confirmed after."}],
+      "prompt":"Who refuses to go to Winthrop?","answer":"Mary Elliot.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Elegant Regency country lane with three adult figures walking toward a distant farmhouse and one adult woman visible at a cottage window, restrained morning light, hands fully out of frame, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-180/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-181","title":"Interview English: Catch the Final Question","thumbnailHeadline":"THE LAST QUESTION","format":"dialogue","cefr":"A2","durationSec":51,"hookStyle":"statement","hook":"An interviewer's final sentence is never small talk.",
+      "turns":[{"speaker":"interviewer","text":"We will call the successful candidate by Friday. Now, one last question: why do you want this role?"},{"speaker":"candidate","text":"Because the role matches the reporting work I already do, and I want to do it with a larger team."},{"speaker":"interviewer","text":"Good. Remember the promised call, and answer the last question with one reason only."}],
+      "prompt":"What does the interviewer promise?","answer":"A call by Friday.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright modern office interview scene, two adult professionals seated across a small table with a folder between them, chest-up framing, hands below frame, teal and warm grey palette, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-181/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-182","title":"Persuasion: The Return of Charles Hayter","thumbnailHeadline":"HE CAME BACK","format":"micro_story","cefr":"B1","durationSec":49,"hookStyle":"question","hook":"Charles Hayter leaves the field. How does he return?",
+      "turns":[{"speaker":"narrator","text":"Charles Hayter felt slighted and seemed to quit the field after Captain Wentworth's arrival."},{"speaker":"narrator","text":"But Charles and Henrietta returned to the cottage, bringing, as may be conjectured, Charles Hayter with them."},{"speaker":"narrator","text":"The inclusion itself is the forgiveness. No grand speech is required."}],
+      "prompt":"How is the conflict resolved?","answer":"He returns with them, accepted again.","relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Warm Regency cottage doorway at dusk with two adult young people welcoming a third adult gentleman, soft amber light, restrained relief in posture, hands mostly out of frame, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-182/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-183","title":"Interview English: Name One Reason","thumbnailHeadline":"ONE REASON ONLY","format":"dialogue","cefr":"A2","durationSec":46,"hookStyle":"statement","hook":"One clean reason beats five nervous ones.",
+      "turns":[{"speaker":"candidate","text":"I want this role because I already do this reporting work, and I do it well."},{"speaker":"interviewer","text":"That is one clear reason. Candidates who list five reasons usually lose the thread."},{"speaker":"candidate","text":"So I will keep one reason and one example. The final answer is the clean one."}],
+      "prompt":"How many reasons should the answer include?","answer":"One reason and one example.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright anime office corner with an adult woman reviewing interview notes beside a laptop, upper body only, hands below frame, cream blue and coral palette, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-183/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

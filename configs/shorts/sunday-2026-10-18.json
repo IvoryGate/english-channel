@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"sunday-2026-10-18",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-204","title":"Listening Challenge: Catch the Final Step","thumbnailHeadline":"THE LAST STEP","format":"listen_choose","cefr":"A2","durationSec":47,"hookStyle":"question","hook":"The message gives three steps. Which one is the final action?",
+      "turns":[{"speaker":"message","text":"The parcel leaves our warehouse today. You will receive the tracking number tonight, and the courier will call before delivery."},{"speaker":"narrator","text":"Three steps: warehouse, tracking, courier call."},{"speaker":"narrator","text":"The final action is the courier call. The last step is the one you act on."}],
+      "prompt":"What is the final step?","answer":"The courier calls before delivery.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright modern delivery desk scene with an adult traveller checking a phone beside parcel shelves, chest-up framing, hands below frame, teal and warm orange palette, no readable text.","backgroundImage":"shorts/sunday-2026-10-18/elr-s-204/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-205","title":"End a Conversation: The Summary Line","thumbnailHeadline":"SUMMARISE, THEN GO","format":"dialogue","cefr":"B1","durationSec":50,"hookStyle":"statement","hook":"The summary line is the friendliest exit in English.",
+      "turns":[{"speaker":"friend_a","text":"Right, I will let you get on. We solved the venue question, and I will send the price tonight."},{"speaker":"friend_b","text":"Perfect. Speak soon."},{"speaker":"narrator","text":"The summary names what is settled and what happens next. Then the exit needs nothing more."}],
+      "prompt":"What does the summary line contain?","answer":"What is settled and the next step.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright anime library corner with two adult friends ending a warm conversation near a staircase, relaxed daylight, chest-up framing, hands below frame, soft green and amber palette, no readable text.","backgroundImage":"shorts/sunday-2026-10-18/elr-s-205/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-206","title":"Listening Challenge: Repair the Mistake","thumbnailHeadline":"REPAIR IT FAST","format":"micro_story","cefr":"A2","durationSec":49,"hookStyle":"statement","hook":"Every section ends with an answer and a repair. That is the method.",
+      "turns":[{"speaker":"narrator","text":"You answer section one: Tuesday, gate twenty-four, one bag."},{"speaker":"narrator","text":"The repair explains the trap: gate twenty was the first announcement, not the final one."},{"speaker":"narrator","text":"Answers with repairs build the habit. That is why the marathon works."}],
+      "prompt":"What does each repair explain?","answer":"The trap that caused the wrong first answer.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Calm bright study nook with headphones resting beside a notebook and a cup on a wooden desk, morning light, no people, hands out of frame, warm cream and slate palette, no readable text.","backgroundImage":"shorts/sunday-2026-10-18/elr-s-206/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-207","title":"Conversation Exits: The Forward Promise","thumbnailHeadline":"SEE YOU THURSDAY","format":"listen_choose","cefr":"B1","durationSec":45,"hookStyle":"question","hook":"Which line opens a door instead of closing one?",
+      "turns":[{"speaker":"friend_a","text":"I have to run, but tell me how the interview goes on Thursday."},{"speaker":"friend_b","text":"Thursday, not yet. Which exit leaves the door open?"},{"speaker":"narrator","text":"The forward promise names a next meeting. That is the exit that keeps the friendship warm."}],
+      "prompt":"Which exit keeps the door open?","answer":"The forward promise of a next meeting.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright anime evening street with two adult friends parting with a friendly wave under warm street lamps, chest-up framing, hands mostly below frame, navy amber and coral palette, no readable text.","backgroundImage":"shorts/sunday-2026-10-18/elr-s-207/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    }
+  ]
+}

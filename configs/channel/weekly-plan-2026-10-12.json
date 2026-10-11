@@ -1,0 +1,140 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-10-12",
+  "strategy": "double_long_form_with_search_led_listening_and_daily_short_form",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedAt": "2026-10-11",
+    "scope": "produce_upload_and_schedule_full_double_long_form_week_and_reconcile_prior_week_uploads",
+    "confirmationPolicy": "owner_authorized_execution_without_per_item_confirmation",
+    "controlPlaneRemoteMutationAuthority": true
+  },
+  "evidence": {
+    "capturedAt": "2026-10-11",
+    "note": "studio_trends_capture_pending_owner_login; fold fresh signals into plan Status before the first upload",
+    "sources": [
+      "youtube_studio_trends_channel_signed_in",
+      "latest_complete_week_operating_results",
+      "current_week_directional_results"
+    ],
+    "searchSignals": [
+      "british english listening practice",
+      "english listening practice with questions",
+      "vocabulary words english learn"
+    ],
+    "inspirationSignals": [
+      "idiom challenge with a clear score",
+      "long British English conversation",
+      "level-labelled listening test"
+    ],
+    "planningRule": "Use search demand as the packaging entry point, then deliver one complete learning outcome per video. Do not clone competitor wording or presentation."
+  },
+  "portfolio": {
+    "longFormCount": 14,
+    "standardDialogueCount": 10,
+    "classicListeningCount": 2,
+    "flagship40Count": 2,
+    "shortsCount": 28,
+    "totalUploadCount": 42,
+    "qualityGate": "docs/QUALITY_SCORE.md"
+  },
+  "formatContracts": {
+    "standard": {"durationMinutes":[10,15],"spokenWordTarget":[1400,2800]},
+    "classic_listening": {"measuredDurationRequired":true,"completeChapterRequired":true},
+    "flagship_40": {
+      "durationMinutes":[35,45],
+      "targetMinutes":[38,42],
+      "spokenWordTarget":[5200,6200],
+      "measuredMediaDurationRequired":true,
+      "minimumStimulusChanges":10
+    }
+  },
+  "publicationSlots": [
+    {"contentId":"content:classic_listening:persuasion_chapter_010","scheduledAt":"2026-10-12T08:00:00+08:00","format":"classic_listening","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-180","scheduledAt":"2026-10-12T09:30:00+08:00","source":"persuasion_chapter_010","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-181","scheduledAt":"2026-10-12T13:00:00+08:00","source":"series_b_episode_039","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-182","scheduledAt":"2026-10-12T17:00:00+08:00","source":"persuasion_chapter_010","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_039","scheduledAt":"2026-10-12T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-183","scheduledAt":"2026-10-12T22:00:00+08:00","source":"series_b_episode_039","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_b:episode_040","scheduledAt":"2026-10-13T08:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-184","scheduledAt":"2026-10-13T09:30:00+08:00","source":"series_b_episode_040","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-185","scheduledAt":"2026-10-13T13:00:00+08:00","source":"series_a_episode_036","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-186","scheduledAt":"2026-10-13T17:00:00+08:00","source":"series_b_episode_040","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_036","scheduledAt":"2026-10-13T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-187","scheduledAt":"2026-10-13T22:00:00+08:00","source":"series_a_episode_036","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_a:episode_037","scheduledAt":"2026-10-14T08:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-188","scheduledAt":"2026-10-14T09:30:00+08:00","source":"series_a_episode_037","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-189","scheduledAt":"2026-10-14T13:00:00+08:00","source":"series_c_episode_032","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-190","scheduledAt":"2026-10-14T17:00:00+08:00","source":"series_a_episode_037","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_c:episode_032","scheduledAt":"2026-10-14T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-191","scheduledAt":"2026-10-14T22:00:00+08:00","source":"series_c_episode_032","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_a:episode_040","scheduledAt":"2026-10-15T08:00:00+08:00","format":"flagship_40","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-192","scheduledAt":"2026-10-15T09:30:00+08:00","source":"series_a_episode_040","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-193","scheduledAt":"2026-10-15T13:00:00+08:00","source":"series_b_episode_041","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-194","scheduledAt":"2026-10-15T17:00:00+08:00","source":"series_a_episode_040","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_041","scheduledAt":"2026-10-15T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-195","scheduledAt":"2026-10-15T22:00:00+08:00","source":"series_b_episode_041","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_c:episode_033","scheduledAt":"2026-10-16T08:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-196","scheduledAt":"2026-10-16T09:30:00+08:00","source":"series_c_episode_033","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-197","scheduledAt":"2026-10-16T13:00:00+08:00","source":"series_a_episode_038","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-198","scheduledAt":"2026-10-16T17:00:00+08:00","source":"series_c_episode_033","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_038","scheduledAt":"2026-10-16T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-199","scheduledAt":"2026-10-16T22:00:00+08:00","source":"series_a_episode_038","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:classic_listening:persuasion_chapter_011","scheduledAt":"2026-10-17T08:00:00+08:00","format":"classic_listening","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-200","scheduledAt":"2026-10-17T09:30:00+08:00","source":"persuasion_chapter_011","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-201","scheduledAt":"2026-10-17T13:00:00+08:00","source":"series_b_episode_042","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-202","scheduledAt":"2026-10-17T17:00:00+08:00","source":"persuasion_chapter_011","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_b:episode_042","scheduledAt":"2026-10-17T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-203","scheduledAt":"2026-10-17T22:00:00+08:00","source":"series_b_episode_042","remoteAction":"planned","checks":"pending"},
+
+    {"contentId":"content:series_b:episode_043","scheduledAt":"2026-10-18T08:00:00+08:00","format":"flagship_40","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-204","scheduledAt":"2026-10-18T09:30:00+08:00","source":"series_b_episode_043","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-205","scheduledAt":"2026-10-18T13:00:00+08:00","source":"series_a_episode_039","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-206","scheduledAt":"2026-10-18T17:00:00+08:00","source":"series_b_episode_043","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:series_a:episode_039","scheduledAt":"2026-10-18T20:00:00+08:00","format":"standard","remoteAction":"planned","checks":"pending"},
+    {"contentId":"content:shorts_main:elr-s-207","scheduledAt":"2026-10-18T22:00:00+08:00","source":"series_a_episode_039","remoteAction":"planned","checks":"pending"}
+  ],
+  "dialogueBriefs": [
+    {"contentId":"content:series_b:episode_039","format":"standard","topicPillar":"practical_english","workingTitle":"Job Interview English Listening Practice with Questions | A2-B1","centralIdea":"Learners identify the role, the working schedule, the interviewer's final question, and the promised next step across a realistic interview call.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":91,"status":"planned"},
+    {"contentId":"content:series_b:episode_040","format":"standard","topicPillar":"everyday_life","workingTitle":"Airport Check-In and Gate Change Announcements | A2-B1","centralIdea":"Learners separate the original gate and time from the final changed instruction across check-in and boarding announcements.","demandEvidence":["studio_british_english_listening_practice"],"candidateScore":90,"status":"planned"},
+    {"contentId":"content:series_a:episode_036","format":"standard","topicPillar":"psychology","workingTitle":"Why You Reread Messages Before Sending | B1-B2","centralIdea":"Replace the reread loop with one factual review, one send decision, and one sentence to use when anxiety restarts the cycle.","demandEvidence":["current_channel_psychology_fit"],"candidateScore":85,"status":"planned"},
+    {"contentId":"content:series_a:episode_037","format":"standard","topicPillar":"philosophy","workingTitle":"Stoicism in One Minute: What Is Actually in Your Control? | B1-B2","centralIdea":"The control dichotomy applied to delays, criticism, and waiting rooms gives learners one test they can run in real time.","demandEvidence":["current_channel_philosophy_gap","public_stoicism_listening_demand"],"candidateScore":82,"status":"planned"},
+    {"contentId":"content:series_c:episode_032","format":"standard","topicPillar":"practical_english","workingTitle":"English Small Talk That Does Not Feel Fake | B2-C1","centralIdea":"Learners hear how observation, one honest detail, and a clean exit line turn small talk into usable social English.","demandEvidence":["studio_british_english_listening_practice"],"candidateScore":88,"status":"planned"},
+    {"contentId":"content:series_a:episode_040","format":"flagship_40","topicPillar":"psychology","workingTitle":"40-Minute Overthinking Reset Listening Marathon | B1-B2","centralIdea":"A full listening marathon turns the overthinking cycle into three moves: name the loop, test the facts, choose the next action.","demandEvidence":["studio_english_listening_practice_with_questions","current_channel_psychology_fit"],"candidateScore":94,"status":"planned"},
+    {"contentId":"content:series_b:episode_041","format":"standard","topicPillar":"relationships","workingTitle":"How to Say No Without a Long Explanation | A2-B1","centralIdea":"Learners recognise short refusal formulas and the moment a request is finally closed, without apologising for the boundary.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":87,"status":"planned"},
+    {"contentId":"content:series_c:episode_033","format":"standard","topicPillar":"everyday_life","workingTitle":"How British People Apologise When They Are Not Sorry | B2-C1","centralIdea":"Learners separate real apology from social cushioning by listening for collision, responsibility, and repair in each exchange.","demandEvidence":["studio_british_english_listening_practice"],"candidateScore":89,"status":"planned"},
+    {"contentId":"content:series_a:episode_038","format":"standard","topicPillar":"resilience","workingTitle":"The Two-Day Rule: Miss Once, Never Twice | B1-B2","centralIdea":"One missed day is data; two missed days is a decision. Learners hear the rule applied to study, exercise, and language practice.","demandEvidence":["current_channel_resilience_fit"],"candidateScore":84,"status":"planned"},
+    {"contentId":"content:series_b:episode_042","format":"standard","topicPillar":"practical_english","workingTitle":"Hotel Check-In English: Room, Breakfast, Checkout | A2-B1","centralIdea":"Learners track the booking name, the room type, breakfast hours, and the checkout time across a complete hotel arrival conversation.","demandEvidence":["studio_english_listening_practice_with_questions"],"candidateScore":90,"status":"planned"},
+    {"contentId":"content:series_b:episode_043","format":"flagship_40","topicPillar":"practical_english","workingTitle":"40-Minute Easy English Listening Challenge with Questions | A2-B1","centralIdea":"A progressive A2-B1 challenge stacks calls, announcements, and messages with answers and repair explanations after every section.","demandEvidence":["studio_english_listening_practice_with_questions","public_level_labelled_listening_test"],"candidateScore":95,"status":"planned"},
+    {"contentId":"content:series_a:episode_039","format":"standard","topicPillar":"relationships","workingTitle":"How to End a Conversation Without Being Rude | B1-B2","centralIdea":"Learners hear three clean exit moves: the summary line, the forward promise, and the physical exit cue.","demandEvidence":["current_channel_relationship_fit"],"candidateScore":86,"status":"planned"}
+  ],
+  "classicBriefs": [
+    {"contentId":"content:classic_listening:persuasion_chapter_010","book":"Persuasion","chapter":10,"sourceWordCount":3855,"status":"planned"},
+    {"contentId":"content:classic_listening:persuasion_chapter_011","book":"Persuasion","chapter":11,"sourceWordCount":2998,"status":"planned"}
+  ],
+  "shortsStrategy": {
+    "dailyCount": 4,
+    "windows":["09:30","13:00","17:00","22:00"],
+    "roles":["complete_listening_question","one_key_phrase","mistake_and_repair","fast_final_challenge"],
+    "rule":"Each Short must stand alone as a complete micro-lesson and may point to one of that day's two long videos."
+  },
+  "releaseGates": {
+    "allLongForm":["script_profile_pass","thumbnail_phone_size_pass","audio_traceability_pass","subtitles_present","metadata_synchronized","identity_collision_zero"],
+    "flagship_40":["measured_duration_35_to_45_minutes","stimulus_change_gap_no_more_than_4_minutes","minimum_ten_stimulus_changes"],
+    "portfolio":["exactly_two_long_form_releases_per_day","exactly_two_flagship_40_releases","exactly_twenty_eight_shorts","rolling_seven_day_uploads_no_more_than_42","prior_week_ids_adopted_or_dropped_before_new_uploads"]
+  },
+  "ttsRollout": {
+    "series_b":{"provider":"kokoro","voices":{"Riley":"af_heart","Sam":"am_fenrir"}},
+    "series_a":{"provider":"chatterbox_500m"},
+    "series_c":{"provider":"chatterbox_500m"},
+    "classic_listening":{"provider":"chatterbox_500m"},
+    "fallback":"voxcpm",
+    "mixedProviderEpisodeAllowed":false
+  }
+}

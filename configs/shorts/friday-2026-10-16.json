@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"friday-2026-10-16",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-196","title":"British Apologies: Real or Polite?","thumbnailHeadline":"REAL OR POLITE?","format":"listen_choose","cefr":"B1","durationSec":48,"hookStyle":"question","hook":"Two sorrys follow two very different events. Which one is a real apology?",
+      "turns":[{"speaker":"passerby","text":"Oh, sorry about that."},{"speaker":"shop_assistant","text":"I am sorry. We sold the last one this morning."},{"speaker":"narrator","text":"The first sorry cushions a small collision. The second one carries the bad news and a little regret."}],
+      "prompt":"Which sorry carries regret?","answer":"The shop assistant's.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright British high-street shop interior with an adult customer and an adult assistant at a counter, chest-up framing, hands below frame, cream and muted green palette, no readable text.","backgroundImage":"shorts/friday-2026-10-16/elr-s-196/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-197","title":"The Two-Day Rule","thumbnailHeadline":"MISS ONCE","format":"micro_story","cefr":"B1","durationSec":49,"hookStyle":"statement","hook":"Missing one day is data. Missing two is a decision.",
+      "turns":[{"speaker":"narrator","text":"The first miss happens to everyone. Traffic, illness, a late night."},{"speaker":"narrator","text":"The second miss is different: it is the start of a new pattern without your permission."},{"speaker":"narrator","text":"So the rule is short. Miss once, never twice."}],
+      "prompt":"What is the rule?","answer":"Miss once, never twice.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Early morning kitchen with an adult man beginning a short routine beside a window and a coffee cup, calm light, upper body only, hands mostly out of frame, warm grey and amber palette, no readable text.","backgroundImage":"shorts/friday-2026-10-16/elr-s-197/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-198","title":"Sorry After a Collision","thumbnailHeadline":"WHO APOLOGISES?","format":"dialogue","cefr":"B1","durationSec":45,"hookStyle":"question","hook":"They walk into each other. Britain apologises twice. Why?",
+      "turns":[{"speaker":"person_a","text":"Oh, sorry."},{"speaker":"person_b","text":"Sorry, my fault entirely."},{"speaker":"narrator","text":"Both sorrys are social glue. Neither person caused a crime. The double apology keeps the peace."}],
+      "prompt":"Why do both people apologise?","answer":"It is polite social glue.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright anime narrow pavement scene with two adult strangers politely passing each other, friendly body language, chest-up framing, hands below frame, blue and coral palette, no readable text.","backgroundImage":"shorts/friday-2026-10-16/elr-s-198/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-199","title":"Never Twice: Rebuild the Study Hour","thumbnailHeadline":"THE NEXT SESSION","format":"dialogue","cefr":"B1","durationSec":52,"hookStyle":"statement","hook":"The missed hour is not lost until the next one fails to happen.",
+      "turns":[{"speaker":"friend_a","text":"I skipped yesterday's study hour entirely."},{"speaker":"friend_b","text":"Then book today's hour before the day fills. The second skip is the real loss."},{"speaker":"friend_a","text":"Agreed. Today at seven, same desk. Miss once, never twice."}],
+      "prompt":"What prevents the second miss?","answer":"Booking the next session immediately.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Warm evening desk setup with an adult woman marking a study time in a paper planner beside a laptop, upper body only, hands visible and anatomically natural, muted teal and cream palette, no readable text.","backgroundImage":"shorts/friday-2026-10-16/elr-s-199/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

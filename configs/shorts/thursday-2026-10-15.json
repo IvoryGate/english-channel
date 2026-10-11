@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"thursday-2026-10-15",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-192","title":"Overthinking Reset: Name the Loop","thumbnailHeadline":"NAME IT FIRST","format":"listen_choose","cefr":"B1","durationSec":47,"hookStyle":"question","hook":"Before the loop runs your evening, which sentence names it?",
+      "turns":[{"speaker":"narrator","text":"I am reviewing the same conversation for the fourth time. That sentence is the name."},{"speaker":"narrator","text":"Once named, the loop loses its claim to be new information."},{"speaker":"narrator","text":"Choose the line that names the loop, then move to the facts."}],
+      "prompt":"Which sentence names the loop?","answer":"I am reviewing the same conversation again.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Calm study room at night with an adult woman pausing thoughtfully beside a notebook and a warm desk lamp, upper body only, hands below frame, deep teal and gold palette, no readable text.","backgroundImage":"shorts/thursday-2026-10-15/elr-s-192/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-193","title":"Say No Without a Long Explanation","thumbnailHeadline":"SHORT AND KIND","format":"dialogue","cefr":"A2","durationSec":50,"hookStyle":"statement","hook":"A long refusal sounds like an invitation to negotiate.",
+      "turns":[{"speaker":"friend_a","text":"Can you drive us on Saturday?"},{"speaker":"friend_b","text":"No, I cannot, but I hope you find a good ride."},{"speaker":"friend_a","text":"That was clear and kind. The explanation would only have blurred it."}],
+      "prompt":"What does the refusal contain?","answer":"A clear no and a warm close.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright anime doorstep scene with two adult friends talking casually in daylight, chest-up framing, hands below frame, yellow and soft blue palette, no readable text.","backgroundImage":"shorts/thursday-2026-10-15/elr-s-193/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-194","title":"Overthinking Reset: Test the Facts","thumbnailHeadline":"TEST, DON'T LOOP","format":"micro_story","cefr":"B1","durationSec":51,"hookStyle":"statement","hook":"The loop asks the same question. Facts are asked once.",
+      "turns":[{"speaker":"narrator","text":"Loop question: did I sound foolish? Fact question: what did they actually say?"},{"speaker":"narrator","text":"Their words: that was clearer than last time. The facts are the review."},{"speaker":"narrator","text":"Name the loop, test the facts, choose the next action. That is the whole reset."}],
+      "prompt":"What replaces the loop question?","answer":"One fact question about what was actually said.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Minimal bright room with an adult man writing three short lines in a notebook beside a window, upper body only, hands mostly visible and anatomically natural, warm cream and slate palette, no readable text.","backgroundImage":"shorts/thursday-2026-10-15/elr-s-194/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-195","title":"Refusals: Hear the Close","thumbnailHeadline":"THE REQUEST IS CLOSED","format":"dialogue","cefr":"A2","durationSec":46,"hookStyle":"question","hook":"When is a request truly finished?",
+      "turns":[{"speaker":"friend_a","text":"Ask me again on Friday. It might be easier then."},{"speaker":"friend_b","text":"Friday does not change my answer. No, and I hope the event goes well."},{"speaker":"narrator","text":"The final answer is the close. Date changes do not reopen a refusal."}],
+      "prompt":"When is the request closed?","answer":"When the no stays the same answer.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright anime park bench scene with two adult friends in friendly daylight conversation, relaxed posture, chest-up framing, hands below frame, green coral and cream palette, no readable text.","backgroundImage":"shorts/thursday-2026-10-15/elr-s-195/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    }
+  ]
+}
