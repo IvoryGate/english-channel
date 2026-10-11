@@ -1,5 +1,12 @@
 # API-First YouTube Release Automation
 
+> **Status (2026-10-11):** the OAuth prerequisites below are not met in this
+> environment, so the API controller is not the operative release path. Routine
+> publishing runs through the browser-only Studio pathway documented in
+> `docs/STUDIO_BROWSER.md` (persistent session + manifest-driven upload as
+> private → checks → publish). The manifest and journal contracts below remain
+> the durable specification the browser pathway consumes and respects.
+
 Routine uploads and scheduling use `scripts/youtube.py`. The controller validates
 local QC, media identity, channel identity, metadata, artifacts, and future
 schedule before any remote write. It uploads privately, records the returned

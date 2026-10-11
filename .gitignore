@@ -37,3 +37,6 @@ workspace/shows/*
 !workspace/shows/tools/*.json
 /_tmp_*.json
 /.worktrees/
+
+# Playwright MCP scratch output (browser automation console logs/snapshots)
+.playwright-mcp/
