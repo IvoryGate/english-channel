@@ -4,7 +4,7 @@
   "entries":[
     {
       "shortId":"elr-s-176","title":"British English: Is ‘Thorough’ Really Praise?","thumbnailHeadline":"PRAISE OR WARNING?","format":"listen_choose","cefr":"B1","durationSec":49,"hookStyle":"question","hook":"Your manager says your report is ‘certainly thorough.’ Is that praise?",
-      "turns":[{"speaker":"narrator","text":"Well, it’s certainly thorough. Could we produce a two-page version for the board?"},{"speaker":"narrator","text":"The request for a shorter version shows that thorough also means too long for this audience."}],
+      "turns":[{"speaker":"narrator","text":"Well, it’s certainly thorough. Could we produce a two-page version for the board?"},{"speaker":"narrator","text":"The request for a shorter version shows that thorough also means too long for this audience."},{"speaker":"narrator","text":"Listen for the action after the polite adjective. That action reveals the real message."}],
       "prompt":"What action reveals the implied meaning?","answer":"The request for a two-page version.","relatedShow":"series_c","relatedVideoId":null,
       "visualBrief":"Bright polished anime boardroom with one adult professional holding a very thick report beside a slim abstract summary, hands hidden behind documents, teal gold and navy, no readable text.","backgroundImage":"shorts/sunday-2026-10-11/elr-s-176/background.png","experimentAssignments":{"hook":"question","duration":"short"}
     },

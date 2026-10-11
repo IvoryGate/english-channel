@@ -296,12 +296,6 @@ def test_thumbnail_qc_requires_vertical_png(tmp_path: Path) -> None:
 
 def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Path, monkeypatch) -> None:
     product, portfolio = contracts()
-    model = tmp_path / "pretrained_models" / "VoxCPM2"
-    model.mkdir(parents=True)
-    voice_dir = tmp_path / "assets" / "voices" / "series_b"
-    voice_dir.mkdir(parents=True)
-    (voice_dir / "riley_reference_clean.wav").write_bytes(b"riley")
-    (voice_dir / "sam_reference_clean.wav").write_bytes(b"sam")
     monkeypatch.setenv("ELR_SHORTS_RUNTIME_ROOT", str(tmp_path))
     manifest = build_manifest(portfolio["entries"][0], product, portfolio["cycleId"])
 
@@ -313,6 +307,7 @@ def test_audio_manifest_uses_single_narrator_and_real_answer_pause(tmp_path: Pat
     assert audio_manifest["renderSettings"]["device"] == "cpu"
     assert audio_manifest["hosts"]["Riley"]["voice"]["voiceId"] == "af_heart"
     assert audio_manifest["hosts"]["Sam"]["voice"]["voiceId"] == "am_fenrir"
+    assert "referenceAudioClean" not in audio_manifest["hosts"]["Riley"]
     prompt = next(turn for turn in audio_manifest["turns"] if turn["sourceId"] == "prompt")
     assert prompt["pauseAfterSec"] == 2.25
 

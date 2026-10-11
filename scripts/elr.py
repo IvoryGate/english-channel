@@ -147,6 +147,8 @@ def monitor_command(
         "--qc-no-asr",
         "--log",
         str(log_path),
+        "--python",
+        str(python),
     ]
     if force:
         cmd.append("--force")
@@ -182,6 +184,8 @@ def audio_render_command(
         "--turns-only",
         "--log-file",
         str(log_path),
+        "--python",
+        str(python),
     ]
     if force:
         cmd.append("--force")

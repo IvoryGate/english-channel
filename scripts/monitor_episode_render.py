@@ -24,7 +24,8 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
+LEGACY_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
+DEFAULT_PYTHON = LEGACY_PYTHON if LEGACY_PYTHON.is_file() else Path(sys.executable)
 RENDER_EPISODE = REPO_ROOT / "workspace" / "shows" / "tools" / "render_episode.py"
 TOOLS_DIR = REPO_ROOT / "workspace" / "shows" / "tools"
 sys.path.insert(0, str(REPO_ROOT / "scripts"))

@@ -16,7 +16,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
+LEGACY_PYTHON = REPO_ROOT / ".conda-env" / "python.exe"
+DEFAULT_PYTHON = LEGACY_PYTHON if LEGACY_PYTHON.is_file() else Path(sys.executable)
 MONITOR_RENDER = REPO_ROOT / "scripts" / "monitor_episode_render.py"
 PACK_SCRIPT = REPO_ROOT / "workspace" / "shows" / "tools" / "pack_episode.py"
 sys.path.insert(0, str(REPO_ROOT / "scripts"))

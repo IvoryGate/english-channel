@@ -53,6 +53,8 @@ Sam: This is another short test line.
         ],
     }
     _write(paths["manifest"], json.dumps(manifest))
+    _write(paths["thumbnailPng"], "derivative thumbnail")
+    _write(paths["videoBgJpg"], "derivative background")
 
     report = preflight_episode(context, runtime_checks=False, scaffold_metadata=True)
 
@@ -61,7 +63,9 @@ Sam: This is another short test line.
     assert saved["title"] == title
     by_name = {check.name: check for check in report.checks}
     assert by_name["manifest-coverage"].status == "pass"
+    # Derivatives cannot satisfy the packer's native image-source contract.
     assert by_name["cover-16x9"].status == "error"
+    assert by_name["background-16x9"].status == "error"
     assert report.ok is False
 
     monkeypatch.setattr(
@@ -143,19 +147,77 @@ Sam: Comment with the next step you will practice today.
     assert {check.name: check for check in report.checks}["script-quality"].status == "pass"
 
 
+def test_preflight_accepts_preset_voices_without_reference_audio(tmp_path: Path, monkeypatch) -> None:
+    context = build_context(tmp_path, "series_b", 38, tmp_path / "youtube")
+    paths = artifact_paths(context.workspace, context.episode_id)
+    draft = """Title: A Preset Voice Test
+Description: A practical long-form conversation.
+
+Riley: This is a complete test line for a preset voice.
+Sam: This is another complete test line for a preset voice.
+"""
+    _write(paths["draft"], draft)
+    _write(
+        paths["manifest"],
+        json.dumps(
+            {
+                "episodeId": context.episode_id,
+                "showId": "series_b",
+                "title": "A Preset Voice Test",
+                "description": "A practical long-form conversation.",
+                "hosts": {
+                    "Riley": {
+                        "referenceAudioClean": "assets/voices/series_b/missing-riley.wav",
+                        "voice": {"kind": "preset", "voiceId": "af_heart"},
+                    },
+                    "Sam": {
+                        "referenceAudioClean": "assets/voices/series_b/missing-sam.wav",
+                        "voice": {"kind": "preset", "voiceId": "am_fenrir"},
+                    },
+                },
+                "turns": [
+                    {"text": "This is a complete test line for a preset voice.", "wordCount": 10},
+                    {"text": "This is another complete test line for a preset voice.", "wordCount": 10},
+                ],
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        "elr_production.validate_script_text",
+        lambda *_args, **_kwargs: {"ok": True, "word_count": 20, "issues": []},
+    )
+
+    report = preflight_episode(
+        context,
+        runtime_checks=False,
+        scaffold_metadata=True,
+        require_visuals=False,
+    )
+
+    by_name = {check.name: check for check in report.checks}
+    assert by_name["voice-reference-Riley"].status == "pass"
+    assert by_name["voice-reference-Sam"].status == "pass"
+    assert "af_heart" in by_name["voice-reference-Riley"].detail
+    assert "am_fenrir" in by_name["voice-reference-Sam"].detail
+    assert report.ok is True
+
+
 def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_path: Path, monkeypatch) -> None:
     interpreter = tmp_path / "runtime" / "kokoro" / "python.exe"
     model_path = tmp_path / "runtime" / "kokoro" / "model"
     _write(interpreter)
     model_path.mkdir(parents=True)
-    monkeypatch.setattr(
-        "elr_production.subprocess.run",
-        lambda *_args, **_kwargs: type(
+    captured: dict[str, object] = {}
+
+    def fake_run(*_args, **kwargs):
+        captured.update(kwargs)
+        return type(
             "Result",
             (),
             {"returncode": 0, "stdout": "provider=kokoro;device=cpu\n", "stderr": ""},
-        )(),
-    )
+        )()
+
+    monkeypatch.setattr("elr_production.subprocess.run", fake_run)
     checks: list[CheckResult] = []
 
     _runtime_checks(
@@ -176,3 +238,4 @@ def test_runtime_checks_use_selected_cpu_provider_without_requiring_cuda(tmp_pat
     assert by_name["tts-provider-model"].status == "pass"
     assert by_name["runtime-imports"].status == "pass"
     assert "cuda=true" not in by_name["runtime-imports"].detail
+    assert captured["timeout"] == 180

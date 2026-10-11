@@ -56,6 +56,7 @@ def test_monitor_command_uses_only_canonical_workspace_and_batch_20(tmp_path: Pa
     assert str(context.workspace) in cmd
     assert cmd[cmd.index("--batch-size") + 1] == "20"
     assert cmd[cmd.index("--episode-num") + 1] == "17"
+    assert cmd[cmd.index("--python") + 1] == "python.exe"
     assert "--force" not in cmd
 
 
@@ -120,6 +121,7 @@ def test_audio_render_command_defers_compose_and_visual_pack(tmp_path: Path) -> 
 
     assert str(context.workspace / "000_episode_017.episode_manifest.json") in cmd
     assert cmd[cmd.index("--batch-size") + 1] == "20"
+    assert cmd[cmd.index("--python") + 1] == "python.exe"
     assert "--turns-only" in cmd
     assert "--force" not in cmd
 

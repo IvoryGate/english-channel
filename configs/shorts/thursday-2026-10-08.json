@@ -20,6 +20,8 @@
       "hook": "Your train was on platform four. Listen for the final platform.",
       "turns": [
         {"speaker": "narrator", "text": "The eleven eighteen service to Brighton will now leave from platform six, not platform four. It is running twelve minutes late."},
+        {"speaker": "narrator", "text": "The announcement first gives old platform four. The word now replaces it with platform six, so follow the updated instruction."},
+        {"speaker": "narrator", "text": "Do not confuse twelve minutes late with a platform number. It changes the departure time, not the place where you wait."},
         {"speaker": "narrator", "text": "The final platform is six. Twelve is the delay in minutes, not another platform."}
       ],
       "prompt": "Which platform should you use?",
@@ -63,7 +65,9 @@
       "hook": "The appointment is at nine forty, but what time should she arrive?",
       "turns": [
         {"speaker": "mia", "text": "Your appointment is at nine forty tomorrow. Please arrive ten minutes early and use the side entrance."},
-        {"speaker": "leo", "text": "Ten minutes before nine forty is nine thirty."}
+        {"speaker": "leo", "text": "Ten minutes before nine forty is nine thirty."},
+        {"speaker": "mia", "text": "The appointment begins at nine forty. Arriving at nine thirty gives her time to check in before the doctor is ready."},
+        {"speaker": "leo", "text": "That earlier arrival time is for reception, forms, and finding the room. It does not change the appointment itself."}
       ],
       "prompt": "Should she arrive at nine twenty, nine thirty, or nine forty?",
       "answer": "Nine thirty.",
@@ -85,7 +89,8 @@
       "turns": [
         {"speaker": "narrator", "text": "Maya heard, ‘The meeting begins at half nine.’ She first thought it meant eight thirty."},
         {"speaker": "narrator", "text": "In everyday British English, half nine means half past nine: nine thirty."},
-        {"speaker": "narrator", "text": "A quarter to nine is eight forty-five, but half nine is nine thirty."}
+        {"speaker": "narrator", "text": "A quarter to nine is eight forty-five, but half nine is nine thirty."},
+        {"speaker": "narrator", "text": "Remember: the number after half names the coming hour, so half nine is nine thirty."}
       ],
       "prompt": "What time does the meeting begin?",
       "answer": "Nine thirty.",

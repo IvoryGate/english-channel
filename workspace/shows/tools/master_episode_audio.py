@@ -147,18 +147,61 @@ def loudnorm_two_pass(src: Path, dest: Path, *, integrated: float = -16.0, true_
     }
 
 
-def per_turn_filter(*, denoise_nr: float, denoise_nf: float) -> str:
+def resolve_playback_tempo(
+    production_card: dict[str, Any] | None,
+    *,
+    clip_durations_sec: list[float],
+    gap_sec: float,
+) -> float:
+    """Slow flagship speech just enough to meet its measured target runtime.
+
+    Tempo is applied to each turn before subtitle timing is generated, so the
+    audio, captions, chapters, and final video continue to share one timeline.
+    Standard episodes are deliberately unchanged.
+    """
+    if not production_card or production_card.get("format") != "flagship_40":
+        return 1.0
+    targets = production_card.get("formatContract", {}).get("targetMinutes", [])
+    if not isinstance(targets, list) or not targets:
+        return 1.0
+    target_sec = float(targets[0]) * 60.0
+    speech_sec = sum(clip_durations_sec)
+    total_gap_sec = max(0, len(clip_durations_sec) - 1) * gap_sec
+    current_sec = speech_sec + total_gap_sec
+    if current_sec >= target_sec or speech_sec <= 0:
+        return 1.0
+    available_speech_sec = target_sec - total_gap_sec
+    if available_speech_sec <= 0:
+        return 1.0
+    # ffmpeg atempo accepts 0.5..100. Keep editorial slowdown conservative;
+    # scripts that would need more than 15% stretching must be rewritten.
+    return round(max(0.85, min(1.0, speech_sec / available_speech_sec)), 6)
+
+
+def per_turn_filter(*, denoise_nr: float, denoise_nf: float, playback_tempo: float = 1.0) -> str:
     # Conservative speech chain — see AUDIO_MASTERING.md
-    return (
-        "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono,"
-        "highpass=f=80,"
-        f"afftdn=nr={denoise_nr}:nf={denoise_nf},"
-        "acompressor=threshold=-18dB:ratio=2.5:attack=15:release=120:makeup=2,"
+    filters = [
+        "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono"
+    ]
+    if playback_tempo != 1.0:
+        filters.append(f"atempo={playback_tempo:.6f}")
+    filters.extend([
+        "highpass=f=80",
+        f"afftdn=nr={denoise_nr}:nf={denoise_nf}",
+        "acompressor=threshold=-18dB:ratio=2.5:attack=15:release=120:makeup=2",
         "alimiter=limit=0.89:attack=5:release=50"
-    )
+    ])
+    return ",".join(filters)
 
 
-def master_turn(src: Path, dest: Path, *, denoise_nr: float, denoise_nf: float) -> None:
+def master_turn(
+    src: Path,
+    dest: Path,
+    *,
+    denoise_nr: float,
+    denoise_nf: float,
+    playback_tempo: float = 1.0,
+) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     _run(
         [
@@ -170,7 +213,11 @@ def master_turn(src: Path, dest: Path, *, denoise_nr: float, denoise_nf: float) 
             "-i",
             str(src),
             "-af",
-            per_turn_filter(denoise_nr=denoise_nr, denoise_nf=denoise_nf),
+            per_turn_filter(
+                denoise_nr=denoise_nr,
+                denoise_nf=denoise_nf,
+                playback_tempo=playback_tempo,
+            ),
             "-ar",
             "48000",
             "-ac",
@@ -253,6 +300,16 @@ def master_episode(
     # afftdn nr ~6 mild; map --denoise-strength 0..20
     denoise_nr = max(0.0, min(20.0, float(denoise_strength)))
     denoise_nf = -25.0
+    production_card_path = workspace / "production" / "production_card.json"
+    production_card = load_json(production_card_path) if production_card_path.is_file() else None
+    source_durations = [probe_duration_sec(clip) for clip in clips]
+    playback_tempo = resolve_playback_tempo(
+        production_card,
+        clip_durations_sec=source_durations,
+        gap_sec=gap,
+    )
+    if playback_tempo != 1.0:
+        print(f"flagship runtime pacing -> atempo={playback_tempo:.6f}", flush=True)
 
     master_dir = workspace / "audio" / "_master_turns"
     master_dir.mkdir(parents=True, exist_ok=True)
@@ -260,7 +317,13 @@ def master_episode(
     for turn, clip in zip(turns, clips):
         out = master_turn_wav_path(workspace, str(turn["id"]), str(turn["filename"]))
         print(f"master turn {turn['id']} -> {out.name}", flush=True)
-        master_turn(clip, out, denoise_nr=denoise_nr, denoise_nf=denoise_nf)
+        master_turn(
+            clip,
+            out,
+            denoise_nr=denoise_nr,
+            denoise_nf=denoise_nf,
+            playback_tempo=playback_tempo,
+        )
         cleaned.append(out)
 
     audio_dir = workspace / "audio"
@@ -289,6 +352,7 @@ def master_episode(
         "gapSec": gap,
         "denoiseNr": denoise_nr,
         "denoiseNf": denoise_nf,
+        "playbackTempo": playback_tempo,
         "rawWav": str(raw_path).replace("\\", "/") if raw_path.is_file() else None,
         "preloudnormWav": str(concat_path).replace("\\", "/"),
         "masterWav": str(master_path).replace("\\", "/"),

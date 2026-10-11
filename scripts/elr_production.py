@@ -36,7 +36,11 @@ MIN_FREE_GIB = 10.0
 MIN_AVAILABLE_MEMORY_GIB = 3.0
 RECOMMENDED_AVAILABLE_MEMORY_GIB = 8.0
 YOUTUBE_TITLE_MAX = 100
-RUNTIME_SMOKE_TIMEOUT_SECONDS = 120
+# Chatterbox imports Torch and its watermark stack on a cold Windows process.
+# The production host has repeatedly completed that import just after two
+# minutes, so the smoke gate must cover a measured cold start rather than fail
+# before inference begins.
+RUNTIME_SMOKE_TIMEOUT_SECONDS = 180
 
 
 @dataclass(frozen=True)
@@ -276,6 +280,13 @@ def preflight_episode(
             checks.append(CheckResult("manifest-turns", "error", "Manifest contains no turns."))
 
         for host, profile in (manifest.get("hosts") or {}).items():
+            voice = dict(profile.get("voice") or {})
+            if str(voice.get("kind") or "").strip().lower() == "preset":
+                voice_id = str(voice.get("voiceId") or "").strip()
+                status = "pass" if voice_id else "error"
+                detail = f"preset voice: {voice_id}" if voice_id else "Preset voiceId is empty."
+                checks.append(CheckResult(f"voice-reference-{host}", status, detail))
+                continue
             reference = Path(str(profile.get("referenceAudioClean") or ""))
             reference_path = reference if reference.is_absolute() else context.repo_root / reference
             _check_file(checks, f"voice-reference-{host}", reference_path)
@@ -301,20 +312,18 @@ def preflight_episode(
             checks.append(CheckResult("youtube-metadata", "pass", f"{action}: {sync['path']}"))
 
     if require_visuals:
-        cover_ready = paths["coverBakedScene"].is_file() or paths["thumbnailPng"].is_file()
-        background_ready = paths["videoBgSource16x9"].is_file() or paths["videoBgJpg"].is_file()
         checks.append(
             CheckResult(
                 "cover-16x9",
-                "pass" if cover_ready else "error",
-                str(paths["coverBakedScene"] if paths["coverBakedScene"].is_file() else paths["thumbnailPng"]),
+                "pass" if paths["coverBakedScene"].is_file() else "error",
+                str(paths["coverBakedScene"]),
             )
         )
         checks.append(
             CheckResult(
                 "background-16x9",
-                "pass" if background_ready else "error",
-                str(paths["videoBgSource16x9"] if paths["videoBgSource16x9"].is_file() else paths["videoBgJpg"]),
+                "pass" if paths["videoBgSource16x9"].is_file() else "error",
+                str(paths["videoBgSource16x9"]),
             )
         )
         for name in ("english-listening-room-intro.mp4", "english-listening-room-outro.mp4"):
