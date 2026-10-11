@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"tuesday-2026-10-13",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-184","title":"Airport English: The Gate Changed","thumbnailHeadline":"GATE CHANGED","format":"listen_choose","cefr":"A2","durationSec":48,"hookStyle":"question","hook":"The first announcement names a gate. The second cancels it. Which gate survives?",
+      "turns":[{"speaker":"announcer","text":"Flight three-two gate twenty is now closing. Please proceed immediately."},{"speaker":"announcer","text":"Correction for flight three-two: use gate twenty-four instead. Gate twenty is closed."},{"speaker":"narrator","text":"The correction is the final instruction. When you hear correction, replace the old gate."}],
+      "prompt":"Which gate should the passenger use?","answer":"Gate twenty-four.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright modern airport departure hall with departure boards and two adult travellers looking up toward a gate sign, chest-up framing, hands below frame, silver blue and amber palette, no readable text.","backgroundImage":"shorts/tuesday-2026-10-13/elr-s-184/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-185","title":"Stop Rereading: One Factual Review","thumbnailHeadline":"READ ONCE MORE","format":"micro_story","cefr":"B1","durationSec":50,"hookStyle":"statement","hook":"The reread loop never finds a new mistake. It only finds the same one.",
+      "turns":[{"speaker":"narrator","text":"After you send a careful message, the loop offers one more read. But the words will not change."},{"speaker":"narrator","text":"So allow one factual review: spelling, names, dates. Then decide once."},{"speaker":"narrator","text":"When the loop restarts, say: I already checked the facts. The next step is sending, not rereading."}],
+      "prompt":"What does the one factual review check?","answer":"Spelling, names, and dates.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Calm night desk scene with an adult woman closing a laptop beside a warm lamp and a cup of tea, upper body only, hands below frame, muted teal and amber palette, no readable text.","backgroundImage":"shorts/tuesday-2026-10-13/elr-s-185/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-186","title":"Airport Check-In: The Final Bag Rule","thumbnailHeadline":"ONE BAG ONLY","format":"dialogue","cefr":"A2","durationSec":52,"hookStyle":"question","hook":"The agent first allows two bags, then changes the rule. How many go through?",
+      "turns":[{"speaker":"agent","text":"For this fare, one cabin bag and one small personal item."},{"speaker":"passenger","text":"I have two cabin bags. May I take both?"},{"speaker":"agent","text":"Not on this fare. The final rule is one cabin bag; the second must be checked."}],
+      "prompt":"How many bags may the passenger carry on?","answer":"One cabin bag.","relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright anime airport check-in counter with an adult traveller and an airline agent separated by a scale, upper bodies only, hands below frame, blue cream and orange palette, no readable text.","backgroundImage":"shorts/tuesday-2026-10-13/elr-s-186/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-187","title":"Overthinking: Which Line Ends the Loop?","thumbnailHeadline":"WHICH LINE STOPS IT?","format":"listen_choose","cefr":"B1","durationSec":46,"hookStyle":"question","hook":"Three sentences sound supportive. Only one closes the reread loop.",
+      "turns":[{"speaker":"friend_a","text":"Maybe read it again, just to be safe."},{"speaker":"friend_b","text":"You already checked the facts, so the message is ready."},{"speaker":"narrator","text":"The first sentence feeds the loop. The second sentence ends it with the review you already did."}],
+      "prompt":"Which sentence ends the loop?","answer":"You already checked the facts.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright anime cafe window seat with two adult friends talking over phones placed face down, chest-up framing, hands mostly below frame, warm yellow and teal palette, no readable text.","backgroundImage":"shorts/tuesday-2026-10-13/elr-s-187/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    }
+  ]
+}

@@ -107,6 +107,57 @@ def test_double_long_form_week_has_two_longs_per_day_and_exact_capacity() -> Non
     }
 
 
+def test_second_double_long_form_week_rotates_flagships_and_keeps_capacity() -> None:
+    plan = _load_json("configs/channel/weekly-plan-2026-10-12.json")
+    slots = plan["publicationSlots"]
+    dialogue_slots = [slot for slot in slots if slot["contentId"].startswith("content:series_")]
+    shorts_slots = [slot for slot in slots if slot["contentId"].startswith("content:shorts_main:")]
+    classic_slots = [slot for slot in slots if slot["contentId"].startswith("content:classic_listening:")]
+    flagships = [slot for slot in dialogue_slots if slot["format"] == "flagship_40"]
+
+    assert plan["weekStartsOn"] == "2026-10-12"
+    assert len(slots) == 42
+    assert len(dialogue_slots) == 12
+    assert len(classic_slots) == 2
+    assert len(shorts_slots) == 28
+    assert len(flagships) == 2
+    assert plan["portfolio"]["totalUploadCount"] == 42
+
+    # Flagship lanes rotate series_b -> series_a -> series_c across the week pair:
+    # the 2026-10-05 week used series_b and series_c, so this week uses series_a and series_b.
+    flagship_series = sorted(slot["contentId"].split(":")[1] for slot in flagships)
+    assert flagship_series == ["series_a", "series_b"]
+
+    long_slots = dialogue_slots + classic_slots
+    long_dates = [slot["scheduledAt"][:10] for slot in long_slots]
+    assert {day: long_dates.count(day) for day in sorted(set(long_dates))} == {
+        "2026-10-12": 2,
+        "2026-10-13": 2,
+        "2026-10-14": 2,
+        "2026-10-15": 2,
+        "2026-10-16": 2,
+        "2026-10-17": 2,
+        "2026-10-18": 2,
+    }
+
+    briefs = plan["dialogueBriefs"]
+    assert len(briefs) == 12
+    assert len({brief["topicPillar"] for brief in briefs}) >= 4
+    assert all(brief["candidateScore"] >= 65 for brief in briefs)
+    assert all(
+        "40-Minute" in brief["workingTitle"]
+        for brief in briefs
+        if brief["format"] == "flagship_40"
+    )
+
+    short_ids = sorted(int(slot["contentId"].rsplit("-", 1)[1]) for slot in shorts_slots)
+    assert short_ids == list(range(180, 208))
+
+    assert plan["releaseGates"]["portfolio"][-1] == (
+        "prior_week_ids_adopted_or_dropped_before_new_uploads"
+    )
+
+
 def test_accepted_tts_rollout_is_locked_into_the_new_week_plan() -> None:
     plan = _load_json("configs/channel/weekly-plan-2026-09-14.json")
     rollout = plan["ttsRollout"]

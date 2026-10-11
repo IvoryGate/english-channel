@@ -1,0 +1,30 @@
+{
+  "schema":"elr-shorts-portfolio-v1","cycleId":"wednesday-2026-10-14",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "entries":[
+    {
+      "shortId":"elr-s-188","title":"Stoicism: What Is in Your Control?","thumbnailHeadline":"YOUR CONTROL TEST","format":"micro_story","cefr":"B1","durationSec":50,"hookStyle":"statement","hook":"A delayed train tests your stoicism in sixty seconds.",
+      "turns":[{"speaker":"narrator","text":"The train is delayed. The weather, the signal, the queue: none of them belong to you."},{"speaker":"narrator","text":"Your seat choice, your next call, your tone: those are yours."},{"speaker":"narrator","text":"The test is simple. Name what is yours, and place the rest down."}],
+      "prompt":"What belongs to you in a delay?","answer":"Your choices and your tone.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Quiet railway platform at golden hour with one adult traveller standing calm apart from the crowd, wide restrained composition, hands out of frame, slate blue and amber palette, no readable text.","backgroundImage":"shorts/wednesday-2026-10-14/elr-s-188/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-189","title":"Small Talk That Does Not Feel Fake","thumbnailHeadline":"ONE HONEST DETAIL","format":"dialogue","cefr":"B1","durationSec":53,"hookStyle":"question","hook":"What turns polite noise into real conversation?",
+      "turns":[{"speaker":"colleague_a","text":"Cold today, isn't it?"},{"speaker":"colleague_b","text":"It is. I walked from the station and my ears are still explaining why."},{"speaker":"colleague_a","text":"That is the difference. Weather first, then one honest detail of your own."}],
+      "prompt":"What makes the reply feel real?","answer":"One honest, specific detail.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright modern office kitchen with two adult colleagues holding mugs near a window, chest-up framing, hands mostly below frame, soft green and cream palette, no readable text.","backgroundImage":"shorts/wednesday-2026-10-14/elr-s-189/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-190","title":"Stoicism: Delay vs Rejection","thumbnailHeadline":"DELAY, NOT REJECTION","format":"listen_choose","cefr":"B1","durationSec":45,"hookStyle":"question","hook":"The reply is late. Which reading is the stoic one?",
+      "turns":[{"speaker":"friend_a","text":"No answer yet. Maybe my message annoyed them."},{"speaker":"friend_b","text":"Or their week is full. Late is not the same as no."},{"speaker":"narrator","text":"One reading blames you without evidence. The other waits for facts."}],
+      "prompt":"Which reading has evidence?","answer":"Their week may simply be full.","relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Soft evening living room with an adult man setting a phone face down beside a book, upper body only, hands below frame, muted blue and warm sand palette, no readable text.","backgroundImage":"shorts/wednesday-2026-10-14/elr-s-190/background.png","experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-191","title":"Small Talk: The Clean Exit Line","thumbnailHeadline":"EXIT WITHOUT RUDE","format":"dialogue","cefr":"B1","durationSec":49,"hookStyle":"statement","hook":"Good small talk needs a door, not an escape.",
+      "turns":[{"speaker":"colleague_a","text":"Anyway, I will let you get back to your afternoon."},{"speaker":"colleague_b","text":"Likewise. Good to see you."},{"speaker":"narrator","text":"The summary line closes the talk warmly. No excuse, no vanish, no apology needed."}],
+      "prompt":"What closes the conversation?","answer":"The summary line and a warm reply.","relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright anime office corridor with two adult colleagues ending a friendly chat near a doorway, relaxed posture, upper bodies visible, hands below frame, coral and light blue palette, no readable text.","backgroundImage":"shorts/wednesday-2026-10-14/elr-s-191/background.png","experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}
