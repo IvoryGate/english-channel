@@ -252,22 +252,76 @@ def _upload_captions(page, captions_path: Path) -> None:
         confirm.click()
 
 
+# Row labels for the playlist picker dropdown, keyed by playlist id
+# (channel_ops/policy.json publicName + the classic Persuasion playlist).
+_PLAYLIST_ROW_NAMES: dict[str, list[str]] = {
+    "PLeDOm-qygJM4": ["Polished English"],
+    "PLUALyXHUPuM0": ["Daily Talk"],
+    "PLV6UzOzdXS_w": ["First Steps"],
+    "PLbM2xsP8plRg": ["Persuasion"],
+}
+
+_PICK_ROW_JS = """(name) => {
+    const cands = [...document.querySelectorAll('*')].filter(
+        x => x.children.length <= 3 && x.textContent.includes(name) && x.textContent.length < 120
+    );
+    for (const label of cands) {
+        let row = label;
+        for (let i = 0; i < 8 && row; i++) {
+            const box = row.querySelector('[role=checkbox]');
+            if (box) {
+                if (box.getAttribute('aria-checked') === 'true') return 'already-checked';
+                box.click();
+                // aria-checked flips asynchronously; never re-read here or
+                // the loop would keep clicking further candidates.
+                return 'clicked';
+            }
+            row = row.parentElement;
+        }
+    }
+    return cands.length ? 'no-checkbox' : 'not-found';
+}"""
+
+
 def _assign_playlist(page, playlist_id: str) -> None:
     playlist_button = page.get_by_role("button", name=re.compile("播放列表")).first
     if playlist_button.count() == 0:
         return
     playlist_button.click()
-    dialog = page.get_by_role("dialog")
-    dialog.wait_for(state="visible", timeout=10000)
-    row = dialog.locator(f"a[href*='{playlist_id}']").first
-    if row.count() == 0:
+    # The picker is a dropdown panel, not a role=dialog. Its 完成 action is
+    # only visible while the panel is open (the wizard's own step button
+    # is 继续), so it doubles as the open-state guard.
+    try:
+        page.get_by_role("button", name="完成").first.wait_for(state="visible", timeout=10000)
+    except Exception as exc:  # noqa: BLE001
+        raise StudioUploadError(f"{page.url}: playlist picker did not open") from exc
+    matched = False
+    href_row = page.locator(f"a[href*='{playlist_id}']").first
+    if href_row.count() > 0:
+        target = href_row.locator(
+            "xpath=ancestor::*[self::tp-yt-paper-checkbox or self::yt-checkbox-renderer or self::div[@role='checkbox']][1]"
+        )
+        (target if target.count() > 0 else href_row).first.click()
+        matched = True
+    if not matched:
+        for name in _PLAYLIST_ROW_NAMES.get(playlist_id, []):
+            outcome = page.evaluate(_PICK_ROW_JS, name)
+            if outcome in ("clicked", "already-checked"):
+                matched = True
+                break
+            page.wait_for_timeout(500)
+    if not matched:
         page.keyboard.press("Escape")
-        raise StudioUploadError(f"playlist {playlist_id} not found in Studio dialog")
-    target = row.locator(
-        "xpath=ancestor::*[self::tp-yt-paper-checkbox or self::yt-checkbox-renderer or self::tp-yt-paper-checkbox][1]"
-    )
-    (target if target.count() > 0 else row).first.click()
-    dialog.get_by_role("button", name="完成").click()
+        raise StudioUploadError(f"playlist {playlist_id} not found in Studio picker")
+    done = page.get_by_role("button", name="完成").first
+    try:
+        done.click(timeout=8000)
+    except Exception:  # noqa: BLE001
+        page.evaluate(
+            "() => { const b = [...document.querySelectorAll('button')]"
+            ".filter(x => x.textContent.trim() === '完成').pop(); if (b) b.click(); }"
+        )
+    page.wait_for_timeout(800)
 
 
 def _set_audience(page, made_for_kids: bool) -> None:
@@ -278,12 +332,27 @@ def _set_audience(page, made_for_kids: bool) -> None:
 
 
 def _advance_wizard(page) -> None:
-    for _ in range(5):
+    """Walk the wizard steps, tolerating a disabled 继续 during checks."""
+    deadline = time.time() + 1500
+    clicks = 0
+    stalls = 0
+    while time.time() < deadline:
         next_button = page.get_by_role("button", name=re.compile("^(下一步|继续)$")).first
         if next_button.count() == 0:
-            break
-        next_button.click()
-        page.wait_for_timeout(800)
+            return
+        try:
+            next_button.click(timeout=10000)
+            page.wait_for_timeout(800)
+            clicks += 1
+            stalls = 0
+            if clicks > 8:
+                return
+        except Exception:  # noqa: BLE001
+            # Disabled while the platform checks run — wait and retry.
+            stalls += 1
+            if stalls > 90:
+                raise StudioUploadError(f"{page.url}: wizard next button stuck disabled")
+            page.wait_for_timeout(10000)
 
 
 def _store_private(page, spec: UploadSpec) -> None:
@@ -310,7 +379,19 @@ def _store_private(page, spec: UploadSpec) -> None:
             except Exception:  # noqa: BLE001
                 pass
     save = page.get_by_role("button", name=re.compile("^(保存|存为私享)$")).first
-    save.click()
+    # The save button stays disabled until the upload itself finishes;
+    # long-form files can take minutes, so poll instead of one-shot click.
+    deadline = time.time() + 1500
+    while time.time() < deadline:
+        try:
+            if save.count() > 0 and save.is_enabled():
+                save.click()
+                break
+        except Exception:  # noqa: BLE001
+            pass
+        page.wait_for_timeout(10000)
+    else:
+        raise StudioUploadError(f"{page.url}: save-as-private button never enabled")
     page.wait_for_timeout(4000)
 
 
@@ -385,11 +466,20 @@ def _set_video_file(page, video_path: Path) -> None:
     performed by the browser itself — no transfer, no limit.
     """
     client = page.context.new_cdp_session(page)
-    doc = client.send("DOM.getDocument", {"depth": -1})
-    node = client.send("DOM.querySelector", {"nodeId": doc["root"]["nodeId"], "selector": "input[type=file]"})
-    if not node.get("nodeId"):
+    deadline = time.time() + 20
+    node_id = 0
+    while time.time() < deadline:
+        doc = client.send("DOM.getDocument", {"depth": -1})
+        node = client.send(
+            "DOM.querySelector", {"nodeId": doc["root"]["nodeId"], "selector": "input[type=file]"}
+        )
+        if node.get("nodeId"):
+            node_id = node["nodeId"]
+            break
+        page.wait_for_timeout(1000)
+    if not node_id:
         raise StudioUploadError(f"{page.url}: no file input found for video upload")
-    client.send("DOM.setFileInputFiles", {"files": [str(video_path)], "nodeId": node["nodeId"]})
+    client.send("DOM.setFileInputFiles", {"files": [str(video_path)], "nodeId": node_id})
 
 
 def upload_one(context, spec: UploadSpec) -> dict[str, Any]:
