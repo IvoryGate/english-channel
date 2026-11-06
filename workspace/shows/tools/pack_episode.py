@@ -251,7 +251,6 @@ def pack_episode(
         return 2
 
     manifest = load_json(manifest_path)
-    gap = float(manifest.get("renderSettings", {}).get("interTurnSilenceSec", 0.3))
     master_dir = workspace / "audio" / "_master_turns"
 
     py = str(DEFAULT_PYTHON if DEFAULT_PYTHON.is_file() else Path(sys.executable))
@@ -344,8 +343,6 @@ def pack_episode(
         "--master-turns-dir",
         str(master_dir.resolve()),
         "--scripted-only",
-        "--gap-sec",
-        str(gap),
     ]
     code = run_step(log, "subtitles", sub_cmd, cwd=REPO, env=env)
     if code != 0:

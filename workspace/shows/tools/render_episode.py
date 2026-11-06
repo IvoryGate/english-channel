@@ -16,6 +16,7 @@ sys.path.insert(0, str(REPO_ROOT / "apps" / "worker-py"))
 
 from prepare_reference_concat_audio import build_concat_audio  # noqa: E402
 from episode_artifacts import turn_wav_path  # noqa: E402
+from episode_timeline import manifest_gaps  # noqa: E402
 from worker.tts.dialogue import dialogue_turn_is_reusable, dialogue_turn_spec  # noqa: E402
 from worker.tts.process import run_provider_batch  # noqa: E402
 from worker.tts.schema import resolve_provider_config  # noqa: E402
@@ -127,6 +128,7 @@ def main() -> int:
                     "voice": spec["workerVoice"],
                     "referenceText": manifest["hosts"][str(turn["speaker"])].get("referenceText", ""),
                     "seed": spec["seed"],
+                    "providerSettings": spec["effectiveSettings"],
                     "maxLen": turn.get("maxLen"),
                 }
             )
@@ -145,6 +147,8 @@ def main() -> int:
             output = turn_wav_path(workspace, str(turn["filename"]))
             result = by_id[turn_id]
             spec = specs[turn_id]
+            if result.get("effectiveSettings") != spec["effectiveSettings"]:
+                raise ValueError(f"Provider settings acknowledgement mismatch for {turn_id}")
             prior = previous_trace.get(turn_id) or {}
             prior_hash = prior.get("outputSha256")
             retry_number = int(prior.get("retryNumber") or -1) + 1 if prior else 0
@@ -156,13 +160,15 @@ def main() -> int:
                 "renderedAt": datetime.now(timezone.utc).isoformat(),
                 "provider": {
                     **provider.to_trace(REPO_ROOT),
+                    "providerSettings": spec["effectiveSettings"],
                     "packageVersion": result["packageVersion"],
                     "modelLoadSec": result["modelLoadSec"],
                 },
                 "voice": spec["voice"],
                 "normalizedText": spec["normalizedText"],
                 "seed": spec["seed"],
-                "effectiveSettings": provider.settings,
+                "effectiveSettings": spec["effectiveSettings"],
+                "deliveryCueStatus": spec["deliveryCueStatus"],
                 "identitySha256": spec["identity"]["sha256"],
                 "sampleRate": result["sampleRate"],
                 "durationSec": result["durationSec"],
@@ -191,6 +197,8 @@ def main() -> int:
                     "tracePath": turn_trace_path(output).relative_to(REPO_ROOT).as_posix(),
                     "outputSha256": sha256_file(output),
                     "deliveryCue": turn.get("deliveryCue", ""),
+                    "deliveryCueStatus": spec["deliveryCueStatus"],
+                    "effectiveSettings": spec["effectiveSettings"],
                     "maxLen": turn.get("maxLen"),
                 }
             )
@@ -219,7 +227,7 @@ def main() -> int:
         audio_dir.mkdir(parents=True, exist_ok=True)
         raw_path = audio_dir / f"000_{episode_id}.raw.wav"
         gap = float(settings.get("interTurnSilenceSec", 0.3))
-        build_concat_audio(clips, raw_path, gap_sec=gap)
+        build_concat_audio(clips, raw_path, gap_sec=gap, gaps_sec=manifest_gaps(manifest))
         print(f"raw={raw_path.as_posix()}", flush=True)
 
         if not args.no_self_check:

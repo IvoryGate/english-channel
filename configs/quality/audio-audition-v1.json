@@ -1,12 +1,12 @@
 {
   "schema": "elr-audio-audition-plan-v1",
   "id": "audio-quality-reset-2026-11-06",
-  "status": "specified_not_rendered",
+  "status": "runnable_pending_listening",
   "createdOn": "2026-11-06",
   "purpose": "Test whether supported synthesis controls improve appropriate expression without reducing clarity or voice stability.",
   "contract": {
     "productionManifest": false,
-    "runnerImplemented": false,
+    "runnerImplemented": true,
     "newPaidSpend": 0,
     "downloadsAllowed": false,
     "publicReleaseAllowed": false,

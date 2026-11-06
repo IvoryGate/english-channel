@@ -6,34 +6,35 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from episode_timeline import validated_gaps
+
 
 def build_concat_audio(
     clips: list[Path],
     output_wav: Path,
     *,
     gap_sec: float = 0.35,
+    gaps_sec: list[float] | None = None,
+    sample_rate: int = 44100,
 ) -> Path:
     if len(clips) < 1:
         raise ValueError("At least one clip is required")
+    gaps = validated_gaps(len(clips), gap_sec, gaps_sec)
     for clip in clips:
         if not clip.is_file():
             raise FileNotFoundError(f"Missing clip: {clip}")
 
     output_wav.parent.mkdir(parents=True, exist_ok=True)
-    if len(clips) == 1 and gap_sec <= 0:
-        subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(clips[0]), str(output_wav)], check=True)
-        return output_wav
-
     # Keep clip paths in a concat manifest instead of placing every input on
     # the command line. Large Series C episodes otherwise exceed Windows'
     # CreateProcess command-length limit before ffmpeg can start.
     with tempfile.TemporaryDirectory(prefix="elr_reference_concat_") as tmp:
         tmp_dir = Path(tmp)
         list_file = tmp_dir / "concat.txt"
-        silence = tmp_dir / "gap.wav"
+        silences: dict[float, Path] = {}
         lines: list[str] = []
 
-        if gap_sec > 0 and len(clips) > 1:
+        if any(gap > 0 for gap in gaps):
             probe = subprocess.run(
                 [
                     "ffprobe",
@@ -53,34 +54,37 @@ def build_concat_audio(
             )
             stream = json.loads(probe.stdout)["streams"][0]
             codec = str(stream["codec_name"])
-            sample_rate = int(stream["sample_rate"])
+            input_sample_rate = int(stream["sample_rate"])
             channels = int(stream["channels"])
             if codec not in {"pcm_f32le", "pcm_s16le", "pcm_s24le", "pcm_s32le"}:
                 raise ValueError(f"Unsupported concat PCM codec: {codec}")
-            subprocess.run(
-                [
-                    "ffmpeg",
-                    "-y",
-                    "-hide_banner",
-                    "-loglevel",
-                    "error",
-                    "-f",
-                    "lavfi",
-                    "-i",
-                    f"anullsrc=r={sample_rate}:cl={'mono' if channels == 1 else 'stereo'}",
-                    "-t",
-                    str(gap_sec),
-                    "-c:a",
-                    codec,
-                    str(silence),
-                ],
-                check=True,
-            )
+            for gap in sorted(set(gap for gap in gaps if gap > 0)):
+                silence = tmp_dir / f"gap_{len(silences)}.wav"
+                silences[gap] = silence
+                subprocess.run(
+                    [
+                        "ffmpeg",
+                        "-y",
+                        "-hide_banner",
+                        "-loglevel",
+                        "error",
+                        "-f",
+                        "lavfi",
+                        "-i",
+                        f"anullsrc=r={input_sample_rate}:cl={'mono' if channels == 1 else 'stereo'}",
+                        "-t",
+                        str(gap),
+                        "-c:a",
+                        codec,
+                        str(silence),
+                    ],
+                    check=True,
+                )
 
         for index, clip in enumerate(clips):
             lines.append(f"file '{clip.resolve().as_posix()}'")
-            if gap_sec > 0 and index < len(clips) - 1:
-                lines.append(f"file '{silence.resolve().as_posix()}'")
+            if index < len(gaps) and gaps[index] > 0:
+                lines.append(f"file '{silences[gaps[index]].resolve().as_posix()}'")
         list_file.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
         subprocess.run(
@@ -97,7 +101,7 @@ def build_concat_audio(
                 "-i",
                 str(list_file),
                 "-ar",
-                "44100",
+                str(sample_rate),
                 "-ac",
                 "1",
                 "-c:a",

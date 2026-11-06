@@ -1,10 +1,41 @@
 # Audio Quality Reset
 
-As of 2026-11-06 this is a specified experiment, not an accepted voice upgrade.
-No new samples have been rendered or listened to. The reusable original corpus
+As of 2026-11-06 this is a runnable experiment, not an accepted voice upgrade.
+Listening approval remains pending. The reusable original corpus
 and settings are in [audio-audition-v1.json](../configs/quality/audio-audition-v1.json).
-That file is an experiment specification; existing renderers do not consume
-its schema, and an audition runner is not implemented in this slice.
+That file is consumed by `scripts/audio_audition.py`. Production defaults do
+not change automatically when an audition succeeds.
+
+## Executable controls and trial
+
+Episode turns may supply `providerSettings` overrides: Chatterbox's six
+numerical generation controls, Kokoro speed, or VoxCPM CFG/step controls.
+Unsupported controls, non-finite numbers and invalid sampling ranges fail
+before generation. Effective settings enter the request, trace and reuse
+identity. Free-text `deliveryCue` remains explicitly `editorial_only`: no
+keyword-to-emotion mapping or instruction text is appended to speech.
+
+```powershell
+.\.conda-env\python.exe scripts/audio_audition.py --run-id expression-v1-20261106
+.\.conda-env\python.exe scripts/audio_audition.py --run-id expression-v1-20261106 --render
+```
+
+Preparation verifies the local pinned model against recorded upstream file
+hashes, freezes host/reference hashes, the voice-acceptance evidence document,
+the plan and source-code hashes. It creates only an ignored run manifest;
+no model is loaded or downloaded. The render action uses the existing GPU
+lease, offline provider environments, serial two-turn batches and a process
+watchdog. Attempts are persisted before each batch; a failed run retains its
+partial artifacts and does not silently retry. The implemented first round
+has no automatic repair or conditional third arm.
+
+Raw takes remain under `raw/`; `listen/` contains six shuffled A/B pairs with
+gain-only, true-peak-safe loudness matching. `review.json` has blank scores;
+keep `private-code-map.json` closed until scoring. Resuming a completed trial
+reuses its exact traces and keeps blind assignments unchanged. Peak memory
+remains null when unmeasured. A completed render means awaiting blind review,
+never an accepted new production voice. Record actual run results separately
+from this stable specification.
 
 ## What the audit proves
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from pathlib import Path
 from typing import Any
 
@@ -84,7 +85,7 @@ def _project_path(repo_root: Path, value: str, field: str) -> Path:
 
 def _number(settings: dict[str, Any], key: str, *, minimum: float = 0.0) -> float:
     value = settings.get(key)
-    if not isinstance(value, (int, float)) or isinstance(value, bool) or float(value) <= minimum:
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or float(value) <= minimum:
         raise ProviderConfigError(f"providerSettings.{key} must be greater than {minimum}")
     return float(value)
 
@@ -98,6 +99,11 @@ def _validate_settings(provider_id: str, settings: dict[str, Any]) -> None:
     elif provider_id == "chatterbox_500m":
         for key in ("exaggeration", "cfgWeight", "temperature", "topP", "minP", "repetitionPenalty"):
             _number(settings, key, minimum=-1e-12)
+        for key in ("cfgWeight", "topP", "minP"):
+            if float(settings[key]) > 1:
+                raise ProviderConfigError(f"providerSettings.{key} must be at most 1")
+        for key in ("temperature", "topP", "repetitionPenalty"):
+            _number(settings, key)
     elif provider_id == "chatterbox_turbo":
         unsupported = sorted({"exaggeration", "cfgWeight", "minP"} & set(settings))
         if unsupported:
@@ -109,6 +115,26 @@ def _validate_settings(provider_id: str, settings: dict[str, Any]) -> None:
         _number(settings, "cfgValue")
         if not isinstance(settings.get("inferenceTimesteps"), int) or settings["inferenceTimesteps"] < 1:
             raise ProviderConfigError("providerSettings.inferenceTimesteps must be a positive integer")
+
+
+def effective_turn_settings(provider_id: str, base: dict[str, Any], overrides: Any = None) -> dict[str, Any]:
+    """Only controls actually used per generate() call may vary between turns."""
+    allowed = {
+        "kokoro": {"speed"},
+        "chatterbox_500m": {"exaggeration", "cfgWeight", "temperature", "topP", "minP", "repetitionPenalty"},
+        "voxcpm": {"cfgValue", "inferenceTimesteps"},
+    }
+    if overrides is None:
+        overrides = {}
+    if not isinstance(overrides, dict):
+        raise ProviderConfigError("turn.providerSettings must be an object")
+    unsupported = {key for key in overrides if key not in allowed.get(provider_id, set())
+                   and (key not in base or overrides[key] != base[key])}
+    if unsupported:
+        raise ProviderConfigError("Unsupported per-turn controls: " + ", ".join(sorted(unsupported)))
+    result = {**base, **overrides}
+    _validate_settings(provider_id, result)
+    return result
 
 
 def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) -> ProviderConfig:

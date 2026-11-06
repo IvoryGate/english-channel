@@ -24,6 +24,7 @@ from media.generate_media_srt import write_media_srt  # noqa: E402
 from media.thumbnail_tokens import tokens_from_show  # noqa: E402
 from media.turn_alignment import assign_words_to_turns  # noqa: E402
 from episode_artifacts import artifact_paths, load_json, resolve_episode_audio, write_json  # noqa: E402
+from episode_timeline import assert_program_duration, resolve_episode_timeline  # noqa: E402
 
 SHOW_CONFIG_PATH = Path(__file__).resolve().parent / "show_config.json"
 
@@ -68,7 +69,7 @@ def main() -> int:
         action="store_true",
         help="Audiobook-style: clip WAV duration + script text only (no Whisper per turn).",
     )
-    parser.add_argument("--gap-sec", type=float, default=0.35, help="Silence between clips when using --clips")
+    parser.add_argument("--gap-sec", type=float, default=None, help="Compatibility assertion; must agree with recorded audio gaps")
     parser.add_argument("--model-size", default="base")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--compute-type", default="int8")
@@ -92,11 +93,6 @@ def main() -> int:
         manifest_turns = manifest.get("turns") or []
         reference_text = reference_text_for_manifest(manifest)
 
-    if paths["manifest"].is_file():
-        manifest = load_json(paths["manifest"])
-        manifest_turns = manifest.get("turns") or []
-        reference_text = reference_text_for_manifest(manifest)
-
     if args.clips:
         if not manifest_turns:
             raise ValueError("--clips requires manifest turns")
@@ -108,18 +104,25 @@ def main() -> int:
     else:
         clip_paths = []
 
+    timing = None
     if clip_paths:
+        timing, expected_clips = resolve_episode_timeline(workspace, manifest)
+        if [path.resolve() for path in clip_paths] != [path.resolve() for path in expected_clips]:
+            raise ValueError("Subtitle clips do not match the resolved program timeline")
+        assert_program_duration(timing, audio_path)
+        if args.gap_sec is not None and any(abs(gap - args.gap_sec) > 1e-9 for gap in timing["gapsSec"]):
+            raise ValueError("Subtitle gap override disagrees with the resolved program timeline")
         if args.scripted_only:
             alignment = align_turn_clips_scripted(
                 clip_paths,
                 manifest_turns,
-                gap_sec=args.gap_sec,
+                gaps_sec=timing["gapsSec"],
             )
         else:
             alignment = align_turn_clips(
                 clip_paths,
                 manifest_turns,
-                gap_sec=args.gap_sec,
+                gaps_sec=timing["gapsSec"],
                 model_size=args.model_size,
                 device=args.device,
                 compute_type=args.compute_type,
@@ -160,6 +163,8 @@ def main() -> int:
         "turnCount": len(turns),
         "referenceCoverage": alignment.get("referenceCoverage"),
         "alignmentMode": alignment.get("alignmentMode", "whole-file"),
+        "timelineSource": timing["source"] if timing else "whole-program-alignment",
+        "timeline": timing,
     }
     write_json(paths["subtitleReport"], report)
     print(json.dumps(report, ensure_ascii=False, indent=2))

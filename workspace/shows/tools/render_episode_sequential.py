@@ -19,6 +19,7 @@ sys.path.insert(0, str(REPO_ROOT / ".cursor" / "skills" / "audiobook-chapter-tts
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from prepare_reference_concat_audio import build_concat_audio  # noqa: E402
+from episode_timeline import manifest_gaps  # noqa: E402
 from render_chapter import load_voxcpm  # noqa: E402
 from render_episode import control_text, normalize_quiet_segment  # noqa: E402
 
@@ -100,7 +101,7 @@ def main() -> int:
         clips = [workspace / str(t["filename"]) for t in manifest["turns"]]
         raw = workspace / f"000_{manifest['episodeId']}.raw.wav"
         gap = float(settings.get("interTurnSilenceSec", 0.3))
-        build_concat_audio(clips, raw, gap_sec=gap)
+        build_concat_audio(clips, raw, gap_sec=gap, gaps_sec=manifest_gaps(manifest))
         print(f"raw={raw.as_posix()}", flush=True)
     print("done", flush=True)
     return 0

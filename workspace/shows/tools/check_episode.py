@@ -26,6 +26,7 @@ from check_chapter import (  # noqa: E402
     transcribe_segment,
 )
 from episode_artifacts import turn_wav_path  # noqa: E402
+from episode_timeline import manifest_gaps  # noqa: E402
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -99,11 +100,11 @@ def build_episode_qc_report(
         raw_duration = round(float(len(raw_audio) / raw_sr), 3)
 
     expected = 0.0
-    gap = float(chapter_like["interSegmentSilenceSec"])
+    gaps = manifest_gaps(episode)
     for i, row in enumerate(rows):
         expected += float(row.get("durationSec") or 0.0)
         if i < len(rows) - 1:
-            expected += gap
+            expected += gaps[i]
     expected = round(expected, 3)
     compose_drift = None
     if raw_duration is not None:

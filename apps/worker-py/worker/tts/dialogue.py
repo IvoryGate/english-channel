@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .schema import ProviderConfig, ProviderConfigError, resolve_provider_config, validate_voice
+from .schema import ProviderConfig, ProviderConfigError, effective_turn_settings, resolve_provider_config, validate_voice
 from .trace import build_turn_identity, normalized_text, sha256_file, trace_is_reusable
 
 
@@ -50,8 +50,9 @@ def dialogue_turn_spec(
     if not isinstance(seed_offset, int) or isinstance(seed_offset, bool):
         raise ProviderConfigError("turn.ttsSeedOffset must be an integer")
     seed = provider.seed_base + int(turn["order"]) + seed_offset
+    effective = effective_turn_settings(provider.provider_id, provider.settings, turn.get("providerSettings"))
     identity = build_turn_identity(
-        provider=provider.to_trace(repo_root),
+        provider={**provider.to_trace(repo_root), "providerSettings": effective},
         voice=voice,
         text=str(turn["text"]),
         seed=seed,
@@ -62,6 +63,8 @@ def dialogue_turn_spec(
         "workerVoice": worker_voice,
         "seed": seed,
         "normalizedText": normalized_text(str(turn["text"])),
+        "effectiveSettings": effective,
+        "deliveryCueStatus": "editorial_only" if turn.get("deliveryCue") else "not_supplied",
         "identity": identity,
     }
 

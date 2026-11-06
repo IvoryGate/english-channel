@@ -111,7 +111,6 @@ def process_series(series: str, py: str, env: dict[str, str]) -> int:
     manifest = build_preview_workspace(series, src_workspace, preview_workspace)
     n_turns = len(manifest["turns"])
     n_words = int(manifest.get("previewWordCount") or 0)
-    gap = float(manifest.get("renderSettings", {}).get("interTurnSilenceSec", 0.3))
     log(f"  preview: {n_turns} turns, {n_words} words, gap={gap}s")
 
     # 1 — Render turns (serial, one VoxCPM load)
@@ -146,7 +145,7 @@ def process_series(series: str, py: str, env: dict[str, str]) -> int:
             "--show", series, "--episode", "episode_001_preview",
             "--workspace", str(preview_workspace.resolve()),
             "--master-turns-dir", str(master_dir.resolve()),
-            "--scripted-only", "--gap-sec", str(gap),
+            "--scripted-only",
         ],
         cwd=REPO,
         env=env,

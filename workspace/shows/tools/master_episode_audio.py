@@ -12,11 +12,12 @@ import argparse
 import json
 import re
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Any
 
 from episode_artifacts import turn_wav_path, master_turn_wav_path
+from episode_timeline import manifest_gaps, master_timeline_record, validated_gaps
+from prepare_reference_concat_audio import build_concat_audio
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -152,6 +153,7 @@ def resolve_playback_tempo(
     *,
     clip_durations_sec: list[float],
     gap_sec: float,
+    gaps_sec: list[float] | None = None,
 ) -> float:
     """Slow flagship speech just enough to meet its measured target runtime.
 
@@ -166,7 +168,7 @@ def resolve_playback_tempo(
         return 1.0
     target_sec = float(targets[0]) * 60.0
     speech_sec = sum(clip_durations_sec)
-    total_gap_sec = max(0, len(clip_durations_sec) - 1) * gap_sec
+    total_gap_sec = sum(validated_gaps(len(clip_durations_sec), gap_sec, gaps_sec))
     current_sec = speech_sec + total_gap_sec
     if current_sec >= target_sec or speech_sec <= 0:
         return 1.0
@@ -229,55 +231,9 @@ def master_turn(
     )
 
 
-def concat_turns(clips: list[Path], output: Path, *, gap_sec: float) -> None:
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="elr_master_concat_") as tmp:
-        tmp_dir = Path(tmp)
-        list_file = tmp_dir / "concat.txt"
-        lines: list[str] = []
-        silence = tmp_dir / "gap.wav"
-        if gap_sec > 0 and len(clips) > 1:
-            _run(
-                [
-                    "ffmpeg",
-                    "-y",
-                    "-hide_banner",
-                    "-loglevel",
-                    "error",
-                    "-f",
-                    "lavfi",
-                    "-i",
-                    f"anullsrc=r=48000:cl=mono",
-                    "-t",
-                    str(gap_sec),
-                    "-c:a",
-                    "pcm_s16le",
-                    str(silence),
-                ]
-            )
-        for index, clip in enumerate(clips):
-            lines.append(f"file '{clip.resolve().as_posix()}'")
-            if gap_sec > 0 and index < len(clips) - 1:
-                lines.append(f"file '{silence.resolve().as_posix()}'")
-        list_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        _run(
-            [
-                "ffmpeg",
-                "-y",
-                "-hide_banner",
-                "-loglevel",
-                "error",
-                "-f",
-                "concat",
-                "-safe",
-                "0",
-                "-i",
-                str(list_file),
-                "-c",
-                "copy",
-                str(output),
-            ]
-        )
+def concat_turns(clips: list[Path], output: Path, *, gap_sec: float,
+                 gaps_sec: list[float] | None = None) -> None:
+    build_concat_audio(clips, output, gap_sec=gap_sec, gaps_sec=gaps_sec, sample_rate=48000)
 
 
 def master_episode(
@@ -292,6 +248,7 @@ def master_episode(
     episode_id = str(manifest["episodeId"])
     gap = float(manifest.get("renderSettings", {}).get("interTurnSilenceSec", 0.3))
     turns = list(manifest["turns"])
+    gaps = manifest_gaps(manifest)
     clips = [turn_wav_path(workspace, str(t["filename"])) for t in turns]
     missing = [str(c) for c in clips if not c.is_file()]
     if missing:
@@ -307,6 +264,7 @@ def master_episode(
         production_card,
         clip_durations_sec=source_durations,
         gap_sec=gap,
+        gaps_sec=gaps,
     )
     if playback_tempo != 1.0:
         print(f"flagship runtime pacing -> atempo={playback_tempo:.6f}", flush=True)
@@ -330,7 +288,7 @@ def master_episode(
     audio_dir.mkdir(parents=True, exist_ok=True)
     concat_path = audio_dir / f"000_{episode_id}.preloudnorm.wav"
     print(f"concat -> {concat_path.name} gap={gap}", flush=True)
-    concat_turns(cleaned, concat_path, gap_sec=gap)
+    concat_turns(cleaned, concat_path, gap_sec=gap, gaps_sec=gaps)
 
     raw_path = audio_dir / f"000_{episode_id}.raw.wav"
     master_path = audio_dir / f"000_{episode_id}.master.wav"
@@ -350,6 +308,7 @@ def master_episode(
         "showId": manifest.get("showId"),
         "sourceTurns": len(clips),
         "gapSec": gap,
+        "timeline": master_timeline_record(manifest, cleaned, master_path),
         "denoiseNr": denoise_nr,
         "denoiseNf": denoise_nf,
         "playbackTempo": playback_tempo,
