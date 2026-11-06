@@ -1,5 +1,10 @@
 # ELR Visual Identity — Brand Book (source of truth)
 
+> Historical visual specification. October approved motion/caption changes
+> are preserved in checkpoint `6eb97f1` (PR #21), not yet integrated into this
+> trunk-derived branch. Do not combine conflicting versions. The rebuild brief
+> is in [MARKET_AND_CREATIVE_RESET.md](../MARKET_AND_CREATIVE_RESET.md).
+
 Consolidates the visual system for all ELR dialogue series (A/B/C). Other docs reference this; do not duplicate the palette/font tables elsewhere.
 
 Channel avatar is **out of scope** for this doc — it stays neutral ELR brand and is managed separately.

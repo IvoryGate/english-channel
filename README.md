@@ -11,6 +11,13 @@ specialized dialogue, Shorts, and Classic Listening production adapters.
 
 ## Current State
 
+The 2026-11-06 rebuild starts at
+[`docs/PRODUCT_REBUILD.md`](docs/PRODUCT_REBUILD.md). It records verified gaps,
+the zero-new-spend constraint, quality trials and the next evidence gates.
+Older schedules below describe historical capabilities, not fresh approval.
+Inspect local evidence with `python scripts/channel.py readiness`; this
+diagnostic never migrates the database.
+
 The integrated baseline combines the frontend/backend VoxCPM2 platform with
 Dialogue / English Listening Room research, show definitions, script skills,
 resumable production, QC, packaging, and publication preflight. The Shorts

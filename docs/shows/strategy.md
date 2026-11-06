@@ -1,5 +1,10 @@
 # English Listening Room — Multi-Series Strategy
 
+> Historical strategy snapshot. Its episode-021 hold and cadence are not
+> current operating instructions. The 2026-11-06 rebuild sequence and evidence
+> gaps are governed by [PRODUCT_REBUILD.md](../PRODUCT_REBUILD.md); existing
+> remote state and authority still require explicit reconciliation.
+
 > Growth, publication, experimentation, analytics, and autonomy are governed by
 > [`AUTONOMOUS_GROWTH_SYSTEM.md`](AUTONOMOUS_GROWTH_SYSTEM.md). Until its
 > baseline is complete, the existing 63-video dialogue inventory is the

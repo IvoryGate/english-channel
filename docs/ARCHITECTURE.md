@@ -18,9 +18,10 @@
   versioned SQLite repository, legacy-ledger adapters, collision reporting,
   immutable public-remote inventory imports, read-only reconciliation,
   exclusive heavy-resource leases, channel release reservations, and a
-  local-only channel CLI. It does not yet implement shared lifecycle,
-  generalized resource capacity planning, publication mutations, analytics,
-  experiment, or decision services.
+  local identity CLI plus an isolated read-only readiness diagnostic. The
+  separate `YouTubeReleaseService` / `youtube_transport.py` implement API-first
+  private upload, metadata and scheduling with explicit apply flags; this does
+  not constitute a complete shared lifecycle, analytics or decision loop.
 - `apps/worker-py/worker/channel_ops/`: the Dialogue-era publication identity
   and release-preflight prototype retained as a migration input.
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
@@ -34,11 +35,13 @@
   video remain in ignored `workspace/shorts/`.
 
 The current implementation provides identity, public-capture reconciliation,
-the first durable resource lease, and transactional channel release-slot
-reservations. General resource scheduling, remote publication, analytics,
-experiments, decisions, and progressive authority remain future slices. Do not
-infer remote mutation authority or complete Studio visibility from the
-presence of `scripts/channel.py`.
+the first durable resource lease, transactional local release reservations,
+and a separate remote publication adapter. General resource scheduling,
+integrated analytics, experiments, decisions and progressive authority remain
+incomplete. Do not infer authority or complete Studio visibility from a CLI.
+The `readiness` route never initializes/migrates the shared database; it uses
+separate read-only evidence access, preserving missing values and scope.
+See [PRODUCT_REBUILD.md](PRODUCT_REBUILD.md) for the verified rebuild sequence.
 
 ## Target System
 

@@ -7,6 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from .repo import PolicyMismatchError, RepositoryError, SqliteChannelRepository
+from .readiness_repo import ReadinessRepository
+from .readiness_schema import aware_timestamp
+from .readiness_service import ReadinessService
 from .schema import (
     SchemaError,
     load_channel_policy,
@@ -104,6 +107,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("init", help="Apply SQLite migrations and seed tracked channel policy.")
     subparsers.add_parser("status", help="Show local database and collision status.")
     subparsers.add_parser("inventory", help="Show canonical identity inventory counts.")
+    readiness = subparsers.add_parser("readiness", help="Diagnose local evidence without creating or migrating state.")
+    readiness.add_argument("--as-of", required=True, help="ISO-8601 timestamp with timezone offset.")
     collisions = subparsers.add_parser("collisions", help="List identity collisions for review.")
     collisions.add_argument("--all", action="store_true", help="Include resolved collisions.")
     dialogue = subparsers.add_parser("import-dialogue", help="Import a Dialogue publication JSON ledger.")
@@ -141,6 +146,14 @@ def main(argv: list[str] | None = None) -> int:
     policy_path = (args.policy or repo_root / "configs" / "channel" / "control-plane.json").resolve()
     database_path = (args.database or repo_root / "workspace" / "channel" / "channel.sqlite").resolve()
     try:
+        if args.command == "readiness":
+            release_path = (args.release_policy or repo_root / "configs" / "channel" / "release-policy.json").resolve()
+            diagnostic = ReadinessService(
+                ReadinessRepository(repo_root, database_path, release_path), aware_timestamp(args.as_of)
+            )
+            _print(diagnostic.report())
+            # Findings are report data, not a failed release check or permission.
+            return 0
         policy = load_channel_policy(policy_path)
         repository = SqliteChannelRepository(database_path)
         service = ChannelIdentityService(policy, repository)
