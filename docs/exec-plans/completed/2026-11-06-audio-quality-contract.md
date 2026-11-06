@@ -23,9 +23,35 @@ trial; do not merge the entire October checkpoint.
 
 ## Status
 
-2026-11-06, Codex. In progress on `codex/audio-quality-contract` from `009dfa0`
+2026-11-07, Codex. Implementation scope complete on `codex/audio-quality-contract` from `009dfa0`
 after foundation PR #22 passed and merged. Agents split timeline, provider/
 audition and independent analytics work; analytics has its own branch/plan.
+
+2026-11-07: implementation delivered in PR #23; analytics PR #24 passed and
+merged separately, then was integrated without rewriting branch history.
+Initial full checks passed 289 Python tests; staged-runtime changes passed
+292 tests plus all Node/lint gates. Independent reviews cover timeline,
+provider controls, loader/process visibility and recovery accounting.
+
+Actual v2 trial failed with CUDA OOM on its first pair after 105.406 seconds,
+with 2 attempts and no audio output. The v3 trial uses explicit staged CPU
+offload for both arms, preserves FP32 weights, and carries prior time and
+attempts into the same 30-minute/28-total-attempt ceiling. V3 then failed during
+SciPy import with MemoryError, before loading the model. Cumulative accounting
+is 4 attempts, 0 completed takes and 115.687 seconds. The repeated-failure stop
+rule has halted this trial; no remaining candidates or full episodes are run.
+Staged inference remains runtime-unverified despite passing code tests.
+No source settings or old recordings were changed to hide the failed run.
+
+A CUDA-hidden, import-only diagnostic subsequently succeeded in 22.54 seconds;
+the v3 MemoryError was not reproduced and its cause is unresolved. No additional
+generation followed. Host measurement corrected RAM inventory to approximately
+32 GB; sampled device memory during failed imports is not model peak memory.
+The implementation meets this plan's archive criterion by delivering code,
+tests, measured A045 repair evidence and the exact retained trial blocker.
+Sound acceptance and staged-runtime feasibility remain open in the product
+roadmap. PR #23's integrated code head passed quality-gates and evaluate;
+final documentation archival is part of the same PR.
 
 ## Plan
 

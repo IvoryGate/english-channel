@@ -1,6 +1,7 @@
 # Audio Quality Reset
 
-As of 2026-11-06 this is a runnable experiment, not an accepted voice upgrade.
+As of 2026-11-07 this is an implemented experiment with a failed live trial,
+not an accepted voice upgrade.
 Listening approval remains pending. The reusable original corpus
 and settings are in [audio-audition-v1.json](../configs/quality/audio-audition-v1.json).
 That file is consumed by `scripts/audio_audition.py`. Production defaults do
@@ -47,7 +48,24 @@ The repaired first pair receives the same recorded +10000 seed offset in both
 arms. Another failed repair cannot qualify for this recovery path. No GPU
 retry occurs automatically.
 
-Raw takes remain under `raw/`; `listen/` contains six shuffled A/B pairs with
+That repair (`expression-v3-20261107`) also stopped: a SciPy import raised
+MemoryError before model loading. Total recorded cost across both runs is
+four attempts and 115.687 seconds, with zero completed audio takes. A later
+import-only diagnostic succeeded in 22.54 seconds with CUDA hidden; it did not
+reproduce the error or establish a cause. This is not a successful staged
+inference test. The repeated-failure stop rule applies; no further candidates
+were started and no blind listening files exist for these runs.
+
+The normal-host system query reports approximately 32 GB physical RAM, rather
+than the historical 16 GB assumption. The v3 observation recorded at most
+1763 MiB of whole-device GPU usage before model loading; that includes other
+applications and is neither model peak memory nor evidence of savings.
+Evidence stays in ignored `workspace/runtime/audio-quality-reset/` and
+`workspace/rebuild/chatterbox-import-diagnostic.json`. A future trial must name
+its runtime hypothesis, preserve these failed attempts and set a new explicit
+scope; successful imports alone do not justify retrying synthesis.
+
+On successful future runs, raw takes remain under `raw/`; `listen/` contains six shuffled A/B pairs with
 gain-only, true-peak-safe loudness matching. `review.json` has blank scores;
 keep `private-code-map.json` closed until scoring. Resuming a completed trial
 reuses its exact traces and keeps blind assignments unchanged. Peak memory
@@ -55,7 +73,7 @@ remains null when unmeasured. A completed render means awaiting blind review,
 never an accepted new production voice. Record actual run results separately
 from this stable specification.
 
-## What the audit proves
+## Initial audit findings before these patches
 
 | Finding | Evidence | Consequence |
 | --- | --- | --- |
@@ -65,7 +83,8 @@ from this stable specification.
 | Technical checks do not establish expression | ASR, peak and loudness checks exist; Classic acceptance has no explicit emotional-performance scale | A technically clean episode can still be dull |
 | Provider guidance is stale | `TTS_PIPELINE.md` and parts of `AUDIO_MASTERING.md` centre VoxCPM; `show_config.json` selects Chatterbox for A/C and Kokoro for B | Resolve actual configuration before following historical tuning advice |
 
-These are code and contract findings. They do not prove how much each issue
+These describe the pre-patch code and contract. The controls and timing repairs
+above address their mechanical causes. They do not prove how much each issue
 contributes to the user's listening dissatisfaction. The current mastering
 chain also applies denoise and compression across providers. Whether that
 helps each voice requires a matched-volume comparison, not a blanket removal.
@@ -135,7 +154,8 @@ The accessible September audition traces under
 Both sets use one settings variant. These figures exclude process startup,
 retries, mastering and video; repeated model-load fields are not independent
 load events and must not be summed. The host reports an RTX 4060 Laptop with
-8188 MiB VRAM; repository operating evidence records 16 GB RAM. Retain bounded
+8188 MiB VRAM; a 2026-11-07 host query measured approximately 32 GB RAM,
+superseding the historical 16 GB operating assumption. Retain bounded
 batches and measure total wall time and peak memory before increasing capacity.
 
 The completed migration plan records owner acceptance on September 9, while
