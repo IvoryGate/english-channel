@@ -6,9 +6,9 @@ from typing import Any
 
 from worker.channel.providers.youtube import authorize, credentials
 
-from .analytics import ANALYTICS_SCHEMA
+from .analytics import _number, normalize_row, store_snapshot
 from .ledger import load_ledger, record_publication
-from .workspace import atomic_write_json, operation_root, read_json
+from .workspace import read_json
 
 
 def _google_modules() -> tuple[Any, Any, Any, Any, Any]:
@@ -75,12 +75,14 @@ def upload_private(
     )
 
 
-def _report_values(response: dict[str, Any]) -> dict[str, float]:
+def _report_values(response: dict[str, Any]) -> dict[str, float | None]:
     headers = [str(header["name"]) for header in response.get("columnHeaders", [])]
     rows = response.get("rows") or []
     if not rows:
-        return {name: 0.0 for name in headers}
-    return {name: float(value) for name, value in zip(headers, rows[0], strict=False)}
+        return {name: None for name in headers}
+    if len(rows) != 1 or len(rows[0]) != len(headers):
+        raise ValueError("Expected one aggregate analytics row matching its column headers")
+    return {name: _number(value, name) for name, value in zip(headers, rows[0], strict=True)}
 
 
 def sync_analytics(
@@ -115,32 +117,17 @@ def sync_analytics(
             .execute(num_retries=3)
         )
         values = _report_values(response)
-        rows.append(
-            {
-                "shortId": item["shortId"],
-                "observedOn": end.isoformat(),
-                "views": values.get("views", 0.0),
-                "engaged_views": values.get("engagedViews", 0.0),
-                "average_percentage_viewed": values.get("averageViewPercentage", 0.0),
-                "subscribers_gained": values.get("subscribersGained", 0.0),
-                "likes": values.get("likes", 0.0),
-                "comments": values.get("comments", 0.0),
-                "shares": values.get("shares", 0.0),
-                "long_form_views": 0.0,
-            }
-        )
+        field_mapping = {"views": "views", "engaged_views": "engagedViews",
+                         "average_percentage_viewed": "averageViewPercentage",
+                         "subscribers_gained": "subscribersGained", "likes": "likes",
+                         "comments": "comments", "shares": "shares"}
+        row = {field: values.get(api_name) for field, api_name in field_mapping.items()}
+        row.update(shortId=item["shortId"], observedOn=end.isoformat(), long_form_views=None)
+        row["metricAvailability"] = {field: "observed" if value is not None else "not_returned"
+                                     for field, value in row.items() if field in field_mapping}
+        row["metricAvailability"]["long_form_views"] = "unsupported"
+        rows.append(normalize_row(row))
     if not rows:
         raise RuntimeError("No uploaded Shorts with YouTube IDs are available for analytics sync")
-    output = operation_root(repo_root) / "analytics" / f"{end.isoformat()}.json"
-    atomic_write_json(
-        output,
-        {
-            "schema": ANALYTICS_SCHEMA,
-            "snapshotDate": end.isoformat(),
-            "importedAt": date.today().isoformat(),
-            "sourceFile": "youtube-analytics-api",
-            "window": {"start": start.isoformat(), "end": end.isoformat()},
-            "rows": rows,
-        },
-    )
-    return output
+    return store_snapshot(repo_root, rows, source="youtube-analytics-api",
+                          window={"start": start.isoformat(), "end": end.isoformat()})
