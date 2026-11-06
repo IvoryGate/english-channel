@@ -60,16 +60,71 @@ def load_checkpoint(module, path: Path, *, strict: bool = True) -> None:
                 del value, buffer
 
 
-def load_chatterbox(model_path: Path, device: str):
+def install_staged_offload(model):
+    """Retain FP32 inference, but never keep T3 and S3Gen on CUDA together.
+
+    Wrap the installed provider's phase methods instead of copying its sampling,
+    conditioning or watermark implementations. Both comparison arms use this mode.
+    """
+    import torch
+
+    components = {"t3": model.t3, "s3gen": model.s3gen, "ve": model.ve}
+    prepare = model.prepare_conditionals
+    tokens = model.t3.inference
+    waveform = model.s3gen.inference
+    generate = model.generate
+
+    def activate(*names):
+        for name, component in components.items():
+            if name not in names:
+                component.to("cpu")
+        torch.cuda.empty_cache()
+        for name in names:
+            components[name].to(model.device)
+
+    def prepare_conditionals(*args, **kwargs):
+        model.conds = None
+        activate("s3gen", "ve")
+        return prepare(*args, **kwargs)
+
+    def infer_tokens(*args, **kwargs):
+        activate("t3")
+        return tokens(*args, **kwargs)
+
+    def infer_waveform(*args, **kwargs):
+        activate("s3gen")
+        return waveform(*args, **kwargs)
+
+    def infer(*args, **kwargs):
+        # Reference feature extraction is outside the upstream inference context.
+        # Disable autograd there too, so offloading cannot retain its CUDA graph.
+        with torch.inference_mode():
+            return generate(*args, **kwargs)
+
+    model.prepare_conditionals = prepare_conditionals
+    model.t3.inference = infer_tokens
+    model.s3gen.inference = infer_waveform
+    model.generate = infer
+    return model
+
+
+def load_chatterbox(model_path: Path, device: str, *, runtime_mode: str = "default"):
     """Preserve the installed original Chatterbox model and voice behavior."""
     import torch
     from chatterbox.tts import (
         ChatterboxTTS, Conditionals, EnTokenizer, S3Gen, T3, VoiceEncoder,
     )
 
+    if runtime_mode not in {"default", "staged_cpu_offload"}:
+        raise ValueError("Unsupported Chatterbox runtime mode")
+    staged = runtime_mode == "staged_cpu_offload"
+    if staged and not device.startswith("cuda"):
+        raise ValueError("Staged offload requires CUDA")
+    load_device = "cpu" if staged else device
+
     def component(factory, filename, *, strict=True):
         model = factory()
-        model.to(device).eval()
+        model.to(load_device).eval()
         load_checkpoint(model, model_path / filename, strict=strict)
         return model
 
@@ -79,6 +134,7 @@ def load_chatterbox(model_path: Path, device: str):
     tokenizer = EnTokenizer(str(model_path / "tokenizer.json"))
     conds = None
     if (model_path / "conds.pt").exists():
-        location = torch.device("cpu") if device in {"cpu", "mps"} else None
+        location = torch.device("cpu") if load_device in {"cpu", "mps"} else None
         conds = Conditionals.load(model_path / "conds.pt", map_location=location).to(device)
-    return ChatterboxTTS(t3, s3gen, ve, tokenizer, device, conds=conds)
+    model = ChatterboxTTS(t3, s3gen, ve, tokenizer, device, conds=conds)
+    return install_staged_offload(model) if staged else model

@@ -29,6 +29,24 @@ watchdog. Attempts are persisted before each batch; a failed run retains its
 partial artifacts and does not silently retry. The implemented first round
 has no automatic repair or conditional third arm.
 
+The first actual trial (`expression-v2-20261106`) stopped on CUDA out-of-memory
+before producing a WAV: two charged attempts, 105.406 seconds. The audition now
+explicitly uses `runtimeMode: staged_cpu_offload` for both Chatterbox arms.
+Unchanged FP32 components move through CPU between reference encoding, text
+token sampling and waveform decoding; the text model and waveform decoder do
+not occupy CUDA together. Full-call inference mode also excludes reference
+feature extraction from autograd. This is a memory remedy, not a quality claim.
+Its nondefault mode is included in cache identity; ordinary existing provider
+identities remain unchanged.
+
+One explicit repair may pass `--previous-run-id expression-v2-20261106` with
+a new run ID. It freezes the failed-run hash/reason, carries its elapsed time
+inside the same 30-minute generation budget, and charges both failed attempts
+against the two-retry allowance (28 attempts including the 26 original takes).
+The repaired first pair receives the same recorded +10000 seed offset in both
+arms. Another failed repair cannot qualify for this recovery path. No GPU
+retry occurs automatically.
+
 Raw takes remain under `raw/`; `listen/` contains six shuffled A/B pairs with
 gain-only, true-peak-safe loudness matching. `review.json` has blank scores;
 keep `private-code-map.json` closed until scoring. Resuming a completed trial

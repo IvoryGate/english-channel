@@ -57,6 +57,7 @@ class ProviderConfig:
     local_model_path: Path
     seed_base: int
     settings: dict[str, Any]
+    runtime_mode: str = "default"
 
     @property
     def uses_gpu(self) -> bool:
@@ -73,6 +74,7 @@ class ProviderConfig:
             "seedBase": self.seed_base,
             "outputFormat": {"container": "wav", "sampleType": "float32"},
             "providerSettings": dict(self.settings),
+            **({"runtimeMode": self.runtime_mode} if self.runtime_mode != "default" else {}),
         }
 
 
@@ -149,6 +151,11 @@ def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) ->
             f"{provider_id} must use pinned revision {PROVIDER_REVISIONS[provider_id]}"
         )
     device = str(render_settings.get("device") or defaults.get("device") or "cpu").strip()
+    runtime_mode = str(render_settings.get("runtimeMode") or "default")
+    if runtime_mode not in {"default", "staged_cpu_offload"}:
+        raise ProviderConfigError("Unsupported provider runtimeMode")
+    if runtime_mode == "staged_cpu_offload" and (provider_id != "chatterbox_500m" or not device.startswith("cuda")):
+        raise ProviderConfigError("staged_cpu_offload requires Chatterbox on CUDA")
     interpreter_value = str(render_settings.get("providerPython") or defaults.get("interpreter") or "")
     model_path_value = str(render_settings.get("localModelPath") or defaults.get("localModelPath") or "")
     seed_base = render_settings.get("seedBase", 20260914)
@@ -170,6 +177,7 @@ def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) ->
         local_model_path=_project_path(repo_root, model_path_value, "localModelPath"),
         seed_base=seed_base,
         settings=settings,
+        runtime_mode=runtime_mode,
     )
 
 

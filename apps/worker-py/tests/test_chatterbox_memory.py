@@ -4,7 +4,7 @@ import struct
 import pytest
 import torch
 
-from worker.tts.chatterbox_memory import load_checkpoint
+from worker.tts.chatterbox_memory import install_staged_offload, load_checkpoint
 
 
 def checkpoint(path, tensors):
@@ -59,3 +59,39 @@ def test_truncated_checkpoint_rejected(tmp_path):
     path.write_bytes(path.read_bytes()[:-1])
     with pytest.raises(ValueError, match="Invalid checkpoint tensor"):
         load_checkpoint(target, path)
+
+
+def test_staged_offload_evicts_inactive_weights_before_each_phase(monkeypatch):
+    events = []
+    class Component:
+        def __init__(self, name):
+            self.name, self.device = name, "cpu"
+        def to(self, device):
+            self.device = device
+            events.append((self.name, device))
+            assert not (model.t3.device == "cuda" and model.s3gen.device == "cuda")
+            return self
+        def inference(self, value):
+            assert torch.is_inference_mode_enabled()
+            assert self.device == "cuda"
+            events.append(("call", self.name))
+            return value + 1
+    class Model:
+        device = "cuda"
+        conds = None
+        def __init__(self):
+            self.t3, self.s3gen, self.ve = (Component(name) for name in ("t3", "s3gen", "ve"))
+        def prepare_conditionals(self, value):
+            assert torch.is_inference_mode_enabled()
+            assert self.s3gen.device == self.ve.device == "cuda"
+            self.conds = value
+        def generate(self, value):
+            self.prepare_conditionals(value)
+            return self.s3gen.inference(self.t3.inference(value))
+    model = Model()
+    monkeypatch.setattr(torch.cuda, "empty_cache", lambda: events.append(("cache", "clear")))
+    install_staged_offload(model)
+    assert model.generate(10) == 12
+    assert model.generate(20) == 22  # second voice/turn repeats the same safe phases
+    assert events.count(("call", "t3")) == events.count(("call", "s3gen")) == 2
+    assert model.t3.device == model.ve.device == "cpu"

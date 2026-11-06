@@ -104,7 +104,8 @@ class Engine:
             sys.path.insert(0, str(repo_root / "apps" / "worker-py"))
             from worker.tts.chatterbox_memory import load_chatterbox
 
-            self.model = load_chatterbox(self.model_path, self.device)
+            self.model = load_chatterbox(self.model_path, self.device,
+                runtime_mode=str(self.config.get("runtimeMode", "default")))
             self.sample_rate = int(self.model.sr)
             self.package_version = importlib.metadata.version("chatterbox-tts")
         elif self.provider_id == "voxcpm":
@@ -224,6 +225,7 @@ def main() -> int:
                         "outputSha256": sha256_file(output),
                         "packageVersion": engine.package_version,
                         "modelLoadSec": round(load_seconds, 3),
+                        "runtimeMode": str(provider.get("runtimeMode", "default")),
                         "watermark": (
                             {"provider": "PerTh", "status": "implicit-enabled"}
                             if provider["providerId"] == "chatterbox_500m"

@@ -28,6 +28,11 @@ The timeline contains unrounded seconds internally; display timestamps round
 only at export. Intro offsets remain a separate measured video boundary.
 Script-derived word placement remains labelled scripted rather than ASR-verified.
 
+The historical `render_episode_edge_tts.py` prototype is outside this canonical
+pipeline: it retains flat paths and compressed turn audio. It is not covered by
+the shared PCM timeline acceptance and must not be substituted for the formal
+renderer without a separate migration.
+
 ## Existing Recordings
 
 Old master reports do not contain hashes or a gap vector. For those files the

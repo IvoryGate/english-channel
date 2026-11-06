@@ -16,8 +16,9 @@ def main() -> int:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--voice-evidence", type=Path, default=ROOT / "docs/exec-plans/completed/2026-09-09-tts-provider-migration.md")
     parser.add_argument("--render", action="store_true", help="Generate at most the two first-round arms and prepare blind review.")
+    parser.add_argument("--previous-run-id", help="Retain and charge the first CUDA-OOM trial when using staged offload.")
     args = parser.parse_args()
-    plan, state, destination = prepare(ROOT, args.plan, args.run_id, args.voice_evidence)
+    plan, state, destination = prepare(ROOT, args.plan, args.run_id, args.voice_evidence, args.previous_run_id)
     if args.render:
         state = render(ROOT, plan, state, destination)
     print(json.dumps({"status": state["status"], "runPath": str(destination), "completedUtterances": state["completedUtterances"]}))

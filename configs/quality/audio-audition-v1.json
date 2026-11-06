@@ -40,6 +40,7 @@
       "ttsProvider": "chatterbox_500m",
       "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
       "device": "cuda",
+      "runtimeMode": "staged_cpu_offload",
       "providerSettings": {"exaggeration": 0.5, "cfgWeight": 0.5, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
     },
     {
@@ -50,6 +51,7 @@
       "ttsProvider": "chatterbox_500m",
       "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
       "device": "cuda",
+      "runtimeMode": "staged_cpu_offload",
       "providerSettings": {"exaggeration": 0.7, "cfgWeight": 0.5, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
     },
     {
@@ -61,6 +63,7 @@
       "ttsProvider": "chatterbox_500m",
       "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
       "device": "cuda",
+      "runtimeMode": "staged_cpu_offload",
       "providerSettings": {"exaggeration": 0.7, "cfgWeight": 0.3, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
     },
     {

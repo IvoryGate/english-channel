@@ -35,8 +35,8 @@ def round_one(plan: dict) -> list[dict]:
                if arms[0]["providerSettings"].get(key) != arms[1]["providerSettings"].get(key)}
     if changed != {variable}:
         raise ValueError("The paired arms must differ in exactly the declared setting")
-    for key in ("ttsProvider", "modelRevision", "device"):
-        if arms[0][key] != arms[1][key]:
+    for key in ("ttsProvider", "modelRevision", "device", "runtimeMode"):
+        if arms[0].get(key, "default") != arms[1].get(key, "default"):
             raise ValueError("Paired provider identities must match")
     count = sum(len(row["utterances"]) for row in plan["snippets"])
     if count * 2 > plan["budget"]["maximumInitialUtteranceGenerations"]:
@@ -68,11 +68,40 @@ def model_hashes(path: Path, revision: str) -> dict[str, str]:
     return result
 
 
-def prepare(root: Path, plan_path: Path, run_id: str, voice_evidence: Path) -> tuple[dict, dict, Path]:
+def recovery_evidence(root: Path, plan: dict, previous_run_id: str | None) -> dict:
+    """One named repair consumes the existing two-attempt allowance, not a fresh budget."""
+    if previous_run_id is None:
+        return {}
+    if not re.fullmatch(r"[a-zA-Z0-9_-]+", previous_run_id):
+        raise ValueError("Invalid previous run ID")
+    path = root / "workspace/runtime/audio-quality-reset" / previous_run_id / "run.json"
+    previous = read_json(path)
+    if (previous.get("status") != "incomplete" or previous.get("completedUtterances") != 0
+            or previous.get("priorAttemptedUtterances", 0) != 0
+            or previous.get("attemptedUtterances") != 2
+            or "CUDA" not in previous.get("error", "") or "out of memory" not in previous.get("error", "")):
+        raise ValueError("Only the first failed CUDA-OOM pair qualifies for this named repair")
+    if previous["attemptedUtterances"] > plan["budget"]["maximumDefectRetriesTotal"]:
+        raise ValueError("Named repair exceeds the cumulative retry budget")
+    if any(arm.get("runtimeMode") != "staged_cpu_offload" for arm in round_one(plan)):
+        raise ValueError("CUDA-OOM repair must change both arms to staged CPU offload")
+    return {"previousRunId": previous_run_id, "previousRunSha256": sha256_file(path),
+        "retryReason": "CUDA OOM with all model phases resident; stage unchanged FP32 weights through CPU",
+        "priorAttemptedUtterances": previous["attemptedUtterances"],
+        "priorElapsedSec": previous["elapsedSec"],
+        "retryUtteranceId": plan["snippets"][0]["utterances"][0]["id"],
+        "retrySeedOffset": plan["seedPlan"]["namedDefectRetryOffset"]}
+
+
+def prepare(root: Path, plan_path: Path, run_id: str, voice_evidence: Path,
+            previous_run_id: str | None = None) -> tuple[dict, dict, Path]:
     if not re.fullmatch(r"[a-zA-Z0-9_-]+", run_id):
         raise ValueError("Run ID must contain only letters, digits, underscores or hyphens")
     plan = read_json(plan_path)
     arms = round_one(plan)
+    if previous_run_id == run_id:
+        raise ValueError("Repair requires a new run ID")
+    recovery = recovery_evidence(root, plan, previous_run_id)
     destination = root / "workspace/runtime/audio-quality-reset" / run_id
     registry = read_json(root / plan["voicePlan"]["registryPath"])
     hosts = {}
@@ -87,9 +116,9 @@ def prepare(root: Path, plan_path: Path, run_id: str, voice_evidence: Path) -> t
     frozen = {"sourcePlanSha256": sha256_file(plan_path), "voiceMapping": hosts,
         "voiceEvidence": str(voice_evidence), "voiceEvidenceSha256": sha256_file(voice_evidence),
         "verifiedModelFileHashes": model_hashes(provider.local_model_path, provider.model_revision),
-        "provider": provider.to_trace(root)}
+        "provider": provider.to_trace(root), "recovery": recovery}
     frozen["sourceCodeHashes"] = {name: sha256_file(root / "apps/worker-py/worker/tts" / name)
-        for name in ("schema.py", "dialogue.py", "process.py", "isolated_worker.py", "chatterbox_memory.py", "audition.py", "audition_audio.py")}
+        for name in ("schema.py", "trace.py", "dialogue.py", "process.py", "isolated_worker.py", "chatterbox_memory.py", "audition.py", "audition_audio.py")}
     frozen["fingerprint"] = canonical_hash(frozen)
     state_path = destination / "run.json"
     if state_path.exists():
@@ -98,7 +127,10 @@ def prepare(root: Path, plan_path: Path, run_id: str, voice_evidence: Path) -> t
             raise ValueError("Run inputs changed; use a new run ID and retain previous artifacts")
     else:
         state = {"schema": "elr-audio-audition-run-v1", "status": "prepared", "frozen": frozen,
-            "attemptedUtterances": 0, "completedUtterances": 0, "elapsedSec": 0.0,
+            "attemptedUtterances": 0, "completedUtterances": 0,
+            "priorAttemptedUtterances": recovery.get("priorAttemptedUtterances", 0),
+            "cumulativeAttemptedUtterances": recovery.get("priorAttemptedUtterances", 0),
+            "elapsedSec": recovery.get("priorElapsedSec", 0.0),
             "reviewCompleted": False, "publicReleaseAllowed": False,
             "peakRamMiB": None, "peakVramMiB": None,
             "memoryMeasurementNote": "Peak memory is not instrumented; unavailable is not zero.",
@@ -118,6 +150,9 @@ def tasks(root: Path, plan: dict, state: dict, destination: Path) -> list[dict]:
                 manifest = {"renderSettings": {**arm, "seedBase": plan["seedPlan"]["seedBase"]},
                             "hosts": state["frozen"]["voiceMapping"]}
                 turn = {**utterance, "order": order, "deliveryCue": snippet["performanceIntent"]}
+                recovery = state["frozen"].get("recovery", {})
+                if utterance["id"] == recovery.get("retryUtteranceId"):
+                    turn["ttsSeedOffset"] = recovery["retrySeedOffset"]
                 spec = dialogue_turn_spec(root, manifest, turn)
                 output = destination / "raw" / arm["id"] / f"{utterance['id']}.wav"
                 rows.append({"candidateId": arm["id"], "snippetId": snippet["id"], "output": output,
@@ -167,6 +202,7 @@ def render(root: Path, plan: dict, state: dict, destination: Path) -> dict:
 
     def save() -> None:
         state["elapsedSec"] = elapsed_before + time.monotonic() - started
+        state["cumulativeAttemptedUtterances"] = state.get("priorAttemptedUtterances", 0) + state["attemptedUtterances"]
         atomic_write_json(state_path, state)
 
     try:
@@ -175,7 +211,9 @@ def render(root: Path, plan: dict, state: dict, destination: Path) -> dict:
         for index in range(0, len(pending), 2):
             batch = pending[index:index + 2]
             remaining = budget["maximumTotalWallMinutes"] * 60 - (elapsed_before + time.monotonic() - started)
-            if remaining <= 0 or state["attemptedUtterances"] + len(batch) > budget["maximumInitialUtteranceGenerations"]:
+            cumulative = state.get("priorAttemptedUtterances", 0) + state["attemptedUtterances"] + len(batch)
+            if (remaining <= 0 or state["attemptedUtterances"] + len(batch) > budget["maximumInitialUtteranceGenerations"]
+                    or cumulative > budget["maximumInitialUtteranceGenerations"] + budget["maximumDefectRetriesTotal"]):
                 raise ValueError("Audition generation/time budget exhausted")
             if shutil.disk_usage(destination).free < budget["minimumFreeDiskGiB"] * 1024**3:
                 raise ValueError("Audition free-disk requirement failed")
@@ -189,12 +227,15 @@ def render(root: Path, plan: dict, state: dict, destination: Path) -> dict:
                 spec = row["spec"]
                 if actual["id"] != row["request"]["id"] or actual["effectiveSettings"] != spec["effectiveSettings"]:
                     raise ValueError("Provider did not confirm the requested turn settings")
+                if actual.get("runtimeMode", "default") != spec["provider"].runtime_mode:
+                    raise ValueError("Provider did not confirm the requested runtime mode")
                 atomic_write_json(turn_trace_path(row["output"]), {
                     "schema": TRACE_SCHEMA, "identitySha256": spec["identity"]["sha256"],
                     "candidateId": row["candidateId"], "snippetId": row["snippetId"],
                     "provider": {**spec["provider"].to_trace(root), "providerSettings": spec["effectiveSettings"]},
                     "voice": spec["voice"], "normalizedText": spec["normalizedText"], "seed": spec["seed"],
-                    "deliveryCueStatus": "editorial_only", **actual})
+                    "deliveryCueStatus": "editorial_only",
+                    "recovery": state["frozen"].get("recovery", {}), **actual})
                 state["completedUtterances"] += 1
             save()
             print(f"audition turns={state['completedUtterances']}/{len(rows)}", flush=True)

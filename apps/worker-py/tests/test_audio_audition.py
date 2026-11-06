@@ -114,7 +114,8 @@ def test_success_uses_existing_trace_identity_and_reuses_blind_assignment(tmp_pa
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(b"test wav")
             result.append({"id": request["id"], "effectiveSettings": request["providerSettings"],
-                "outputSha256": sha256_file(target), "durationSec": 1, "packageVersion": "fixture"})
+                "outputSha256": sha256_file(target), "durationSec": 1, "packageVersion": "fixture",
+                "runtimeMode": provider.runtime_mode})
         return result
     monkeypatch.setattr(audition, "run_provider_batch", generate)
     assemblies = []
@@ -136,6 +137,44 @@ def test_model_hash_mismatch_fails_without_loading_a_model(tmp_path: Path) -> No
     (tmp_path / "conds.pt").write_bytes(b"changed")
     with pytest.raises(ValueError, match="fingerprint"):
         audition.model_hashes(tmp_path, "revision")
+
+
+def test_runtime_mode_changes_identity_and_paired_modes_must_match(tmp_path: Path) -> None:
+    config, state, output = fixture(tmp_path)
+    staged = audition.tasks(tmp_path, config, state, output)[0]
+    for arm in config["candidates"][:2]:
+        arm["runtimeMode"] = "default"
+    ordinary = audition.tasks(tmp_path, config, state, output)[0]
+    assert staged["spec"]["identity"] != ordinary["spec"]["identity"]
+    for arm in config["candidates"][:2]:
+        del arm["runtimeMode"]
+    legacy = audition.tasks(tmp_path, config, state, output)[0]
+    assert ordinary["spec"]["identity"] == legacy["spec"]["identity"]
+    assert "runtimeMode" not in legacy["spec"]["provider"].to_trace(tmp_path)
+    config["candidates"][0]["runtimeMode"] = "staged_cpu_offload"
+    with pytest.raises(ValueError, match="identities"):
+        audition.round_one(config)
+
+
+def test_named_oom_repair_carries_cost_and_paired_retry_seed(tmp_path: Path) -> None:
+    config, state, output = fixture(tmp_path)
+    original = audition.tasks(tmp_path, config, state, output)
+    previous = tmp_path / "workspace/runtime/audio-quality-reset/failed/run.json"
+    previous.parent.mkdir(parents=True)
+    previous.write_text(json.dumps({"status": "incomplete", "completedUtterances": 0,
+        "attemptedUtterances": 2, "elapsedSec": 105.406, "error": "CUDA error: out of memory"}), encoding="utf-8")
+    recovery = audition.recovery_evidence(tmp_path, config, "failed")
+    assert recovery["priorAttemptedUtterances"] == 2
+    assert recovery["priorElapsedSec"] == 105.406
+    state["frozen"]["recovery"] = recovery
+    repaired = audition.tasks(tmp_path, config, state, output)
+    assert repaired[0]["request"]["seed"] == repaired[1]["request"]["seed"] == original[0]["request"]["seed"] + 10000
+    assert repaired[2]["request"]["seed"] == original[2]["request"]["seed"]
+    payload = audition.read_json(previous)
+    payload["priorAttemptedUtterances"] = 2
+    previous.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match="first failed"):
+        audition.recovery_evidence(tmp_path, config, "failed")
 
 
 def test_completed_resume_rejects_deleted_listening_output(tmp_path: Path) -> None:
