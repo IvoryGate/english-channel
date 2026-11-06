@@ -89,3 +89,19 @@ def test_loudnorm_second_pass_uses_measured_values() -> None:
 def test_loudnorm_second_pass_rejects_incomplete_measurements() -> None:
     with pytest.raises(V2ProofError, match="incomplete"):
         _loudnorm_second_pass_filter(-16.0, -1.5, 11.0, {"input_i": "-18.20"})
+
+
+def test_shared_body_keeps_scene_transitions_and_delivery_30fps(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from worker.classics import v2_proof
+    observed = []
+    monkeypatch.setattr(v2_proof, 'render_shared_spectrum', lambda *args: args[-1])
+    monkeypatch.setattr(v2_proof, '_run', lambda command, **kwargs: observed.append(command))
+    v2_proof._render_video(tmp_path, [tmp_path/'one.png', tmp_path/'two.png'],
+        tmp_path/'audio.wav', tmp_path/'body.ass', tmp_path/'body.mp4', 20., [10.], 1.5,
+        shared_style=True)
+    command = observed[0]
+    filters = command[command.index('-filter_complex')+1]
+    assert 'xfade=transition=fade' in filters
+    assert '[3:v]overlay=880:90' in filters
+    assert 'fps=30' in filters
+    assert command[command.index('-r')+1] == '30'

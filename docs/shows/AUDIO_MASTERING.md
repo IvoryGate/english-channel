@@ -10,6 +10,14 @@ gate; a failed narrator cannot be repaired into approval by this chain.
 
 ## Goals
 
+Standard episodes are not automatically stretched. A production card may opt in
+with `formatContract.pacingPolicy: bounded_slowdown` and an explicit
+`targetMinutes` range after a measured fast-delivery defect. This reuses raw
+provider WAVs, applies pitch-preserving tempo per mastered turn (minimum 0.85),
+then rebuilds subtitles and video on that measured timeline. No silence padding
+or final-video-only timing patch is permitted. If the bound cannot meet the
+format contract, revise content instead of weakening the duration gate.
+
 1. Reduce metallic / robotic “电音” from clone TTS where post-processing can help.
 2. Unify loudness across hosts and turns for YouTube dialogue listening.
 3. Keep speech clear: no crushed dynamics, no underwater denoise, no false stereo wideners.

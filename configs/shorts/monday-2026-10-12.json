@@ -21,7 +21,7 @@
       "visualBrief":"Warm Regency cottage doorway at dusk with two adult young people welcoming a third adult gentleman, soft amber light, restrained relief in posture, hands mostly out of frame, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-182/background.png","experimentAssignments":{"hook":"question","duration":"short"}
     },
     {
-      "shortId":"elr-s-183","title":"Interview English: Name One Reason","thumbnailHeadline":"ONE REASON ONLY","format":"dialogue","cefr":"A2","durationSec":46,"hookStyle":"statement","hook":"One clean reason beats five nervous ones.",
+      "shortId":"elr-s-183","title":"Interview English: Name One Reason","thumbnailHeadline":"ONE REASON ONLY","format":"dialogue","cefr":"A2","durationSec":51,"hookStyle":"statement","hook":"One clean reason beats five nervous ones.",
       "turns":[{"speaker":"candidate","text":"I want this role because I already do this reporting work, and I do it well."},{"speaker":"interviewer","text":"That is one clear reason. Candidates who list five reasons usually lose the thread."},{"speaker":"candidate","text":"So I will keep one reason and one example. The final answer is the clean one."}],
       "prompt":"How many reasons should the answer include?","answer":"One reason and one example.","relatedShow":"series_b","relatedVideoId":null,
       "visualBrief":"Bright anime office corner with an adult woman reviewing interview notes beside a laptop, upper body only, hands below frame, cream blue and coral palette, no readable text.","backgroundImage":"shorts/monday-2026-10-12/elr-s-183/background.png","experimentAssignments":{"hook":"statement","duration":"long"}

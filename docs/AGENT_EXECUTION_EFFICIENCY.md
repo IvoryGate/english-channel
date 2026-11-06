@@ -22,6 +22,12 @@ versioned scripts and configuration.
 
 ## Proportional validation
 
+- Use existing sandbox permissions for ordinary project diagnostics first, not
+  host elevation just to read logs. Never change approval settings to work
+  around reviewer capacity; escalate only a genuine permission boundary.
+- Process access denied means visibility unknown, not confirmed dead. Unknown
+  owners retain the heavy-job safety lock; report UNVERIFIED, not interruption.
+
 Defensive programming is not a goal. Evidence is.
 
 - Run one authoritative preflight at each state transition.
@@ -49,6 +55,9 @@ Defensive programming is not a goal. Evidence is.
 - Capture repetitive renderer progress locally. On success, retain only the
   artifact result; on failure, expose a bounded diagnostic tail instead of the
   complete frame-by-frame log.
+- Persist producer logs before best-effort console output. A broken redirected
+  console must not stop media production; real filesystem write errors still
+  fail visibly. Read terminal run state as well as the last progress line.
 - On failure, diagnose the failing boundary once and retry only the affected
   stage. Do not restart the entire pipeline by default.
 - Repair deterministic audio-level defects in place when the waveform is
@@ -105,6 +114,13 @@ Defensive programming is not a goal. Evidence is.
   transition and stay quiet when no user action is required.
 
 ## Completion discipline
+
+Owner paused all existing scheduled tasks on2026-10-19. Do not reactivate or
+replace them without a new owner request. Continue production through the
+existing controllers, not a new model-driven scheduler. Future long-form
+delivery uses30fps and reusable fixed artwork/single-channel dynamic masks.
+Benchmark a bounded real-audio preview before a costly full-length style
+rollout; report stage timings, not file growth as a throughput success.
 
 Complete the requested production slice before proposing optional safeguards.
 Block only on a real release, safety, authority, or data-integrity failure.

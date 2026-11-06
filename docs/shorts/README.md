@@ -58,6 +58,9 @@ copy; revisions receive a new `shortId`.
 
 ### Visual direction and brand
 
+The current mobile editorial review candidate and safe-area rules are recorded
+in [VISUAL_STYLE.md](VISUAL_STYLE.md). It remains separate from long-form v7.
+
 Every production Short requires a story-specific generated background. One
 background may appear only once per cycle; renames, crops, and minor variations
 do not satisfy the originality requirement. Pure code gradients and generic

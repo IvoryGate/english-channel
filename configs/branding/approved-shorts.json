@@ -1,0 +1,36 @@
+{
+  "schema": "approved-shorts-visual-v1",
+  "approvedDate": "2026-10-18",
+  "scope": "all_future_shorts",
+  "profile": "shorts-centered-audio-v4",
+  "reference": "workspace/branding/shorts-v4/short-preview.mp4",
+  "production": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "header": {
+    "avatarPixels": 208,
+    "alignment": "center",
+    "wash": "translucent_warm_gradient"
+  },
+  "captions": {
+    "alignment": "center",
+    "backingBox": false,
+    "mainAnchorY": 1010
+  },
+  "audioVisual": {
+    "kind": "horizontal_light_spectrum",
+    "bottomPixels": 265,
+    "realAudioRequired": true,
+    "progressBar": false
+  },
+  "cta": {
+    "alignment": "center",
+    "anchorHeightPercent": 53,
+    "buttonWidth": 560,
+    "buttonHeight": 132,
+    "backingBox": false
+  },
+  "retroactiveRebuild": false
+}

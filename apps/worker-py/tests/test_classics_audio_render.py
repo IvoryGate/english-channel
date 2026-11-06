@@ -6,8 +6,10 @@ import sys
 from types import SimpleNamespace
 from pathlib import Path
 
+import pytest
+
 from worker.classics import audio_render
-from worker.classics.audio_render import parse_segment_ids, tts_text
+from worker.classics.audio_render import AudioRenderError, parse_segment_ids, provider_batches, tts_text
 
 
 def test_parse_segment_ids_normalizes_numeric_ids() -> None:
@@ -28,6 +30,22 @@ def test_tts_input_converts_parentheses_to_pauses_without_dropping_words() -> No
     segment = {"spokenText": "a father (having met disappointment), continued"}
 
     assert tts_text(segment) == "a father , having met disappointment, , continued"
+
+
+def test_provider_batches_bound_long_chapter_requests() -> None:
+    requests = [{"id": str(index).zfill(3)} for index in range(1, 71)]
+
+    batches = provider_batches(requests, 20)
+
+    assert [len(batch) for batch in batches] == [20, 20, 20, 10]
+    assert batches[0][0]["id"] == "001"
+    assert batches[-1][-1]["id"] == "070"
+
+
+@pytest.mark.parametrize("batch_size", [0, 21])
+def test_provider_batches_reject_unsafe_sizes(batch_size: int) -> None:
+    with pytest.raises(AudioRenderError, match="between 1 and 20"):
+        provider_batches([{"id": "001"}], batch_size)
 
 
 def test_persuasion_manifest_routes_every_segment_to_one_voice() -> None:

@@ -43,6 +43,31 @@ def test_flagship_tempo_reaches_lower_target_without_changing_standard() -> None
     ) == 1.0
 
 
+def test_standard_tempo_requires_explicit_opt_in() -> None:
+    card = {"format": "standard", "formatContract": {"targetMinutes": [10, 15]}}
+    kwargs = {"clip_durations_sec": [250.0, 250.0], "gap_sec": 0.3}
+    assert resolve_playback_tempo(card, **kwargs) == 1.0
+    card["formatContract"]["pacingPolicy"] = "bounded_slowdown"
+    tempo = resolve_playback_tempo(card, **kwargs)
+    assert tempo == 0.85  # Never stretch speech beyond the established bound.
+    assert resolve_playback_tempo(
+        card, clip_durations_sec=[305.0, 305.0], gap_sec=0.3,
+    ) == 1.0  # Never speed up speech that already meets its target.
+
+
+def test_standard_tempo_reaches_ten_minutes_from_b044_measurement() -> None:
+    card = {
+        "format": "standard",
+        "formatContract": {
+            "targetMinutes": [10, 15], "pacingPolicy": "bounded_slowdown",
+        },
+    }
+    clips = [503.375 / 57] * 57
+    tempo = resolve_playback_tempo(card, clip_durations_sec=clips, gap_sec=0.3)
+    assert 0.86 < tempo < 0.87
+    assert abs(sum(clips) / tempo + 56 * 0.3 - 600) < 0.01
+
+
 def test_resolve_episode_audio_prefers_master(tmp_path: Path) -> None:
     ep = "episode_001"
     paths = artifact_paths(tmp_path, ep)

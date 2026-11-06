@@ -1,0 +1,78 @@
+{
+  "schema":"elr-shorts-portfolio-v1",
+  "cycleId":"sunday-2026-10-25",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "researchReuseNote":"Approved V4 layout and accepted visual research reused. Original fictional practice from A045/A044; no real addresses, financial advice or invented current trend claims. Independent generated backgrounds pending.",
+  "entries":[
+    {
+      "shortId":"elr-s-232","title":"Hear the Correction, Not Just the Time",
+      "thumbnailHeadline":"MEETING OR LEAVING?",
+      "format":"listen_choose","cefr":"B1","durationSec":44,
+      "hookStyle":"question","hook":"Will you miss your friends?",
+      "turns":[
+        {"speaker":"narrator","text":"Listen to this fictional message: Meet at the cafe at six. Sorry, I mean we're leaving from there at six. Come earlier if you want a drink."},
+        {"speaker":"narrator","text":"Which reply fits if you don't want a drink? First: I'll arrive at six and order coffee. Second: I'll be outside before six, ready to leave."},
+        {"speaker":"narrator","text":"The second reply follows the corrected plan. Six is now the departure time. A drink is optional. Don't keep an early detail after the speaker has replaced it. Your answer should fit the current arrangement."}
+      ],
+      "prompt":"Does the corrected six o'clock time mean arrive for coffee, or leave with the group?",
+      "answer":"Leave with the group. Be there before departure if you're joining them.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright clearly drawn2D adult anime Riley auburn hair teal cardigan and Sam blond blue-gray hoodie outside sunny coral cafe looking toward a path, no readable signs, hands cropped, pale cream center, turquoise awning and lemon flower accents, single coherent scene.",
+      "backgroundImage":"shorts/sunday-2026-10-25/elr-s-232/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-233","title":"An Excuse Can Sound Like Yes with a Problem",
+      "thumbnailHeadline":"THEY SOLVED YOUR EXCUSE",
+      "format":"dialogue","cefr":"B1","durationSec":44,
+      "hookStyle":"question","hook":"Did you decline, or ask for help?",
+      "turns":[
+        {"speaker":"Sam","text":"My friends offered matching hoodies. I don't want one, so I said my size might not be available. Now they've found my size in three colours."},
+        {"speaker":"Riley","text":"They heard a problem they could solve. Try naming your actual choice: Thanks for organising it. I'm going to pass on the hoodie, but I'm still coming to the evening."},
+        {"speaker":"Sam","text":"So I can decline the optional item without pretending I have a delivery problem?"},
+        {"speaker":"Riley","text":"Yes. Say which offer you're declining. That keeps the purchase separate from the invitation, and stops another helpful search for your size."}
+      ],
+      "prompt":"Which is clearer: an invented obstacle, or your actual choice about the item?",
+      "answer":"Your actual choice. A solvable obstacle may sound like a yes waiting for help.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright clearly drawn2D adult anime Riley auburn hair teal cardigan beside Sam blond blue-gray hoodie in sunlit mint living room with folded plain coral hoodie at side, thoughtful friendly faces, hands below crop, pale cream middle, warm yellow and turquoise accents, no text.",
+      "backgroundImage":"shorts/sunday-2026-10-25/elr-s-233/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-234","title":"Coming to Games Night Is Not Leading It",
+      "thumbnailHeadline":"COMING OR RUNNING IT?",
+      "format":"micro_story","cefr":"B1","durationSec":51,
+      "hookStyle":"statement","hook":"One yes became a different job.",
+      "turns":[
+        {"speaker":"narrator","text":"Sam accepted a fictional games-night invitation. Later, the host asked him to explain the rules and lead the first round. He nearly wrote: Sure, happy to help. But he had only watched a short explanation of the game. He wasn't ready to lead a group."},
+        {"speaker":"narrator","text":"Instead, he asked what the host needed. Then he replied: I can explain the opening example, but I don't know the rules well enough to run the whole game. Could somebody else lead the round?"},
+        {"speaker":"narrator","text":"He hasn't withdrawn his attendance. He's answered a new request honestly. Coming along, helping with one part and taking responsibility for the whole activity are different commitments."}
+      ],
+      "prompt":"Did Sam refuse the invitation, or clarify the help he can offer?",
+      "answer":"He clarified the help he can offer. Agreeing to attend didn't automatically mean leading.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright clearly drawn2D adult anime blond Sam blue-gray hoodie thoughtfully demonstrating one plain game piece while Riley auburn hair coral blouse listens at sunny ivory table, unbranded simple game pieces only, face upper sides, correct natural hands, mint peach lemon colors, quiet central subtitle space, no writing.",
+      "backgroundImage":"shorts/sunday-2026-10-25/elr-s-234/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-235","title":"Already Agreed? Have a Different Conversation",
+      "thumbnailHeadline":"BEFORE OR AFTER YES?",
+      "format":"dialogue","cefr":"B1","durationSec":51,
+      "hookStyle":"statement","hook":"The earlier agreement changes your reply.",
+      "turns":[
+        {"speaker":"Sam","text":"I already told the organiser to order a hoodie for me. Now I don't want it. I'll write: I'm passing on the hoodie. Problem solved?"},
+        {"speaker":"Riley","text":"That sentence fits an optional offer you haven't accepted. Here, you've already agreed. Start with that: I know I asked you to order one. Is it still possible to change my answer?"},
+        {"speaker":"Sam","text":"And if the order has already gone through, I shouldn't pretend my new message erased the first agreement."},
+        {"speaker":"Riley","text":"Right. Ask what's possible and discuss the next step. This fictional conversation doesn't decide anyone's refund rights. It shows why the same polite sentence doesn't fit every stage of an arrangement."}
+      ],
+      "prompt":"Should Sam acknowledge his earlier yes before asking to change it?",
+      "answer":"Yes. Acknowledge what was agreed, then ask what can still be changed.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Bright clearly drawn2D adult anime Riley auburn hair teal cardigan and Sam blond blue-gray hoodie at warm sunlit peach dining table considering one folded plain hoodie and blank order card at far side, thoughtful not distressed, hands cropped, ivory center, saturated aqua coral lemon accents, no text prices logos or screens.",
+      "backgroundImage":"shorts/sunday-2026-10-25/elr-s-235/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

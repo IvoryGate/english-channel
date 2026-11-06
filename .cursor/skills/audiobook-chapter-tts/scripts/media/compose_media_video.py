@@ -7,9 +7,9 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from media.bar_waveform import render_bar_waveform_video
-from media.media_layout import HEIGHT, WAVE_HEIGHT, WAVE_WIDTH, WAVE_X, WAVE_Y, WIDTH
-from media.thumbnail_tokens import ThumbnailTokens, hex_to_rgb
+from media.radial_waveform import render_radial_waveform_video
+from media.media_layout import FPS, HEIGHT, WAVE_HEIGHT, WAVE_WIDTH, WAVE_X, WAVE_Y, WIDTH
+from media.thumbnail_tokens import ThumbnailTokens
 
 
 _HW_CACHE: str | None = None
@@ -170,17 +170,17 @@ def build_ffmpeg_command(
         f"[{background_index}:v]scale={WIDTH}:{HEIGHT},setsar=1[bg];"
         f"[{waveform_index}:v]scale={WAVE_WIDTH}:{WAVE_HEIGHT},format=rgba[wave];"
         f"[bg][wave]overlay={WAVE_X}:{WAVE_Y}:shortest=1:format=auto[bgwave];"
-        f"[bgwave]{ass_filter},fps=30,format=yuv420p[mainv]"
+        f"[bgwave]{ass_filter},fps={FPS},format=yuv420p[mainv]"
     )
     if use_branding:
         outro_index = 4
         filter_complex = (
-            f"[0:v]scale={WIDTH}:{HEIGHT},setsar=1,fps=30,format=yuv420p[introv];"
-            f"[0:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[introa];"
+            f"[0:v]scale={WIDTH}:{HEIGHT},setsar=1,fps={FPS},format=yuv420p[introv];"
+            f"[0:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo[introa];"
             f"{main_filter};"
-            f"[{audio_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[maina];"
-            f"[{outro_index}:v]scale={WIDTH}:{HEIGHT},setsar=1,fps=30,format=yuv420p[outrov];"
-            f"[{outro_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono[outroa];"
+            f"[{audio_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo[maina];"
+            f"[{outro_index}:v]scale={WIDTH}:{HEIGHT},setsar=1,fps={FPS},format=yuv420p[outrov];"
+            f"[{outro_index}:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo[outroa];"
             f"[introv][introa][mainv][maina][outrov][outroa]concat=n=3:v=1:a=1[v][a]"
         )
     else:
@@ -206,7 +206,7 @@ def build_ffmpeg_command(
             "-bufsize", bufsize,
             "-spatial_aq", "1",
             "-rc-lookahead", "16",
-            "-g", "60",  # 2s keyframe interval @30fps
+            "-g", str(2*FPS),  # Two-second keyframe interval.
         ]
     elif hw == "h264_qsv":
         # Intel QuickSync: veryfast preset, VBR with bitrate caps. QSV encodes
@@ -217,7 +217,7 @@ def build_ffmpeg_command(
             "-b:v", video_bitrate,
             "-maxrate", maxrate,
             "-bufsize", bufsize,
-            "-g", "60",
+            "-g", str(2*FPS),
         ]
     elif hw == "h264_amf":
         # AMD AMF: balanced preset, VBR bitrate caps.
@@ -227,7 +227,7 @@ def build_ffmpeg_command(
             "-b:v", video_bitrate,
             "-maxrate", maxrate,
             "-bufsize", bufsize,
-            "-g", "60",
+            "-g", str(2*FPS),
         ]
     else:
         video_args = [
@@ -250,7 +250,7 @@ def build_ffmpeg_command(
         "-loop",
         "1",
         "-framerate",
-        "30",
+        str(FPS),
         "-i",
         str(background_jpg),
         "-i",
@@ -266,10 +266,14 @@ def build_ffmpeg_command(
         *input_args,
         "-filter_complex",
         filter_complex,
+        "-filter_complex_threads",
+        "1",
         "-map",
         "[v]",
         "-map",
         "[a]" if use_branding else str(audio_index) + ":a",
+        "-threads",
+        "2",
         *video_args,
         "-c:a",
         "aac",
@@ -299,9 +303,14 @@ def compose_media_video(
 ) -> dict[str, Any]:
     output_mp4.parent.mkdir(parents=True, exist_ok=True)
     temp_wave = waveform_mov or output_mp4.with_name(f"{output_mp4.stem}.barwave.mov")
-    bar_rgb = hex_to_rgb(tokens.wave_bar_color)
+    bar_rgb = (255, 255, 255)
 
-    render_bar_waveform_video(audio_wav, temp_wave, bar_rgb=bar_rgb)
+    avatar = Path(__file__).resolve().parents[5] / 'public/branding/english_listening_room_avatar_v2.png'
+    if waveform_mov is None:
+        render_radial_waveform_video(audio_wav, temp_wave, width=WAVE_WIDTH, height=WAVE_HEIGHT,
+                                    bar_rgb=bar_rgb, avatar_path=avatar)
+    elif not temp_wave.is_file():
+        raise FileNotFoundError(f'Explicit waveform overlay is missing: {temp_wave}')
     partial_output = output_mp4.with_name(f"{output_mp4.stem}.partial{output_mp4.suffix}")
     partial_output.unlink(missing_ok=True)
     command = build_ffmpeg_command(
@@ -332,8 +341,9 @@ def compose_media_video(
         "audioWav": str(audio_wav).replace("\\", "/"),
         "assPath": str(ass_path).replace("\\", "/"),
         "waveformMov": str(temp_wave).replace("\\", "/"),
-        "waveformStyle": "rounded-bars-transparent",
-        "waveBarColor": tokens.wave_bar_color,
+        "waveformStyle": "radial-audio-spectrum-v1",
+        "waveBarColor": "green-cyan-blue-violet",
+        "bodyStyleProfile": "elr-longform-body-v7",
         "waveWidth": WAVE_WIDTH,
         "waveHeight": WAVE_HEIGHT,
         "waveX": WAVE_X,

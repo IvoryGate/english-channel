@@ -1,0 +1,102 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "tuesday-2026-10-20",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "researchReuseNote": "Reuse accepted visual-cohort evidence and owner-approved Shorts layout, not a fresh research claim. Topical context: workspace/channel/raw/google-trends-2026-10-18.json. Original fictional practice only.",
+  "entries": [
+    {
+      "shortId": "elr-s-212",
+      "title": "Shop English: The Price on the Tag",
+      "thumbnailHeadline": "THE FINAL PRICE?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Is that the final price?",
+      "turns": [
+        {"speaker": "Sam", "text": "The costume jacket says twenty dollars. Can I stop asking questions and pay now?"},
+        {"speaker": "Riley", "text": "First ask: How much is it altogether? You want the total you actually need to pay."},
+        {"speaker": "Sam", "text": "How much is it altogether? In this pretend shop, the assistant says twenty-two dollars, including a small extra charge."},
+        {"speaker": "Riley", "text": "Now you can decide before paying. Altogether asks for the total, not just the price of one part."}
+      ],
+      "prompt": "Which question checks the total: What colour is it, or how much is it altogether?",
+      "answer": "How much is it altogether? Ask for the total before you pay.",
+      "relatedShow": "series_b",
+      "relatedVideoId": "3TWW7cidkEo",
+      "visualBrief": "Bright high-key anime, auburn-haired adult Riley teal cardigan left and adult Sam dark-blond blue-gray hoodie right, medium shot at a cheerful coral costume shop counter with blank tag and blue jacket, hands below counter, quiet cream center, no lettering or numbers.",
+      "backgroundImage": "shorts/tuesday-2026-10-20/elr-s-212/background-v1.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-213",
+      "title": "Disagree in English Without Judging Your Friend",
+      "thumbnailHeadline": "NOT MY KIND OF SHOW",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Honest opinion or personal insult?",
+      "turns": [
+        {"speaker": "narrator", "text": "Your friend loves a mystery series. You watched two episodes and found them slow. Listen to two possible answers. First: Anyone who likes that show has terrible taste."},
+        {"speaker": "narrator", "text": "Second: I found the beginning slow. What did you enjoy about it? The second answer describes your own experience. It leaves room for your friend's different reaction, without pretending you liked the show."}
+      ],
+      "prompt": "Which answer gives an opinion without judging the viewer: the first or the second?",
+      "answer": "The second. Say what you experienced, then ask a genuine question.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright high-key anime Nora adult woman brown loose low bun cream cardigan foreground at outdoor mint-and-peach cafe, Ethan adult dark wavy hair tan jacket listening at side, relaxed different opinions, white sunny parasol, faces upper outer areas, quiet center, hands outside frame, no text.",
+      "backgroundImage": "shorts/tuesday-2026-10-20/elr-s-213/background-v2.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-214",
+      "title": "Shop English: Ask Before You Remove the Tag",
+      "thumbnailHeadline": "CHECK BEFORE PAYING",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "The answer has a condition.",
+      "turns": [
+        {"speaker": "Sam", "text": "The jacket might be too small. I'll buy it and ask about returning it tomorrow, after the party."},
+        {"speaker": "Riley", "text": "Ask now: Can I return it if it doesn't fit? In our fictional shop, the assistant says yes, but only with the tag still attached."},
+        {"speaker": "Sam", "text": "So yes doesn't mean I can wear it to the party, remove the tag, and bring it back later."},
+        {"speaker": "Riley", "text": "Right. The condition changes your choice. Ask the assistant to explain anything unclear before paying. Different shops may give different answers."}
+      ],
+      "prompt": "In this pretend shop, what must stay attached if you may return the jacket?",
+      "answer": "The tag. Check the shop's stated conditions before you decide to buy.",
+      "relatedShow": "series_b",
+      "relatedVideoId": "3TWW7cidkEo",
+      "visualBrief": "Bright luminous anime, adult auburn-haired woman Riley teal cardigan attentively looking at blue costume jacket on hanger with visible blank tag in white and lemon fitting-room area; adult Sam at far side thoughtfully listening, close crop, hands below frame, sky-blue and yellow palette, quiet center, no text or prices.",
+      "backgroundImage": "shorts/tuesday-2026-10-20/elr-s-214/background-v2.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-215",
+      "title": "A Bad Review Is Not a Bad Evening",
+      "thumbnailHeadline": "THE FILM WASN'T FOR ME",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Dislike the film. Keep the friendship.",
+      "turns": [
+        {"speaker": "narrator", "text": "Ethan's friend chose a film for their evening together. Ethan didn't enjoy the story, but he loved talking with her afterwards. When she asks about the film, he doesn't need to pretend."},
+        {"speaker": "narrator", "text": "He says: The film wasn't for me, but I enjoyed our evening. Those are two different experiences. An honest opinion about a film doesn't have to become a judgment of the person who chose it."}
+      ],
+      "prompt": "Does Ethan dislike spending time with his friend, or just the film they watched?",
+      "answer": "Just the film. He enjoyed the evening and says so honestly. Separate the activity from the company.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright colorful anime Nora brown loose low bun cream cardigan and Ethan dark wavy hair tan jacket, adult friends walking beside cinema lobby windows in luminous pink-and-lavender early evening, warm relaxed smiles after discussing film, upper-body medium framing with hands outside crop, pale glowing center for captions, no recognizable posters or text.",
+      "backgroundImage": "shorts/tuesday-2026-10-20/elr-s-215/background-v2.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

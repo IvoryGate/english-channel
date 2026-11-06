@@ -1,0 +1,77 @@
+{
+  "schema":"elr-shorts-portfolio-v1",
+  "cycleId":"friday-2026-10-23",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "researchReuseNote":"Accepted visual cohort and owner-approved V4 layout reused. Original fictional practice adapted from C036/A043; no real cafe accusations, real ratings, live forecast or private directions. Independent generated art pending.",
+  "entries":[
+    {
+      "shortId":"elr-s-224","title":"One Cold Drink Does Not Mean Always",
+      "thumbnailHeadline":"ONE VISIT OR ALWAYS?",
+      "format":"listen_choose","cefr":"B1","durationSec":44,
+      "hookStyle":"question","hook":"One visit, or every visit?",
+      "turns":[
+        {"speaker":"narrator","text":"In a fictional cafe, your drink arrived cold. You're writing a review. Which sentence stays close to what you know? First: They never get anything right, and every customer must be disappointed."},
+        {"speaker":"narrator","text":"Second: On my visit, the drink arrived cold, and that was disappointing. The second sentence still criticises the experience. It doesn't pretend that one visit tells you what happened to every other customer."}
+      ],
+      "prompt":"Which sentence describes the experience without claiming to know every visit?",
+      "answer":"The second. On my visit gives the criticism a clear, honest limit.",
+      "relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright2D adult anime auburn-haired Riley plum sweater at sunlit coral cafe booth thoughtfully looking at plain mug, open blank notebook, lavender and turquoise window, medium side angle, one hand on notebook other below table, pale center, no logos, writing or stars.",
+      "backgroundImage":"shorts/friday-2026-10-23/elr-s-224/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-225","title":"Your Backup Needs a Decision Time",
+      "thumbnailHeadline":"WHEN WILL WE KNOW?",
+      "format":"dialogue","cefr":"B1","durationSec":44,
+      "hookStyle":"question","hook":"When will your friends know?",
+      "turns":[
+        {"speaker":"Sam","text":"If it rains at noon, we'll change the picnic. I'll confirm the place at eleven. That sounds organised, doesn't it?"},
+        {"speaker":"Riley","text":"The times don't work together. At eleven, you can't check whether it's raining at noon. Choose a condition you can check before people travel."},
+        {"speaker":"Sam","text":"Then let's check at ten. I'll confirm the meeting place by ten fifteen, before anyone leaves."},
+        {"speaker":"Riley","text":"That's clearer. In this invented plan, the condition and the confirmation time now fit together. We haven't made a weather prediction."}
+      ],
+      "prompt":"Should the confirmation come before or after your friends need to leave?",
+      "answer":"Before they leave. Give people enough time to use the information.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"High-key adult anime Riley teal cardigan and Sam blue-gray hoodie discussing picnic basket at bright mint entryway, closed lemon umbrellas, gentle rain behind side window, over-shoulder two-shot, hands cropped, coral flower accents, quiet cream center, no clock numerals, UI or text.",
+      "backgroundImage":"shorts/friday-2026-10-23/elr-s-225/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-226","title":"An Honest Review Can Explain Who Might Like It",
+      "thumbnailHeadline":"NOT FOR ME, BUT MAYBE YOU",
+      "format":"micro_story","cefr":"B1","durationSec":51,
+      "hookStyle":"statement","hook":"Your complaint can help someone choose.",
+      "turns":[
+        {"speaker":"narrator","text":"Riley tried a fictional cafe while hoping for a quiet conversation. She found loud music and closely packed tables. Her first review said nobody should ever go there. Then she thought about what she actually wanted to tell a reader."},
+        {"speaker":"narrator","text":"She changed it to: It was too noisy for our conversation. It may suit you if you want a lively atmosphere. She hasn't withdrawn her complaint."},
+        {"speaker":"narrator","text":"She's explained the problem and the kind of visitor who might feel differently. That gives another person useful details for their own choice."}
+      ],
+      "prompt":"Has Riley pretended to like the noise, or explained her experience more clearly?",
+      "answer":"She's explained it more clearly. Her preference and someone else's can both make sense.",
+      "relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright adult anime Riley auburn loose bun coral blouse thoughtfully writing blank notebook at quiet lemon garden table outside lively turquoise cafe window, side profile and pink flowers, warm daylight, hands simple and correct, pale center, no writing, stars, signs or logos.",
+      "backgroundImage":"shorts/friday-2026-10-23/elr-s-226/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-227","title":"Change the Plan Without Sending a Puzzle",
+      "thumbnailHeadline":"ONE COMPLETE UPDATE",
+      "format":"dialogue","cefr":"B1","durationSec":51,
+      "hookStyle":"statement","hook":"Your friends shouldn't need the chat history.",
+      "turns":[
+        {"speaker":"Sam","text":"Our indoor picnic room isn't available. I'll write: Forget my last message. Everyone can scroll back and work out what I mean."},
+        {"speaker":"Riley","text":"They might read only the notification. Send the current plan in one message: The room isn't available. We're moving the picnic to another day, so there's no meeting this afternoon."},
+        {"speaker":"Sam","text":"That tells them what changed and whether they should leave home. I don't need to include every idea we considered before deciding."},
+        {"speaker":"Riley","text":"Right. A complete update can be short. Keep private directions in your actual group chat, and ask the people affected to acknowledge an important change."}
+      ],
+      "prompt":"Does forget my last message tell a friend where to go now?",
+      "answer":"No. State the current arrangement so it makes sense without older messages.",
+      "relatedShow":"series_a","relatedVideoId":null,
+      "visualBrief":"Vivid bright adult anime Riley teal sweater with closed blank phone and Sam tan overshirt beside packed picnic basket in cream hallway, relieved friendly expressions, front medium two-shot, coral bench and turquoise door, hands below crop, no phone screen, writing or logos.",
+      "backgroundImage":"shorts/friday-2026-10-23/elr-s-227/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

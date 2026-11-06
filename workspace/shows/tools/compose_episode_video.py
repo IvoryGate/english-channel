@@ -29,10 +29,11 @@ def episode_number(episode: str) -> int | None:
 
 def branding_assets_for(episode: str, *, disabled: bool) -> tuple[Path | None, Path | None]:
     number = episode_number(episode)
-    if disabled or number is None or number < BRANDING_START_EPISODE:
+    if disabled or number is None:
         return None, None
-    intro = BRANDING_DIR / "english-listening-room-intro.mp4"
-    outro = BRANDING_DIR / "english-listening-room-outro.mp4"
+    approved = load_json(REPO_ROOT / "configs/branding/approved-longform.json")
+    intro = REPO_ROOT / approved["intro"]["path"]
+    outro = REPO_ROOT / approved["outro"]["path"]
     missing = [str(path) for path in (intro, outro) if not path.is_file()]
     if missing:
         raise FileNotFoundError(f"Branding is required for episode {episode}, but assets are missing: {missing}")
