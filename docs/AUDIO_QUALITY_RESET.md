@@ -1,12 +1,79 @@
 # Audio Quality Reset
 
-As of 2026-11-06 this is a specified experiment, not an accepted voice upgrade.
-No new samples have been rendered or listened to. The reusable original corpus
+As of 2026-11-07 this is an implemented experiment with a failed live trial,
+not an accepted voice upgrade.
+Listening approval remains pending. The reusable original corpus
 and settings are in [audio-audition-v1.json](../configs/quality/audio-audition-v1.json).
-That file is an experiment specification; existing renderers do not consume
-its schema, and an audition runner is not implemented in this slice.
+That file is consumed by `scripts/audio_audition.py`. Production defaults do
+not change automatically when an audition succeeds.
 
-## What the audit proves
+## Executable controls and trial
+
+Episode turns may supply `providerSettings` overrides: Chatterbox's six
+numerical generation controls, Kokoro speed, or VoxCPM CFG/step controls.
+Unsupported controls, non-finite numbers and invalid sampling ranges fail
+before generation. Effective settings enter the request, trace and reuse
+identity. Free-text `deliveryCue` remains explicitly `editorial_only`: no
+keyword-to-emotion mapping or instruction text is appended to speech.
+
+```powershell
+.\.conda-env\python.exe scripts/audio_audition.py --run-id expression-v1-20261106
+.\.conda-env\python.exe scripts/audio_audition.py --run-id expression-v1-20261106 --render
+```
+
+Preparation verifies the local pinned model against recorded upstream file
+hashes, freezes host/reference hashes, the voice-acceptance evidence document,
+the plan and source-code hashes. It creates only an ignored run manifest;
+no model is loaded or downloaded. The render action uses the existing GPU
+lease, offline provider environments, serial two-turn batches and a process
+watchdog. Attempts are persisted before each batch; a failed run retains its
+partial artifacts and does not silently retry. The implemented first round
+has no automatic repair or conditional third arm.
+
+The first actual trial (`expression-v2-20261106`) stopped on CUDA out-of-memory
+before producing a WAV: two charged attempts, 105.406 seconds. The audition now
+explicitly uses `runtimeMode: staged_cpu_offload` for both Chatterbox arms.
+Unchanged FP32 components move through CPU between reference encoding, text
+token sampling and waveform decoding; the text model and waveform decoder do
+not occupy CUDA together. Full-call inference mode also excludes reference
+feature extraction from autograd. This is a memory remedy, not a quality claim.
+Its nondefault mode is included in cache identity; ordinary existing provider
+identities remain unchanged.
+
+One explicit repair may pass `--previous-run-id expression-v2-20261106` with
+a new run ID. It freezes the failed-run hash/reason, carries its elapsed time
+inside the same 30-minute generation budget, and charges both failed attempts
+against the two-retry allowance (28 attempts including the 26 original takes).
+The repaired first pair receives the same recorded +10000 seed offset in both
+arms. Another failed repair cannot qualify for this recovery path. No GPU
+retry occurs automatically.
+
+That repair (`expression-v3-20261107`) also stopped: a SciPy import raised
+MemoryError before model loading. Total recorded cost across both runs is
+four attempts and 115.687 seconds, with zero completed audio takes. A later
+import-only diagnostic succeeded in 22.54 seconds with CUDA hidden; it did not
+reproduce the error or establish a cause. This is not a successful staged
+inference test. The repeated-failure stop rule applies; no further candidates
+were started and no blind listening files exist for these runs.
+
+The normal-host system query reports approximately 32 GB physical RAM, rather
+than the historical 16 GB assumption. The v3 observation recorded at most
+1763 MiB of whole-device GPU usage before model loading; that includes other
+applications and is neither model peak memory nor evidence of savings.
+Evidence stays in ignored `workspace/runtime/audio-quality-reset/` and
+`workspace/rebuild/chatterbox-import-diagnostic.json`. A future trial must name
+its runtime hypothesis, preserve these failed attempts and set a new explicit
+scope; successful imports alone do not justify retrying synthesis.
+
+On successful future runs, raw takes remain under `raw/`; `listen/` contains six shuffled A/B pairs with
+gain-only, true-peak-safe loudness matching. `review.json` has blank scores;
+keep `private-code-map.json` closed until scoring. Resuming a completed trial
+reuses its exact traces and keeps blind assignments unchanged. Peak memory
+remains null when unmeasured. A completed render means awaiting blind review,
+never an accepted new production voice. Record actual run results separately
+from this stable specification.
+
+## Initial audit findings before these patches
 
 | Finding | Evidence | Consequence |
 | --- | --- | --- |
@@ -16,7 +83,8 @@ its schema, and an audition runner is not implemented in this slice.
 | Technical checks do not establish expression | ASR, peak and loudness checks exist; Classic acceptance has no explicit emotional-performance scale | A technically clean episode can still be dull |
 | Provider guidance is stale | `TTS_PIPELINE.md` and parts of `AUDIO_MASTERING.md` centre VoxCPM; `show_config.json` selects Chatterbox for A/C and Kokoro for B | Resolve actual configuration before following historical tuning advice |
 
-These are code and contract findings. They do not prove how much each issue
+These describe the pre-patch code and contract. The controls and timing repairs
+above address their mechanical causes. They do not prove how much each issue
 contributes to the user's listening dissatisfaction. The current mastering
 chain also applies denoise and compression across providers. Whether that
 helps each voice requires a matched-volume comparison, not a blanket removal.
@@ -86,7 +154,8 @@ The accessible September audition traces under
 Both sets use one settings variant. These figures exclude process startup,
 retries, mastering and video; repeated model-load fields are not independent
 load events and must not be summed. The host reports an RTX 4060 Laptop with
-8188 MiB VRAM; repository operating evidence records 16 GB RAM. Retain bounded
+8188 MiB VRAM; a 2026-11-07 host query measured approximately 32 GB RAM,
+superseding the historical 16 GB operating assumption. Retain bounded
 batches and measure total wall time and peak memory before increasing capacity.
 
 The completed migration plan records owner acceptance on September 9, while

@@ -47,6 +47,8 @@ def build_turn_identity(
         "seed": int(seed),
         "providerSettings": provider["providerSettings"],
     }
+    if provider.get("runtimeMode", "default") != "default":
+        payload["runtimeMode"] = provider["runtimeMode"]
     return {"payload": payload, "sha256": canonical_hash(payload)}
 
 

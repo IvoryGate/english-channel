@@ -78,6 +78,7 @@ def align_turn_clips(
   turns: list[dict[str, Any]],
   *,
   gap_sec: float = 0.35,
+  gaps_sec: list[float] | None = None,
   language: str = "en",
   model_size: str = "base",
   device: str = "cpu",
@@ -124,6 +125,7 @@ def align_turn_clips(
   merged = merge_turn_alignments(
     turn_alignments,
     gap_sec=gap_sec,
+    gaps_sec=gaps_sec,
     clip_durations_sec=clip_durations,
   )
   merged["audio"] = ",".join(str(path).replace("\\", "/") for path in clips)
@@ -138,6 +140,7 @@ def align_turn_clips_scripted(
   turns: list[dict[str, Any]],
   *,
   gap_sec: float = 0.35,
+  gaps_sec: list[float] | None = None,
 ) -> dict[str, Any]:
   """Audiobook-style timing: clip WAV duration + script text, no per-clip ASR."""
   import soundfile as sf
@@ -168,6 +171,7 @@ def align_turn_clips_scripted(
   merged = merge_turn_alignments(
     turn_alignments,
     gap_sec=gap_sec,
+    gaps_sec=gaps_sec,
     clip_durations_sec=clip_durations,
   )
   merged["audio"] = ",".join(str(path).replace("\\", "/") for path in clips)

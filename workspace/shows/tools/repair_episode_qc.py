@@ -56,6 +56,7 @@ from check_episode import (  # noqa: E402
 from episode_artifacts import turn_wav_path  # noqa: E402
 from gpu_production_lock import GpuProductionLock  # noqa: E402
 from prepare_reference_concat_audio import build_concat_audio  # noqa: E402
+from episode_timeline import manifest_gaps  # noqa: E402
 from worker.tts.trace import atomic_write_json, sha256_file, turn_trace_path  # noqa: E402
 
 
@@ -72,7 +73,7 @@ def compose_raw_wav(manifest_path: Path) -> Path:
     if missing:
         raise FileNotFoundError(f"missing turn wavs: {missing[:5]}")
     gap = float(settings.get("interTurnSilenceSec", 0.3))
-    build_concat_audio(clips, raw_path, gap_sec=gap)
+    build_concat_audio(clips, raw_path, gap_sec=gap, gaps_sec=manifest_gaps(episode))
     print(f"raw={raw_path.as_posix()} gap={gap}", flush=True)
     return raw_path
 

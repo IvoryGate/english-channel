@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from pathlib import Path
 from typing import Any
 
@@ -56,6 +57,7 @@ class ProviderConfig:
     local_model_path: Path
     seed_base: int
     settings: dict[str, Any]
+    runtime_mode: str = "default"
 
     @property
     def uses_gpu(self) -> bool:
@@ -72,6 +74,7 @@ class ProviderConfig:
             "seedBase": self.seed_base,
             "outputFormat": {"container": "wav", "sampleType": "float32"},
             "providerSettings": dict(self.settings),
+            **({"runtimeMode": self.runtime_mode} if self.runtime_mode != "default" else {}),
         }
 
 
@@ -84,7 +87,7 @@ def _project_path(repo_root: Path, value: str, field: str) -> Path:
 
 def _number(settings: dict[str, Any], key: str, *, minimum: float = 0.0) -> float:
     value = settings.get(key)
-    if not isinstance(value, (int, float)) or isinstance(value, bool) or float(value) <= minimum:
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or float(value) <= minimum:
         raise ProviderConfigError(f"providerSettings.{key} must be greater than {minimum}")
     return float(value)
 
@@ -98,6 +101,11 @@ def _validate_settings(provider_id: str, settings: dict[str, Any]) -> None:
     elif provider_id == "chatterbox_500m":
         for key in ("exaggeration", "cfgWeight", "temperature", "topP", "minP", "repetitionPenalty"):
             _number(settings, key, minimum=-1e-12)
+        for key in ("cfgWeight", "topP", "minP"):
+            if float(settings[key]) > 1:
+                raise ProviderConfigError(f"providerSettings.{key} must be at most 1")
+        for key in ("temperature", "topP", "repetitionPenalty"):
+            _number(settings, key)
     elif provider_id == "chatterbox_turbo":
         unsupported = sorted({"exaggeration", "cfgWeight", "minP"} & set(settings))
         if unsupported:
@@ -109,6 +117,26 @@ def _validate_settings(provider_id: str, settings: dict[str, Any]) -> None:
         _number(settings, "cfgValue")
         if not isinstance(settings.get("inferenceTimesteps"), int) or settings["inferenceTimesteps"] < 1:
             raise ProviderConfigError("providerSettings.inferenceTimesteps must be a positive integer")
+
+
+def effective_turn_settings(provider_id: str, base: dict[str, Any], overrides: Any = None) -> dict[str, Any]:
+    """Only controls actually used per generate() call may vary between turns."""
+    allowed = {
+        "kokoro": {"speed"},
+        "chatterbox_500m": {"exaggeration", "cfgWeight", "temperature", "topP", "minP", "repetitionPenalty"},
+        "voxcpm": {"cfgValue", "inferenceTimesteps"},
+    }
+    if overrides is None:
+        overrides = {}
+    if not isinstance(overrides, dict):
+        raise ProviderConfigError("turn.providerSettings must be an object")
+    unsupported = {key for key in overrides if key not in allowed.get(provider_id, set())
+                   and (key not in base or overrides[key] != base[key])}
+    if unsupported:
+        raise ProviderConfigError("Unsupported per-turn controls: " + ", ".join(sorted(unsupported)))
+    result = {**base, **overrides}
+    _validate_settings(provider_id, result)
+    return result
 
 
 def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) -> ProviderConfig:
@@ -123,6 +151,11 @@ def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) ->
             f"{provider_id} must use pinned revision {PROVIDER_REVISIONS[provider_id]}"
         )
     device = str(render_settings.get("device") or defaults.get("device") or "cpu").strip()
+    runtime_mode = str(render_settings.get("runtimeMode") or "default")
+    if runtime_mode not in {"default", "staged_cpu_offload"}:
+        raise ProviderConfigError("Unsupported provider runtimeMode")
+    if runtime_mode == "staged_cpu_offload" and (provider_id != "chatterbox_500m" or not device.startswith("cuda")):
+        raise ProviderConfigError("staged_cpu_offload requires Chatterbox on CUDA")
     interpreter_value = str(render_settings.get("providerPython") or defaults.get("interpreter") or "")
     model_path_value = str(render_settings.get("localModelPath") or defaults.get("localModelPath") or "")
     seed_base = render_settings.get("seedBase", 20260914)
@@ -144,6 +177,7 @@ def resolve_provider_config(repo_root: Path, render_settings: dict[str, Any]) ->
         local_model_path=_project_path(repo_root, model_path_value, "localModelPath"),
         seed_base=seed_base,
         settings=settings,
+        runtime_mode=runtime_mode,
     )
 
 

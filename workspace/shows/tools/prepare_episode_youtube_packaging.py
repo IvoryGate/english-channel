@@ -34,7 +34,8 @@ TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parents[2]
 sys.path.insert(0, str(TOOLS))
 
-from episode_artifacts import artifact_paths, load_json, turn_wav_path, write_json  # noqa: E402
+from episode_artifacts import artifact_paths, load_json, write_json  # noqa: E402
+from episode_timeline import resolve_episode_timeline  # noqa: E402
 
 # Legacy body-only videos previously reserved a three-second opening. Branded
 # episodes derive their real offset from the composed intro asset instead.
@@ -125,44 +126,11 @@ def episode_timeline(
     *,
     silence_sec: float | None = None,
 ) -> list[dict[str, Any]]:
-    """Build a cumulative timeline (startSec/endSec) for every turn in order.
-
-    Durations come from the rendered turn WAVs (audio must exist). Inter-turn
-    silence is ``renderSettings.interTurnSilenceSec`` (or per-turn
-    ``pauseAfterSec`` if present).
-    """
-    gap = float(
-        silence_sec
-        if silence_sec is not None
-        else manifest.get("renderSettings", {}).get("interTurnSilenceSec", 0.3)
-    )
-    cursor = 0.0
-    timeline: list[dict[str, Any]] = []
-    for turn in manifest["turns"]:
-        wav_path = turn_wav_path(workspace, str(turn["filename"]))
-        if not wav_path.is_file():
-            raise FileNotFoundError(
-                f"Missing turn audio for timeline: {wav_path}. Run render first."
-            )
-        duration = _read_wav_duration(wav_path)
-        start = cursor
-        end = start + duration
-        timeline.append(
-            {
-                "id": str(turn["id"]),
-                "order": int(turn["order"]),
-                "filename": str(turn["filename"]),
-                "speaker": str(turn["speaker"]),
-                "section": str(turn.get("section", "")),
-                "text": str(turn["text"]),
-                "startSec": round(start, 3),
-                "endSec": round(end, 3),
-                "durationSec": round(duration, 3),
-            }
-        )
-        pause = float(turn.get("pauseAfterSec", gap))
-        cursor = end + pause
-    return timeline
+    """Use the same measured program clock as subtitle generation."""
+    resolved, _ = resolve_episode_timeline(workspace, manifest)
+    if silence_sec is not None and any(abs(gap - silence_sec) > 1e-9 for gap in resolved["gapsSec"]):
+        raise ValueError("Silence override disagrees with the resolved audio timeline")
+    return resolved["turns"]
 
 
 def _format_timestamp(seconds: float) -> str:
@@ -550,7 +518,8 @@ def prepare_episode_youtube_packaging(
         raise FileNotFoundError(f"Missing youtube.json: {youtube_path}")
     youtube = load_json(youtube_path)
 
-    timeline = episode_timeline(workspace, manifest)
+    timing, _ = resolve_episode_timeline(workspace, manifest)
+    timeline = timing["turns"]
     resolved_intro_offset_sec, offset_source = resolve_video_intro_offset(
         paths,
         explicit_offset_sec=intro_offset_sec,
@@ -601,6 +570,8 @@ def prepare_episode_youtube_packaging(
         "descriptionTimestampsBlock": timestamps_block,
         "chapterMarkers": resolved,
         "timelineTurns": len(timeline),
+        "timelineSource": timing["source"],
+        "timeline": timing,
         "totalDurationSec": round(float(timeline[-1]["endSec"]) if timeline else 0.0, 3),
     }
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import re
 from typing import Any
 
@@ -127,6 +128,7 @@ def merge_turn_alignments(
     turn_alignments: list[dict[str, Any]],
     *,
     gap_sec: float = 0.0,
+    gaps_sec: list[float] | None = None,
     clip_durations_sec: list[float] | None = None,
 ) -> dict[str, Any]:
     """Stitch per-turn word timings onto the concatenated episode clock.
@@ -134,10 +136,18 @@ def merge_turn_alignments(
     Always advance the timeline by real clip duration (+ gap), never by the
     last ASR word end — otherwise silence tails accumulate huge drift.
     """
+    gaps = [gap_sec] * max(0, len(turn_alignments) - 1) if gaps_sec is None else list(gaps_sec)
+    if len(gaps) != max(0, len(turn_alignments) - 1) or any(
+        not math.isfinite(float(value)) or float(value) < 0 for value in gaps
+    ):
+        raise ValueError("Alignment requires one finite nonnegative gap between clips")
+    if clip_durations_sec is not None and len(clip_durations_sec) != len(turn_alignments):
+        raise ValueError("Alignment duration count differs from turn count")
     words: list[dict[str, Any]] = []
     turns: list[dict[str, Any]] = []
     offset = 0.0
     for index, item in enumerate(turn_alignments):
+        gap = float(gaps[index]) if index < len(gaps) else 0.0
         speaker = str(item.get("speaker", ""))
         turn_id = str(item.get("turnId", ""))
         turn_words = []
@@ -153,13 +163,13 @@ def merge_turn_alignments(
             words.append(shifted)
         turns.append({"turnId": turn_id, "speaker": speaker, "words": turn_words})
         if clip_durations_sec is not None and index < len(clip_durations_sec):
-            offset += float(clip_durations_sec[index]) + gap_sec
+            offset += float(clip_durations_sec[index]) + gap
         elif turn_words:
-            offset = float(turn_words[-1]["end"]) + gap_sec
+            offset = float(turn_words[-1]["end"]) + gap
         else:
-            offset += gap_sec
+            offset += gap
     if clip_durations_sec:
-        duration = sum(float(x) for x in clip_durations_sec) + gap_sec * max(0, len(clip_durations_sec) - 1)
+        duration = sum(float(x) for x in clip_durations_sec) + sum(gaps)
     else:
         duration = float(words[-1]["end"]) if words else 0.0
     return {

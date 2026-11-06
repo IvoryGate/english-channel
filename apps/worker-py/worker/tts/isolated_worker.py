@@ -100,9 +100,12 @@ class Engine:
             self.sample_rate = 24_000
             self.package_version = importlib.metadata.version("kokoro")
         elif self.provider_id == "chatterbox_500m":
-            from chatterbox.tts import ChatterboxTTS
+            repo_root = Path(str(self.config["repoRoot"]))
+            sys.path.insert(0, str(repo_root / "apps" / "worker-py"))
+            from worker.tts.chatterbox_memory import load_chatterbox
 
-            self.model = ChatterboxTTS.from_local(self.model_path, device=self.device)
+            self.model = load_chatterbox(self.model_path, self.device,
+                runtime_mode=str(self.config.get("runtimeMode", "default")))
             self.sample_rate = int(self.model.sr)
             self.package_version = importlib.metadata.version("chatterbox-tts")
         elif self.provider_id == "voxcpm":
@@ -136,7 +139,9 @@ class Engine:
             torch.cuda.manual_seed_all(seed)
         text = str(turn["text"])
         voice = dict(turn["voice"])
-        settings = {**self.settings, **dict(turn.get("providerSettings") or {})}
+        from worker.tts.schema import effective_turn_settings
+
+        settings = effective_turn_settings(self.provider_id, self.settings, turn.get("providerSettings"))
         if self.provider_id == "kokoro":
             chunks = [
                 row.audio.detach().cpu().numpy()
@@ -184,6 +189,8 @@ def main() -> int:
     response_path = Path(args.response)
     request = json.loads(request_path.read_text(encoding="utf-8"))
     repo_root = Path(request["repoRoot"])
+    sys.path.insert(0, str(repo_root / "apps" / "worker-py"))
+    from worker.tts.schema import effective_turn_settings
     provider = dict(request["provider"])
     provider["repoRoot"] = str(repo_root)
     uses_gpu = str(provider["device"]).lower().startswith("cuda")
@@ -210,6 +217,7 @@ def main() -> int:
                 response["turns"].append(
                     {
                         "id": str(turn["id"]),
+                        "effectiveSettings": effective_turn_settings(engine.provider_id, engine.settings, turn.get("providerSettings")),
                         "sampleRate": engine.sample_rate,
                         "durationSec": round(float(value.size / engine.sample_rate), 3),
                         "generationSec": round(generation_seconds, 3),
@@ -217,6 +225,7 @@ def main() -> int:
                         "outputSha256": sha256_file(output),
                         "packageVersion": engine.package_version,
                         "modelLoadSec": round(load_seconds, 3),
+                        "runtimeMode": str(provider.get("runtimeMode", "default")),
                         "watermark": (
                             {"provider": "PerTh", "status": "implicit-enabled"}
                             if provider["providerId"] == "chatterbox_500m"

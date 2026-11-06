@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 import os
+import signal
 import subprocess
 import uuid
 from pathlib import Path
 from typing import Any
 
-from .schema import ProviderConfig
+from .schema import ProviderConfig, effective_turn_settings
 from .trace import atomic_write_json
 
 
@@ -48,9 +49,13 @@ def run_provider_batch(
     turns: list[dict[str, Any]],
     *,
     label: str,
+    timeout_sec: float | None = None,
+    offline: bool = False,
 ) -> list[dict[str, Any]]:
     if not turns:
         return []
+    for turn in turns:
+        effective_turn_settings(provider.provider_id, provider.settings, turn.get("providerSettings"))
     if not provider.interpreter.is_file():
         raise ProviderProcessError(f"Provider interpreter not found: {provider.interpreter}")
     if provider.provider_id != "kokoro" and not provider.local_model_path.exists():
@@ -71,16 +76,36 @@ def run_provider_batch(
     worker = repo_root / "apps" / "worker-py" / "worker" / "tts" / "isolated_worker.py"
     command = [str(provider.interpreter), "-u", str(worker), "--request", str(request_path), "--response", str(response_path)]
     try:
-        result = subprocess.run(
-            command,
-            cwd=str(repo_root),
-            env=_runtime_env(repo_root),
+        env = _runtime_env(repo_root)
+        if offline:
+            env.update(HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
+        options = dict(
+            cwd=str(repo_root), env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
             encoding="utf-8",
             errors="replace",
         )
+        if timeout_sec is None:
+            result = subprocess.run(command, **options)
+        else:
+            if timeout_sec <= 0:
+                raise ProviderProcessError("Provider time budget exhausted")
+            with subprocess.Popen(command, **options, start_new_session=os.name != "nt") as child:
+                try:
+                    stdout, _ = child.communicate(timeout=timeout_sec)
+                except subprocess.TimeoutExpired:
+                    if os.name == "nt":
+                        subprocess.run(["taskkill", "/PID", str(child.pid), "/T", "/F"],
+                                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    else:
+                        os.killpg(child.pid, signal.SIGKILL)
+                    if child.poll() is None:
+                        child.kill()
+                    child.communicate()
+                    raise ProviderProcessError(f"Provider exceeded {timeout_sec:.1f}s batch budget") from None
+                result = subprocess.CompletedProcess(command, child.returncode, stdout=stdout)
         if result.returncode != 0 or not response_path.is_file():
             tail = (result.stdout or "")[-4000:]
             raise ProviderProcessError(
