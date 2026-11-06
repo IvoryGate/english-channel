@@ -1,5 +1,9 @@
 # English Channel YouTube Operating System
 
+2026-11-06: this remains the target architecture contract. Current sequencing
+and verified gaps are in [PRODUCT_REBUILD.md](PRODUCT_REBUILD.md). Cadences
+below are historical policy, not proof of capacity or valid release windows.
+
 ## Mission
 
 Build an AI-operated YouTube channel that compounds audience knowledge and

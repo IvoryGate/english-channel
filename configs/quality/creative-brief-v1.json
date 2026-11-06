@@ -1,0 +1,127 @@
+{
+  "schema": "channel-creative-brief-example-v1",
+  "documentType": "planning_example_not_runtime_configuration",
+  "createdOn": "2026-11-06",
+  "status": "local_prototype_candidate",
+  "contentId": "pilot:h1:the-ten-minute-offer",
+  "hypothesisId": "H1",
+  "publicationAuthorized": false,
+  "newPaidSpendAllowed": false,
+  "audience": {
+    "language": "English",
+    "level": "A2-B1",
+    "need": "Offer help without accidentally agreeing to more time than you have.",
+    "demographicAssumption": "Adult learners; region and gender unvalidated."
+  },
+  "editorial": {
+    "workingTitle": "Helpful, but Busy: Offer Ten Minutes in English",
+    "viewerOutcome": "Say what you can help with and when you need to stop, in one clear sentence.",
+    "originality": "Original fictional conversation; no competitor dialogue or real viewer story reused.",
+    "prototypeDurationSeconds": [60, 90],
+    "candidateFullDurationMinutes": [8, 10],
+    "durationPolicy": "Prototype timing is measured; do not pad to a label or alter production defaults from this example.",
+    "openingPayoff": "A colleague needs help just before you leave. Hear a useful limited offer within the opening 20 seconds.",
+    "openingDialogue": [
+      {"speaker": "Sam", "text": "Could you help me with these slides?", "intent": "Hopeful, a little rushed; speak to a colleague, not an audience."},
+      {"speaker": "Riley", "text": "I can help for ten minutes, but I need to leave at six.", "intent": "Warm and clear; emphasize ten minutes and six without sounding annoyed."},
+      {"speaker": "Sam", "text": "Ten minutes is enough. Can we start with the first slide?", "intent": "Audible relief; lighter pace after the first sentence."},
+      {"speaker": "Riley", "text": "Of course. Let's look at it together.", "intent": "Reassuring and matter-of-fact, without exaggerated cheerfulness."}
+    ],
+    "storyBeats": [
+      {"id": "request", "purpose": "Show a clear request and a real time constraint."},
+      {"id": "notice", "purpose": "Ask what Riley offered and what limit she gave; leave an audible response pause."},
+      {"id": "contrast", "purpose": "Compare a vague Maybe later with a specific offer; neither character is a villain."},
+      {"id": "changed_condition", "purpose": "Sam needs more work than ten minutes. Riley can review one slide now and suggest a separate time for the rest."},
+      {"id": "transfer", "purpose": "Viewer offers a friend five minutes of help before a bus arrives; change the context and numbers."},
+      {"id": "callback", "purpose": "Return to the first slide: a small clear offer was useful even though it did not solve everything."}
+    ],
+    "practicePrompt": "A friend asks for help, but your bus leaves soon. Offer five minutes of help in one sentence.",
+    "exampleAnswer": "I can help for five minutes, but I need to catch my bus.",
+    "factualClaims": [],
+    "exclude": ["clinical advice", "invented native-speaker statistics", "claims of guaranteed fluency", "celebrity voices"]
+  },
+  "performance": {
+    "directionIsNotSpokenText": true,
+    "voiceSelection": "Reuse accepted, rights-cleared voices only after the audio benchmark; selection remains pending.",
+    "focus": ["request sounds addressed to the other person", "limited offer sounds kind rather than defensive", "relief is audible in the answer", "practice silence is intentional"],
+    "avoid": ["uniform sentence-final rise", "cheerful delivery on every line", "reading direction labels aloud", "padding with repeated explanations"]
+  },
+  "visual": {
+    "styleVersion": "local-pilot-proposal-v1",
+    "productionStyleOverride": false,
+    "identityRegistry": "configs/shows/host-visuals.json",
+    "identityRegistrySha256": null,
+    "hostIds": ["series_b_riley", "series_b_sam"],
+    "references": [],
+    "referenceRequirement": "Attach accepted original host reference assets and record their hashes before claiming identity fidelity; do not copy competitor faces.",
+    "sharedArtDirection": "Original 2D editorial comic illustration, clean outlines, restrained flat shading, adult characters, teal and warm cream, a believable small shared workspace. Riley has shoulder-length auburn hair and a teal cardigan; Sam has short tousled dark blond hair and a muted blue-gray hoodie. Maintain the same faces, ages, clothes and room in both concepts and the body art.",
+    "lettering": {
+      "method": "deterministic_overlay_for_this_local_comparison",
+      "headline": "I CAN HELP, BUT...",
+      "badge": "A2-B1",
+      "font": "bundled Inter Bold",
+      "rule": "Exactly the same wording, typeface and lettering colors on both concepts; placement follows each concept's safe box and is part of the composition treatment. No generated lettering. This does not change the existing thumbnail adapter default."
+    },
+    "thumbnailCanvas": {"width": 1920, "height": 1080},
+    "thumbnailConcepts": [
+      {
+        "id": "A",
+        "visualHypothesis": "A visible request and imminent departure make the learning situation immediately recognizable.",
+        "composition": "Medium two-person scene; Riley left holding her coat, Sam right with an open laptop; Riley's body turns toward the door while her face remains attentive to Sam. Both expressions are mild, not distressed.",
+        "textSafeBoxNormalized": [0.22, 0.08, 0.75, 0.28],
+        "prompt": "Create a native 16:9 no-text thumbnail illustration. Use the shared art direction and the attached original host references exactly for identity. Riley, left, is standing with her coat over one arm, ready to leave. Sam, right, is seated beside an open laptop with abstract unreadable slide shapes. They make eye contact: he is hopeful, she is kind but clearly about to go. A warm doorway at the back gives the departure a visible meaning. Use one strong action, close enough to read both faces at phone size. Keep the top-center rectangle from 22% to 75% of frame width and 8% to 28% of frame height quiet for later lettering. Do not include microphones, lettering, logos, speech bubbles, watermarks, photorealistic skin or a dramatic argument. Keep essential faces clear of the bottom-right duration badge."
+      },
+      {
+        "id": "B",
+        "visualHypothesis": "A calm, confident speaker's expression communicates a useful way to respond more directly than a busy situation.",
+        "composition": "Close portrait of Riley at left-center, relaxed open posture and small reassuring smile; a small warm doorway and laptop remain out of focus in the right background. Sam is a soft, unobtrusive shoulder silhouette at far right.",
+        "textSafeBoxNormalized": [0.56, 0.13, 0.93, 0.52],
+        "prompt": "Create a native 16:9 no-text thumbnail illustration. Use the shared art direction and the attached original host references exactly for identity. Frame Riley from chest up at left-center as she makes a clear, friendly offer to Sam. Her expression is composed, engaged and reassuring, not apologetic or triumphant. Her auburn hair, teal cardigan and face match concept A. Sam is only an unobtrusive shoulder at the far right; retain the same workspace as soft simplified shapes behind her. The emotional subject is the speaker choosing a helpful response. Leave the rectangle from 56% to 93% of frame width and 13% to 52% of frame height low-detail for later lettering. No lettering, microphones, logos, speech bubbles, watermarks, photorealism, aggressive gestures or before-and-after split. Keep the lower-right corner nonessential."
+      }
+    ],
+    "bodyCanvas": {"width": 1920, "height": 1080},
+    "bodyArt": {
+      "role": "One stable scene for the local audio/story prototype, not a production renderer style change.",
+      "captionSafeBoxNormalized": [0.15, 0.72, 0.85, 0.93],
+      "prompt": "Create a native 16:9 no-text body illustration for the same original fictional conversation, using the shared art direction and attached original host references. Riley sits on the left and Sam on the right of a small shared work table, looking together at a laptop showing only abstract blocks. Riley's coat rests on the back of her chair and the warm doorway is visible behind them, preserving continuity with both thumbnail concepts. Expressions are attentive and relaxed after the limited offer has been accepted. Place faces in the outer upper thirds. Keep the lower-center rectangle from 15% to 85% of frame width and 72% to 93% of frame height quiet and dark enough for a separately rendered light caption. No text, logos, microphones, watermarks, baked captions or simulated audio visualizer. Do not add extra people or change host ages, facial identities or clothes.",
+      "motion": "Static for the first prototype; add motion only after measured production cost and readability review."
+    }
+  },
+  "provenance": {
+    "promptVersion": "creative-brief-v1",
+    "generator": null,
+    "modelRevision": null,
+    "generatedAt": null,
+    "promptSha256": null,
+    "referenceAssetHashes": [],
+    "outputs": [],
+    "attemptBudget": {"primaryGenerationPerAsset": 1, "namedDefectRevisionPerAsset": 1},
+    "status": "not_generated"
+  },
+  "qualityReview": {
+    "status": "pending",
+    "required": ["blind audio comprehension and emotion review", "speech contains no performance directions", "phone-size headline and action readability", "original host identity consistency", "no unintended text or anatomy defects", "thumbnail promise is fulfilled in opening", "body captions do not obscure faces", "full provenance and artifact hash available before readiness"],
+    "reviewer": null,
+    "reviewedAt": null,
+    "namedDefects": []
+  },
+  "community": {
+    "status": "draft_only",
+    "remoteActionAuthorized": false,
+    "videoQuestion": "A friend needs help, but you have only five minutes. What would you say? Write one sentence.",
+    "channelAuthoredExample": "Example from us: I can help for five minutes, but I need to catch my bus.",
+    "followUpPost": "You can make a small offer clearly: I can help for five minutes, but I need to catch my bus. Now change the situation: you can check ONE page before lunch. What would you say?",
+    "feedbackRouting": "Record real misunderstandings by source ID for the next brief. If nobody answers, keep the example explicitly channel-authored and do not invent participation."
+  },
+  "experiment": {
+    "status": "proposed_not_running",
+    "type": "native_thumbnail_only_if_eligible",
+    "variable": "situation-led versus expression-led visual concept, including framing and text placement",
+    "fixed": ["video", "title", "headline wording", "host identities", "palette", "lettering typeface and colors"],
+    "interpretationLimit": "This tests complete visual concepts. It cannot isolate the causal effect of expression, scene, framing or text placement alone.",
+    "primaryOutcome": "native watch-time-based result",
+    "secondaryObservations": ["first-30-second retention", "substantive practice responses", "production minutes and rework"],
+    "windows": ["T+24h", "T+7d", "T+28d"],
+    "insufficientEvidenceAction": "Retain control; report inconclusive. Do not buy traffic or declare a winner from tiny raw counts."
+  }
+}

@@ -1,5 +1,9 @@
 # Plans Index
 
+Current rebuild entry point: [PRODUCT_REBUILD.md](PRODUCT_REBUILD.md).
+It owns sequencing and historical-plan disposition. Prior plans remain
+evidence of original scopes, not fresh operating authority.
+
 - Active plans live in `docs/exec-plans/active/`.
 - Completed plans live in `docs/exec-plans/completed/`.
 - A plan must move from active to completed in the same PR that completes its scope.

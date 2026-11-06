@@ -1,0 +1,174 @@
+{
+  "schema": "elr-audio-audition-plan-v1",
+  "id": "audio-quality-reset-2026-11-06",
+  "status": "specified_not_rendered",
+  "createdOn": "2026-11-06",
+  "purpose": "Test whether supported synthesis controls improve appropriate expression without reducing clarity or voice stability.",
+  "contract": {
+    "productionManifest": false,
+    "runnerImplemented": false,
+    "newPaidSpend": 0,
+    "downloadsAllowed": false,
+    "publicReleaseAllowed": false,
+    "estimatedSpeechSeconds": 90,
+    "estimateBasis": "188 words at an assumed 130 words per minute plus seven 0.28-second turn gaps gives approximately 89 seconds; measure actual output.",
+    "performanceIntentIsSpokenText": false,
+    "performanceIntentIsModelInstruction": false,
+    "comparisonUnit": "One complete snippet; never compare individual words in isolation."
+  },
+  "voicePlan": {
+    "registryPath": "workspace/dialogue_podcast_research/voices/voice_profiles.json",
+    "chatterbox_500m": {"host_a": "Ethan", "host_b": "Nora"},
+    "kokoro": {"host_a": "am_fenrir", "host_b": "af_heart"},
+    "beforeRender": [
+      "Verify the existing approval and usage record for each reference; an audio filename alone is not evidence.",
+      "Resolve reference paths, hash their bytes and freeze speaker mapping in the run manifest.",
+      "Check the frozen mapping against approved host identity; the September audition had opposite filename mappings.",
+      "Verify local model snapshot identity and package version; fail instead of downloading a missing model."
+    ]
+  },
+  "seedPlan": {
+    "seedBase": 20261106,
+    "rule": "seedBase + one-based utterance order across the six snippets; use identical seeds in paired arms",
+    "namedDefectRetryOffset": 10000,
+    "keepRejectedTake": true
+  },
+  "candidates": [
+    {
+      "id": "cb-baseline",
+      "role": "round_1_control",
+      "ttsProvider": "chatterbox_500m",
+      "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+      "device": "cuda",
+      "providerSettings": {"exaggeration": 0.5, "cfgWeight": 0.5, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
+    },
+    {
+      "id": "cb-expression",
+      "role": "round_1_candidate",
+      "compareAgainst": "cb-baseline",
+      "changedSetting": "exaggeration",
+      "ttsProvider": "chatterbox_500m",
+      "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+      "device": "cuda",
+      "providerSettings": {"exaggeration": 0.7, "cfgWeight": 0.5, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
+    },
+    {
+      "id": "cb-expression-pacing",
+      "role": "conditional_later_round",
+      "condition": "Only after round 1 shows useful expression but a measured fast-delivery defect; compare with cb-expression.",
+      "compareAgainst": "cb-expression",
+      "changedSetting": "cfgWeight",
+      "ttsProvider": "chatterbox_500m",
+      "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+      "device": "cuda",
+      "providerSettings": {"exaggeration": 0.7, "cfgWeight": 0.3, "temperature": 0.8, "topP": 1.0, "minP": 0.05, "repetitionPenalty": 1.2}
+    },
+    {
+      "id": "kokoro-cost-reference",
+      "role": "optional_later_cost_reference",
+      "condition": "Use in a separate bounded run, or when GPU production is unavailable; different voice identity prevents a causal expression comparison.",
+      "ttsProvider": "kokoro",
+      "modelRevision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+      "device": "cpu",
+      "providerSettings": {"languageCode": "a", "speed": 0.95}
+    }
+  ],
+  "snippets": [
+    {
+      "id": "01-embarrassment-relief",
+      "performanceIntent": "Host A admits a small mistake with embarrassment; host B responds with recognition and gentle relief, without sounding like a teacher praising a pupil.",
+      "utterances": [
+        {"id": "u01", "speaker": "host_a", "text": "I called my new manager Mum. In front of the whole team. I wanted to disappear."},
+        {"id": "u02", "speaker": "host_b", "text": "Oh, no. What did she say? Please tell me she laughed with you."}
+      ]
+    },
+    {
+      "id": "02-quiet-support",
+      "performanceIntent": "A short, vulnerable admission receives calm, specific support. Keep warmth intimate and restrained; no whispering or exaggerated sadness.",
+      "utterances": [
+        {"id": "u03", "speaker": "host_a", "text": "Everyone else seems to know what they are doing. I keep checking the same email."},
+        {"id": "u04", "speaker": "host_b", "text": "You have answered the question. Read it once, then send it. I can sit here with you."}
+      ]
+    },
+    {
+      "id": "03-friendly-disagreement",
+      "performanceIntent": "Two reasonable people disagree. Host B pushes back with mild conviction, then offers a practical alternative; no argument or sarcastic contempt.",
+      "utterances": [
+        {"id": "u05", "speaker": "host_a", "text": "If I practise every morning, I will never miss a day. That is the plan."},
+        {"id": "u06", "speaker": "host_b", "text": "Never? I would plan for a messy morning too. Five minutes still counts when life gets in the way."}
+      ]
+    },
+    {
+      "id": "04-dry-humour",
+      "performanceIntent": "The joke comes from timing and understatement. Host A is sincerely pleased, host B gently punctures the claim, and host A concedes. Do not insert laughter tokens.",
+      "utterances": [
+        {"id": "u07", "speaker": "host_a", "text": "I bought a notebook to organise all my unfinished projects."},
+        {"id": "u08", "speaker": "host_b", "text": "And have you written anything in it yet?"},
+        {"id": "u09", "speaker": "host_a", "text": "No. Choosing the right pen has become another project."}
+      ]
+    },
+    {
+      "id": "05-conversational-repair",
+      "performanceIntent": "A brief misunderstanding is repaired immediately. Preserve the question's uncertainty and the final speaker's self-correction without rushing or adding filler.",
+      "utterances": [
+        {"id": "u10", "speaker": "host_a", "text": "Could you check the figures before lunch? I only need the total, not the whole report."},
+        {"id": "u11", "speaker": "host_b", "text": "Before lunch today?"},
+        {"id": "u12", "speaker": "host_a", "text": "Tomorrow. Sorry, I should have said that first. Today would be a little ambitious."}
+      ]
+    },
+    {
+      "id": "06-narrative-names",
+      "performanceIntent": "One narrator moves from patient observation to quiet expectation. Keep the long sentence coherent, articulate Eleanor and Frederick, and land the final contrast without melodrama.",
+      "utterances": [
+        {"id": "u13", "speaker": "host_b", "text": "Eleanor checked the letter again: Thursday, the twenty-third of September. Frederick would arrive before sunset, if the sea stayed calm. She placed two cups on the table, then quietly put one away."}
+      ]
+    }
+  ],
+  "assembly": {
+    "round1GapSec": 0.28,
+    "gapScope": "Between utterances inside a snippet only; snippets remain separate review files.",
+    "silenceToReachDurationAllowed": false,
+    "timeStretchAllowed": false,
+    "round1ReviewProcessing": "Identical peak-safe gain and loudness matching only; no denoise, compressor, music, effects or video.",
+    "targetIntegratedLufs": -16,
+    "maximumTruePeakDbtp": -1.5,
+    "maximumPairLoudnessDifferenceLu": 0.5,
+    "ifTargetConflictsWithPeak": "Use the quieter common level for both arms and record it; do not compress one arm differently.",
+    "laterMasteringComparison": "After synthesis selection, compare the same raw WAVs through minimal processing and the existing full chain, with matched loudness."
+  },
+  "budget": {
+    "round1Arms": ["cb-baseline", "cb-expression"],
+    "maximumInitialUtteranceGenerations": 26,
+    "maximumDefectRetriesTotal": 2,
+    "maximumRetriesPerUtterance": 1,
+    "maximumConcurrentGpuJobs": 1,
+    "chatterboxTurnsPerProcess": 2,
+    "batchWatchdogSeconds": 300,
+    "maximumTotalWallMinutes": 30,
+    "maximumOwnerReviewMinutes": 12,
+    "maximumArtifactsMiB": 512,
+    "minimumFreeDiskGiB": 2,
+    "resourceRule": "Honor the existing heavy-resource lease and stricter runtime gates; unknown process visibility stops the trial. Do not increase batch size to meet the clock.",
+    "stopRule": "Stop at the first budget limit, repeated process crash, missing model/reference, or unavailable resource. Preserve partial traces and mark incomplete; do not run the remaining candidates automatically."
+  },
+  "blindReview": {
+    "scheme": "Randomise A/B order independently per snippet and keep the code map separate until scoring is saved.",
+    "dimensions": ["naturalness", "appropriate_emotion", "conversational_timing", "intelligibility", "voice_stability", "desire_to_continue"],
+    "scale": {"1": "Distracting failure", "2": "Repeatedly synthetic or inappropriate", "3": "Usable but clearly weak", "4": "Convincing with minor defects", "5": "Convincing throughout"},
+    "fields": ["reviewerId", "snippetId", "blindCode", "dimensionScores", "preference_A_B_tie", "defectTimestampSec", "defectDescription"],
+    "localTriageReviewers": 1,
+    "publicVoiceSelectionAdditionalTargetListeners": 2,
+    "listenerRecruitment": "Owner-arranged volunteers; no paid recruiting or automatic outreach.",
+    "promotionRule": "Candidate must be preferred on at least four of six snippets, have median naturalness/appropriate_emotion/intelligibility/voice_stability at least 4, and show no intelligibility or voice-stability regression. This is a provisional local selection rule, not statistical proof of audience preference.",
+    "hardFailures": ["Audible unrequested words or missing meaning", "Mispronounced target names not resolved in review", "Clipping or non-finite samples", "Broken or changed speaker identity", "Missing provenance"],
+    "nextGate": "Passing this short audition permits one 8-12 minute fatigue test, not public release or a full production week."
+  },
+  "evidence": {
+    "runtimeRoot": "workspace/runtime/audio-quality-reset/2026-11-06",
+    "requiredRunFields": ["sourcePlanSha256", "codeCommit", "candidateId", "providerId", "modelRevision", "verifiedModelFileHashes", "packageVersion", "voiceMapping", "referenceSha256", "normalizedText", "seed", "effectiveSettings", "watermarkStatus", "outputSha256", "rawDurationSec", "generationSec", "modelLoadSec", "totalWallSec", "retryReason", "peakRamMiB", "peakVramMiB", "measuredLoudness", "reviewRecord"],
+    "missingMeasurementRule": "Use null with a reason; never infer peak memory or listening approval from a successful render.",
+    "decisionMetrics": ["Wall minutes per accepted audio minute", "Rejected takes per attempted take", "Human review minutes", "Peak RAM and VRAM", "Blind listening preference"],
+    "samplesGenerated": 0,
+    "reviewCompleted": false
+  }
+}
