@@ -10,7 +10,7 @@ from .analytics import derived_metrics, load_latest_metrics, median_metrics
 from .workspace import atomic_write_json, operation_root
 
 
-REVIEW_SCHEMA = "elr-shorts-weekly-review-v1"
+REVIEW_SCHEMA = "elr-shorts-weekly-review-v2"
 WEIGHTS = {
     "engaged_view_rate": 0.35,
     "average_percentage_viewed": 0.30,
@@ -26,27 +26,35 @@ def _ratio(value: float, baseline: float) -> float:
     return max(0.0, min(2.0, value / baseline))
 
 
-def score(row: dict[str, Any], baseline: dict[str, float]) -> float:
+def score(row: dict[str, Any], baseline: dict[str, float | None]) -> float | None:
     metrics = derived_metrics(row)
-    return sum(WEIGHTS[key] * _ratio(metrics[key], baseline.get(key, 0.0)) for key in WEIGHTS)
+    if any(metrics[key] is None or baseline.get(key) is None for key in WEIGHTS):
+        return None
+    return sum(WEIGHTS[key] * _ratio(metrics[key], baseline[key]) for key in WEIGHTS)
 
 
-def _variant_summary(rows: list[dict[str, Any]], baseline: dict[str, float]) -> dict[str, Any]:
+def _rounded(value: float | None, digits: int = 4) -> float | None:
+    return round(value, digits) if value is not None else None
+
+
+def _complete_mean(values: list[float | None], digits: int = 4) -> float | None:
+    return round(statistics.mean(values), digits) if values and all(value is not None for value in values) else None
+
+
+def _variant_summary(rows: list[dict[str, Any]], baseline: dict[str, float | None]) -> dict[str, Any]:
     metrics = [derived_metrics(row) for row in rows]
+    scores = [score(row, baseline) for row in rows]
+    engaged = [row.get("engaged_views") for row in rows]
     return {
         "entryCount": len(rows),
-        "engagedViews": round(sum(float(row.get("engaged_views", 0.0)) for row in rows), 3),
-        "score": round(statistics.mean(score(row, baseline) for row in rows), 4),
-        "engagedViewRate": round(statistics.mean(item["engaged_view_rate"] for item in metrics), 4),
-        "averagePercentageViewed": round(
-            statistics.mean(item["average_percentage_viewed"] for item in metrics), 3
-        ),
-        "subscribersPer1000Engaged": round(
-            statistics.mean(item["subscribers_per_1000_engaged"] for item in metrics), 3
-        ),
-        "longFormViewsPer1000Engaged": round(
-            statistics.mean(item["long_form_views_per_1000_engaged"] for item in metrics), 3
-        ),
+        "completeScoreEntries": sum(value is not None for value in scores),
+        "missingMetrics": sorted({key for item in metrics for key, value in item.items() if value is None}),
+        "engagedViews": round(sum(engaged), 3) if engaged and all(value is not None for value in engaged) else None,
+        "score": _complete_mean(scores),
+        "engagedViewRate": _complete_mean([item["engaged_view_rate"] for item in metrics]),
+        "averagePercentageViewed": _complete_mean([item["average_percentage_viewed"] for item in metrics], 3),
+        "subscribersPer1000Engaged": _complete_mean([item["subscribers_per_1000_engaged"] for item in metrics], 3),
+        "longFormViewsPer1000Engaged": _complete_mean([item["long_form_views_per_1000_engaged"] for item in metrics], 3),
     }
 
 
@@ -62,12 +70,16 @@ def build_review(
     available = [latest[str(entry["shortId"])] for entry in portfolio["entries"] if str(entry["shortId"]) in latest]
     baseline = median_metrics(available)
     experiments: dict[str, dict[str, list[dict[str, Any]]]] = {}
+    expected: dict[str, dict[str, int]] = {}
     for entry in portfolio["entries"]:
         row = latest.get(str(entry["shortId"]))
-        if row is None:
-            continue
         for experiment, variant in dict(entry["experimentAssignments"]).items():
-            experiments.setdefault(str(experiment), {}).setdefault(str(variant), []).append(row)
+            experiment, variant = str(experiment), str(variant)
+            expected.setdefault(experiment, {}).setdefault(variant, 0)
+            expected[experiment][variant] += 1
+            rows = experiments.setdefault(experiment, {}).setdefault(variant, [])
+            if row is not None:
+                rows.append(row)
     minimum_entries = int(product["experiments"]["minimumEntriesPerVariant"])
     minimum_engaged = float(product["experiments"]["minimumEngagedViewsPerVariant"])
     required_lift = float(product["experiments"]["winnerRelativeLift"])
@@ -78,16 +90,23 @@ def build_review(
             variant: _variant_summary(rows, baseline)
             for variant, rows in sorted(variants.items())
         }
+        for variant, summary in summaries.items():
+            summary["plannedEntryCount"] = expected[experiment][variant]
+        evidence_complete = all(summary["score"] is not None
+                                and summary["entryCount"] == summary["plannedEntryCount"]
+                                for summary in summaries.values())
         qualified = [
             variant
             for variant, summary in summaries.items()
-            if summary["entryCount"] >= minimum_entries and summary["engagedViews"] >= minimum_engaged
+            if summary["score"] is not None and summary["entryCount"] >= minimum_entries
+            and summary["engagedViews"] is not None and summary["engagedViews"] >= minimum_engaged
         ]
         decision = "hold"
         winner = None
         loser = None
-        reason = "Need more matched entries or engaged views."
-        if len(qualified) >= 2:
+        reason = ("Need complete metric evidence for all planned entries; missing is not zero."
+                  if not evidence_complete else "Need more matched entries or engaged views.")
+        if evidence_complete and len(qualified) >= 2:
             ranked = sorted(qualified, key=lambda variant: summaries[variant]["score"], reverse=True)
             winner, loser = ranked[0], ranked[1]
             winner_summary = summaries[winner]
@@ -115,33 +134,40 @@ def build_review(
                 "winner": winner if decision == "scale" else None,
                 "loser": loser if decision == "scale" else None,
                 "reason": reason,
+                "evidenceComplete": evidence_complete,
                 "variants": summaries,
             }
         )
     scored = [
         {
             "shortId": short_id,
-            "score": round(score(row, baseline), 4),
+            "score": _rounded(score(row, baseline)),
             "metrics": derived_metrics(row),
+            "metricAvailability": row["metricAvailability"],
+            "sourceSnapshot": row["sourceSnapshot"],
+            "missingMetrics": sorted(key for key, value in derived_metrics(row).items() if value is None),
             "observedOn": row["observedOn"],
         }
-        for short_id, row in latest.items()
+        for short_id, row in latest.items() if short_id in {str(entry["shortId"]) for entry in portfolio["entries"]}
     ]
     entry_by_id = {str(entry["shortId"]): entry for entry in portfolio["entries"]}
-    format_scores: dict[str, list[float]] = {}
+    format_scores: dict[str, list[float | None]] = {}
     for item in scored:
         entry = entry_by_id.get(str(item["shortId"]))
         if entry is not None:
-            format_scores.setdefault(str(entry["format"]), []).append(float(item["score"]))
+            format_scores.setdefault(str(entry["format"]), []).append(item["score"])
     format_performance = {
         format_name: {
             "entryCount": len(values),
-            "meanScore": round(statistics.mean(values), 4),
+            "completeScoreEntries": sum(value is not None for value in values),
+            "meanScore": _complete_mean(values),
         }
         for format_name, values in sorted(format_scores.items())
     }
     next_formats = dict(product["formatAllocation"])
-    if len(available) >= 8 and len(format_performance) >= 2:
+    allocation_complete = (len(available) == len(portfolio["entries"])
+                           and all(item["score"] is not None for item in scored))
+    if allocation_complete and len(available) >= 8 and len(format_performance) >= 2:
         ranked_formats = sorted(
             format_performance,
             key=lambda format_name: format_performance[format_name]["meanScore"],
@@ -165,12 +191,16 @@ def build_review(
         "schema": REVIEW_SCHEMA,
         "cycleId": portfolio["cycleId"],
         "cutoff": cutoff,
-        "coverage": {"planned": len(portfolio["entries"]), "measured": len(available)},
+        "coverage": {"planned": len(portfolio["entries"]), "recorded": len(available),
+                     "measured": sum(any(state == "observed" for state in row["metricAvailability"].values())
+                                     for row in available),
+                     "completeScoreEntries": sum(item["score"] is not None for item in scored)},
         "baseline": baseline,
         "experiments": decisions,
         "formatPerformance": format_performance,
-        "shorts": sorted(scored, key=lambda item: item["score"], reverse=True),
+        "shorts": sorted(scored, key=lambda item: (item["score"] is not None, item["score"] or 0), reverse=True),
         "nextPlan": {
+            "allocationEvidenceComplete": allocation_complete,
             "portfolioSize": int(product["pilotSize"]),
             "formatAllocation": next_formats,
             "contentAllocation": product["experiments"]["allocation"],
@@ -198,6 +228,7 @@ def write_review(repo_root: Path, review: dict[str, Any]) -> tuple[Path, Path]:
         f"# Shorts review — {review_id}",
         "",
         f"Coverage: {review['coverage']['measured']}/{review['coverage']['planned']} planned Shorts measured.",
+        f"Complete scores: {review['coverage']['completeScoreEntries']}; recorded rows: {review['coverage']['recorded']}.",
         "",
         "## Experiment decisions",
         "",
@@ -207,7 +238,8 @@ def write_review(repo_root: Path, review: dict[str, Any]) -> tuple[Path, Path]:
         lines.append(f"- **{experiment['experiment']}** — {experiment['decision']}{winner}. {experiment['reason']}")
     lines.extend(["", "## Ranked Shorts", ""])
     for item in review["shorts"]:
-        lines.append(f"- `{item['shortId']}` — score {item['score']:.3f} ({item['observedOn']})")
+        label = f"{item['score']:.3f}" if item["score"] is not None else "unavailable (incomplete evidence)"
+        lines.append(f"- `{item['shortId']}` — score {label} ({item['observedOn']})")
     lines.extend(["", "## Next plan", ""])
     lines.append(
         "- Format allocation: "

@@ -252,6 +252,54 @@ quality gate.
 
 ## Analytics and experiments
 
+Since 2026-11-06, new imports use `elr-shorts-analytics-snapshot-v2` and reviews
+use `elr-shorts-weekly-review-v2`. Each numeric field has a `metricAvailability`
+state: `observed`, `missing`, `not_returned`, `unsupported`, or
+`legacy_unverified`. Observed zero remains numeric zero. Blank CSV cells,
+omitted JSON values and unavailable API fields remain null; boolean, negative,
+NaN and infinite inputs are rejected. A ratio with a missing input or zero
+denominator is null, not a measured zero rate. Partial interaction counts do
+not imply a complete likes/comments/shares total.
+
+Snapshots now use a content-addressed `.v2-<sha256>.json` filename. Identical
+source-file imports reuse their original file. Each live API collection
+includes its capture time in its identity, including a recovery to previously
+observed values after a missing response. New captures preserve earlier ones
+and record source filename/hash (for file imports), import time and API window.
+For each Short, review selects the latest observation date; at equal dates v2
+takes priority over v1, then the later capture is selected. It never falls back
+to an older complete row to hide newer missing evidence.
+
+Existing v1 files remain untouched. Their numeric zeros may have been inserted
+for absent metrics, so the loader exposes their values as `legacyValues` and
+marks all decision metrics null/`legacy_unverified`. Importing a v1 snapshot
+as if it were an original export is rejected. Reimport the original CSV/JSON
+export or obtain a new capture; merely changing a schema label cannot recover
+the lost evidence.
+
+The existing composite weights are unchanged. Every weighted metric and its
+baseline must be available for a score; no metric is silently omitted or
+reweighted. An experiment remains `hold` if any planned variant entry or
+required metric is missing. Format allocation remains unchanged unless all
+planned entries have complete scores. Reports retain incomplete rows with null
+scores, metric reasons, snapshot references and coverage counts. Real measured
+zero numerators remain valid when their denominators are positive.
+
+The API query below does not supply related-long-video attribution and marks
+`long_form_views` as null/`unsupported`. An empty response is `not_returned`,
+not proof of zero activity. API-only data therefore cannot satisfy the current
+composite score; a reviewed matching export is needed. This conservative hold
+does not prove a format failed, and changing the score requires a separate
+experiment decision. Imports do not merge disparate windows automatically.
+
+This repair establishes missing-value integrity only. It does not implement
+publication-age eligibility, matched observation windows, causal randomization,
+or the full channel analytics inventory. Numeric completeness is not sufficient
+evidence of a valid experiment; those checks remain separate work. At the
+2026-11-06 host inspection, OAuth client/token environment variables and the
+default token file were absent. No fresh API pull or authentication change was
+performed by this repair.
+
 API sync uses aggregate metrics for each ledger YouTube ID:
 
 ```powershell
@@ -275,7 +323,8 @@ short_id,date,views,engaged_views,average_percentage_viewed,subscribers_gained,l
 & $py scripts/shorts.py review --cutoff 2026-08-31
 ```
 
-Each experiment requires at least three measured entries per variant and 200
+Each experiment requires complete metric evidence for every planned entry,
+at least three measured entries per variant and 200
 combined engaged views per variant. A variant scales only when its normalized
 score leads by at least 10% and neither engaged-view rate nor average percentage
 viewed breaks the 10% guardrail. Otherwise the result remains `hold`; the
