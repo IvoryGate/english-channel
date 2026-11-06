@@ -294,6 +294,8 @@ def build_v2_chapter(
     if chapter not in CHAPTER_COPY:
         raise V2ProofError(f"No reviewed YouTube copy for chapter {chapter}")
     paths = ClassicPaths(repo_root, config.slug)
+    from .providers.branding import uses_approved_body
+    shared_style = uses_approved_body(repo_root, config.slug, chapter)
     output_dir = paths.chapter(chapter) / "v2"
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest = read_json(paths.segments(chapter))
@@ -321,7 +323,8 @@ def build_v2_chapter(
     )
     base = f"000_chapter_{chapter:03d}.v2"
     body_srt, body_ass = write_aligned_subtitles(
-        output_dir, alignment["cues"], base_name=f"{base}.body"
+        output_dir, alignment["cues"], base_name=f"{base}.body",
+        shared_style_root=repo_root if shared_style else None,
     )
     total_duration, boundaries = scene_timeline(
         manifest, segment_dir, selected_ids, [end_id for end_id, _ in scenes], silence
@@ -338,6 +341,7 @@ def build_v2_chapter(
         total_duration,
         boundaries,
         transition_sec,
+        shared_style=shared_style,
     )
 
     intro = paths.intro_video(chapter)

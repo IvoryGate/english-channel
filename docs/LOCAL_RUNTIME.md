@@ -45,6 +45,13 @@ revision, voice/reference hash, normalized text, seed, effective settings,
 output format, watermark state, and output hash. Resume reuses a WAV only when
 that complete identity and the current file hash match.
 
+Chatterbox original500M uses a provider-local bounded checkpoint reader instead
+of Windows whole-file mapping. It preserves normal constructors, nonpersistent
+buffers, parameter dtype and approved voice settings, loading one tensor at a
+time onto the configured device. No installed package or pagefile is modified.
+Classic upload packages reference the canonical workspace MP4; metadata export
+folders must not contain a second finished video.
+
 The ELR controller forces child-process `TEMP` and `TMP` into the ignored
 project workspace so model loading and media work do not consume a nearly full
 Windows system drive. Override with `ELR_RUNTIME_TEMP` only when the selected
@@ -86,6 +93,19 @@ permission contexts from sharing a temp directory. `ELR_RUNTIME_TEMP` remains
 the explicit root override.
 
 ## Recover GPU / virtual memory (after crash or long serial render)
+
+Classic Listening narration is also split into bounded provider batches. The
+book config's `render.batchSize` must be between 1 and 20; completed segment
+WAVs and their identity traces are reused when a chapter resumes. This keeps a
+long audiobook chapter from sending every remaining segment to one model
+process and makes progress visible at each batch boundary.
+
+For recovery from an interrupted legacy batch that wrote valid WAVs before it
+wrote their sidecar traces, a book may temporarily set
+`render.adoptUntracedExisting` to `true`. The renderer validates each existing
+WAV, records its checksum and current identity in an explicit recovery trace,
+and renders only missing segments. The recovery status remains visible in the
+trace instead of inventing unavailable generation timing.
 
 VoxCPM loads are RAM-heavy. After a marathon A→B→C run or exit `3221225477` / “页面文件太小”, free stale workers before resuming:
 

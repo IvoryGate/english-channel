@@ -153,15 +153,23 @@ def resolve_playback_tempo(
     clip_durations_sec: list[float],
     gap_sec: float,
 ) -> float:
-    """Slow flagship speech just enough to meet its measured target runtime.
+    """Apply bounded editorial pacing to an explicitly authorized format.
 
     Tempo is applied to each turn before subtitle timing is generated, so the
     audio, captions, chapters, and final video continue to share one timeline.
-    Standard episodes are deliberately unchanged.
+    Standard episodes stay unchanged unless their production card explicitly
+    requests bounded_slowdown; raw provider WAVs are never modified.
     """
-    if not production_card or production_card.get("format") != "flagship_40":
+    if not production_card:
         return 1.0
-    targets = production_card.get("formatContract", {}).get("targetMinutes", [])
+    contract = production_card.get("formatContract", {})
+    standard_opt_in = (
+        production_card.get("format") in {"standard", "standard_10"}
+        and contract.get("pacingPolicy") == "bounded_slowdown"
+    )
+    if production_card.get("format") != "flagship_40" and not standard_opt_in:
+        return 1.0
+    targets = contract.get("targetMinutes", [])
     if not isinstance(targets, list) or not targets:
         return 1.0
     target_sec = float(targets[0]) * 60.0
@@ -309,7 +317,7 @@ def master_episode(
         gap_sec=gap,
     )
     if playback_tempo != 1.0:
-        print(f"flagship runtime pacing -> atempo={playback_tempo:.6f}", flush=True)
+        print(f"runtime pacing -> atempo={playback_tempo:.6f}", flush=True)
 
     master_dir = workspace / "audio" / "_master_turns"
     master_dir.mkdir(parents=True, exist_ok=True)

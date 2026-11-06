@@ -108,15 +108,22 @@
     "minimumCandidateScore": 65
   },
   "community": {
-    "postsPerWeek": 4,
+    "postsPerWeek": 7,
     "rituals": [
       {"day": "monday", "name": "Monday Choice", "purpose": "topic_vote"},
+      {"day": "tuesday", "name": "Listening Check", "purpose": "detail_practice"},
       {"day": "wednesday", "name": "Reply Challenge", "purpose": "response_practice"},
+      {"day": "thursday", "name": "Everyday Scenario", "purpose": "practical_application"},
       {"day": "friday", "name": "Phrase Clinic", "purpose": "language_choice"},
+      {"day": "saturday", "name": "Reading Conversation", "purpose": "chapter_discussion"},
       {"day": "sunday", "name": "Reading Club", "purpose": "retention_and_feedback"}
     ],
     "maximumQuestionsPerPost": 1,
-    "replyWindowHours": 24
+    "replyWindowHours": 24,
+    "operationsRunbook": "docs/COMMUNITY_OPERATIONS.md",
+    "postTimeLocal": "12:00",
+    "perVideoInteractionRequired": true,
+    "historicalBackfillPerDay": null
   },
   "descriptionFooter": [
     "Long-form English: every day at 8:00 AM and 8:00 PM (UTC+8)",

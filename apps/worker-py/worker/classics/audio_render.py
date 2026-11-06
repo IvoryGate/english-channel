@@ -39,6 +39,14 @@ class AudioRenderError(RuntimeError):
 ModelFactory = Callable[[str, str], Any]
 
 
+def provider_batches(
+    requests: list[dict[str, Any]], batch_size: int
+) -> list[list[dict[str, Any]]]:
+    if batch_size < 1 or batch_size > 20:
+        raise AudioRenderError("render.batchSize must be between 1 and 20")
+    return [requests[offset : offset + batch_size] for offset in range(0, len(requests), batch_size)]
+
+
 def parse_segment_ids(value: str | None) -> set[str]:
     if not value:
         return set()
@@ -208,6 +216,52 @@ def render_audio(
             seed=seed,
         )
         specs[segment_id] = {"seed": seed, "text": text, "identity": identity}
+        trace_path = turn_trace_path(output)
+        if (
+            not force
+            and bool(config.render.get("adoptUntracedExisting", False))
+            and output.is_file()
+            and not trace_path.is_file()
+        ):
+            audio, existing_rate = sf.read(output, dtype="float32")
+            audio = _mono_float(audio)
+            if int(existing_rate) != target_rate:
+                audio = _resample(audio, int(existing_rate), target_rate)
+                _atomic_write_wav(output, audio, target_rate)
+            atomic_write_turn_trace(
+                trace_path,
+                {
+                    "schema": TRACE_SCHEMA,
+                    "turnId": segment_id,
+                    "bookSlug": config.slug,
+                    "chapter": chapter,
+                    "renderedAt": datetime.fromtimestamp(
+                        output.stat().st_mtime, tz=timezone.utc
+                    ).isoformat(),
+                    "provider": {
+                        **provider_trace,
+                        "packageVersion": "unknown-after-interrupted-batch",
+                        "modelLoadSec": None,
+                    },
+                    "voice": voice,
+                    "normalizedText": text,
+                    "seed": seed,
+                    "effectiveSettings": provider.settings,
+                    "identitySha256": identity["sha256"],
+                    "sampleRate": target_rate,
+                    "durationSec": round(float(len(audio) / target_rate), 3),
+                    "generationSec": None,
+                    "peak": round(float(np.max(np.abs(audio))), 6),
+                    "outputSha256": sha256_file(output),
+                    "watermark": {"status": "not-recoverable"},
+                    "retryNumber": 0,
+                    "priorArtifactSha256": None,
+                    "recovery": {
+                        "status": "adopted-existing-after-interrupted-batch",
+                        "adoptedAt": datetime.now(timezone.utc).isoformat(),
+                    },
+                },
+            )
         if force or not trace_is_reusable(output, str(identity["sha256"])):
             requests.append(
                 {
@@ -222,12 +276,27 @@ def render_audio(
             )
     if model_factory is not _default_model_factory and requests:
         raise AudioRenderError("Custom in-process model factories are supported only by the legacy VoxCPM renderer")
-    results = run_provider_batch(
-        repo_root,
-        provider,
-        requests,
-        label=f"classic-{config.slug}-{chapter:03d}-{provider.provider_id}",
-    )
+    batch_size = int(config.render.get("batchSize", 20))
+    batches = provider_batches(requests, batch_size)
+    results: list[dict[str, Any]] = []
+    batch_count = len(batches)
+    for batch_number, batch in enumerate(batches, start=1):
+        print(
+            f"provider_batch={batch_number}/{batch_count} turns={len(batch)} "
+            f"range={batch[0]['id']}-{batch[-1]['id']}",
+            flush=True,
+        )
+        results.extend(
+            run_provider_batch(
+                repo_root,
+                provider,
+                batch,
+                label=(
+                    f"classic-{config.slug}-{chapter:03d}-{provider.provider_id}"
+                    f"-batch-{batch_number:02d}"
+                ),
+            )
+        )
     by_id = {str(item["id"]): item for item in results}
     model_rate = int(results[0]["sampleRate"]) if results else target_rate
     rendered: list[dict[str, Any]] = []

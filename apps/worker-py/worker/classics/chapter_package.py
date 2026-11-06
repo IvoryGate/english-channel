@@ -16,6 +16,8 @@ from .config import BookConfig
 from .io import atomic_write_json, atomic_write_text, read_json, sha256_file
 from .paths import ClassicPaths
 from .qc import qc_chapter
+from .providers.branding import uses_approved_body
+from .providers.longform_media import write_shared_captions, compose_shared_body
 
 
 class ChapterPackageError(RuntimeError):
@@ -67,6 +69,26 @@ CHAPTER_COPY = {
         "hook": "One Small Kindness",
         "summary": "At Uppercross, a crowded family scene and one quiet act of help expose the feeling that Anne and Captain Wentworth cannot put into words.",
         "keywords": ["Anne Elliot", "Captain Wentworth", "Uppercross", "quiet kindness"],
+    },
+    10: {
+        "hook": "He Could Not See Her Suffer",
+        "summary": "An autumn walk to Winthrop leaves Anne painfully close to Captain Wentworth and Louisa Musgrove, until one quiet act of care reveals that he still notices her suffering.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Louisa Musgrove", "Winthrop walk"],
+    },
+    11: {
+        "hook": "A New World at Lyme",
+        "summary": "A journey to Lyme introduces Anne to Captain Wentworth's warm naval circle, where friendship, loss, and a thoughtful conversation with Captain Benwick open a different world to her.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Captain Benwick", "Lyme Regis"],
+    },
+    12: {
+        "hook": "After the Fall",
+        "summary": "A walk on the Cobb at Lyme turns into a crisis, and Anne's clear judgment helps the shaken group decide what to do next. Captain Wentworth begins to rely on the understanding he once dismissed.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Louisa Musgrove", "the Cobb", "Lyme Regis"],
+    },
+    13: {
+        "hook": "He Asked About Her",
+        "summary": "Anne helps the Musgroves before leaving Uppercross and returning to Kellynch. A visit to the Crofts brings news of Louisa's recovery and the quiet pleasure of learning that Captain Wentworth has particularly enquired after her.",
+        "keywords": ["Anne Elliot", "Captain Wentworth", "Admiral Croft", "Mrs Croft", "Kellynch Hall"],
     },
 }
 
@@ -181,6 +203,9 @@ def write_subtitles(repo_root: Path, config: BookConfig, chapter: int) -> dict[s
     srt_path.write_text("\n\n".join(srt_blocks) + "\n", encoding="utf-8")
 
     ass_path = srt_path.with_suffix(".ass")
+    if uses_approved_body(repo_root, config.slug, chapter):
+        write_shared_captions(repo_root, ass_path, cues)
+        return {"srt": srt_path, "ass": ass_path, "durationSec": cursor, "cueCount": len(cues)}
     header = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 2560
@@ -240,6 +265,9 @@ def render_body_video(repo_root: Path, config: BookConfig, chapter: int, *, forc
         raise ChapterPackageError("Body video inputs are incomplete")
     output.parent.mkdir(parents=True, exist_ok=True)
     ass_filter_path = ass_path.relative_to(repo_root).as_posix().replace(":", r"\:")
+    if uses_approved_body(repo_root, config.slug, chapter):
+        compose_shared_body(repo_root, background, master, ass_path, output)
+        return output
     video_filter = (
         "scale=2560:1440:force_original_aspect_ratio=increase,crop=2560:1440,"
         "drawbox=x=0:y=1030:w=2560:h=410:color=0x2b1c16@0.18:t=fill,"
@@ -279,7 +307,7 @@ def _normalized_concat_command(inputs: list[Path], output: Path) -> list[str]:
     filters: list[str] = []
     for index in range(3):
         filters.append(
-            f"[{index}:v]fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v{index}]"
+            f"[{index}:v]scale=2560:1440,setsar=1,fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v{index}]"
         )
         filters.append(
             f"[{index}:a]aresample=48000,"
@@ -449,7 +477,8 @@ Subscribe to the English Listening Room and continue the story with the next cha
 
     export_dir = repo_root / "exports" / "youtube" / config.slug / f"chapter-{chapter:02d}"
     export_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(paths.final_video(chapter), export_dir / f"persuasion-chapter-{chapter:02d}.mp4")
+    # The canonical workspace owns the only finished video. Export metadata
+    # may be small and portable; never duplicate the multi-GB MP4.
     shutil.copy2(paths.thumbnail(chapter), export_dir / f"persuasion-chapter-{chapter:02d}-thumbnail.png")
     shutil.copy2(youtube_captions, export_dir / f"persuasion-chapter-{chapter:02d}.srt")
     atomic_write_text(export_dir / "title.txt", title)
@@ -457,7 +486,7 @@ Subscribe to the English Listening Room and continue the story with the next cha
     atomic_write_text(export_dir / "tags.txt", ", ".join(tags))
     checklist = f"""# YouTube upload checklist — Persuasion Chapter {chapter}
 
-- [ ] Upload `persuasion-chapter-{chapter:02d}.mp4`
+- [ ] Upload canonical video `{report['video']}` (no exported video copy)
 - [ ] Apply `title.txt` and `description.txt`
 - [ ] Add `persuasion-chapter-{chapter:02d}-thumbnail.png`
 - [ ] Upload English captions from `persuasion-chapter-{chapter:02d}.srt`

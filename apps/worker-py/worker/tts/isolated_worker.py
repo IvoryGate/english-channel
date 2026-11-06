@@ -100,9 +100,11 @@ class Engine:
             self.sample_rate = 24_000
             self.package_version = importlib.metadata.version("kokoro")
         elif self.provider_id == "chatterbox_500m":
-            from chatterbox.tts import ChatterboxTTS
+            repo_root = Path(str(self.config["repoRoot"]))
+            sys.path.insert(0, str(repo_root / "apps" / "worker-py"))
+            from worker.tts.chatterbox_memory import load_chatterbox
 
-            self.model = ChatterboxTTS.from_local(self.model_path, device=self.device)
+            self.model = load_chatterbox(self.model_path, self.device)
             self.sample_rate = int(self.model.sr)
             self.package_version = importlib.metadata.version("chatterbox-tts")
         elif self.provider_id == "voxcpm":

@@ -14,6 +14,7 @@ from .aligned_subtitles import align_segment_files
 from .config import BookConfig
 from .io import atomic_write_json, atomic_write_text, read_json, sha256_file
 from .paths import ClassicPaths
+from .providers.longform_media import write_shared_captions, render_shared_spectrum
 
 
 class V2ProofError(RuntimeError):
@@ -43,6 +44,7 @@ def write_aligned_subtitles(
     cues: list[dict[str, Any]],
     *,
     base_name: str = "persuasion-chapter-01-v2-proof",
+    shared_style_root: Path | None = None,
 ) -> tuple[Path, Path]:
     srt_path = output_dir / f"{base_name}.srt"
     ass_path = output_dir / f"{base_name}.ass"
@@ -51,6 +53,9 @@ def write_aligned_subtitles(
         for index, cue in enumerate(cues, start=1)
     ]
     atomic_write_text(srt_path, "\n\n".join(srt_blocks))
+    if shared_style_root is not None:
+        write_shared_captions(shared_style_root, ass_path, cues)
+        return srt_path, ass_path
     header = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 2560
@@ -153,6 +158,8 @@ def _render_video(
     total_duration: float,
     boundaries: list[float],
     transition_sec: float,
+    *,
+    shared_style: bool = False,
 ) -> None:
     if len(images) < 2 or len(boundaries) != len(images) - 1:
         raise V2ProofError("Scene images and transition boundaries do not match")
@@ -164,21 +171,27 @@ def _render_video(
     durations.append(total_duration - boundaries[-1] + transition_sec / 2.0)
     if min(durations) <= transition_sec:
         raise V2ProofError("Scene duration is too short for the requested transition")
+    fps = 30
+    spectrum = output.with_suffix('.spectrum.mov')
+    if shared_style:
+        render_shared_spectrum(repo_root, master_audio, spectrum)
     command = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
     for image, duration in zip(images, durations, strict=True):
-        command.extend(["-loop", "1", "-framerate", "30", "-t", f"{duration:.6f}", "-i", str(image)])
+        command.extend(["-loop", "1", "-framerate", str(fps), "-t", f"{duration:.6f}", "-i", str(image)])
     command.extend(["-i", str(master_audio)])
+    if shared_style:
+        command.extend(['-i', str(spectrum)])
     ass_filter_path = ass_path.relative_to(repo_root).as_posix().replace(":", r"\:")
     x_positions = ["iw/2-(iw/zoom/2)", "iw-(iw/zoom)", "0"]
     filters: list[str] = []
     for index in range(len(images)):
-        zoom_step = 0.000020 + (index % 4) * 0.000002
+        zoom_step = (0.000020 + (index % 4) * 0.000002) * 30/fps
         zoom_limit = 1.030 + (index % 3) * 0.002
         filters.append(
             f"[{index}:v]scale=2560:1440:force_original_aspect_ratio=increase,crop=2560:1440,"
             f"zoompan=z='min(zoom+{zoom_step:.6f},{zoom_limit:.3f})':"
             f"x='{x_positions[index % len(x_positions)]}':y='ih/2-(ih/zoom/2)':"
-            f"d=1:s=2560x1440:fps=30,setsar=1,format=yuv420p[v{index}]"
+            f"d=1:s=2560x1440:fps={fps},setsar=1,format=yuv420p[v{index}]"
         )
     previous = "v0"
     for index, boundary in enumerate(boundaries, start=1):
@@ -188,11 +201,14 @@ def _render_video(
             f"offset={boundary-transition_sec/2.0:.6f}[{output_label}]"
         )
         previous = output_label
+    if shared_style:
+        filters.append(f'[{previous}][{len(images)+1}:v]overlay=880:90:shortest=1[bodywave]')
+        previous = 'bodywave'
     filters.append(f"[{previous}]ass='{ass_filter_path}'[vout]")
     command.extend(
         [
             "-filter_complex", ";".join(filters), "-map", "[vout]", "-map", f"{len(images)}:a:0",
-            "-r", "30", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
+            "-r", str(fps), "-filter_complex_threads", "1", "-threads", "2", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2",
             "-t", f"{total_duration:.6f}", "-movflags", "+faststart", str(output),
         ]

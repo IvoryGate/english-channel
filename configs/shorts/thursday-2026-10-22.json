@@ -1,0 +1,92 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "thursday-2026-10-22",
+  "visualResearch": {"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "researchReuseNote": "Reuse accepted visual cohort and owner-approved V4 layout. Original simplified practice tied to C035/B046; all events and reviews fictional, no live ranking claims. Generated independent backgrounds still pending.",
+  "entries": [
+    {
+      "shortId":"elr-s-220",
+      "title":"Popular Does Not Mean Right for Your Group",
+      "thumbnailHeadline":"POPULAR, BUT FOR YOU?",
+      "format":"listen_choose",
+      "cefr":"B1",
+      "durationSec":44,
+      "hookStyle":"question",
+      "hook":"Popular, or right for you?",
+      "turns":[
+        {"speaker":"narrator","text":"In our fictional example, a busy evening event gets lots of excited reviews. Your friend needs somewhere quiet to talk. Which question helps you choose? First: How many people liked it?"},
+        {"speaker":"narrator","text":"Second: Will it be quiet enough for our conversation? Popularity tells you other people enjoyed something. It doesn't tell you whether the same place fits your purpose. Start with what your group actually needs."}
+      ],
+      "prompt":"Which question checks your group's needs: the first or the second?",
+      "answer":"The second. Ask whether it will be quiet enough to talk.",
+      "relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Bright adult anime auburn-haired woman Riley teal cardigan thoughtfully comparing a lively distant lantern courtyard with a quiet sunny garden table, side profile foreground, lemon and turquoise palette, no text or numbers, pale central area, hands below crop.",
+      "backgroundImage":"shorts/thursday-2026-10-22/elr-s-220/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-221",
+      "title":"Crunchy and Salty Describe Different Things",
+      "thumbnailHeadline":"TASTE OR TEXTURE?",
+      "format":"dialogue",
+      "cefr":"A2",
+      "durationSec":44,
+      "hookStyle":"question",
+      "hook":"Crunchy: taste or texture?",
+      "turns":[
+        {"speaker":"Sam","text":"This cracker is crunchy and salty. Are those two words telling you the same thing?"},
+        {"speaker":"Riley","text":"No. Crunchy describes the texture: how it feels when you bite. Salty describes the taste. You can use both to help someone imagine the snack."},
+        {"speaker":"Sam","text":"So a crunchy snack doesn't have to be salty. It could be crunchy and sweet, like some biscuits."},
+        {"speaker":"Riley","text":"Exactly. Describe the food you actually tried. One word for texture and one for taste is a useful start."}
+      ],
+      "prompt":"Which word describes taste: crunchy or salty?",
+      "answer":"Salty describes taste. Crunchy describes texture.",
+      "relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright playful adult anime Riley auburn hair teal sweater and dark-blond Sam blue-gray hoodie at sunlit coral kitchen island, small crackers and biscuits on turquoise plates, medium two-shot, hands below island, vivid yellow cabinets, pale center, no text or packaging logos.",
+      "backgroundImage":"shorts/thursday-2026-10-22/elr-s-221/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-222",
+      "title":"An Honest Review Can Still Miss Your Needs",
+      "thumbnailHeadline":"GOOD REVIEW, WRONG FIT",
+      "format":"micro_story",
+      "cefr":"B1",
+      "durationSec":51,
+      "hookStyle":"statement",
+      "hook":"The review can be true and still not help.",
+      "turns":[
+        {"speaker":"narrator","text":"Riley reads an excited review of a fictional evening event. The writer loved the loud music and busy crowd. Riley wants a quiet place to catch up with a friend. She doesn't need to call the review dishonest."},
+        {"speaker":"narrator","text":"Instead, she says: That sounds fun for them, but it may not suit our plans. The writer describes a real preference inside this invented story. Riley has a different purpose. She looks for details about noise and seating, not just another enthusiastic opinion."}
+      ],
+      "prompt":"Must the review be false because Riley wants a different kind of evening?",
+      "answer":"No. Different people can enjoy different things. Check the details that matter to your plans.",
+      "relatedShow":"series_c","relatedVideoId":null,
+      "visualBrief":"Luminous adult anime Riley auburn loose bun coral blouse reading blank-screen phone beside open turquoise balcony doors, quiet cream cafe booth and lavender cushions, thoughtful smile, warm daylight pink flowers, one natural hand holding phone other below frame, no text or interface.",
+      "backgroundImage":"shorts/thursday-2026-10-22/elr-s-222/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-223",
+      "title":"Too Chewy for Me Is a Personal Preference",
+      "thumbnailHeadline":"TOO CHEWY FOR ME",
+      "format":"dialogue",
+      "cefr":"A2",
+      "durationSec":51,
+      "hookStyle":"statement",
+      "hook":"Describe your preference, not everybody's.",
+      "turns":[
+        {"speaker":"Sam","text":"I brought these chewy sweets for us to try. You look unsure. Do you think they're terrible?"},
+        {"speaker":"Riley","text":"Not terrible. They're a little too chewy for me. I prefer something softer. For me shows that I'm describing my own preference, not making a rule for everyone."},
+        {"speaker":"Sam","text":"I like chewy sweets, but now I know what you prefer. Would you rather try this soft cake?"},
+        {"speaker":"Riley","text":"Yes, thanks. I can appreciate you sharing food without pretending to enjoy every texture. A clear, friendly answer helps you offer something different."}
+      ],
+      "prompt":"Does too chewy for me mean nobody should like the sweet?",
+      "answer":"No. It describes one person's preference. Someone else may enjoy the same texture.",
+      "relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"High-key adult anime picnic under sunny lemon parasol, auburn Riley coral cardigan and dark-blond Sam blue-gray shirt sharing small soft cake and colorful unwrapped sweets, cheerful mint blanket and pink flowers, close side-angle faces upper thirds, anatomically simple hands below crop, no text, bright pale center.",
+      "backgroundImage":"shorts/thursday-2026-10-22/elr-s-223/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

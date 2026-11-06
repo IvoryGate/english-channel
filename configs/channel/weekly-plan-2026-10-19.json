@@ -1,0 +1,632 @@
+{
+  "schema": "youtube-channel-weekly-plan-v1",
+  "timezone": "Asia/Shanghai",
+  "weekStartsOn": "2026-10-19",
+  "strategy": "trend_informed_nonpolitical_english_with_approved_visuals",
+  "executionAuthority": {
+    "approvedBy": "channel_owner",
+    "approvedAt": "2026-10-18",
+    "scope": "produce_next_week_under_approved_visual_and_editorial_rules",
+    "confirmationPolicy": "owner_authorized_weekly_execution_no_per_script_pause",
+    "note": "Publication requires verified package and duplicate-safe browser reconciliation; no automatic claim that a local slot is remotely scheduled."
+  },
+  "evidence": {
+    "capturedAt": "2026-10-18",
+    "sources": [
+      "Google Trends Trending Now US",
+      "Google Trends Halloween 2026 discovery"
+    ],
+    "artifact": "workspace/channel/raw/google-trends-2026-10-18.json",
+    "scope": "Retrieved recent trend snapshots, not a complete top-ranking census or forecast. Recheck before late-week topical claims.",
+    "t7Analytics": "No fresh complete T+7 capture verified in this turn; do not invent results."
+  },
+  "cadence": {
+    "longFormCount": 14,
+    "standardDialogueCount": 10,
+    "classicListeningCount": 2,
+    "flagship40Count": 2,
+    "shortsCount": 28,
+    "totalUploadCount": 42
+  },
+  "formatContracts": {
+    "standard": {
+      "durationMinutes": [
+        10,
+        15
+      ],
+      "spokenWordTarget": [
+        1400,
+        2800
+      ]
+    },
+    "classic_listening": {
+      "completeChapterRequired": true,
+      "measuredDurationRequired": true
+    },
+    "flagship_40": {
+      "durationMinutes": [
+        35,
+        45
+      ],
+      "targetMinutes": [
+        38,
+        42
+      ],
+      "spokenWordTarget": [
+        5200,
+        6200
+      ],
+      "measuredMediaDurationRequired": true,
+      "minimumStimulusChanges": 10
+    }
+  },
+  "visualPolicy": {
+    "longform": "configs/branding/approved-longform.json",
+    "shorts": "configs/branding/approved-shorts.json"
+  },
+  "editorialSafety": {
+    "exclude": [
+      "politics",
+      "elections",
+      "political_parties",
+      "wars",
+      "geopolitical_conflict",
+      "partisan_culture_wars",
+      "real_tragedy_clickbait"
+    ],
+    "noInventedScoresOffersOrRankings": true,
+    "originalFictionalPracticeScenes": true,
+    "classicException": "Continue original public-domain chapters; do not alter the novel to insert trends."
+  },
+  "publicationSlots": [
+    {
+      "contentId": "content:classic_listening:persuasion_chapter_012",
+      "scheduledAt": "2026-10-19T08:00:00+08:00",
+      "format": "classic_listening",
+      "remoteAction": "published_public_recovery_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "IOErf9wFRZI",
+      "publicationEvidence": "workspace/channel/persuasion12-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-208",
+      "scheduledAt": "2026-10-19T09:30:00+08:00",
+      "source": "persuasion_chapter_012",
+      "remoteAction": "uploaded_private_hold_for_source",
+      "checks": "local_package_pass_platform_checks_pending_at_save",
+      "videoId": "DfV7CvZp4pk"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-209",
+      "scheduledAt": "2026-10-19T13:00:00+08:00",
+      "source": "series_b_episode_044",
+      "remoteAction": "published_public_recovery",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "gtA8wkgXnvY",
+      "relatedVideoId": "3xHuorhVSKc"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-210",
+      "scheduledAt": "2026-10-19T17:00:00+08:00",
+      "source": "persuasion_chapter_012",
+      "remoteAction": "published_public_recovery_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "F68ML96hcu8",
+      "relatedVideoId": "IOErf9wFRZI",
+      "publicationEvidence": "workspace/channel/monday-classic-shorts-recovery-2026-10-20.json"
+    },
+    {
+      "contentId": "content:series_b:episode_044",
+      "scheduledAt": "2026-10-19T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_recovery",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "3xHuorhVSKc",
+      "publicationEvidence": "workspace/channel/b044-browser-publication-2026-10-19.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-211",
+      "scheduledAt": "2026-10-19T22:00:00+08:00",
+      "source": "series_b_episode_044",
+      "remoteAction": "scheduled_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "nBV1NWMv5SI",
+      "relatedVideoId": "3xHuorhVSKc"
+    },
+    {
+      "contentId": "content:series_b:episode_045",
+      "scheduledAt": "2026-10-20T08:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "scheduled_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "3TWW7cidkEo",
+      "publicationEvidence": "workspace/channel/b045-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-212",
+      "scheduledAt": "2026-10-20T09:30:00+08:00",
+      "source": "series_b_episode_045",
+      "remoteAction": "published_public_recovery_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "ZDCQgTxhJb8",
+      "relatedVideoId": "3TWW7cidkEo",
+      "publicationEvidence": "workspace/channel/short212-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-213",
+      "scheduledAt": "2026-10-20T13:00:00+08:00",
+      "source": "series_a_episode_041",
+      "remoteAction": "published_public_recovery_verified",
+      "relatedVideoId": "EQiBcdfbHyI",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "UWiyOmKvnMs",
+      "publicationEvidence": "workspace/channel/tuesday-shorts-private-upload-2026-10-20.json",
+      "recoveryTiming": "Original13:00 slot elapsed; publish at a reasonable actual recovery time after source A041 is public, never backdate."
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-214",
+      "scheduledAt": "2026-10-20T17:00:00+08:00",
+      "source": "series_b_episode_045",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "J7pZGYIrS_A",
+      "relatedVideoId": "3TWW7cidkEo",
+      "publicationEvidence": "workspace/channel/short214-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:series_a:episode_041",
+      "scheduledAt": "2026-10-20T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "EQiBcdfbHyI",
+      "actualScheduledAt": "2026-10-20T20:15:00+08:00",
+      "publicationEvidence": "workspace/channel/a041-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-215",
+      "scheduledAt": "2026-10-20T22:00:00+08:00",
+      "source": "series_a_episode_041",
+      "remoteAction": "published_public_verified",
+      "relatedVideoId": "EQiBcdfbHyI",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "NzJz8mSYFic",
+      "publicationEvidence": "workspace/channel/tuesday-shorts-private-upload-2026-10-20.json"
+    },
+    {
+      "contentId": "content:series_a:episode_042",
+      "scheduledAt": "2026-10-21T08:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "apoFLeHZ3YE",
+      "publicationEvidence": "workspace/channel/a042-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-216",
+      "scheduledAt": "2026-10-21T09:30:00+08:00",
+      "source": "series_a_episode_042",
+      "remoteAction": "published_public_recovery_verified",
+      "relatedVideoId": "apoFLeHZ3YE",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "vU0aJb8bE84",
+      "publicationEvidence": "workspace/channel/wednesday-release-recovery-2026-10-21.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-217",
+      "scheduledAt": "2026-10-21T13:00:00+08:00",
+      "source": "series_c_episode_034",
+      "remoteAction": "uploaded_private_hold_for_source",
+      "checks": "copyright_passed_community_reconciliation_pending",
+      "videoId": "4ygVBp_94tM",
+      "relatedVideoId": "hKtG4lVsFpg",
+      "publicationEvidence": "workspace/channel/wednesday-release-recovery-2026-10-21.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-218",
+      "scheduledAt": "2026-10-21T17:00:00+08:00",
+      "source": "series_a_episode_042",
+      "remoteAction": "published_public_verified",
+      "relatedVideoId": "apoFLeHZ3YE",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "AOREt4e-FUg",
+      "publicationEvidence": "workspace/channel/wednesday-release-recovery-2026-10-21.json"
+    },
+    {
+      "contentId": "content:series_c:episode_034",
+      "scheduledAt": "2026-10-21T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "hKtG4lVsFpg",
+      "publicationEvidence": "workspace/channel/c034-browser-publication-2026-10-20.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-219",
+      "scheduledAt": "2026-10-21T22:00:00+08:00",
+      "source": "series_c_episode_034",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "-zTAJMe9Sao",
+      "relatedVideoId": "hKtG4lVsFpg",
+      "publicationEvidence": "workspace/channel/wednesday-release-recovery-2026-10-21.json"
+    },
+    {
+      "contentId": "content:series_c:episode_035",
+      "scheduledAt": "2026-10-22T08:00:00+08:00",
+      "format": "flagship_40",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "GrunU5bvWTo",
+      "publicationEvidence": "workspace/channel/c035-browser-publication-2026-10-21.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-220",
+      "scheduledAt": "2026-10-22T09:30:00+08:00",
+      "source": "series_c_episode_035",
+      "remoteAction": "published_public_recovery_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "vuUnxlYQwW0",
+      "relatedVideoId": "GrunU5bvWTo",
+      "publicationEvidence": "workspace/channel/thursday-release-recovery-2026-10-22.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-221",
+      "scheduledAt": "2026-10-22T13:00:00+08:00",
+      "source": "series_b_episode_046",
+      "remoteAction": "published_public_recovery_verified",
+      "relatedVideoId": "ME1ddEWECK0",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "cs3rkMRQ-rQ",
+      "publicationEvidence": "workspace/channel/friday-release-recovery-2026-10-23.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-222",
+      "scheduledAt": "2026-10-22T17:00:00+08:00",
+      "source": "series_c_episode_035",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "LmtxoR1FkEs",
+      "relatedVideoId": "GrunU5bvWTo",
+      "publicationEvidence": "workspace/channel/thursday-release-recovery-2026-10-22.json"
+    },
+    {
+      "contentId": "content:series_b:episode_046",
+      "scheduledAt": "2026-10-22T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "ME1ddEWECK0",
+      "publicationEvidence": "workspace/channel/b046-browser-publication-2026-10-21.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-223",
+      "scheduledAt": "2026-10-23T16:00:00+08:00",
+      "originalScheduledAt": "2026-10-22T22:00:00+08:00",
+      "source": "series_b_episode_046",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "YGgjp0dBKbY",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "ME1ddEWECK0"
+    },
+    {
+      "contentId": "content:series_c:episode_036",
+      "scheduledAt": "2026-10-23T08:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "7PMRsEuzdSY",
+      "publicationEvidence": "workspace/channel/c036-browser-publication-2026-10-21.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-224",
+      "scheduledAt": "2026-10-23T15:30:00+08:00",
+      "originalScheduledAt": "2026-10-23T09:30:00+08:00",
+      "source": "series_c_episode_036",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "B1I6qQzJcCQ",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "7PMRsEuzdSY"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-225",
+      "scheduledAt": "2026-10-23T20:30:00+08:00",
+      "source": "series_a_episode_043",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "nARI2d-H3MY",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "5yAMEUIw_P8"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-226",
+      "scheduledAt": "2026-10-23T17:00:00+08:00",
+      "source": "series_c_episode_036",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "VagcyKtGqMA",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "7PMRsEuzdSY"
+    },
+    {
+      "contentId": "content:series_a:episode_043",
+      "scheduledAt": "2026-10-23T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "5yAMEUIw_P8",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-227",
+      "scheduledAt": "2026-10-23T22:00:00+08:00",
+      "source": "series_a_episode_043",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "__pPTHD7bvo",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "5yAMEUIw_P8"
+    },
+    {
+      "contentId": "content:classic_listening:persuasion_chapter_013",
+      "scheduledAt": "2026-10-24T08:00:00+08:00",
+      "format": "classic_listening",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "WxExlJmIFiw",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-228",
+      "scheduledAt": "2026-10-24T09:30:00+08:00",
+      "source": "persuasion_chapter_013",
+      "remoteAction": "published_public_recovery_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "cT_Su_QgcRM",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "WxExlJmIFiw"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-229",
+      "scheduledAt": "2026-10-24T20:30:00+08:00",
+      "source": "series_b_episode_047",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "qSuagweMuiQ",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "cYOivQxuAH0"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-230",
+      "scheduledAt": "2026-10-24T17:00:00+08:00",
+      "source": "persuasion_chapter_013",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "Fi396R1hHWE",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "WxExlJmIFiw"
+    },
+    {
+      "contentId": "content:series_b:episode_047",
+      "scheduledAt": "2026-10-24T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "cYOivQxuAH0",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-231",
+      "scheduledAt": "2026-10-24T22:00:00+08:00",
+      "source": "series_b_episode_047",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "hMCZucknZgY",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "cYOivQxuAH0"
+    },
+    {
+      "contentId": "content:series_a:episode_045",
+      "scheduledAt": "2026-10-25T08:00:00+08:00",
+      "format": "flagship_40",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "24y5uh2fvvc",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-232",
+      "scheduledAt": "2026-10-25T20:30:00+08:00",
+      "source": "series_a_episode_045",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "619ARZDStKU",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "24y5uh2fvvc"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-233",
+      "scheduledAt": "2026-10-25T21:00:00+08:00",
+      "source": "series_a_episode_044",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "XJs5ga3aTY8",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "lGf10l3uOLo"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-234",
+      "scheduledAt": "2026-10-25T21:30:00+08:00",
+      "source": "series_a_episode_045",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "LGLp_LmP_yA",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "24y5uh2fvvc"
+    },
+    {
+      "contentId": "content:series_a:episode_044",
+      "scheduledAt": "2026-10-25T20:00:00+08:00",
+      "format": "standard",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "lGf10l3uOLo",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json"
+    },
+    {
+      "contentId": "content:shorts_main:elr-s-235",
+      "scheduledAt": "2026-10-25T22:00:00+08:00",
+      "source": "series_a_episode_044",
+      "remoteAction": "published_public_verified",
+      "checks": "copyright_and_community_guidelines_passed",
+      "videoId": "IN4ilPAXDZw",
+      "publicationEvidence": "workspace/channel/weekly-publication-observations-20261023.json",
+      "relatedVideoId": "lGf10l3uOLo"
+    }
+  ],
+  "dialogueBriefs": [
+    {
+      "contentId": "content:series_b:episode_044",
+      "scheduledAt": "2026-10-19T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Game-Day Small Talk — Join In Without Knowing the Rules | A2-B1",
+      "topicPillar": "practical_english",
+      "trendId": "sports",
+      "centralIdea": "Ask who someone supports, check the score, and follow one moment without pretending expertise.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_b:episode_045",
+      "scheduledAt": "2026-10-20T08:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Halloween Shop English — Check Size, Price and Returns | A2-B1",
+      "topicPillar": "practical_english",
+      "trendId": "halloween",
+      "centralIdea": "Clarify a costume purchase with sizes, availability and return conditions; no invented brand offers.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_a:episode_041",
+      "scheduledAt": "2026-10-20T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Everyone Loves That Show — Share a Different View Kindly | B1-B2",
+      "topicPillar": "relationships",
+      "trendId": "entertainment",
+      "centralIdea": "Disagree about entertainment without insulting the person recommending it.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_a:episode_042",
+      "scheduledAt": "2026-10-21T08:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Enjoy the Trend Without Filling Your Whole Weekend | B1-B2",
+      "topicPillar": "psychology",
+      "trendId": "sports",
+      "centralIdea": "Choose one enjoyable event while protecting an existing personal commitment.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_c:episode_034",
+      "scheduledAt": "2026-10-21T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "When Promotion Sounds Like a Promise — Ask What Is Included | B2-C1",
+      "topicPillar": "practical_english",
+      "trendId": "halloween",
+      "centralIdea": "Distinguish promotional implication from an explicit offer using precise clarification.",
+      "status": "scheduled_verified"
+    },
+    {
+      "contentId": "content:series_c:episode_035",
+      "scheduledAt": "2026-10-22T08:00:00+08:00",
+      "format": "flagship_40",
+      "workingTitle": "40-Minute English Discussion Lab: Hype, Evidence and Choice | B2-C1",
+      "topicPillar": "psychology",
+      "trendId": "entertainment",
+      "centralIdea": "Compare popularity, evidence and personal fit across original fictional consumer and entertainment scenes.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_b:episode_046",
+      "scheduledAt": "2026-10-22T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Snack Taste-Test English — Crunchy, Tangy or Too Spicy? | A2-B1",
+      "topicPillar": "everyday_life",
+      "trendId": "food",
+      "centralIdea": "Describe taste and texture and respond honestly without insulting a host.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_c:episode_036",
+      "scheduledAt": "2026-10-23T08:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Worth the Hype? Give a Fair Review Without Absolutes | B2-C1",
+      "topicPillar": "everyday_life",
+      "trendId": "food",
+      "centralIdea": "Separate a reviewer's experience, expectation and evidence with qualified language.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_a:episode_043",
+      "scheduledAt": "2026-10-23T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Rain Changes the Plan — Agree on a Clear Backup | B1-B2",
+      "topicPillar": "everyday_life",
+      "trendId": "weather",
+      "centralIdea": "Negotiate a weather contingency with a trigger, place and confirmation deadline.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_b:episode_047",
+      "scheduledAt": "2026-10-24T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "Party Invitation English — Costume, Time and What to Bring | A2-B1",
+      "topicPillar": "relationships",
+      "trendId": "halloween",
+      "centralIdea": "Confirm an invitation without assuming dress code or bringing the wrong item.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_a:episode_045",
+      "scheduledAt": "2026-10-25T08:00:00+08:00",
+      "format": "flagship_40",
+      "workingTitle": "40-Minute Everyday English: Parties, Games and Changing Plans | B1-B2",
+      "topicPillar": "practical_english",
+      "trendId": "sports",
+      "centralIdea": "A progressive scenario marathon with changed constraints, replay, questions and explained repairs.",
+      "status": "planned"
+    },
+    {
+      "contentId": "content:series_a:episode_044",
+      "scheduledAt": "2026-10-25T20:00:00+08:00",
+      "format": "standard",
+      "workingTitle": "A Group Purchase Is Not a Promise — Say No Without Excuses | B1-B2",
+      "topicPillar": "relationships",
+      "trendId": "halloween",
+      "centralIdea": "Decline a shared seasonal purchase clearly without inventing an excuse.",
+      "status": "planned"
+    }
+  ],
+  "productionOrder": [
+    "2026-10-19",
+    "2026-10-20",
+    "2026-10-21",
+    "2026-10-22",
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25"
+  ],
+  "qualityGates": [
+    "approved_visual_profiles",
+    "script_validation",
+    "traceable_audio",
+    "single_heavy_resource_lease",
+    "measured_runtime",
+    "generated_covers_not_collages",
+    "canonical_workspace_only",
+    "no_H_Youtube_duplicate",
+    "verified_captions_and_metadata",
+    "remote_duplicate_check_before_upload"
+  ]
+}

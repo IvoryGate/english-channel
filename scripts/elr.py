@@ -3,12 +3,16 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import queue
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable
+
+CHILD_HEARTBEAT_SECONDS = 15
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -24,6 +28,7 @@ from elr_production import (  # noqa: E402
     reports_ok,
 )
 from elr_run_state import RunStateStore, state_path, utc_now  # noqa: E402
+from worker.channel.providers.process import process_state  # noqa: E402
 from episode_workspace import normalize_episode_id, resolve_series  # noqa: E402
 from gpu_production_lock import (  # noqa: E402
     DEFAULT_RENDER_BATCH_SIZE,
@@ -47,9 +52,14 @@ class RunLogger:
 
     def write(self, message: str) -> None:
         line = message.rstrip()
-        print(line, flush=True)
         with self.path.open("a", encoding="utf-8", newline="\n") as handle:
             handle.write(line + "\n")
+        try:
+            print(line, flush=True)
+        except (BrokenPipeError, PermissionError):
+            # A closed/invalid redirected console is not a media failure.
+            # The durable log above must still succeed; never hide disk errors.
+            pass
 
     def event(self, message: str) -> None:
         self.write(f"[{utc_now()}] {message}")
@@ -91,7 +101,26 @@ def run_streamed(
         bufsize=1,
     )
     assert process.stdout is not None
-    for raw_line in process.stdout:
+    lines: queue.Queue[str | None] = queue.Queue()
+
+    def read_lines() -> None:
+        try:
+            for line in process.stdout:
+                lines.put(line)
+        finally:
+            lines.put(None)
+
+    reader = threading.Thread(target=read_lines, daemon=True)
+    reader.start()
+    while True:
+        try:
+            raw_line = lines.get(timeout=CHILD_HEARTBEAT_SECONDS)
+        except queue.Empty:
+            if heartbeat is not None:
+                heartbeat(f"child pid={process.pid}; waiting for stage output")
+            continue
+        if raw_line is None:
+            break
         line = raw_line.rstrip()
         logger.write("    " + line)
         if heartbeat is not None:
@@ -507,12 +536,22 @@ def command_status(args: argparse.Namespace) -> int:
         print(f"No production state found for {episode_id}.")
         return 1
     pid = int(state.get("pid") or -1)
-    alive = pid_alive(pid)
-    if state.get("status") in {"STARTING", "RUNNING"} and not alive:
-        state["effectiveStatus"] = "INTERRUPTED"
+    observed = process_state(pid)
+    alive = {"alive": True, "dead": False, "unknown": None}[observed]
+    if state.get("status") in {"STARTING", "RUNNING"} and observed != "alive":
+        state["effectiveStatus"] = "INTERRUPTED" if observed == "dead" else "UNVERIFIED"
     else:
         state["effectiveStatus"] = state.get("status")
     state["processAlive"] = alive
+    state["processProbe"] = observed
+    if observed == "unknown" and state.get("status") in {"STARTING", "RUNNING"}:
+        try:
+            last = datetime.fromisoformat(state["heartbeatAt"]).timestamp()
+            if 0 <= time.time() - last <= 90:
+                state["effectiveStatus"] = state["status"]
+                state["activityEvidence"] = "fresh_producer_heartbeat"
+        except (KeyError, TypeError, ValueError):
+            pass
     if args.json:
         print(json.dumps(state, ensure_ascii=False, indent=2))
         return 0

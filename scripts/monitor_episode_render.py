@@ -69,9 +69,12 @@ class MonitorLogger:
 
     def write(self, message: str) -> None:
         line = message.rstrip()
-        print(line, flush=True)
         self._file.write(line + "\n")
         self._file.flush()
+        try:
+            print(line, flush=True)
+        except (BrokenPipeError, PermissionError):
+            pass  # Durable logging succeeded; console output is best effort.
 
     def log(self, message: str) -> None:
         self.write(f"[{_format_ts(_utc_now())}] {message}")

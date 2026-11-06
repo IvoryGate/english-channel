@@ -1,0 +1,77 @@
+{
+  "schema":"elr-shorts-portfolio-v1",
+  "cycleId":"saturday-2026-10-24",
+  "visualResearch":{"artifactPath":"workspace/shorts/research/weekly-2026-09-14.json","sampleSize":30,"targetMarket":"United States","primaryAudience":"women 25-44","highViewCohort":true},
+  "researchReuseNote":"Owner-approved V4 layout and accepted visual cohort reused. Chapter13 entries are original simplified commentary, not invented Austen quotations or a reunion. B047 examples are fictional invitations. Independent generated backgrounds pending.",
+  "entries":[
+    {
+      "shortId":"elr-s-228","title":"He Asked About Her. Did They Meet?",
+      "thumbnailHeadline":"A QUESTION, NOT A MEETING",
+      "format":"listen_choose","cefr":"B1","durationSec":44,
+      "hookStyle":"question","hook":"Does asking mean meeting?",
+      "turns":[
+        {"speaker":"narrator","text":"In this simplified look at Persuasion chapter thirteen, Anne learns that Captain Wentworth asked about her. Which conclusion follows? First: They met at Kellynch. Second: He wanted information about her. Listen for the difference between asking about someone and speaking to them."},
+        {"speaker":"narrator","text":"The second conclusion fits. Asking about Anne doesn't establish that they met. This chapter gives Anne news about him, not a reunion with him. A small detail can matter emotionally without telling us everything a character feels."}
+      ],
+      "prompt":"Does asked about her prove that he spoke to her?",
+      "answer":"No. It describes an enquiry about her, not a conversation with her.",
+      "relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Bright elegant adult anime Regency Anne in rose gown listening to older Mrs Croft in sage by a sunny country house window, medium two shot faces at upper sides, cream center, subtle turquoise and peach flowers, hands out of crop, no male visitor, no writing or logos.",
+      "backgroundImage":"shorts/saturday-2026-10-24/elr-s-228/background-v1.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-229","title":"Costumes Optional Means You Have a Choice",
+      "thumbnailHeadline":"DO I NEED A COSTUME?",
+      "format":"dialogue","cefr":"A2","durationSec":44,
+      "hookStyle":"question","hook":"Do you have to dress up?",
+      "turns":[
+        {"speaker":"Sam","text":"The invitation says costumes optional. I haven't got one. Should I say I can't come?"},
+        {"speaker":"Riley","text":"Optional means you can choose. You can ask: Are casual clothes okay? You don't need to turn a clothing question into a cancellation."},
+        {"speaker":"Sam","text":"The host says casual clothes are fine. Then I'll reply: Great, I'll come in casual clothes. Thanks for checking."},
+        {"speaker":"Riley","text":"Now you've answered the invitation and checked the one detail you needed. You haven't promised to buy anything or invent an excuse."}
+      ],
+      "prompt":"Does optional mean required, or your choice?",
+      "answer":"Your choice. Ask about the detail if the invitation is unclear.",
+      "relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"High-key adult anime Riley auburn bun teal cardigan and blond Sam blue gray hoodie at sunlit peach hallway, simple hanging costume cape and ordinary jacket at side, relaxed faces, hands cropped, ivory middle, mint and coral accents, no text or screens.",
+      "backgroundImage":"shorts/saturday-2026-10-24/elr-s-229/background-v2.png",
+      "experimentAssignments":{"hook":"question","duration":"short"}
+    },
+    {
+      "shortId":"elr-s-230","title":"Anne Turns Worry into Practical Help",
+      "thumbnailHeadline":"WHAT WOULD ACTUALLY HELP?",
+      "format":"micro_story","cefr":"B1","durationSec":51,
+      "hookStyle":"statement","hook":"Comfort can become a practical plan.",
+      "turns":[
+        {"speaker":"narrator","text":"Here is a simplified retelling of one moment in Persuasion chapter thirteen. The Musgroves are worried about Louisa. They also dread Anne leaving. Anne cannot remove their worry with a cheerful promise, but she sees something useful they can do."},
+        {"speaker":"narrator","text":"She encourages them to go to Lyme and helps with their preparations. Being nearer Louisa also gives them a way to relieve some of the Harvilles' responsibilities. Anne's help is practical, not a claim that everything is suddenly fine."},
+        {"speaker":"narrator","text":"Notice the move from feeling helpless to finding a useful action. In everyday English, you might ask: What would actually help right now? That sentence is our modern practice, not a quotation from Austen."}
+      ],
+      "prompt":"Does Anne erase their worry, or help them act on it?",
+      "answer":"She helps them act. Useful support need not promise an outcome nobody knows.",
+      "relatedShow":"classic_listening","relatedVideoId":null,
+      "visualBrief":"Bright painterly adult anime Regency Anne rose gown helping older woman prepare small travel bag beside sunlit pale country house doorway, calm purposeful faces, luggage at lower side, cream central space, lavender and warm yellow accents, hands simple and correct, no accident scene or writing.",
+      "backgroundImage":"shorts/saturday-2026-10-24/elr-s-230/background-v2.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    },
+    {
+      "shortId":"elr-s-231","title":"Ask Before Bringing an Extra Guest",
+      "thumbnailHeadline":"CAN I BRING A FRIEND?",
+      "format":"dialogue","cefr":"A2","durationSec":51,
+      "hookStyle":"statement","hook":"An invitation isn't a guest list.",
+      "turns":[
+        {"speaker":"Sam","text":"Our fictional party host invited me. My friend wants to come too, so I'll just arrive with them. One more person won't matter, will it?"},
+        {"speaker":"Riley","text":"It might matter to the host. Ask first: Would it be okay if I brought a friend? That's a question, not an announcement that you've already decided."},
+        {"speaker":"Sam","text":"The host says the room is full. I'll say: No problem. I'll come on my own. I haven't promised my friend a place."},
+        {"speaker":"Riley","text":"Exactly. Your reply accepts the actual invitation. You don't have to argue, guess the host's reasons, or share anyone's personal details to practise the question."}
+      ],
+      "prompt":"Should you ask before promising your friend they can come?",
+      "answer":"Yes. A clear question leaves the host free to answer honestly.",
+      "relatedShow":"series_b","relatedVideoId":null,
+      "visualBrief":"Bright adult anime Riley auburn bun coral blouse and blond Sam blue hoodie discussing invitation at sunny mint kitchen island, a few plain cups and party bunting at far side, medium side two shot, hands cropped, pale central space, turquoise lemon peach colors, no lettering or logos.",
+      "backgroundImage":"shorts/saturday-2026-10-24/elr-s-231/background-v1.png",
+      "experimentAssignments":{"hook":"statement","duration":"long"}
+    }
+  ]
+}

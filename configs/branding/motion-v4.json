@@ -1,0 +1,31 @@
+{
+  "version": "elr-brand-motion-v4-revision3-subscribe",
+  "fps": 30,
+  "introFrames": 150,
+  "outroFrames": 240,
+  "impactFrame": 24,
+  "noteFrames": [36, 45, 54],
+  "sampleRate": 48000,
+  "seed": 20261018,
+  "peakDbfs": -6,
+  "welcomeFrame": 12,
+  "ctaEnterFrame": 72,
+  "ctaPressFrame": 112,
+  "ctaBurstFrame": 118,
+  "ctaText": "Join us. Make English a daily habit.",
+  "welcomeText": "Hi, welcome to English Listening Room. Let's begin!",
+  "outroVoiceFrame": 12,
+  "outroVoiceText": "Thanks for learning with us. Subscribe and join the room. See you next time.",
+  "brand": {
+    "name": "English Listening Room",
+    "logo": "branding/english_listening_room_avatar_v2.png",
+    "introAudio": "branding/v4/intro.wav",
+    "welcomeAudio": "branding/v4/welcome.wav",
+    "outroVoice": "branding/v4/outro-voice.wav",
+    "outroAudio": "branding/v4/outro.wav",
+    "paper": "#f5f0e6",
+    "ink": "#123f3a",
+    "accent": "#b87b50",
+    "muted": "#647a70"
+  }
+}

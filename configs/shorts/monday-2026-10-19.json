@@ -1,0 +1,146 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "monday-2026-10-19",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "researchReuseNote": "Existing visual cohort evidence retained, not represented as fresh trend research. Owner-approved Shorts v4 layout applies. Current topical evidence is workspace/channel/raw/google-trends-2026-10-18.json.",
+  "entries": [
+    {
+      "shortId": "elr-s-208",
+      "title": "Persuasion: Who Knows Where to Find Help?",
+      "thumbnailHeadline": "WHO KNOWS THE WAY?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Who should go for help?",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "In Persuasion, an accident leaves the group frightened. Anne asks for a surgeon. Captain Wentworth starts to go, but Anne suggests Captain Benwick instead."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Why change the messenger? Benwick knows where a surgeon can be found. Anne chooses local knowledge, not simply the first person ready to run."
+        }
+      ],
+      "prompt": "Who knows where to find the surgeon: Wentworth or Benwick?",
+      "answer": "Benwick. Anne chooses the person who knows the way.",
+      "relatedShow": "classic_listening",
+      "relatedVideoId": null,
+      "visualBrief": "Bright refined anime illustration of adult Regency Anne calmly directing an adult gentleman along a coastal town street, urgent but non-graphic, no injured person visible, hands out of frame, quiet center for captions, no text.",
+      "backgroundImage": "shorts/monday-2026-10-19/elr-s-208/background-qc-v2.png",
+      "experimentAssignments": {
+        "hook": "question",
+        "duration": "short"
+      }
+    },
+    {
+      "shortId": "elr-s-209",
+      "title": "Game-Day English: Rooting or Winning?",
+      "thumbnailHeadline": "ROOTING OR WINNING?",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 43,
+      "hookStyle": "question",
+      "hook": "Does rooting mean winning?",
+      "turns": [
+        {
+          "speaker": "Riley",
+          "text": "Who are you rooting for?"
+        },
+        {
+          "speaker": "Sam",
+          "text": "The team in blue. But they're two points behind."
+        },
+        {
+          "speaker": "Riley",
+          "text": "So you support blue, even though blue isn't winning?"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Exactly. Rooting for a team means supporting it. If you want the score, ask: Who's ahead?"
+        }
+      ],
+      "prompt": "Which question asks about support: Who are you rooting for, or who's ahead?",
+      "answer": "Who are you rooting for? Who's ahead asks which team is winning.",
+      "relatedShow": "series_b",
+      "relatedVideoId": "3xHuorhVSKc",
+      "visualBrief": "Bright high quality anime illustration of auburn-haired adult woman in teal cardigan and dark-blond adult man in blue-gray hoodie enjoying a home watch party, generic field on small TV, no real logos or scores, faces in outer upper thirds, quiet center for captions, no text.",
+      "backgroundImage": "shorts/monday-2026-10-19/elr-s-209/background-qc-v2.png",
+      "experimentAssignments": {
+        "hook": "question",
+        "duration": "short"
+      }
+    },
+    {
+      "shortId": "elr-s-210",
+      "title": "Persuasion: A Friend Who Stayed",
+      "thumbnailHeadline": "HE STAYED A WEEK",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "The support was not a speech.",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "Captain Harville tells Anne how Wentworth helped their grieving friend Benwick. Wentworth travelled night and day to reach Portsmouth."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Then he stayed with Benwick for a week. The important detail is not a clever thing he said. It is the time he gave. Listen for the action that shows friendship."
+        }
+      ],
+      "prompt": "Did Wentworth send a letter and leave, or travel there and stay?",
+      "answer": "He travelled there and stayed for a week. The action shows his care.",
+      "relatedShow": "classic_listening",
+      "relatedVideoId": null,
+      "visualBrief": "Bright warm anime-adjacent Regency illustration of two adult gentlemen in a quiet harbor lodging, one sitting beside the other with a reassuring expression, thoughtful friendship, no injury or tragedy imagery, hands below frame, quiet center for captions, no lettering.",
+      "backgroundImage": "shorts/monday-2026-10-19/elr-s-210/background-qc-v3.png",
+      "experimentAssignments": {
+        "hook": "statement",
+        "duration": "long"
+      }
+    },
+    {
+      "shortId": "elr-s-211",
+      "title": "Watch-Party English: When Should You Ask?",
+      "thumbnailHeadline": "ASK AT THE BREAK",
+      "format": "dialogue",
+      "cefr": "A2",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Good question. Wrong moment.",
+      "turns": [
+        {
+          "speaker": "Sam",
+          "text": "I don't understand that play. Everyone is watching so closely. Should I ask now?"
+        },
+        {
+          "speaker": "Riley",
+          "text": "Wait until a break. Then ask: What happened there? You don't need to pretend you know every rule."
+        },
+        {
+          "speaker": "Sam",
+          "text": "What happened there? That's one simple question, at a better time."
+        }
+      ],
+      "prompt": "When is it easier to ask: during a tense play, or at a break?",
+      "answer": "At a break. Ask what happened there, without interrupting the moment.",
+      "relatedShow": "series_b",
+      "relatedVideoId": "3xHuorhVSKc",
+      "visualBrief": "Bright colorful anime illustration of an adult blue-gray hoodied male beginner and auburn-haired teal-cardigan female friend chatting at a snack table during a watch-party break, television softly blurred, warm lively palette, quiet center, hands out of frame, no text or logos.",
+      "backgroundImage": "shorts/monday-2026-10-19/elr-s-211/background.png",
+      "experimentAssignments": {
+        "hook": "statement",
+        "duration": "long"
+      }
+    }
+  ]
+}

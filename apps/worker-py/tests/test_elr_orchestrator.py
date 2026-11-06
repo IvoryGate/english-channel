@@ -24,6 +24,60 @@ def test_default_render_batch_is_memory_safe_for_production_host() -> None:
     assert DEFAULT_RENDER_BATCH_SIZE == 2
 
 
+def test_console_permission_failure_does_not_discard_durable_logs(tmp_path: Path, monkeypatch) -> None:
+    def closed_console(*args, **kwargs):
+        raise PermissionError(13, 'redirected console unavailable')
+    monkeypatch.setattr('builtins.print', closed_console)
+    log = tmp_path / 'producer.log'
+    elr.RunLogger(log).write('completed audio preserved')
+    assert log.read_text(encoding='utf-8') == 'completed audio preserved\n'
+    monitor = monitor_episode_render.MonitorLogger(tmp_path / 'monitor.log')
+    try:
+        monitor.write('advance to next batch')
+    finally:
+        monitor.close()
+    assert (tmp_path / 'monitor.log').read_text(encoding='utf-8') == 'advance to next batch\n'
+
+
+def test_durable_log_permission_failure_is_not_suppressed(tmp_path: Path, monkeypatch) -> None:
+    import pytest
+    log = elr.RunLogger(tmp_path / 'producer.log')
+    def denied(*args, **kwargs):
+        raise PermissionError(13, 'actual log write denied')
+    monkeypatch.setattr(Path, 'open', denied)
+    with pytest.raises(PermissionError):
+        log.write('must not claim success')
+
+
+def test_silent_child_updates_producer_heartbeat(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(elr, "CHILD_HEARTBEAT_SECONDS", .05)
+    heartbeats = []
+    logger = elr.RunLogger(tmp_path / "silent.log")
+    code = elr.run_streamed(
+        [sys.executable, "-c", "import time; time.sleep(.2)"],
+        logger=logger, heartbeat=heartbeats.append,
+    )
+    assert code == 0
+    assert any("waiting for stage output" in message for message in heartbeats)
+
+
+def test_status_does_not_call_invisible_process_dead(tmp_path: Path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(elr, "REPO", tmp_path)
+    monkeypatch.setattr(elr, "process_state", lambda pid: "unknown")
+    store = RunStateStore(tmp_path / "logs/elr_runs/episode_017.json")
+    state = store.write({"episodeId": "episode_017", "pid": 1234, "status": "RUNNING"})
+    command_status(Namespace(episode="17", json=True))
+    result = json.loads(capsys.readouterr().out)
+    assert result["effectiveStatus"] == "RUNNING"
+    assert result["processAlive"] is None
+    assert result["activityEvidence"] == "fresh_producer_heartbeat"
+    state["heartbeatAt"] = "2000-01-01T00:00:00+00:00"
+    store.path.write_text(json.dumps(state), encoding="utf-8")
+    command_status(Namespace(episode="17", json=True))
+    result = json.loads(capsys.readouterr().out)
+    assert result["effectiveStatus"] == "UNVERIFIED"
+
+
 def test_render_subprocess_timeout_terminates_stuck_process(tmp_path: Path) -> None:
     logger = monitor_episode_render.MonitorLogger(tmp_path / "timeout.log")
     started = time.monotonic()

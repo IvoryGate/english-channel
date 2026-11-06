@@ -32,10 +32,10 @@ def test_turn_based_ass_does_not_mix_speakers() -> None:
         ],
     )
     ass = generate_karaoke_ass([], DEFAULT_TOKENS["series_b"], turns=turns)
-    assert "{\\kf20}Hi" in ass
+    assert "{\\c&H008AD5FF&}Hi" in ass
     assert "there." in ass
     assert "Hello" in ass
-    assert "Hi" not in ass.split("Hello")[1]
+    assert 'Hi' not in next(line for line in ass.splitlines() if 'Hello' in line)
 
 
 def test_ass_timestamp_and_karaoke_tags() -> None:
@@ -46,10 +46,11 @@ def test_ass_timestamp_and_karaoke_tags() -> None:
     ass = generate_karaoke_ass(words, DEFAULT_TOKENS["series_b"])
     assert "0:00:00.00" in ass
     assert "0:00:00.90" in ass
-    assert "{\\kf40}Hello" in ass
-    assert "{\\kf50}world" in ass
+    assert "{\\c&H008AD5FF&}Hello" in ass
+    assert "{\\c&H008AD5FF&}world" in ass
     assert "PlayResX: 2560" in ass
-    assert "\\kf" in ass
+    assert "\\kf" not in ass
+    assert '\\pos(1280,1010)' in ass
 
 
 def test_media_srt_chunks_words() -> None:
@@ -103,7 +104,9 @@ def test_build_ffmpeg_command_includes_layers(
         output_mp4=Path("out.mp4"),
     )
     joined = " ".join(command)
-    assert "overlay=906:1093" in joined
+    assert "overlay=880:90" in joined
+    assert "fps=30" in joined
+    assert command[command.index('-framerate')+1] == '30'
     assert "shortest=1" in joined
     assert "scale=2560:1440" in joined
     assert "-b:v" in command

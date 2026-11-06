@@ -1,0 +1,11 @@
+{
+  "schema":"approved-longform-branding-v1",
+  "approvedDate":"2026-10-18",
+  "scope":"all_future_non_shorts",
+  "body":{"profile":"elr-longform-body-v7","approvedDate":"2026-10-18","reference":"workspace/branding/body-v7/body-preview.mp4","fps":30,"performanceRevision":"2026-10-19-owner-approved-30fps-cached-masks","spectrumSize":800,"avatarSize":360,"threadDisplacementPx":30,"palette":"green-cyan-blue-violet","captions":"stable-two-line-phrase-card","highlight":"aligned_words_only"},
+  "classicLegacyThroughChapter":{"persuasion":11},
+  "intro":{"path":"workspace/branding/v4/intro-r4.mp4","durationSeconds":5.0,"sha256":"E7348F0727CD9A32D69818217D2A8730FDA60CAD244C7EF7F70822DC3EAB3109"},
+  "outro":{"path":"workspace/branding/v4/outro-complete.mp4","durationSeconds":8.0,"sha256":"093A24399266FE7C0880764D6F0C41CF26DEEC41BE44FBAED127A224C1553DB7"},
+  "nativeEndScreenRequired":false,
+  "shortsEnabled":false
+}

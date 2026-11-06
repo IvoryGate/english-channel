@@ -69,11 +69,42 @@ def test_reviewed_youtube_titles_fit_limit() -> None:
         assert len(title) <= 100
 
 
+def test_youtube_package_does_not_duplicate_canonical_video(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from worker.classics import chapter_package as package
+    from worker.classics.paths import ClassicPaths
+
+    config = SimpleNamespace(slug="persuasion", title="Persuasion", author="Jane Austen")
+    paths = ClassicPaths(tmp_path, config.slug)
+    captions = paths.subtitles_dir(12) / "youtube.srt"
+    for path in (paths.final_video(12), paths.thumbnail(12), paths.source_text(12),
+                 paths.subtitle_srt(12), captions):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"canonical fixture")
+    monkeypatch.setattr(package, "_probe", lambda *args: {"format": {"duration": "600"}})
+    monkeypatch.setattr(package, "_validate_composed_video", lambda *args: {"status": "pass"})
+    monkeypatch.setattr(package, "_write_youtube_captions", lambda *args: captions)
+    monkeypatch.setattr(package, "channel_description_footer", lambda *args: "Channel schedule")
+    result = package.write_youtube_package(tmp_path, config, 12)
+    export = result["exportDirectory"]
+    assert not list(export.glob("*.mp4"))
+    assert paths.final_video(12).read_bytes() == b"canonical fixture"
+    assert result["youtube"]["video"] == paths.final_video(12).relative_to(tmp_path).as_posix()
+    assert result["youtube"]["video"] in (export / "upload-checklist.md").read_text(encoding="utf-8")
+
+
 def test_chapter_four_copy_matches_the_thumbnail_promise() -> None:
     assert CHAPTER_COPY[4]["hook"] == "The Broken Engagement"
     assert "Frederick Wentworth" in CHAPTER_COPY[4]["summary"]
     assert CHAPTER_COPY[5]["hook"] == "Left Behind, Still Needed"
     assert "Uppercross" in CHAPTER_COPY[5]["summary"]
+    assert CHAPTER_COPY[10]["hook"] == "He Could Not See Her Suffer"
+    assert "Winthrop" in CHAPTER_COPY[10]["summary"]
+    assert CHAPTER_COPY[11]["hook"] == "A New World at Lyme"
+    assert "Captain Benwick" in CHAPTER_COPY[11]["summary"]
+    assert CHAPTER_COPY[13]["hook"] == "He Asked About Her"
+    assert "Crofts" in CHAPTER_COPY[13]["summary"]
+    assert "enquired after her" in CHAPTER_COPY[13]["summary"]
 
 
 def test_classic_description_uses_channel_owned_schedule() -> None:

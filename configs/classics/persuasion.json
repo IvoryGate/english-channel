@@ -59,6 +59,8 @@
     "providerPython": "workspace/runtime/tts-audition/chatterbox-env/Scripts/python.exe",
     "localModelPath": "workspace/runtime/tts-audition/models/chatterbox-500m",
     "seedBase": 20260914,
+    "batchSize": 20,
+    "adoptUntracedExisting": true,
     "providerSettings": {
       "exaggeration": 0.3,
       "cfgWeight": 0.65,
@@ -126,13 +128,21 @@
       "6": "public/classics/persuasion/chapter-06-cover-bg-v1-imagegen.png",
       "7": "public/classics/persuasion/chapter-07-cover-bg-v1-imagegen.png",
       "8": "public/classics/persuasion/chapter-08-cover-bg-v1-imagegen.png",
-      "9": "public/classics/persuasion/chapter-09-cover-bg-v1-imagegen.png"
+      "9": "public/classics/persuasion/chapter-09-cover-bg-v1-imagegen.png",
+      "10": "public/classics/persuasion/chapter-10-cover-bg-v1-imagegen.png",
+      "11": "public/classics/persuasion/chapter-11-cover-bg-v1-imagegen.png",
+      "12": "public/classics/persuasion/chapter-12-cover-bg-v1-imagegen.png",
+      "13": "public/classics/persuasion/chapter-13-cover-bg-v1-imagegen.png"
     },
     "chapterThumbnails": {
       "1": "public/classics/persuasion/chapter-01-thumbnail-v3-imagegen.jpg",
       "2": "public/classics/persuasion/chapter-02-thumbnail-v3-imagegen.jpg",
       "3": "public/classics/persuasion/chapter-03-thumbnail-v3-imagegen.jpg",
-      "4": "public/classics/persuasion/chapter-04-thumbnail-v1-imagegen.png"
+      "4": "public/classics/persuasion/chapter-04-thumbnail-v1-imagegen.png",
+      "10": "public/classics/persuasion/chapter-10-thumbnail-v1-imagegen.png",
+      "11": "public/classics/persuasion/chapter-11-thumbnail-v1-imagegen.png",
+      "12": "public/classics/persuasion/chapter-12-thumbnail-v1-imagegen.png",
+      "13": "public/classics/persuasion/chapter-13-thumbnail-v1-imagegen.png"
     },
     "width": 2560,
     "height": 1440

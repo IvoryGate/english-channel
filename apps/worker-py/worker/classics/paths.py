@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .config import SLUG_PATTERN, ConfigError
+from .providers.branding import approved_chapter_plate
 
 
 def chapter_id(chapter: int) -> str:
@@ -89,11 +90,13 @@ class ClassicPaths:
 
     def intro_video(self, number: int) -> Path:
         cid = chapter_id(number)
-        return self.video_dir(number) / f"000_{cid}.intro.mp4"
+        legacy = self.video_dir(number) / f"000_{cid}.intro.mp4"
+        return approved_chapter_plate(self.repo_root, self.slug, number, 'intro', legacy)
 
     def outro_video(self, number: int) -> Path:
         cid = chapter_id(number)
-        return self.video_dir(number) / f"000_{cid}.outro.mp4"
+        legacy = self.video_dir(number) / f"000_{cid}.outro.mp4"
+        return approved_chapter_plate(self.repo_root, self.slug, number, 'outro', legacy)
 
     def youtube_report(self, number: int) -> Path:
         cid = chapter_id(number)

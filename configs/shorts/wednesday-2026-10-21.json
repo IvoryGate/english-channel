@@ -1,0 +1,103 @@
+{
+  "schema": "elr-shorts-portfolio-v1",
+  "cycleId": "wednesday-2026-10-21",
+  "visualResearch": {
+    "artifactPath": "workspace/shorts/research/weekly-2026-09-14.json",
+    "sampleSize": 30,
+    "targetMarket": "United States",
+    "primaryAudience": "women 25-44",
+    "highViewCohort": true
+  },
+  "researchReuseNote": "Reuse accepted cohort evidence and owner-approved V4 visuals. Original fictional practice adapted from approved A042 and C034 scripts, not new live trend claims. Independent generated backgrounds still required before media production.",
+  "entries": [
+    {
+      "shortId": "elr-s-216",
+      "title": "A Friendly Yes Can Have a Limit",
+      "thumbnailHeadline": "YES, FOR ONE EPISODE",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Does yes mean all afternoon?",
+      "turns": [
+        {"speaker": "Riley", "text": "My friends invited me to watch a series. I'd like to go, but I don't want to spend the whole afternoon there."},
+        {"speaker": "Sam", "text": "Give a smaller yes: I'm up for one episode, then I'm heading out. Up for means interested or willing."},
+        {"speaker": "Riley", "text": "I'm up for one episode, then I'm heading out. That sounds friendly, and it tells them what I'm agreeing to."},
+        {"speaker": "Sam", "text": "Exactly. A clear limit doesn't cancel the yes. It helps your friends understand it."}
+      ],
+      "prompt": "Does she agree to one episode or the whole afternoon?",
+      "answer": "One episode. She accepts the invitation and names her limit.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright high-key adult anime: auburn-haired Riley in teal cardigan standing at open coral apartment doorway with light jacket over arm, dark-blond Sam inside by sunny sky-blue sofa, friendly bounded visit, medium full-body framing, both hands anatomically clear, quiet cream middle, vibrant turquoise and peach, absolutely no text.",
+      "backgroundImage": "shorts/wednesday-2026-10-21/elr-s-216/background-v1.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-217",
+      "title": "Available Does Not Always Mean Included",
+      "thumbnailHeadline": "INCLUDED OR EXTRA?",
+      "format": "listen_choose",
+      "cefr": "B1",
+      "durationSec": 44,
+      "hookStyle": "question",
+      "hook": "Available, or included?",
+      "turns": [
+        {"speaker": "narrator", "text": "A fictional workshop advert says materials are available. You want to know whether you must pay extra. Which question helps? First: So everything must be free, right?"},
+        {"speaker": "narrator", "text": "Second: Are the materials included in the price, or available separately? Available tells you that you can get them. It doesn't tell you whether the advertised price covers them. Ask about the specific item before booking."}
+      ],
+      "prompt": "Which question checks the price clearly: the first or the second?",
+      "answer": "The second. Ask whether the materials are included or available separately.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "High-key premium anime adult auburn-haired woman Riley in teal sweater at colorful pottery workshop welcome counter, asking instructor about brushes and clay on sunshine-yellow trays, over-shoulder composition, daylight lavender windows, coral and cyan accents, hands below counter, open pale center, no signs, lettering, price tags or logos.",
+      "backgroundImage": "shorts/wednesday-2026-10-21/elr-s-217/background-v1.png",
+      "experimentAssignments": {"hook": "question", "duration": "short"}
+    },
+    {
+      "shortId": "elr-s-218",
+      "title": "Leave Warmly Without Inventing an Excuse",
+      "thumbnailHeadline": "I'LL LEAVE YOU TO IT",
+      "format": "micro_story",
+      "cefr": "B1",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Enjoy it. Still leave on time.",
+      "turns": [
+        {"speaker": "narrator", "text": "Riley enjoyed an episode with her friends. Before arriving, she said she could stay until six. Now another episode is starting. She doesn't invent an urgent appointment or pretend she disliked the visit."},
+        {"speaker": "narrator", "text": "She picks up her coat and says warmly: Thanks for having me. I'll leave you to it. Her friends can continue watching, and she can keep her plan."},
+        {"speaker": "narrator", "text": "I'll leave you to it means I'm going, and you can carry on. A friendly tone keeps it from sounding annoyed."}
+      ],
+      "prompt": "Is Riley asking her friends to stop, or letting them continue?",
+      "answer": "Letting them continue. She thanks them and leaves without an invented excuse.",
+      "relatedShow": "series_a",
+      "relatedVideoId": null,
+      "visualBrief": "Bright expressive anime adult Riley auburn hair teal cardigan happily putting on coral coat beside sunny mint hallway mirror, friends softly visible on distant lavender sofa, waist-up side angle, golden afternoon window light, one natural hand at coat lapel and other out of crop, generous pale center, no text or clock numerals.",
+      "backgroundImage": "shorts/wednesday-2026-10-21/elr-s-218/background-v1.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    },
+    {
+      "shortId": "elr-s-219",
+      "title": "Check the Offer Without Sounding Accusing",
+      "thumbnailHeadline": "JUST SO I'M CLEAR",
+      "format": "dialogue",
+      "cefr": "B1",
+      "durationSec": 51,
+      "hookStyle": "statement",
+      "hook": "Check the detail, not the person's honesty.",
+      "turns": [
+        {"speaker": "Riley", "text": "The workshop says everything is included. But I can't see whether that includes taking my finished piece home. Should I say: You're hiding an extra charge?"},
+        {"speaker": "Sam", "text": "That assumes a motive you haven't checked. Try: Just so I'm clear, does the price include taking the finished piece home?"},
+        {"speaker": "Riley", "text": "Just so I'm clear, does the price include taking the finished piece home? Now I'm asking about the actual detail, not accusing the organiser."},
+        {"speaker": "Sam", "text": "Right. In this fictional example, we still need their answer. A clear question checks the offer; it doesn't invent the result."}
+      ],
+      "prompt": "Which opening checks your understanding: you're hiding something, or just so I'm clear?",
+      "answer": "Just so I'm clear. Then name the exact detail you want confirmed.",
+      "relatedShow": "series_c",
+      "relatedVideoId": null,
+      "visualBrief": "Luminous adult anime Riley auburn ponytail coral blouse attentively discussing a finished turquoise ceramic bowl with Sam dark-blond hair blue-gray shirt at a cheerful workshop pickup shelf, close two-person profile framing, saturated aqua and lemon wall, pink flowers, hands cropped safely, light caption center, no letters or logos.",
+      "backgroundImage": "shorts/wednesday-2026-10-21/elr-s-219/background-v1.png",
+      "experimentAssignments": {"hook": "statement", "duration": "long"}
+    }
+  ]
+}

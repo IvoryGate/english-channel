@@ -34,7 +34,7 @@ def _run_quiet(command: list[str], *, cwd: Path | None = None) -> subprocess.Com
     return result
 
 
-def _caption_pages(text: str, max_chars: int = 50) -> list[str]:
+def _caption_pages(text: str, max_chars: int = 42) -> list[str]:
     words = text.split()
     pages: list[str] = []
     current: list[str] = []
@@ -47,6 +47,11 @@ def _caption_pages(text: str, max_chars: int = 50) -> list[str]:
             current.append(word)
     if current:
         pages.append(" ".join(current))
+    if len(pages) > 1 and len(pages[-1].split()) < 3:
+        left, right = pages[-2].split(), pages[-1].split()
+        while len(right) < 3 and len(left) > 3 and len(' '.join([left[-1], *right])) <= max_chars:
+            right.insert(0, left.pop())
+        pages[-2:] = [' '.join(left), ' '.join(right)]
     return pages or [text]
 
 
@@ -56,16 +61,21 @@ def build_render_props(manifest: dict[str, Any]) -> dict[str, Any]:
         pages = _caption_pages(str(turn["text"]))
         start = float(turn["startSec"])
         end = float(turn["endSec"])
-        page_duration = (end - start) / len(pages)
+        total_weight = sum(len(page.split()) for page in pages)
+        cursor = start
         for index, page in enumerate(pages):
             scenes.append(
                 {
                     "speaker": turn["speaker"],
                     "text": page,
-                    "startSec": round(start + index * page_duration, 3),
-                    "endSec": round(start + (index + 1) * page_duration, 3),
+                    "startSec": round(cursor, 3),
+                    "endSec": round(end if index == len(pages)-1 else cursor+(end-start)*len(page.split())/max(1, total_weight), 3),
                 }
             )
+            cursor = float(scenes[-1]['endSec'])
+    for scene in scenes:
+        scene['caption'] = {'text': scene['text'], 'startMs': round(scene['startSec']*1000),
+            'endMs': round(scene['endSec']*1000), 'timestampMs': None, 'confidence': None}
     return {
         "format": manifest["format"],
         "cefr": manifest["cefr"],
@@ -183,7 +193,11 @@ def render_short(
     if not brand_logo.is_file():
         raise FileNotFoundError(f"Short brand logo does not exist: {brand_logo}")
     props_path = workspace / "reports" / "render_props.json"
-    atomic_write_json(props_path, build_render_props(manifest))
+    props = build_render_props(manifest)
+    if audio_path is not None:
+        from .audio_visual import analyze_short_audio
+        props['spectrum'] = analyze_short_audio(audio_path)
+    atomic_write_json(props_path, props)
     silent_path = workspace / "video" / f"{manifest['shortId']}.silent.mp4"
     output_path = workspace / "video" / f"{manifest['shortId']}.mp4"
     command = [

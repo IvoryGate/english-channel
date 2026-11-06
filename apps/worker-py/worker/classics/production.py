@@ -75,6 +75,11 @@ def render_chapter_visuals(
             ),
         ]
         for output, arguments in jobs:
+            if output.parent != paths.video_dir(chapter):
+                # Shared approved plates are immutable inputs, never render targets.
+                if not output.is_file():
+                    raise ProductionError(f'Approved branding is missing: {output}')
+                continue
             if force or not output.is_file():
                 _render(repo_root, arguments)
         rendered.append(
@@ -93,7 +98,9 @@ def produce_chapters(
     paths = ClassicPaths(repo_root, config.slug)
     state = RunStateStore(paths.state)
     state.update(status="RUNNING", phase="CHAPTER_BRANDING", activeChapters=chapters)
-    brand_trace = render_chapter_brand_voice(repo_root, config, chapters, force=force)
+    legacy_chapters = [chapter for chapter in chapters if paths.intro_video(chapter).parent == paths.video_dir(chapter)]
+    brand_trace = (render_chapter_brand_voice(repo_root, config, legacy_chapters, force=force)
+                   if legacy_chapters else {'tracePath': 'configs/branding/approved-longform.json'})
     audio: list[dict[str, Any]] = []
     state.update(status="RUNNING", phase="AUDIO_RENDER", activeChapters=chapters)
     for chapter in chapters:
