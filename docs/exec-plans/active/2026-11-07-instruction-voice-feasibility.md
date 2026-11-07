@@ -56,15 +56,51 @@ default change or reboot. A successful probe does not grant voice acceptance.
    require a named next hypothesis after this result; success cannot silently
    expand the two-take budget. Document the decision and independent review.
 
+### Named Transport Completion Scope
+
+The original setup window closed with the full main weight verified and
+685,080,042 bytes missing across seven listed snapshot files. A second TLS
+timeout occurred at a redirected Hugging Face configuration request. This is
+a distinct, affected-file transport repair: first verify the direct route to
+that small official file with normal TLS; only if it succeeds, fetch the seven
+missing files under a separate five-minute / 685,080,042-byte limit. Preserve
+both previous attempt records and reuse verified files. No package reinstall,
+model rerun, general retry loop, new paid spend or extension of the two-take
+budget. Record this additional transport scope separately from the original
+1075.395 seconds of setup execution; do not rewrite that history.
+
+The user has already authorized free local work toward the rebuild; this
+routine bounded repair needs no repeated owner permission. Inference still
+requires the original live resource gate. A prepared supervisor's cleanup
+must cover all operations after child launch, including evidence-write failure;
+fix and independently review that boundary before any later model launch.
+
 ## Validation And Status
 
-2026-11-07: environment installed; pinned model download is in progress and
-local quality/memory feasibility remains unknown. The first resolver attempt
+2026-11-07: environment installed and the complete pinned model snapshot is
+verified; local quality/memory feasibility remains unknown. The first resolver attempt
 stopped after 64.469 seconds at a proxy TLS handshake timeout, before Qwen
 installation or model download. Failure evidence is preserved. One diagnosed
 repair uses a process-only direct route with normal certificate verification,
 within the original 20-minute setup deadline; system network settings did not
 change. Ten official wheels total 20,246,153 bytes.
+
+The subsequent official Hugging Face request timed out after 1075.395 seconds
+of original setup execution, retaining six verified files and the complete
+main weight. The separately named direct-route completion then succeeded in
+44.594 seconds, downloading exactly the missing 685,080,042 bytes. All 13
+snapshot files now verify, including both LFS weight hashes. Neither failure
+record was overwritten. Evidence roots are
+`workspace/runtime/qwen-instruction-feasibility/20261107/`,
+`20261107-transport-repair/` and `20261107-affected-files-direct/` under the same
+parent directory.
+
+The post-setup host observation had 7280 MiB free commit, below the conservative
+first-load preflight of 12288 MiB, with 7458 MiB free VRAM. No Qwen inference or
+take has been consumed. This threshold is a preflight decision, not a measured
+Qwen memory requirement. During final CI, at most five one-minute resource
+checks may open the original two-take scope; otherwise retain the plan active
+until real capacity changes. No app termination or reboot is authorized here.
 
 Independent review passed for actual installed source, effective package
 locations and the selected base metadata/source fingerprints. Qwen/Transformers/
@@ -78,6 +114,13 @@ The installed wheel is identified by its PyPI hash and actual reviewed source
 hashes, not assumed to equal the GitHub commit by version number. Actual audio
 tokenizer attention backend must be recorded at load; the top-level backend
 argument is not fully forwarded to that auxiliary loader.
+
+Independent final review found all 13 snapshot files present, verified the
+small-file hashes and checked both recorded weight hashes against official
+metadata. Rechecking 1558 base metadata/sentinel files found no changes.
+The separate v2 supervisor closes the post-launch cleanup gap; four injected
+failure cases confirmed child termination/wait before ownership returns.
+Its source and actual dependency identities are preserved with runtime evidence.
 
 Do not rerun unrelated whole-repository tests for ignored runtime artifacts;
 validate environment isolation, model hashes and actual outputs directly.
