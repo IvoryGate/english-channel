@@ -9,6 +9,8 @@ chapter times as well as captions. Original turn WAVs remain unchanged.
 
 - `pauseAfterSec` overrides `renderSettings.interTurnSilenceSec` between turns.
   Gaps must be finite and nonnegative. There is no extra gap after the last turn.
+  Use the source-draft [`[Pause After: 6]` directive](EPISODE_PIPELINE.md#intentional-practice-pauses)
+  for intentional practice gaps that must survive manifest regeneration.
 - Raw composition, QC duration expectation and mastered concatenation consume
   the same gap vector. One silence clip is reused per distinct gap length.
 - Flagship pacing calculates the speech target after subtracting the actual
@@ -68,5 +70,6 @@ Marker p101 resolves to 2026.359 seconds rather than the historical package's
 Comparison evidence is `workspace/rebuild/audio-timeline-audit.json`; the
 archive and remote metadata were not modified.
 
-This is timing integrity, not subjective voice acceptance or a final loudness
-gate. Those remain separately evaluated in `docs/AUDIO_QUALITY_RESET.md`.
+This is timing integrity. The separate final WAV/AAC measured gates are now
+enforced as described in [AUDIO_MASTERING.md](AUDIO_MASTERING.md). Subjective
+voice acceptance remains separate in `docs/AUDIO_QUALITY_RESET.md`.

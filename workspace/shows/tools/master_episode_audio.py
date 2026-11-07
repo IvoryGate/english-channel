@@ -17,6 +17,9 @@ from typing import Any
 
 from episode_artifacts import turn_wav_path, master_turn_wav_path
 from episode_timeline import manifest_gaps, master_timeline_record, validated_gaps
+from episode_audio_acceptance import (
+    master_sources, measure_audio_acceptance, measure_loudness, validate_audio_acceptance,
+)
 from prepare_reference_concat_audio import build_concat_audio
 
 
@@ -54,37 +57,6 @@ def probe_duration_sec(path: Path) -> float:
         text=True,
     )
     return float(out.stdout.strip())
-
-
-def measure_loudness(path: Path) -> dict[str, float]:
-    """Single-pass loudnorm print format to read integrated / true peak / LRA."""
-    text = _run_capture(
-        [
-            "ffmpeg",
-            "-hide_banner",
-            "-i",
-            str(path),
-            "-af",
-            "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json",
-            "-f",
-            "null",
-            "-",
-        ]
-    )
-    match = re.search(r"\{\s*\"input_i\".*?\}", text, flags=re.S)
-    if not match:
-        # ffmpeg prints JSON after a summary line; take last JSON object
-        matches = list(re.finditer(r"\{[^{}]*\"input_i\"[^{}]*\}", text, flags=re.S))
-        if not matches:
-            raise RuntimeError(f"loudnorm measurement failed for {path}\n{text[-2000:]}")
-        match = matches[-1]
-    payload = json.loads(match.group(0))
-    return {
-        "integratedLufs": float(payload["input_i"]),
-        "truePeakDb": float(payload["input_tp"]),
-        "lra": float(payload["input_lra"]),
-        "threshold": float(payload["input_thresh"]),
-    }
 
 
 def loudnorm_two_pass(src: Path, dest: Path, *, integrated: float = -16.0, true_peak: float = -1.5, lra: float = 11.0) -> dict[str, Any]:
@@ -253,6 +225,7 @@ def master_episode(
     missing = [str(c) for c in clips if not c.is_file()]
     if missing:
         raise FileNotFoundError(f"Missing turn WAVs: {missing[:5]}")
+    source_fingerprints = master_sources(workspace, episode_id)
 
     # afftdn nr ~6 mild; map --denoise-strength 0..20
     denoise_nr = max(0.0, min(20.0, float(denoise_strength)))
@@ -301,7 +274,8 @@ def master_episode(
     )
 
     before = measure_loudness(concat_path)
-    after = measure_loudness(master_path)
+    acceptance = measure_audio_acceptance(master_path, stage="master", sources=source_fingerprints)
+    after = acceptance["measurements"]
     report = {
         "schema": "elr-episode-audio-master-v1",
         "episodeId": episode_id,
@@ -319,6 +293,7 @@ def master_episode(
         "loudnorm": ln,
         "measuredBeforeProgram": before,
         "measuredAfterProgram": after,
+        "audioAcceptance": acceptance,
         "targets": {
             "integratedLufs": integrated_lufs,
             "truePeakDb": true_peak_db,
@@ -328,6 +303,9 @@ def master_episode(
     report_path.parent.mkdir(parents=True, exist_ok=True)
     write_json(report_path, report)
     print(f"report={report_path.as_posix()}", flush=True)
+    # Preserve the failed waveform and measured report, then stop the pipeline.
+    validate_audio_acceptance(acceptance, master_path, stage="master",
+                              sources=master_sources(workspace, episode_id))
     print(
         f"LUFS {before['integratedLufs']:.2f} -> {after['integratedLufs']:.2f} | "
         f"TP {before['truePeakDb']:.2f} -> {after['truePeakDb']:.2f} dB",

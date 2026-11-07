@@ -261,3 +261,23 @@ Store generated evidence only under the ignored runtime root in the spec.
 No audio files, credentials or private listener details belong in Git. This
 slice changes neither formal voice settings nor public schedules and does not
 reactivate the paused automations.
+
+## Completed Staged Comparison, 2026-11-07
+
+The explicit staged FP32 runtime completed the two-take feasibility probe and
+then the separately budgeted 26-take/six-context comparison with no retry.
+The full comparison used 525.922 seconds runner wall time for 124.24 seconds
+of raw speech; paired listening loudness differed by no more than 0.02 LU.
+It is stored under `workspace/runtime/audio-quality-reset/staged-expression-20261107/`.
+The earlier failed budgets remain charged and separate. Sampled free Windows
+commit reached 239 MiB, so success alone does not establish safe production
+headroom. D-drive pagefile settings have been approved and saved, but their
+capacity was not active at the last live query; no reboot was performed.
+
+The owner heard the initial short probe as similar and still needing work.
+After two complete contexts, the owner heard some improvement but did not
+accept the voices for formal use. No winner or dimension scores were inferred.
+The current scalar-exaggeration experiment is therefore not a basis for a
+default change. A new instruction-conditioned provider would require a
+separate bounded feasibility and listening trial; no repeated Chatterbox run
+or whole episode is justified by these results.

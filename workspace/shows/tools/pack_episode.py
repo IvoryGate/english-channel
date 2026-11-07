@@ -31,6 +31,7 @@ DEFAULT_PYTHON = REPO / ".conda-env" / "python.exe"
 sys.path.insert(0, str(TOOLS))
 from episode_artifacts import artifact_paths  # noqa: E402
 from episode_youtube_meta import hook_text_matches_title, sync_youtube_json  # noqa: E402
+from episode_audio_acceptance import require_episode_audio_acceptance  # noqa: E402
 
 
 def utc_now() -> str:
@@ -326,6 +327,13 @@ def pack_episode(
         if code != 0:
             return code
 
+    # A skip flag reuses only a matching accepted master; raw QC is separate.
+    try:
+        require_episode_audio_acceptance(workspace, episode, encoded=False)
+    except (ValueError, OSError) as exc:
+        log.log(f"master audio gate failed: {exc}")
+        return 2
+
     # 3 — Subtitles (audiobook timing: no Whisper per turn)
     if not master_dir.is_dir():
         log.log(f"error: missing {master_dir} — run master first")
@@ -370,6 +378,12 @@ def pack_episode(
     )
     if code != 0:
         return code
+
+    try:
+        require_episode_audio_acceptance(workspace, episode)
+    except (ValueError, OSError) as exc:
+        log.log(f"encoded audio gate failed: {exc}")
+        return 2
 
     production_card_path = workspace / "production" / "production_card.json"
     video_report_path = workspace / "reports" / f"000_{episode}.video_report.json"

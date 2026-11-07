@@ -27,6 +27,10 @@
 - `apps/worker-py/worker/shorts/`: Shorts product contracts, workspace,
   publication ledger, private-upload boundary, analytics snapshots, QC, and
   review decisions.
+- `apps/worker-py/worker/production_handoff/`: read-only local ELR preparation,
+  voice/visual evidence and package gates, exposed through `scripts/elr.py`.
+  It uses existing artifacts and provider identities without adding a database,
+  scheduler or publication authority. See [shows/PRODUCTION_HANDOFF.md](shows/PRODUCTION_HANDOFF.md).
 - `apps/worker-py/worker/classics/`: Classic Listening rights, policy,
   append-only lifecycle, authority, audio-acceptance foundation, and protected
   Persuasion production adapter for source ingestion, aligned subtitles,

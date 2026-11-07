@@ -30,6 +30,7 @@ from episode_youtube_meta import sync_youtube_json  # noqa: E402
 from prepare_episode_manifest import manifest_coverage  # noqa: E402
 from validate_podcast_script import validate_script_text  # noqa: E402
 from worker.tts.schema import ProviderConfigError, resolve_provider_config  # noqa: E402
+from worker.production_handoff.service import evaluate_reference  # noqa: E402
 
 
 MIN_FREE_GIB = 10.0
@@ -231,15 +232,33 @@ def preflight_episode(
 
     config_path = TOOLS_DIR / "show_config.json"
     config = load_json(config_path)["shows"][context.show_id]
+    production_card_path = context.workspace / "production" / "production_card.json"
+    production_card = load_json(production_card_path) if production_card_path.is_file() else {}
+    local_pilot = production_card.get("format") == "local_pilot"
+    if local_pilot:
+        # Whole-episode audio rendering is production too. The separate bounded
+        # audition path is the place to evaluate an unaccepted voice.
+        if production_card.get("publicReleaseAllowed") is not False:
+            checks.append(CheckResult("pilot-scope", "error", "A local pilot must explicitly disallow public release."))
+        handoff = production_card.get("handoff")
+        if not isinstance(handoff, dict):
+            checks.append(CheckResult("production-handoff", "error", "Local pilot requires fingerprinted handoff evidence."))
+        else:
+            result = evaluate_reference(context.repo_root, handoff, "local_production", expected_context={
+                "episodeId": context.episode_id, "workspace": context.workspace,
+                "script": paths["draft"], "productionManifest": paths["manifest"],
+                "visuals": {"thumbnail": paths["coverBakedScene"], "body": paths["videoBgSource16x9"]},
+            })
+            checks.append(CheckResult("production-handoff", "pass" if result["passed"] else "error",
+                                      json.dumps(result, ensure_ascii=False)))
     if draft_ok:
         min_words, max_words = (int(value) for value in config["wordCountRange"])
-        production_card_path = context.workspace / "production" / "production_card.json"
-        if production_card_path.is_file():
-            production_card = load_json(production_card_path)
-            if production_card.get("format") == "flagship_40":
-                flagship_range = production_card.get("formatContract", {}).get("spokenWordTarget")
-                if isinstance(flagship_range, list) and len(flagship_range) == 2:
-                    min_words, max_words = (int(value) for value in flagship_range)
+        if local_pilot:
+            min_words, max_words = 800, 1400
+        elif production_card.get("format") == "flagship_40":
+            flagship_range = production_card.get("formatContract", {}).get("spokenWordTarget")
+            if isinstance(flagship_range, list) and len(flagship_range) == 2:
+                min_words, max_words = (int(value) for value in flagship_range)
         validation = validate_script_text(
             draft_text,
             min_words=min_words,

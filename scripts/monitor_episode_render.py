@@ -87,6 +87,11 @@ def load_manifest(path: Path) -> dict[str, Any]:
 
 
 def patch_cfg(manifest_path: Path, cfg: float, logger: MonitorLogger) -> None:
+    card_path = manifest_path.parent / "production" / "production_card.json"
+    card = json.loads(card_path.read_text(encoding="utf-8")) if card_path.is_file() else {}
+    if card.get("format") == "local_pilot":
+        logger.log("frozen local pilot: ignore legacy CLI cfg; settings changes require preparation and a new review")
+        return
     data = load_manifest(manifest_path)
     settings = dict(data.get("renderSettings") or {})
     settings["cfgValue"] = cfg

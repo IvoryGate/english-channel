@@ -15,6 +15,10 @@ sys.path.insert(0, str(MEDIA_SCRIPTS))
 from media.compose_media_video import compose_media_video  # noqa: E402
 from media.thumbnail_tokens import tokens_from_show  # noqa: E402
 from episode_artifacts import artifact_paths, load_json, resolve_episode_audio  # noqa: E402
+from episode_audio_acceptance import (  # noqa: E402
+    encoded_sources, measure_audio_acceptance, require_episode_audio_acceptance,
+    validate_audio_acceptance,
+)
 
 SHOW_CONFIG_PATH = Path(__file__).resolve().parent / "show_config.json"
 FONTS_DIR = REPO_ROOT / "assets" / "fonts"
@@ -71,6 +75,10 @@ def main() -> int:
         args.episode,
         Path(args.audio) if args.audio else None,
     )
+    if audio.resolve() != paths["masterWav"].resolve():
+        raise ValueError("Episode composition requires the accepted canonical master WAV")
+    require_episode_audio_acceptance(Path(args.workspace), args.episode, encoded=False)
+    source_fingerprints = encoded_sources(Path(args.workspace), args.episode)
     ass_path = Path(args.ass) if args.ass else paths["karaokeAss"]
     output = Path(args.output) if args.output else paths["mp4"]
     intro_mp4, outro_mp4 = branding_assets_for(args.episode, disabled=args.no_branding)
@@ -95,6 +103,12 @@ def main() -> int:
         encoder=args.encoder,
         preset=args.preset,
     )
+    # Decode the final AAC, including branding, rather than trusting WAV levels.
+    report["audioAcceptance"] = measure_audio_acceptance(output, stage="encoded", sources=source_fingerprints)
+    paths["videoReport"].write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                                   encoding="utf-8", newline="\n")
+    validate_audio_acceptance(report["audioAcceptance"], output, stage="encoded",
+                              sources=encoded_sources(Path(args.workspace), args.episode))
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 

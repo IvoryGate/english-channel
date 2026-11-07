@@ -115,6 +115,19 @@ def prepare_command(context: EpisodeContext, python: Path) -> list[str]:
     ]
 
 
+def prepare_for_run(context: EpisodeContext, python: Path, *, logger: RunLogger,
+                    heartbeat: Callable | None = None) -> int:
+    card_path = context.workspace / "production" / "production_card.json"
+    card = json.loads(card_path.read_text(encoding="utf-8")) if card_path.is_file() else {}
+    if card.get("format") == "local_pilot":
+        manifest = context.workspace / f"000_{context.episode_id}.episode_manifest.json"
+        if not manifest.is_file():
+            raise RuntimeError("Local pilot needs an explicitly prepared and reviewed manifest before production")
+        logger.event(f"{context.show_id}: retain frozen pilot manifest; preflight verifies accepted inputs")
+        return 0
+    return run_streamed(prepare_command(context, python), logger=logger, heartbeat=heartbeat)
+
+
 def monitor_command(
     context: EpisodeContext,
     python: Path,
@@ -269,7 +282,7 @@ def execute_production(args: argparse.Namespace) -> int:
         for index, context in enumerate(contexts):
             _set_series_state(store, context.show_id, phase="PREPARE", status="RUNNING")
             logger.event(f"{context.show_id}: prepare manifest")
-            code = run_streamed(prepare_command(context, python), logger=logger, heartbeat=store.heartbeat)
+            code = prepare_for_run(context, python, logger=logger, heartbeat=store.heartbeat)
             if code != 0:
                 raise RuntimeError(f"{context.show_id} prepare failed with exit {code}")
 
@@ -348,7 +361,7 @@ def execute_audio_render(args: argparse.Namespace) -> int:
         for index, context in enumerate(contexts):
             _set_series_state(store, context.show_id, phase="AUDIO_PREPARE", status="RUNNING")
             logger.event(f"{context.show_id}: prepare manifest for audio")
-            code = run_streamed(prepare_command(context, python), logger=logger, heartbeat=store.heartbeat)
+            code = prepare_for_run(context, python, logger=logger, heartbeat=store.heartbeat)
             if code != 0:
                 raise RuntimeError(f"{context.show_id} prepare failed with exit {code}")
 
@@ -553,9 +566,26 @@ def _add_run_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--run-log", default="", help=argparse.SUPPRESS)
 
 
+def command_handoff(args: argparse.Namespace) -> int:
+    sys.path.insert(0, str(REPO / "apps" / "worker-py"))
+    from worker.production_handoff.transport import run_check
+
+    def final_audio_check(workspace: Path, episode_id: str, *, encoded: bool) -> dict:
+        from episode_audio_acceptance import require_episode_audio_acceptance
+        return require_episode_audio_acceptance(workspace, episode_id, encoded=encoded)
+
+    return run_check(REPO, Path(args.input), args.require, final_audio_check)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="English Listening Room production control.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    handoff = subparsers.add_parser("handoff", help="Check local production evidence without rendering or publishing.")
+    handoff.add_argument("--input", required=True)
+    handoff.add_argument("--require", default="ready_to_prepare",
+        choices=["ready_to_prepare", "local_production", "package_verified", "public_release"])
+    handoff.set_defaults(func=command_handoff)
 
     preflight = subparsers.add_parser("preflight", help="Validate scripts, manifests, assets, runtime, and capacity.")
     preflight.add_argument("--episode", required=True)
