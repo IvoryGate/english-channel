@@ -118,6 +118,12 @@ Each series has a specialized skill that owns the script draft, the human-feel r
 | B · First Steps · A2-B1 | `.cursor/skills/series-b-first-steps/` | 1400–1900 spoken words | `series_b` |
 | C · Polished English · B2-C1 | `.cursor/skills/series-c-polished-english/` | 2000–2800 spoken words | `series_c` |
 
+The named `local_pilot` format uses **800–1400 spoken words** in controller
+preflight when `production/production_card.json` declares `format: local_pilot`.
+It retains the series' other script checks. Its script review, human voice
+acceptance and actual-input binding follow [PRODUCTION_HANDOFF.md](PRODUCTION_HANDOFF.md);
+the normal episode workflow below does not replace that pilot contract.
+
 The legacy `dialogue-podcast-scriptwriting` skill remains as a routing fallback and still hosts `validate_podcast_script.py`.
 
 ### Workflow
@@ -141,6 +147,29 @@ The validator checks: title, description, exactly two hosts, balanced turns, CTA
 - **Delivery cues**: every turn carries `[Delivery: …]`. No exceptions.
 - **No `speed` controls** in the draft — all series use `speed=1.0` (the validator rejects the word `speed` anywhere in the text).
 - **No politics, no topic reuse**.
+
+### Intentional practice pauses
+
+Put an explicit pause in the source draft before the spoken turn it belongs to:
+
+```text
+[Practice Prompt]
+[Delivery: inviting, with room for an answer]
+[Pause After: 6]
+Riley: Offer to help, and say how much time you have.
+[Delivery: warm, matter-of-fact]
+Sam: I can help for ten minutes.
+```
+
+`prepare_episode_manifest.py` assigns `pauseAfterSec: 6` to Riley's turn, giving
+the listener six seconds before Sam's answer. The directive applies to exactly
+one following turn; it is neither spoken nor included in spoken-word counts.
+Seconds must be finite and within **0–30**, inclusive. Duplicate directives for
+one turn, orphan directives and directives crossing a section boundary fail.
+Subsequent turns return to their section defaults. Regenerating the manifest
+preserves this source-authored pause; do not rely on an unrecorded manifest edit.
+The shared [audio timeline](AUDIO_TIMELINE.md) applies pauses between turns only,
+with no additional trailing gap after the episode's last turn.
 
 ## Tools map
 
@@ -167,6 +196,13 @@ For episodes `015` and later, the pack's compose stage automatically adds the ap
 workspace, refreshes the manifest, serializes local GPU work, streams progress,
 persists state, and verifies export before completion.
 
+For `local_pilot`, explicitly prepare and review the manifest first. Production
+and audio-only runs preserve its exact bytes, and the render monitor does not
+apply its legacy series CFG rewrite. Preflight checks that the accepted script,
+manifest and visual paths and hashes match the actual episode inputs. Missing,
+changed or other-episode evidence stops production; input changes require a new
+review. See [the handoff contract](PRODUCTION_HANDOFF.md).
+
 ```powershell
 & $py scripts/elr.py render-audio --episode 17 --series all --detach --visible-window
 & $py scripts/elr.py preflight --episode 17 --series all
@@ -174,6 +210,10 @@ persists state, and verifies export before completion.
 ```
 
 ### Parallel visual and audio lane
+
+The `local_pilot` format requires its full `local_production` handoff, including
+visual evidence, before either `produce` or `render-audio`. The early audio lane
+below applies to the existing standard formats.
 
 After script approval, do not leave the local GPU idle while the remote image
 service generates the native 16:9 cover and no-text background:

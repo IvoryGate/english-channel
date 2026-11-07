@@ -182,6 +182,11 @@ workspaces, runs local GPU work serially with batch size 20, streams progress,
 and persists state under `logs/elr_runs/`. See
 `docs/shows/EPISODE_PIPELINE.md` and the `elr-episode-production` Skill.
 
+The rebuild's named `local_pilot` format has a separate evidence handoff:
+full audio and video production require an accepted voice, reviewed script and
+visuals bound to the exact frozen manifest. Preparation and bounded auditions
+can proceed earlier. See [`docs/shows/PRODUCTION_HANDOFF.md`](docs/shows/PRODUCTION_HANDOFF.md).
+
 ## Classic Listening Operations
 
 Classic Listening uses a rights-gated, event-sourced lifecycle. The tracked

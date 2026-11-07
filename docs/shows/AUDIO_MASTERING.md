@@ -79,17 +79,19 @@ Human accepts turns before mastering.
 3. High-pass **80 Hz** (speech)
 4. Mild FFT denoise (`afftdn`, conservative) — softens clone grit / 电音 edges
 5. Soft compressor (gentle ratio) for host-to-host evenness inside a turn
-6. True-peak ceiling via `alimiter` (~−1.0 dBTP local)
+6. Sample limiter via `alimiter`; only the final decoded measurement establishes true peak
 
 **Episode:**
 
-7. Concatenate turns with manifest `interTurnSilenceSec`
+7. Concatenate turns with manifest per-turn pauses, falling back to `interTurnSilenceSec`
 8. **EBU R128** two-pass `loudnorm`:
    - Integrated target **−16 LUFS** (dialogue / YouTube-friendly)
    - True peak **≤ −1.5 dBTP**
    - LRA target **~11 LU**
 9. Write `000_episode_XXX.master.wav` (48 kHz PCM)
-10. Write `000_episode_XXX.master_report.json` (measured I/TP/LRA before & after)
+10. Measure the completed WAV, write `000_episode_XXX.master_report.json`, and
+    stop on failed final-master acceptance. A requested loudnorm target is not
+    proof of the output's measured level.
 
 **Non-goals of stage D:**
 
@@ -99,7 +101,41 @@ Human accepts turns before mastering.
 
 ### E — Video packaging
 
-`compose_episode_video.py` and export must use **`master.wav`** when present; fall back to `raw.wav` only for pilots.
+The canonical `compose_episode_video.py`, pack and export paths require an
+accepted **`master.wav`**. A raw preview remains a separate diagnostic; it
+cannot substitute for an accepted production master, including local pilots.
+
+Composition decodes and measures the final MP4 audio stream after AAC encoding
+and intro/outro concatenation. The measured final media must satisfy **-16 LUFS
++/- 1 LU** and **true peak <= -1.5 dBTP**. There is no peak overshoot allowance:
+the observed -1.33 and -1.41 dBTP cases fail even if integrated loudness passes.
+LRA is reported rather than given an invented hard quality threshold. Silent,
+nonfinite or missing measurements cannot pass.
+
+`episode_audio_acceptance.py` stores versioned `audioAcceptance` evidence inside
+the existing master/video reports: actual measurements, FFmpeg version, capture
+time, policy, media SHA-256/size and source fingerprints. Master evidence binds
+the manifest and raw turns; encoded evidence binds the manifest and accepted
+master. The master timeline must also remain hash-verified. Read-only consumers
+recompute the decision from measured values and current policy and reject
+missing, legacy or stale evidence. They reuse valid measurements without a new
+FFmpeg scan at every step. Hashes protect against accidental stale reuse; these
+local reports are not cryptographic attestations of an untrusted producer.
+
+`--skip-master`, `--skip-qc` and `--skip-export` cannot bypass the applicable final
+audio gates. Export copies an `episodeNN.audio_acceptance.json` sidecar, verifies
+both copied media hashes and the master/encoded pair, then promotes staging.
+The existing raw-turn `qc.json` remains separate: passing it says nothing about
+final WAV/AAC levels. Technical acceptance also does not grant voice-listening
+approval or public-release authority.
+
+Failure retains the generated audio/video and measured report for diagnosis,
+returns a nonzero result and prevents later packaging/export. There is no
+automatic retry or full TTS regeneration. For a valid performance with a peak
+failure, adjust the mastering headroom (for example `--true-peak-db -2`) and
+rerun only the affected downstream stages, then measure again. The acceptance
+ceiling remains -1.5 dBTP. Existing archived reports are not silently upgraded;
+prepare a new local working copy with traceable inputs when repairing one.
 
 ## Commands
 
@@ -124,6 +160,7 @@ $man = "$ws/000_episode_001.episode_manifest.json"
 
 - [ ] `master_report.json` shows integrated loudness within **±1 LU** of −16 LUFS
 - [ ] True peak ≤ **−1.5 dBTP**
+- [ ] Final encoded MP4 independently passes the same measured gates; hashes match current media
 - [ ] No obvious pumping / underwater denoise
 - [ ] Riley vs Sam perceived loudness even on phone speaker
 - [ ] If 电音 still severe: flag turns, **rerender** with cfg 2.15 + cleaner ref, then remaster

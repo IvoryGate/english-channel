@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from episode_artifacts import artifact_paths, load_json
+from episode_audio_acceptance import require_episode_audio_acceptance, validate_audio_acceptance
 
 YOUTUBE_TITLE_MAX = 100
 
@@ -86,10 +87,16 @@ def verify_export_package(out_dir: Path, stem: str) -> dict[str, Any]:
         out_dir / f"{stem}.youtube_description.txt",
         out_dir / f"{stem}.youtube_title.txt",
         out_dir / f"{stem}.youtube.json",
+        out_dir / f"{stem}.audio_acceptance.json",
     ]
     missing = [str(path) for path in required if not path.is_file() or path.stat().st_size == 0]
     if missing:
         raise RuntimeError("Incomplete export package: " + ", ".join(missing))
+    audio_evidence = load_json(out_dir / f"{stem}.audio_acceptance.json")
+    master = validate_audio_acceptance(audio_evidence.get("master"), out_dir / f"{stem}.wav", stage="master")
+    validate_audio_acceptance(audio_evidence.get("encoded"), out_dir / f"{stem}.mp4", stage="encoded",
+                              sources={"manifest": master["sources"]["manifest"],
+                                       "master": master["artifact"]["sha256"]})
 
     probe = _probe_mp4(out_dir / f"{stem}.mp4")
     if int(probe["width"]) < 2560 or int(probe["height"]) < 1440 or float(probe["durationSec"]) <= 0:
@@ -137,6 +144,7 @@ def export_episode(
 
     episode_id = f"episode_{episode_num:03d}"
     paths = artifact_paths(workspace, episode_id)
+    audio_evidence = require_episode_audio_acceptance(workspace, episode_id)
     candidates = {
         "mp4": paths["mp4"],
         "wav": paths["rawWav"],
@@ -158,8 +166,12 @@ def export_episode(
         shutil.rmtree(staging_dir)
     staging_dir.mkdir(parents=True, exist_ok=False)
     _copy(candidates["mp4"], staging_dir / f"{stem}.mp4")
-    wav_src = candidates.get("master") if candidates.get("master") and candidates["master"].is_file() else candidates["wav"]
+    wav_src = candidates["master"]
     _copy(wav_src, staging_dir / f"{stem}.wav")
+    (staging_dir / f"{stem}.audio_acceptance.json").write_text(
+        json.dumps(audio_evidence, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+        encoding="utf-8", newline="\n",
+    )
     _copy(candidates["srt"], staging_dir / f"{stem}.srt")
 
     cover_src = candidates["thumb"] if candidates["thumb"].is_file() else candidates["thumb_jpg"]

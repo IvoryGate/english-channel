@@ -6,6 +6,8 @@ import time
 from argparse import Namespace
 from pathlib import Path
 
+import pytest
+
 
 REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "scripts"))
@@ -16,6 +18,7 @@ import elr_run_state  # noqa: E402
 import monitor_episode_render  # noqa: E402
 from elr import audio_render_command, command_status, monitor_command  # noqa: E402
 from elr_production import build_context  # noqa: E402
+from elr_production import CheckResult, PreflightReport  # noqa: E402
 from elr_run_state import RunStateStore  # noqa: E402
 from gpu_production_lock import DEFAULT_RENDER_BATCH_SIZE  # noqa: E402
 
@@ -262,3 +265,63 @@ def test_status_reads_durable_state_without_process_scan(tmp_path: Path, monkeyp
     output = capsys.readouterr().out
     assert "status=DONE" in output
     assert "series_a: status=DONE phase=DONE" in output
+
+
+@pytest.mark.parametrize("command", [elr.execute_production, elr.execute_audio_render])
+def test_local_pilot_keeps_frozen_manifest_and_stops_before_render_on_failed_handoff(tmp_path, monkeypatch, command):
+    context = build_context(tmp_path, "series_b", 52, tmp_path / "youtube")
+    context.workspace.mkdir(parents=True)
+    (context.workspace / "production").mkdir()
+    (context.workspace / "production/production_card.json").write_text(
+        '{"format":"local_pilot","publicReleaseAllowed":false}', encoding="utf-8")
+    manifest = context.workspace / "000_episode_052.episode_manifest.json"
+    frozen = b'{"renderSettings":{"ttsProvider":"kokoro","device":"cpu","providerSettings":{"speed":0.95}},"turns":[]}\n'
+    manifest.write_bytes(frozen)
+    monkeypatch.setattr(elr, "REPO", tmp_path)
+    monkeypatch.setattr(elr, "_contexts", lambda _: [context])
+    monkeypatch.setattr(elr, "run_streamed", lambda *a, **kw: pytest.fail("No preparation or synthesis subprocess is allowed"))
+    inspected = []
+    def preflight(actual, **kwargs):
+        assert actual == context and manifest.read_bytes() == frozen
+        inspected.append(True)
+        return PreflightReport("series_b", "episode_052", str(context.workspace),
+            (CheckResult("production-handoff", "error", "Voice listening is pending"),))
+    monkeypatch.setattr(elr, "preflight_episode", preflight)
+    args = Namespace(batch_size=2, run_log=str(tmp_path / "run.log"), skip_export=True, preflight_only=False, force=False)
+    assert command(args) == 2
+    assert inspected == [True]
+    assert manifest.read_bytes() == frozen
+
+
+def test_local_pilot_requires_explicit_initial_manifest_and_nonpilot_keeps_prepare_flow(tmp_path, monkeypatch):
+    context = build_context(tmp_path, "series_b", 52, tmp_path / "youtube")
+    (context.workspace / "production").mkdir(parents=True)
+    card = context.workspace / "production/production_card.json"
+    card.write_text('{"format":"local_pilot"}', encoding="utf-8")
+    calls = []
+    monkeypatch.setattr(elr, "run_streamed", lambda command, **kw: calls.append(command) or 0)
+    logger = elr.RunLogger(tmp_path / "prepare.log")
+    with pytest.raises(RuntimeError, match="explicitly prepared and reviewed"):
+        elr.prepare_for_run(context, Path("python"), logger=logger)
+    assert calls == []
+    card.write_text('{"format":"standard"}', encoding="utf-8")
+    assert elr.prepare_for_run(context, Path("python"), logger=logger) == 0
+    assert calls == [elr.prepare_command(context, Path("python"))]
+
+
+def test_monitor_cannot_rewrite_pilot_settings_but_legacy_cfg_still_works(tmp_path):
+    (tmp_path / "production").mkdir()
+    card = tmp_path / "production/production_card.json"
+    card.write_text('{"format":"local_pilot"}', encoding="utf-8")
+    manifest = tmp_path / "000_episode_052.episode_manifest.json"
+    frozen = b'{"renderSettings":{"ttsProvider":"kokoro","device":"cpu","providerSettings":{"speed":0.95}}}\n'
+    manifest.write_bytes(frozen)
+    logger = monitor_episode_render.MonitorLogger(tmp_path / "monitor.log")
+    try:
+        monitor_episode_render.patch_cfg(manifest, 9.99, logger)
+        assert manifest.read_bytes() == frozen
+        card.write_text('{"format":"standard"}', encoding="utf-8")
+        monitor_episode_render.patch_cfg(manifest, 2.15, logger)
+        assert json.loads(manifest.read_bytes())["renderSettings"]["cfgValue"] == 2.15
+    finally:
+        logger.close()

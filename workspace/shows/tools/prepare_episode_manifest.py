@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -94,6 +95,7 @@ def parse_turns(text: str, show: dict[str, Any]) -> list[dict[str, Any]]:
     turns: list[dict[str, Any]] = []
     section = ""
     delivery_cue = ""
+    explicit_pause = None
     in_script = False
 
     for line in text.splitlines():
@@ -103,6 +105,16 @@ def parse_turns(text: str, show: dict[str, Any]) -> list[dict[str, Any]]:
         if stripped == "---":
             in_script = True
             continue
+        if stripped.lower().startswith("[pause after:"):
+            if not stripped.endswith("]") or not in_script or explicit_pause is not None:
+                raise ValueError("Pause After must occur once before a spoken turn in a script section")
+            try:
+                explicit_pause = float(stripped[len("[Pause After:"):-1].strip())
+            except ValueError as exc:
+                raise ValueError("Pause After requires seconds between 0 and 30") from exc
+            if not math.isfinite(explicit_pause) or not 0 <= explicit_pause <= 30:
+                raise ValueError("Pause After requires finite seconds between 0 and 30")
+            continue
         delivery_match = DELIVERY_RE.match(stripped)
         if delivery_match:
             delivery_cue = delivery_match.group(1)
@@ -111,6 +123,8 @@ def parse_turns(text: str, show: dict[str, Any]) -> list[dict[str, Any]]:
         if not section_match:
             section_match = MARKDOWN_SECTION_RE.match(stripped)
         if section_match:
+            if explicit_pause is not None:
+                raise ValueError("Pause After cannot cross a section boundary")
             section = section_match.group(1)
             in_script = section not in skip_sections
             continue
@@ -132,12 +146,15 @@ def parse_turns(text: str, show: dict[str, Any]) -> list[dict[str, Any]]:
             "wordCount": words,
             "filename": f"turn_{order:03d}.wav",
             "deliveryCue": delivery_cue,
-            "pauseAfterSec": pause_after_for(section, show["showId"]),
+            "pauseAfterSec": explicit_pause if explicit_pause is not None else pause_after_for(section, show["showId"]),
         }
         max_len = target_max_len(words)
         if max_len is not None:
             turn["maxLen"] = max_len
         turns.append(turn)
+        explicit_pause = None
+    if explicit_pause is not None:
+        raise ValueError("Pause After has no following spoken turn")
     return turns
 
 
@@ -154,7 +171,7 @@ def source_spoken_word_count(text: str, show: dict[str, Any]) -> int:
         if stripped == "---":
             in_script = True
             continue
-        if DELIVERY_RE.match(stripped):
+        if DELIVERY_RE.match(stripped) or stripped.lower().startswith("[pause after:"):
             continue
         section_match = SECTION_RE.match(stripped)
         if not section_match:
