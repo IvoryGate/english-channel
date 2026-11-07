@@ -72,7 +72,8 @@ Packing/export cannot bypass this with skip flags. The focused 26-test suite
 includes real WAV/AAC measurements and stale-artifact/source rejection. An
 independent review passed. Handoff/controller/source-pause integration passed
 53 combined tests and independent review. Full repository lint and tests pass:
-372 Python tests plus Node/API/web checks. CI remains due before merge.
+372 Python tests plus Node/API/web checks. Required CI passed and PR #25 merged
+as `fd7113b`; the parent plan stays active for voice and actual pilot delivery.
 
 The original B052 pilot has 961 spoken words across 44 turns and three explicit
 six-second practice gaps. Its source pause directive survives manifest
@@ -97,6 +98,8 @@ After hearing two complete contexts, the owner reported some improvement but
 not ready for formal use. No arm preference, numerical score or production
 voice acceptance was inferred. Stop scalar-exaggeration reruns; investigate a
 separately bounded instruction-conditioned model trial before another audition.
+That follow-up uses the
+[instruction-voice feasibility plan](2026-11-07-instruction-voice-feasibility.md).
 
 The owner approved D-drive pagefile configuration of 8192 MB initial and
 16384 MB maximum, without reboot. Configuration was verified; the live usage

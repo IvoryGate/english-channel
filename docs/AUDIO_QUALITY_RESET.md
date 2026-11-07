@@ -281,3 +281,9 @@ The current scalar-exaggeration experiment is therefore not a basis for a
 default change. A new instruction-conditioned provider would require a
 separate bounded feasibility and listening trial; no repeated Chatterbox run
 or whole episode is justified by these results.
+
+The next [instruction-controlled feasibility plan](exec-plans/active/2026-11-07-instruction-voice-feasibility.md)
+uses a separate local Qwen 1.7B CustomVoice environment and a fully verified
+pinned snapshot. Setup and source isolation have been checked; no quality
+result exists yet. The first two-take probe remains behind live resource
+preflight. This does not install a production provider or change the B052 cast.

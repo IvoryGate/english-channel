@@ -57,6 +57,17 @@ Shorts use quality-95 JPEG intermediate frames and request hardware video
 encoding when the host supports it; Remotion falls back to software encoding
 when it does not.
 
+## Experimental Instruction-Controlled Audition
+
+The Qwen 1.7B CustomVoice experiment uses
+`workspace/runtime/tts-audition/qwen3-customvoice-env/` and the complete pinned
+`models/qwen3-tts-1.7b-customvoice/` snapshot under the same runtime root.
+It is an isolated dependency overlay on the project Torch/audio installation,
+not a production provider. Base changes invalidate its recorded identity.
+See the [active feasibility plan](exec-plans/active/2026-11-07-instruction-voice-feasibility.md)
+for exact versions, source/model fingerprints, offline two-take limits and
+live resource gates. Do not infer voice acceptance from successful setup.
+
 ## One-Command Setup
 
 ```powershell
